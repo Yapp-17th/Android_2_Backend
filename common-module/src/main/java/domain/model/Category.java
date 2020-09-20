@@ -31,6 +31,7 @@ public class Category {
   @Column(nullable = false, updatable = false)
   @CreationTimestamp
   private LocalDateTime createdAt;
+  @UpdateTimestamp
   private LocalDateTime updatedAt;
 
   @OneToMany(fetch = FetchType.LAZY)
