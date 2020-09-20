@@ -49,7 +49,7 @@ public class User {
   private Tag tag;
 
   @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-  private List<Board> members = new ArrayList<>();
+  private List<Board> boards = new ArrayList<>();
 
   @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
   private List<BookMark> bookMarks = new ArrayList<>();
