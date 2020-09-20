@@ -9,9 +9,12 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.CreationTimestamp;
 import domain.status.UserStatus;
 
@@ -32,30 +35,28 @@ public class User {
   private LocalDateTime updatedAt;
 
   private String nickName;
-  private int likes = 0;
-  private int dislikes = 0;
-  private int reportPoints = 0;
+
+  @NotNull
+  private Integer likes = 0;
+  @NotNull
+  private Integer dislikes = 0;
+  @NotNull
+  private Integer reportPoints = 0;
 
   @Enumerated(value = EnumType.ORDINAL)
   private UserStatus status = UserStatus.ACTIVE;
 
-  @OneToOne(fetch = FetchType.LAZY, mappedBy = "user")
+  @ManyToOne(fetch = FetchType.LAZY)
   private Address address;
 
-  @OneToOne(fetch = FetchType.LAZY, mappedBy = "user")
-  private Category categoty;
-
-  @OneToOne(fetch = FetchType.LAZY, mappedBy = "user")
-  private Tag tag;
+  @ManyToOne(fetch = FetchType.LAZY)
+  private Category category;
 
   @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
   private List<Board> boards = new ArrayList<>();
 
   @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-  private List<BookMark> bookMarks = new ArrayList<>();
-
-  @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-  private List<Message> messages = new ArrayList<>();
+  private List<Board> bookMarks = new ArrayList<>();
 
   @OneToMany(mappedBy = "reporter", fetch = FetchType.LAZY)
   private List<Report> reportList = new ArrayList<>();

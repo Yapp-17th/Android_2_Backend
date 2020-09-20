@@ -9,21 +9,19 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import org.hibernate.annotations.CreationTimestamp;
 import domain.status.UserTag;
+import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
 public class Tag {
 
   @Id
-  @GeneratedValue(strategy = = GenerationType.IDENTITY)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-
-  @OneToOne(fetch = FetchType.LAZY)
-  private User user;
 
   @Enumerated(value = EnumType.STRING)
   private UserTag name;
@@ -34,6 +32,6 @@ public class Tag {
   @UpdateTimestamp
   private LocalDateTime updatedAt;
 
-  @OneToMany(fetch = FetchType.LAZY)
-  private List<Board> members = new ArrayList<>();
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "tag")
+  private List<Board> boards = new ArrayList<>();
 }

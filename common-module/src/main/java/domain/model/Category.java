@@ -9,11 +9,12 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import org.hibernate.annotations.CreationTimestamp;
 import domain.status.Exercise;
+import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
 public class Category {
@@ -22,8 +23,8 @@ public class Category {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @OneToOne(fetch = FetchType.LAZY)
-  private User user;
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "category")
+  private List<User> user = new ArrayList<>();;
 
   @Enumerated(value = EnumType.STRING)
   private Exercise name;
@@ -34,6 +35,6 @@ public class Category {
   @UpdateTimestamp
   private LocalDateTime updatedAt;
 
-  @OneToMany(fetch = FetchType.LAZY)
-  private List<Board> members = new ArrayList<>();
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "category")
+  private List<Board> boards = new ArrayList<>();
 }

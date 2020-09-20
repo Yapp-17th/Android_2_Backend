@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import org.hibernate.annotations.CreationTimestamp;
 import domain.status.AlarmType;
@@ -14,8 +15,8 @@ import domain.status.AlarmType;
 public class Alarm {
 
   @Id
-  @GeneratedValue
-  private long id;
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
   @Enumerated(value = EnumType.ORDINAL)
   private AlarmType type;
