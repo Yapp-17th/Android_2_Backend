@@ -16,7 +16,7 @@ import domain.status.CityType;
 public class Address {
 
   @Id
-  @GeneratedValue
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
 
   @OneToOne(fetch = FetchType.LAZY)
