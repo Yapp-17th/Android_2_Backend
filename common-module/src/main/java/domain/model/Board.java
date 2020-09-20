@@ -9,9 +9,11 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.CreationTimestamp;
 import domain.status.GroupStatus;
 
@@ -19,8 +21,8 @@ import domain.status.GroupStatus;
 public class Board {
 
   @Id
-  @GeneratedValue
-  private long id;
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
   @ManyToOne(fetch = FetchType.LAZY)
   private User user;
@@ -31,6 +33,9 @@ public class Board {
   @ManyToOne(fetch = FetchType.LAZY)
   private Address address;
 
+  @ManyToOne(fetch = FetchType.LAZY)
+  private Tag tag;
+
   private String title;
   @Column(nullable = false, updatable = false)
   @CreationTimestamp
@@ -39,8 +44,11 @@ public class Board {
   private LocalDateTime startAt;
 
   @Enumerated(value = EnumType.ORDINAL)
-  private GroupStatus status;
+  private GroupStatus status = GroupStatus.RECRUITING;
 
-  @OneToMany(mappedBy = "board")
-  private List<BookMark> bookMarks = new ArrayList<>();
+  @NotNull
+  private Integer recruitCount = 0;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  private User bookMarkUser;
 }
