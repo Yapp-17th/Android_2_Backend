@@ -19,8 +19,8 @@ import domain.status.Exercise;
 public class Category {
 
   @Id
-  @GeneratedValue
-  private long id;
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
   @OneToOne(fetch = FetchType.LAZY)
   private User user;
