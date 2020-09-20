@@ -19,7 +19,7 @@ import domain.status.UserStatus;
 public class User {
 
   @Id
-  @GeneratedValue
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
 
   private String userName;
