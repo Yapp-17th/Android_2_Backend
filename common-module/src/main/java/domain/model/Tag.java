@@ -19,8 +19,8 @@ import domain.status.UserTag;
 public class Tag {
 
   @Id
-  @GeneratedValue
-  private long id;
+  @GeneratedValue(strategy = = GenerationType.IDENTITY)
+  private Long id;
 
   @OneToOne(fetch = FetchType.LAZY)
   private User user;
