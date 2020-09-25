@@ -1,8 +1,9 @@
 package domain.model;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import domain.status.UserStatus;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -13,10 +14,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.validation.constraints.NotNull;
-import org.hibernate.annotations.CreationTimestamp;
-import domain.status.UserStatus;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class User {
@@ -25,22 +25,31 @@ public class User {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  private String userName;
+  @Column(nullable = false)
+  private String username;
+
+  @Column(nullable = false)
+  private String nickname;
+
+  @Column(nullable = false)
   private String email;
+
+  @Column(name = "access_token", nullable = false, unique = true)
   private String accessToken;
 
-  @Column(nullable = false, updatable = false)
   @CreationTimestamp
+  @Column(name = "created_at", nullable = false, updatable = false)
   private LocalDateTime createdAt;
+
+  @UpdateTimestamp
+  @Column(name = "updated_at")
   private LocalDateTime updatedAt;
 
-  private String nickName;
-
-  @NotNull
   private Integer likes = 0;
-  @NotNull
+
   private Integer dislikes = 0;
-  @NotNull
+
+  @Column(name = "report_points")
   private Integer reportPoints = 0;
 
   @Enumerated(value = EnumType.ORDINAL)
@@ -56,7 +65,7 @@ public class User {
   private List<Board> boards = new ArrayList<>();
 
   @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-  private List<Board> bookMarks = new ArrayList<>();
+  private List<Board> bookmarks = new ArrayList<>();
 
   @OneToMany(mappedBy = "reporter", fetch = FetchType.LAZY)
   private List<Report> reportList = new ArrayList<>();
