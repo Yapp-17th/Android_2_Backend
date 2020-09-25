@@ -1,8 +1,9 @@
 package domain.model;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import domain.status.GroupStatus;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -12,10 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.validation.constraints.NotNull;
-import org.hibernate.annotations.CreationTimestamp;
-import domain.status.GroupStatus;
+import java.time.LocalDateTime;
 
 @Entity
 public class Board {
@@ -27,6 +25,9 @@ public class Board {
   @ManyToOne(fetch = FetchType.LAZY)
   private User user;
 
+  @Column(nullable = false)
+  private String title;
+
   @ManyToOne(fetch = FetchType.LAZY)
   private Category category;
 
@@ -36,19 +37,20 @@ public class Board {
   @ManyToOne(fetch = FetchType.LAZY)
   private Tag tag;
 
-  private String title;
-  @Column(nullable = false, updatable = false)
   @CreationTimestamp
+  @Column(name = "created_at", nullable = false, updatable = false)
   private LocalDateTime createdAt;
+
+  @UpdateTimestamp
+  @Column(name = "updated_at")
   private LocalDateTime updatedAt;
-  private LocalDateTime startAt;
+
+  @Column(name = "starts_at", nullable = false)
+  private LocalDateTime startsAt;
 
   @Enumerated(value = EnumType.ORDINAL)
   private GroupStatus status = GroupStatus.RECRUITING;
 
-  @NotNull
+  @Column(name = "recruit_count", nullable = false)
   private Integer recruitCount = 0;
-
-  @ManyToOne(fetch = FetchType.LAZY)
-  private User bookMarkUser;
 }
