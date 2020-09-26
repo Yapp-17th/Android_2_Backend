@@ -1,7 +1,7 @@
 package domain.status;
 
-public enum Exercise {
-  RUNNNING("러닝"),
+public enum ExerciseType {
+  RUNNING("러닝"),
   HIKING("등산"),
   BASKETBALL("농구"),
   SOCCER("축구"),
@@ -11,7 +11,7 @@ public enum Exercise {
 
   private String name;
 
-  Exercise(String name) {
+  ExerciseType(String name) {
     this.name = name;
   }
 
