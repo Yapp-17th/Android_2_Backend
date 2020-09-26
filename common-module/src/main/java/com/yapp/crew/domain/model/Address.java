@@ -26,7 +26,7 @@ public class Address extends BaseEntity {
   @OneToMany(mappedBy = "address", fetch = FetchType.LAZY)
   private List<User> users = new ArrayList<>();
 
-  public Address() {
+  protected Address() {
 
   }
 }

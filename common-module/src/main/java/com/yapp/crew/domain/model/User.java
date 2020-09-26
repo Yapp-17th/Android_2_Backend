@@ -68,7 +68,7 @@ public class User extends BaseEntity {
   @OneToMany(mappedBy = "guest", fetch = FetchType.LAZY)
   private List<ChatRoom> guestList = new ArrayList<>();
 
-  public User() {
+  protected User() {
 
   }
 }

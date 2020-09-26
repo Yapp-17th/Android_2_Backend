@@ -26,7 +26,7 @@ public class Tag extends BaseEntity {
   @OneToMany(mappedBy = "tag", fetch = FetchType.LAZY)
   private List<Board> boards = new ArrayList<>();
 
-  public Tag() {
+  protected Tag() {
 
   }
 }

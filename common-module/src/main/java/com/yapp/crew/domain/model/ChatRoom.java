@@ -36,7 +36,7 @@ public class ChatRoom extends BaseEntity {
   @OneToMany(mappedBy = "chatRoom", fetch = FetchType.LAZY)
   private List<Message> messages = new ArrayList<>();
 
-  public ChatRoom() {
+  protected ChatRoom() {
 
   }
 }

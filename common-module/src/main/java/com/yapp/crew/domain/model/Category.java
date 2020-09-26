@@ -29,7 +29,7 @@ public class Category extends BaseEntity {
   @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
   private List<Board> boards = new ArrayList<>();
 
-  public Category() {
+  protected Category() {
 
   }
 }

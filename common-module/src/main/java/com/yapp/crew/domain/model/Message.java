@@ -35,7 +35,7 @@ public class Message extends BaseEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   private ChatRoom chatRoom;
 
-  public Message() {
+  protected Message() {
 
   }
 }

@@ -31,7 +31,7 @@ public class Report extends BaseEntity {
   @Column(nullable = false)
   private String content;
 
-  public Report() {
+  protected Report() {
 
   }
 }

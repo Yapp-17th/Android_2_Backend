@@ -21,7 +21,7 @@ public class Alarm extends BaseEntity {
 
   private String content;
 
-  public Alarm() {
+  protected Alarm() {
 
   }
 }
