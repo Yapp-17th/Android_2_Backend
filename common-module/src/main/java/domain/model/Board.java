@@ -22,11 +22,11 @@ public class Board {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  private User user;
-
   @Column(nullable = false)
   private String title;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  private User user;
 
   @ManyToOne(fetch = FetchType.LAZY)
   private Category category;
@@ -37,6 +37,15 @@ public class Board {
   @ManyToOne(fetch = FetchType.LAZY)
   private Tag tag;
 
+  @Enumerated(value = EnumType.ORDINAL)
+  private GroupStatus status = GroupStatus.RECRUITING;
+
+  @Column(name = "recruit_count", nullable = false)
+  private Integer recruitCount = 0;
+
+  @Column(name = "starts_at", nullable = false)
+  private LocalDateTime startsAt;
+
   @CreationTimestamp
   @Column(name = "created_at", nullable = false, updatable = false)
   private LocalDateTime createdAt;
@@ -44,13 +53,4 @@ public class Board {
   @UpdateTimestamp
   @Column(name = "updated_at")
   private LocalDateTime updatedAt;
-
-  @Column(name = "starts_at", nullable = false)
-  private LocalDateTime startsAt;
-
-  @Enumerated(value = EnumType.ORDINAL)
-  private GroupStatus status = GroupStatus.RECRUITING;
-
-  @Column(name = "recruit_count", nullable = false)
-  private Integer recruitCount = 0;
 }
