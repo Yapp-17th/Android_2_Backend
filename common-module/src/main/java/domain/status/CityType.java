@@ -27,7 +27,7 @@ public enum CityType {
   SONGPA_GU("송파구"),
   GANGDONG_GU("강동구");
 
-  private String name;
+  private final String name;
 
   CityType(String name) {
     this.name = name;

@@ -5,8 +5,8 @@ public enum GroupStatus {
   COMPLETE(1, "모집 완료"),
   CANCELED(2, "모임 취소");
 
-  private int code;
-  private String name;
+  private final int code;
+  private final String name;
 
   GroupStatus(int code, String name) {
     this.code = code;

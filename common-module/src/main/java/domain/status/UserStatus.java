@@ -4,7 +4,7 @@ public enum UserStatus {
   ACTIVE(1),
   INACTIVE(0);
 
-  private int code;
+  private final int code;
 
   UserStatus(int code) {
     this.code = code;

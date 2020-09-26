@@ -8,8 +8,8 @@ public enum AlarmType {
   REQUEST_GROUP(4, "모임 신청(호스트에게 알람)"),
   EVALUATE_GROUP(5, "모임을 평가해주세요");
 
-  private int code;
-  private String name;
+  private final int code;
+  private final String name;
 
   AlarmType(int code, String name) {
     this.code = code;

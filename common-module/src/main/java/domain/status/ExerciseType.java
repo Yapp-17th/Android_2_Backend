@@ -9,7 +9,7 @@ public enum ExerciseType {
   CLIMBING("클라이밍"),
   OTHERS("기타");
 
-  private String name;
+  private final String name;
 
   ExerciseType(String name) {
     this.name = name;
