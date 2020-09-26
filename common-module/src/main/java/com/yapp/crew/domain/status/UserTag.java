@@ -1,4 +1,4 @@
-package domain.status;
+package com.yapp.crew.domain.status;
 
 public enum UserTag {
   TIGHT_USER("빡겜러"),

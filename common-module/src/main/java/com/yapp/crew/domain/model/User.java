@@ -1,6 +1,6 @@
-package domain.model;
+package com.yapp.crew.domain.model;
 
-import domain.status.UserStatus;
+import com.yapp.crew.domain.status.UserStatus;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -67,4 +67,8 @@ public class User extends BaseEntity {
 
   @OneToMany(mappedBy = "guest", fetch = FetchType.LAZY)
   private List<ChatRoom> guestList = new ArrayList<>();
+
+  public User() {
+
+  }
 }

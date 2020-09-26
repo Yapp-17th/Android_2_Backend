@@ -1,4 +1,4 @@
-package domain.model;
+package com.yapp.crew.domain.model;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;

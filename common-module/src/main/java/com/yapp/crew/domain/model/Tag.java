@@ -1,6 +1,6 @@
-package domain.model;
+package com.yapp.crew.domain.model;
 
-import domain.status.UserTag;
+import com.yapp.crew.domain.status.UserTag;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -25,4 +25,8 @@ public class Tag extends BaseEntity {
 
   @OneToMany(mappedBy = "tag", fetch = FetchType.LAZY)
   private List<Board> boards = new ArrayList<>();
+
+  public Tag() {
+
+  }
 }
