@@ -5,7 +5,7 @@ public enum UserTag {
   FUN_USER("즐겜러"),
   NOTALK_USER("no-talk");
 
-  private String name;
+  private final String name;
 
   UserTag(String name) {
     this.name = name;

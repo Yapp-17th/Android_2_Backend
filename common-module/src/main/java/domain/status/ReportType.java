@@ -7,8 +7,8 @@ public enum ReportType {
   BOTHERING(4, "원치 않는 지속적인 연락 및 강요"),
   OTHERS(0, "기타");
 
-  private int code;
-  private String name;
+  private final int code;
+  private final String name;
 
   ReportType(int code, String name) {
     this.code = code;
