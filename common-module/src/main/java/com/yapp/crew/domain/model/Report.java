@@ -2,7 +2,6 @@ package com.yapp.crew.domain.model;
 
 import com.yapp.crew.domain.status.ReportType;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -28,7 +27,6 @@ public class Report extends BaseEntity {
   @Enumerated(value = EnumType.ORDINAL)
   private ReportType type;
 
-  @Column(nullable = false)
   private String content;
 
   protected Report() {
