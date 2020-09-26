@@ -1,7 +1,6 @@
 package domain.model;
 
 import domain.status.MessageType;
-import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,10 +11,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import java.time.LocalDateTime;
 
 @Entity
-public class Message {
+public class Message extends BaseEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,8 +34,4 @@ public class Message {
 
   @ManyToOne(fetch = FetchType.LAZY)
   private ChatRoom chatRoom;
-
-  @CreationTimestamp
-  @Column(name = "created_at", nullable = false, updatable = false)
-  private LocalDateTime createdAt;
 }
