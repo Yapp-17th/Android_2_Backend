@@ -44,7 +44,7 @@ public class Board extends BaseEntity {
   @Column(name = "starts_at", nullable = false)
   private LocalDateTime startsAt;
 
-  public Board() {
+  protected Board() {
 
   }
 }
