@@ -1,6 +1,6 @@
-package domain.model;
+package com.yapp.crew.domain.model;
 
-import domain.status.GroupStatus;
+import com.yapp.crew.domain.status.GroupStatus;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -43,4 +43,8 @@ public class Board extends BaseEntity {
 
   @Column(name = "starts_at", nullable = false)
   private LocalDateTime startsAt;
+
+  public Board() {
+
+  }
 }

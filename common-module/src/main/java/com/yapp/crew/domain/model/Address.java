@@ -1,6 +1,6 @@
-package domain.model;
+package com.yapp.crew.domain.model;
 
-import domain.status.ExerciseType;
+import com.yapp.crew.domain.status.CityType;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -14,18 +14,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class Category extends BaseEntity {
+public class Address extends BaseEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
   @Enumerated(value = EnumType.STRING)
-  private ExerciseType name;
+  private CityType city;
 
-  @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
-  private List<User> users = new ArrayList<>();;
+  @OneToMany(mappedBy = "address", fetch = FetchType.LAZY)
+  private List<User> users = new ArrayList<>();
 
-  @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
-  private List<Board> boards = new ArrayList<>();
+  public Address() {
+
+  }
 }

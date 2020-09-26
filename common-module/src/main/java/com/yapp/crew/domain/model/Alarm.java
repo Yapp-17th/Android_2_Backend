@@ -1,6 +1,6 @@
-package domain.model;
+package com.yapp.crew.domain.model;
 
-import domain.status.AlarmType;
+import com.yapp.crew.domain.status.AlarmType;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -20,4 +20,8 @@ public class Alarm extends BaseEntity {
   private AlarmType type;
 
   private String content;
+
+  public Alarm() {
+
+  }
 }

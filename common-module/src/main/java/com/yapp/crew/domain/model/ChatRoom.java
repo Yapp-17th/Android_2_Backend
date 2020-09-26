@@ -1,6 +1,6 @@
-package domain.model;
+package com.yapp.crew.domain.model;
 
-import domain.status.ChatRoomStatus;
+import com.yapp.crew.domain.status.ChatRoomStatus;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -35,4 +35,8 @@ public class ChatRoom extends BaseEntity {
 
   @OneToMany(mappedBy = "chatRoom", fetch = FetchType.LAZY)
   private List<Message> messages = new ArrayList<>();
+
+  public ChatRoom() {
+
+  }
 }
