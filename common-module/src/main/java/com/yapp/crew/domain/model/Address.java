@@ -1,6 +1,9 @@
 package com.yapp.crew.domain.model;
 
 import com.yapp.crew.domain.status.CityType;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -20,11 +23,18 @@ public class Address extends BaseEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  @Getter
+  @Setter(value = AccessLevel.PRIVATE)
   @Enumerated(value = EnumType.STRING)
   private CityType city;
 
+  @Getter
   @OneToMany(mappedBy = "address", fetch = FetchType.LAZY)
   private List<User> users = new ArrayList<>();
+
+  @Getter
+  @OneToMany(mappedBy = "address", fetch = FetchType.LAZY)
+  private List<Board> boards = new ArrayList<>();
 
   protected Address() {
 
