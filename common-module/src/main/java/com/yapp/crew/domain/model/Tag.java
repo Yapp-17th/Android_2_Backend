@@ -3,8 +3,10 @@ package com.yapp.crew.domain.model;
 import com.yapp.crew.domain.status.UserTag;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -17,23 +19,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Tag extends BaseEntity {
 
   @Id
-  @Getter
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Getter
   @Setter(value = AccessLevel.PRIVATE)
   @Enumerated(value = EnumType.STRING)
+  @Column(nullable = false)
   private UserTag name;
 
-  @Getter
   @OneToMany(mappedBy = "tag", fetch = FetchType.LAZY)
   private List<Board> boards = new ArrayList<>();
-
-  protected Tag() {
-
-  }
 }

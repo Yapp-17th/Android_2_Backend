@@ -3,8 +3,10 @@ package com.yapp.crew.domain.model;
 import com.yapp.crew.domain.status.AlarmType;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -13,25 +15,22 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Alarm extends BaseEntity {
 
   @Id
-  @Getter
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Getter
   @Setter(value = AccessLevel.PRIVATE)
+  @Column(nullable = false)
   @Enumerated(value = EnumType.ORDINAL)
   private AlarmType type;
 
-  @Getter
   @Setter(value = AccessLevel.PRIVATE)
+  @Column(nullable = false)
   private String content;
-
-  protected Alarm() {
-
-  }
 
   public static AlarmBuilder getBuilder() {
     return new AlarmBuilder();

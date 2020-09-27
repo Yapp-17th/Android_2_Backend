@@ -3,6 +3,7 @@ package com.yapp.crew.domain.model;
 import com.yapp.crew.domain.status.UserStatus;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Column;
@@ -13,6 +14,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
@@ -20,88 +22,74 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends BaseEntity {
 
   @Id
-  @Getter
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Getter
   @Setter(value = AccessLevel.PRIVATE)
   @Column(nullable = false)
   private String username;
 
-  @Getter
   @Setter(value = AccessLevel.PRIVATE)
-  @Column(nullable = false)
+  @Column(nullable = false, unique = true)
   private String nickname;
 
-  @Getter
   @Setter(value = AccessLevel.PRIVATE)
-  @Column(nullable = false)
+  @Column(nullable = false, unique = true)
   private String email;
 
-  @Getter
   @Setter(value = AccessLevel.PRIVATE)
   @Column(name = "access_token", nullable = false, unique = true)
   private String accessToken;
 
-  @Getter
   @Setter(value = AccessLevel.PRIVATE)
+  @Column(nullable = false)
   private Integer likes = 0;
 
-  @Getter
   @Setter(value = AccessLevel.PRIVATE)
+  @Column(nullable = false)
   private Integer dislikes = 0;
 
-  @Getter
   @Setter(value = AccessLevel.PRIVATE)
-  @Column(name = "report_points")
+  @Column(name = "report_points", nullable = false)
   private Integer reportPoints = 0;
 
-  @Getter
   @Setter(value = AccessLevel.PRIVATE)
   @Enumerated(value = EnumType.ORDINAL)
+  @Column(nullable = false)
   private UserStatus status = UserStatus.ACTIVE;
 
-  @Getter
   @Setter(value = AccessLevel.PRIVATE)
+  @JoinColumn(nullable = false)
   @ManyToOne(fetch = FetchType.LAZY)
   private Address address;
 
-  @Getter
   @Setter(value = AccessLevel.PRIVATE)
+  @JoinColumn(nullable = false)
   @ManyToOne(fetch = FetchType.LAZY)
   private Category category;
 
-  @Getter
   @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
   private List<Board> boards = new ArrayList<>();
 
-  @Getter
   @Transient
   private List<Board> bookmarks = new ArrayList<>();
 
-  @Getter
   @OneToMany(mappedBy = "reporter", fetch = FetchType.LAZY)
   private List<Report> reportList = new ArrayList<>();
 
-  @Getter
   @OneToMany(mappedBy = "reported", fetch = FetchType.LAZY)
   private List<Report> reportedList = new ArrayList<>();
 
-  @Getter
   @OneToMany(mappedBy = "host", fetch = FetchType.LAZY)
   private List<ChatRoom> hostList = new ArrayList<>();
 
-  @Getter
   @OneToMany(mappedBy = "guest", fetch = FetchType.LAZY)
   private List<ChatRoom> guestList = new ArrayList<>();
-
-  protected User() {
-
-  }
 
   // TODO: add, delete, increase, decrease, update function
 

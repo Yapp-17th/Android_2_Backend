@@ -3,6 +3,7 @@ package com.yapp.crew.domain.model;
 import com.yapp.crew.domain.status.GroupStatus;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Column;
@@ -13,58 +14,53 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import java.time.LocalDateTime;
 
 @Entity
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Board extends BaseEntity {
 
   @Id
-  @Getter
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Getter
   @Setter(value = AccessLevel.PRIVATE)
   @Column(nullable = false)
   private String title;
 
-  @Getter
   @Setter(value = AccessLevel.PRIVATE)
+  @JoinColumn(nullable = false)
   @ManyToOne(fetch = FetchType.LAZY)
   private User user;
 
-  @Getter
   @Setter(value = AccessLevel.PRIVATE)
+  @JoinColumn(nullable = false)
   @ManyToOne(fetch = FetchType.LAZY)
   private Category category;
 
-  @Getter
   @Setter(value = AccessLevel.PRIVATE)
+  @JoinColumn(nullable = false)
   @ManyToOne(fetch = FetchType.LAZY)
   private Address address;
 
-  @Getter
   @Setter(value = AccessLevel.PRIVATE)
+  @JoinColumn(nullable = false)
   @ManyToOne(fetch = FetchType.LAZY)
   private Tag tag;
 
-  @Getter
   @Enumerated(value = EnumType.ORDINAL)
+  @Column(nullable = false)
   private GroupStatus status = GroupStatus.RECRUITING;
 
-  @Getter
   @Column(name = "recruit_count", nullable = false)
   private Integer recruitCount = 0;
 
-  @Getter
   @Setter(value = AccessLevel.PRIVATE)
   @Column(name = "starts_at", nullable = false)
   private LocalDateTime startsAt;
-
-  protected Board() {
-
-  }
 
   // TODO: add, delete, increase, decrease, update function
 

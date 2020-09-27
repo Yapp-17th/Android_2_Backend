@@ -3,6 +3,7 @@ package com.yapp.crew.domain.model;
 import com.yapp.crew.domain.status.ChatRoomStatus;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Entity;
@@ -12,46 +13,42 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ChatRoom extends BaseEntity {
 
   @Id
-  @Getter
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Getter
   @Setter(value = AccessLevel.PRIVATE)
   @Enumerated(value = EnumType.ORDINAL)
   private ChatRoomStatus status = ChatRoomStatus.ACTIVE;
 
-  @Getter
   @Setter(value = AccessLevel.PRIVATE)
+  @JoinColumn(nullable = false)
   @ManyToOne(fetch = FetchType.LAZY)
   private User host;
 
-  @Getter
   @Setter(value = AccessLevel.PRIVATE)
+  @JoinColumn(nullable = false)
   @ManyToOne(fetch = FetchType.LAZY)
   private User guest;
 
-  @Getter
   @Setter(value = AccessLevel.PRIVATE)
+  @JoinColumn(nullable = false)
   @ManyToOne(fetch = FetchType.LAZY)
   private Board board;
 
-  @Getter
   @OneToMany(mappedBy = "chatRoom", fetch = FetchType.LAZY)
   private List<Message> messages = new ArrayList<>();
-
-  protected ChatRoom() {
-
-  }
 
   public static ChatRoomBuilder getBuilder() {
     return new ChatRoomBuilder();

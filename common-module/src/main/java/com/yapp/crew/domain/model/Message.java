@@ -3,6 +3,7 @@ package com.yapp.crew.domain.model;
 import com.yapp.crew.domain.status.MessageType;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Column;
@@ -13,46 +14,40 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.Transient;
 
 @Entity
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Message extends BaseEntity {
 
   @Id
-  @Getter
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Getter
   @Setter(value = AccessLevel.PRIVATE)
   @Column(nullable = false)
   private String content;
 
-  @Getter
   @Setter(value = AccessLevel.PRIVATE)
   @Column(nullable = false)
   @Enumerated(value = EnumType.ORDINAL)
   private MessageType type;
 
-  @Getter
   @Setter(value = AccessLevel.PRIVATE)
   @Column(name = "is_read", nullable = false)
   private boolean isRead = false;
 
-  @Getter
   @Setter(value = AccessLevel.PRIVATE)
-  @Transient
+  @JoinColumn(nullable = false)
+  @ManyToOne(fetch = FetchType.LAZY)
   private User sender;
 
-  @Getter
   @Setter(value = AccessLevel.PRIVATE)
+  @JoinColumn(nullable = false)
   @ManyToOne(fetch = FetchType.LAZY)
   private ChatRoom chatRoom;
-
-  protected Message() {
-
-  }
 
   public static MessageBuilder getBuilder() {
     return new MessageBuilder();
