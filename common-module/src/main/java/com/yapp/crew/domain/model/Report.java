@@ -45,7 +45,7 @@ public class Report extends BaseEntity {
 
   }
 
-  public ReportBuilder getBuilder() {
+  public static ReportBuilder getBuilder() {
     return new ReportBuilder();
   }
 
