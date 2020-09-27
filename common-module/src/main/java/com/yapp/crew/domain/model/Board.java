@@ -20,6 +20,7 @@ import java.time.LocalDateTime;
 public class Board extends BaseEntity {
 
   @Id
+  @Getter
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 

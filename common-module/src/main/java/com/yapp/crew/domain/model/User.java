@@ -23,6 +23,7 @@ import java.util.List;
 public class User extends BaseEntity {
 
   @Id
+  @Getter
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 

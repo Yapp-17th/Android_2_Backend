@@ -20,6 +20,7 @@ import java.util.List;
 public class Address extends BaseEntity {
 
   @Id
+  @Getter
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
