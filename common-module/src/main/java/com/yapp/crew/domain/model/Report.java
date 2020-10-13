@@ -26,12 +26,12 @@ public class Report extends BaseEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Setter(value = AccessLevel.PRIVATE)
+  @Setter(value = AccessLevel.PROTECTED)
   @JoinColumn(nullable = false)
   @ManyToOne(fetch = FetchType.LAZY)
   private User reporter;
 
-  @Setter(value = AccessLevel.PRIVATE)
+  @Setter(value = AccessLevel.PROTECTED)
   @JoinColumn(nullable = false)
   @ManyToOne(fetch = FetchType.LAZY)
   private User reported;

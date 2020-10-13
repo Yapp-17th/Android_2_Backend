@@ -6,12 +6,11 @@ spring:
     restart:
       enabled: true
 
-  h2:
-    console:
-      enabled: true
-
   datasource:
-    url: jdbc:h2:mem:testdb
+    url: jdbc:mysql://localhost:3306/test?useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC&createDatabaseIfNotExist=true
+    username: root
+    password:
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
   data:
     jpa:
@@ -24,6 +23,9 @@ spring:
       hibernate:
         generate_statistics: true
         format_sql: true
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: create-drop
 
 logging:
   level:
