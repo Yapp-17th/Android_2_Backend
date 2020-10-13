@@ -32,12 +32,12 @@ public class ChatRoom extends BaseEntity {
   @Enumerated(value = EnumType.ORDINAL)
   private ChatRoomStatus status = ChatRoomStatus.ACTIVE;
 
-  @Setter(value = AccessLevel.PRIVATE)
+  @Setter(value = AccessLevel.PROTECTED)
   @JoinColumn(nullable = false)
   @ManyToOne(fetch = FetchType.LAZY)
   private User host;
 
-  @Setter(value = AccessLevel.PRIVATE)
+  @Setter(value = AccessLevel.PROTECTED)
   @JoinColumn(nullable = false)
   @ManyToOne(fetch = FetchType.LAZY)
   private User guest;

@@ -31,7 +31,6 @@ public class Board extends BaseEntity {
   @Column(nullable = false)
   private String title;
 
-  @Setter(value = AccessLevel.PRIVATE)
   @JoinColumn(nullable = false)
   @ManyToOne(fetch = FetchType.LAZY)
   private User user;
@@ -63,6 +62,13 @@ public class Board extends BaseEntity {
   private LocalDateTime startsAt;
 
   // TODO: add, delete, increase, decrease, update function
+  private void setUser(User user){
+    if(this.user != null) {
+      this.user.getBoards().remove(this);
+    }
+    this.user = user;
+    user.getBoards().add(this);
+  }
 
   public static BoardBuilder getBuilder() {
     return new BoardBuilder();
