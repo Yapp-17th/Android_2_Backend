@@ -77,7 +77,7 @@ public class User extends BaseEntity {
   private List<Board> boards = new ArrayList<>();
 
   @Transient
-  private List<Board> bookmarks = new ArrayList<>();
+  private List<Board> bookmarks = new ArrayList<>(); // ???
 
   @OneToMany(mappedBy = "reporter", fetch = FetchType.LAZY)
   private List<Report> reportList = new ArrayList<>();
@@ -92,6 +92,29 @@ public class User extends BaseEntity {
   private List<ChatRoom> guestList = new ArrayList<>();
 
   // TODO: add, delete, increase, decrease, update function
+  void addBookMark(Board board){
+    this.bookmarks.add(board);
+  }
+
+  void addReport(Report report){
+    report.setReporter(this);
+    this.reportList.add(report);
+  }
+
+  void addReported(Report reported){
+    reported.setReported(this);
+    this.reportedList.add(reported);
+  }
+
+  void addChatRoomHost(ChatRoom chatRoom){
+    chatRoom.setHost(this);
+    this.hostList.add(chatRoom);
+  }
+
+  void addChatRoomGuest(ChatRoom chatRoom){
+    chatRoom.setGuest(this);
+    this.guestList.add(chatRoom);
+  }
 
   public static UserBuilder getBuilder() {
     return new UserBuilder();
