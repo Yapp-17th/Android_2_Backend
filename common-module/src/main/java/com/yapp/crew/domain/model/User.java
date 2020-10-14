@@ -90,6 +90,11 @@ public class User extends BaseEntity {
   private List<ChatRoom> guestList = new ArrayList<>();
 
   // TODO: add, delete, increase, decrease, update function
+  public void addBoard(Board board) {
+    board.setUser(this);
+    this.boards.add(board);
+  }
+
   public void addReport(Report report) {
     report.setReporter(this);
     this.reportList.add(report);
