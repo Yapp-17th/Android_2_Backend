@@ -1,5 +1,7 @@
 package com.yapp.crew.service;
 
+import java.util.List;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.yapp.crew.domain.model.Board;
 import com.yapp.crew.domain.model.ChatRoom;
@@ -14,14 +16,13 @@ import com.yapp.crew.payload.ChatRoomPayload;
 import com.yapp.crew.payload.MessagePayload;
 import com.yapp.crew.producer.ChattingProducer;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Slf4j
 @Service
-public class ChattingService {
+public class ChattingProducerService {
 
   @Autowired
   private ChatRoomRepository chatRoomRepository;
@@ -55,6 +56,7 @@ public class ChattingService {
             .build();
 
     chatRoomRepository.save(chatRoom);
+    log.info("Successfully created a new chat room");
 
     sendWelcomeBotMessage(chatRoom.getId());
   }
@@ -69,7 +71,7 @@ public class ChattingService {
 
     MessagePayload welcomeBotMessage = MessagePayload.builder()
             .content("봇 환영 메시지")
-            .type(MessageType.ENTER)
+            .type(MessageType.BOT_MESSAGE)
             .senderId(bot.getId())
             .chatRoomId(chatRoomId)
             .build();
