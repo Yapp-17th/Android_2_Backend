@@ -19,5 +19,4 @@ public class ChatRoomPayload {
 
   private Long boardId;
 
-
 }

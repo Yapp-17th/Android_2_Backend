@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.yapp.crew.payload.ChatRoomPayload;
 import com.yapp.crew.payload.MessagePayload;
 import com.yapp.crew.producer.ChattingProducer;
+import com.yapp.crew.service.ChattingService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,6 +23,9 @@ public class ChattingController {
 
   @Autowired
   private ChattingProducer chattingProducer;
+
+  @Autowired
+  private ChattingService chattingService;
 
   @MessageMapping(value = "/v1/chat/message")
   public void sendMessageByWebsocket(MessagePayload messagePayload) throws JsonProcessingException {
@@ -57,7 +61,8 @@ public class ChattingController {
   }
 
   @PostMapping(path = "/v1/chat/room")
-  public ResponseEntity<?> createChatRoom(@RequestBody ChatRoomPayload chatRoomPayload) {
+  public ResponseEntity<?> createChatRoom(@RequestBody ChatRoomPayload chatRoomPayload) throws JsonProcessingException {
+    chattingService.createChatRoom(chatRoomPayload);
     return ResponseEntity.status(HttpStatus.CREATED).body(chatRoomPayload);
   }
 }
