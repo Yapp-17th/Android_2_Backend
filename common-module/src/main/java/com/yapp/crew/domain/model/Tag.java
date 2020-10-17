@@ -1,5 +1,6 @@
 package com.yapp.crew.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.yapp.crew.domain.type.UserTag;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -32,6 +33,7 @@ public class Tag extends BaseEntity {
   @Column(nullable = false)
   private UserTag name;
 
+  @JsonManagedReference
   @OneToMany(mappedBy = "tag", fetch = FetchType.LAZY)
   private List<Board> boards = new ArrayList<>();
 }

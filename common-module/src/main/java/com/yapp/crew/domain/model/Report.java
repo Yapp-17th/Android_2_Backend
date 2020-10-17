@@ -1,5 +1,6 @@
 package com.yapp.crew.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.yapp.crew.domain.type.ReportType;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -26,11 +27,13 @@ public class Report extends BaseEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  @JsonBackReference
   @Setter(value = AccessLevel.PROTECTED)
   @JoinColumn(nullable = false)
   @ManyToOne(fetch = FetchType.LAZY)
   private User reporter;
 
+  @JsonBackReference
   @Setter(value = AccessLevel.PROTECTED)
   @JoinColumn(nullable = false)
   @ManyToOne(fetch = FetchType.LAZY)

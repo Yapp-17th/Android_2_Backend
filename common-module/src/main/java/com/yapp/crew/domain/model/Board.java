@@ -1,5 +1,6 @@
 package com.yapp.crew.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.yapp.crew.domain.status.GroupStatus;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -31,21 +32,25 @@ public class Board extends BaseEntity {
   @Column(nullable = false)
   private String title;
 
+  @JsonBackReference
   @Setter(value = AccessLevel.PROTECTED)
   @JoinColumn(nullable = false)
   @ManyToOne(fetch = FetchType.LAZY)
   private User user;
 
+  @JsonBackReference
   @Setter(value = AccessLevel.PRIVATE)
   @JoinColumn(nullable = false)
   @ManyToOne(fetch = FetchType.LAZY)
   private Category category;
 
+  @JsonBackReference
   @Setter(value = AccessLevel.PRIVATE)
   @JoinColumn(nullable = false)
   @ManyToOne(fetch = FetchType.LAZY)
   private Address address;
 
+  @JsonBackReference
   @Setter(value = AccessLevel.PRIVATE)
   @JoinColumn(nullable = false)
   @ManyToOne(fetch = FetchType.LAZY)
