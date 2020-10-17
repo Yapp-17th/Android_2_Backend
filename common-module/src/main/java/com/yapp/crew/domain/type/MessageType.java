@@ -1,4 +1,4 @@
-package com.yapp.crew.domain.status;
+package com.yapp.crew.domain.type;
 
 public enum MessageType {
   ENTER(0, "채팅방 입장"),
