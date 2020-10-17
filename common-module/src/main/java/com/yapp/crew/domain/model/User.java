@@ -1,5 +1,7 @@
 package com.yapp.crew.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.yapp.crew.domain.status.UserStatus;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -62,29 +64,36 @@ public class User extends BaseEntity {
   @Column(nullable = false)
   private UserStatus status = UserStatus.ACTIVE;
 
+  @JsonBackReference
   @Setter(value = AccessLevel.PRIVATE)
   @ManyToOne(fetch = FetchType.LAZY)
   private Address address;
 
+  @JsonBackReference
   @Setter(value = AccessLevel.PRIVATE)
   @ManyToOne(fetch = FetchType.LAZY)
   private Category category;
 
+  @JsonManagedReference
   @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
   private List<Board> boards = new ArrayList<>();
 
   @Transient
   private List<Board> bookmarks = new ArrayList<>();
 
+  @JsonManagedReference
   @OneToMany(mappedBy = "reporter", fetch = FetchType.LAZY)
   private List<Report> reportList = new ArrayList<>();
 
+  @JsonManagedReference
   @OneToMany(mappedBy = "reported", fetch = FetchType.LAZY)
   private List<Report> reportedList = new ArrayList<>();
 
+  @JsonManagedReference
   @OneToMany(mappedBy = "host", fetch = FetchType.LAZY)
   private List<ChatRoom> hostList = new ArrayList<>();
 
+  @JsonManagedReference
   @OneToMany(mappedBy = "guest", fetch = FetchType.LAZY)
   private List<ChatRoom> guestList = new ArrayList<>();
 

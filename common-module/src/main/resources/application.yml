@@ -9,7 +9,7 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/explanet_dev?useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC&createDatabaseIfNotExist=true
     username: root
-    password:
+    password: Dnjscksdn98@
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   data:
