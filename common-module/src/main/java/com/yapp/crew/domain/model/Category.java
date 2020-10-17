@@ -1,6 +1,6 @@
 package com.yapp.crew.domain.model;
 
-import com.yapp.crew.domain.status.ExerciseType;
+import com.yapp.crew.domain.type.ExerciseType;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;

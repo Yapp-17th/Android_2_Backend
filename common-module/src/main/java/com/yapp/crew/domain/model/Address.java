@@ -1,6 +1,6 @@
 package com.yapp.crew.domain.model;
 
-import com.yapp.crew.domain.status.CityType;
+import com.yapp.crew.domain.type.CityType;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;

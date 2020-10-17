@@ -1,6 +1,6 @@
 package com.yapp.crew.domain.model;
 
-import com.yapp.crew.domain.status.AlarmType;
+import com.yapp.crew.domain.type.AlarmType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;

@@ -1,6 +1,6 @@
 package com.yapp.crew.domain.model;
 
-import com.yapp.crew.domain.status.ReportType;
+import com.yapp.crew.domain.type.ReportType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;

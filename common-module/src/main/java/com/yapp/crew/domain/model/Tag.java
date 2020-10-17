@@ -1,6 +1,6 @@
 package com.yapp.crew.domain.model;
 
-import com.yapp.crew.domain.status.UserTag;
+import com.yapp.crew.domain.type.UserTag;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;
