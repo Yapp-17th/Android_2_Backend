@@ -11,8 +11,10 @@ import com.yapp.crew.payload.MessagePayload;
 import com.yapp.crew.service.ChattingConsumerService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,8 +25,8 @@ public class ChattingConsumer {
   @Autowired
   private ChattingConsumerService chattingConsumerService;
 
-//  @Autowired
-//  private SimpMessagingTemplate simpMessagingTemplate;
+  @Autowired
+  private SimpMessagingTemplate simpMessagingTemplate;
 
   @Autowired
   private ChatRoomRepository chatRoomRepository;
@@ -51,17 +53,18 @@ public class ChattingConsumer {
     Message message = Message.getBuilder()
             .withContent(messagePayload.getContent())
             .withType(messagePayload.getType())
+						.withIsRead(false)
             .withSender(sender)
             .withChatRoom(chatRoom)
             .build();
 
     chatRoom.addMessage(message);
 
-    String messageJson = objectMapper.writeValueAsString(message);
-
     chattingConsumerService.processMessage(message);
 
-//		simpMessagingTemplate.convertAndSend("/topic/" + message.getChatRoom().getId().toString(), messageJson);
+		simpMessagingTemplate.convertAndSend("/topic/" + message.getChatRoom().getId().toString(), message);
+
+		String messageJson = objectMapper.writeValueAsString(message);
     log.info("Successfully consumed message: {}", messageJson);
   }
 }
