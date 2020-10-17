@@ -1,4 +1,4 @@
-package com.yapp.crew.domain.status;
+package com.yapp.crew.domain.type;
 
 public enum AlarmType {
   MESSAGE(0, "채팅 알람"),

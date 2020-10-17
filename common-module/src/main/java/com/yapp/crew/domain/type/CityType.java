@@ -1,4 +1,4 @@
-package com.yapp.crew.domain.status;
+package com.yapp.crew.domain.type;
 
 public enum CityType {
   JONGNO_GU("종로구"),

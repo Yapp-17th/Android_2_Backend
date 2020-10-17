@@ -1,8 +1,9 @@
 package com.yapp.crew.domain.repository;
 
 import com.yapp.crew.domain.model.ChatRoom;
-import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
 
 public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
 

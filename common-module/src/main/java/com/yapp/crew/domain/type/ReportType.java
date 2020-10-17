@@ -1,4 +1,4 @@
-package com.yapp.crew.domain.status;
+package com.yapp.crew.domain.type;
 
 public enum ReportType {
   NON_MANNERS(1, "욕설 및 비매너 행위"),
