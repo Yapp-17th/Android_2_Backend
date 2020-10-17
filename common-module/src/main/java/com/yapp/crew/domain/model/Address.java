@@ -1,5 +1,6 @@
 package com.yapp.crew.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.yapp.crew.domain.type.CityType;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -32,9 +33,11 @@ public class Address extends BaseEntity {
   @Column(nullable = false)
   private CityType city;
 
+  @JsonManagedReference
   @OneToMany(mappedBy = "address", fetch = FetchType.LAZY)
   private List<User> users = new ArrayList<>();
 
+  @JsonManagedReference
   @OneToMany(mappedBy = "address", fetch = FetchType.LAZY)
   private List<Board> boards = new ArrayList<>();
 }

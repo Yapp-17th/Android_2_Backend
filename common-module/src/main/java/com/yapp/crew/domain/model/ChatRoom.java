@@ -1,5 +1,7 @@
 package com.yapp.crew.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.yapp.crew.domain.status.ChatRoomStatus;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -32,21 +34,25 @@ public class ChatRoom extends BaseEntity {
   @Enumerated(value = EnumType.ORDINAL)
   private ChatRoomStatus status = ChatRoomStatus.ACTIVE;
 
+  @JsonBackReference
   @Setter(value = AccessLevel.PROTECTED)
   @JoinColumn(nullable = false)
   @ManyToOne(fetch = FetchType.LAZY)
   private User host;
 
+  @JsonBackReference
   @Setter(value = AccessLevel.PROTECTED)
   @JoinColumn(nullable = false)
   @ManyToOne(fetch = FetchType.LAZY)
   private User guest;
 
+  @JsonBackReference
   @Setter(value = AccessLevel.PRIVATE)
   @JoinColumn(nullable = false)
   @ManyToOne(fetch = FetchType.LAZY)
   private Board board;
 
+  @JsonManagedReference
   @OneToMany(mappedBy = "chatRoom", fetch = FetchType.LAZY)
   private List<Message> messages = new ArrayList<>();
 

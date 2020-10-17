@@ -1,5 +1,6 @@
 package com.yapp.crew.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.yapp.crew.domain.type.MessageType;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -39,11 +40,13 @@ public class Message extends BaseEntity {
   @Column(name = "is_read", nullable = false)
   private boolean isRead = false;
 
+  @JsonBackReference
   @Setter(value = AccessLevel.PRIVATE)
   @JoinColumn(nullable = false)
   @ManyToOne(fetch = FetchType.LAZY)
   private User sender;
 
+  @JsonBackReference
   @Setter(value = AccessLevel.PROTECTED)
   @JoinColumn(nullable = false)
   @ManyToOne(fetch = FetchType.LAZY)

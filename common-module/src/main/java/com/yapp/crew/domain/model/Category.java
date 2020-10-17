@@ -1,5 +1,6 @@
 package com.yapp.crew.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.yapp.crew.domain.type.ExerciseType;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -32,9 +33,11 @@ public class Category extends BaseEntity {
   @Column(nullable = false)
   private ExerciseType name;
 
+  @JsonManagedReference
   @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
   private List<User> users = new ArrayList<>();;
 
+  @JsonManagedReference
   @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
   private List<Board> boards = new ArrayList<>();
 }
