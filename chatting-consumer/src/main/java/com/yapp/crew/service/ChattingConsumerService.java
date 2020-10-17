@@ -1,0 +1,40 @@
+package com.yapp.crew.service;
+
+import com.yapp.crew.domain.model.Message;
+import com.yapp.crew.domain.repository.ChatRoomRepository;
+import com.yapp.crew.domain.repository.MessageRepository;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Slf4j
+@Service
+public class ChattingConsumerService {
+
+  @Autowired
+  private ChatRoomRepository chatRoomRepository;
+
+  @Autowired
+  private MessageRepository messageRepository;
+
+  public void processMessage(Message message) {
+    switch (message.getType()) {
+      case ENTER:
+        // enter logic
+        break;
+      case TALK:
+        saveMessage(message);
+        break;
+      case PROFILE_REQUEST:
+        // request profile logic
+        break;
+      default:
+        log.info("Invalid Message Type Received");
+    }
+  }
+
+  private void saveMessage(Message message) {
+    log.info("Successfully persisted message");
+    messageRepository.save(message);
+  }
+}

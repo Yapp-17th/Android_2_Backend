@@ -50,6 +50,11 @@ public class ChatRoom extends BaseEntity {
   @OneToMany(mappedBy = "chatRoom", fetch = FetchType.LAZY)
   private List<Message> messages = new ArrayList<>();
 
+  public void addMessage(Message message) {
+    message.setChatRoom(this);
+    this.messages.add(message);
+  }
+
   public static ChatRoomBuilder getBuilder() {
     return new ChatRoomBuilder();
   }

@@ -44,7 +44,7 @@ public class Message extends BaseEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   private User sender;
 
-  @Setter(value = AccessLevel.PRIVATE)
+  @Setter(value = AccessLevel.PROTECTED)
   @JoinColumn(nullable = false)
   @ManyToOne(fetch = FetchType.LAZY)
   private ChatRoom chatRoom;
