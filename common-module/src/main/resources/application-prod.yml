@@ -3,12 +3,12 @@ spring:
     active: prod
 
   datasource:
-    url: jdbc:mysql://localhost:3306/ExPlanetProd?useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC&createDatabaseIfNotExist=true
+    url: jdbc:mysql://localhost:3306/explanet_prod?useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC&createDatabaseIfNotExist=true
     username: root
     password:
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
-    database-platform: org.hibernate.dialect.MySQL8Dialect
+    database-platform: org.hibernate.dialect.MySQL5Dialect
     hibernate:
       ddl-auto: update
