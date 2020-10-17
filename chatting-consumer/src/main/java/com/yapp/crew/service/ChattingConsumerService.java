@@ -20,10 +20,12 @@ public class ChattingConsumerService {
   public void processMessage(Message message) {
     switch (message.getType()) {
       case ENTER:
-        // enter logic
+        saveMessage(message);
+        log.info("Successfully sent welcome bot message");
         break;
       case TALK:
         saveMessage(message);
+        log.info("Successfully sent message");
         break;
       case PROFILE_REQUEST:
         // request profile logic
