@@ -31,7 +31,7 @@ public class ChatRoom extends BaseEntity {
   private Long id;
 
   @Setter(value = AccessLevel.PRIVATE)
-  @Enumerated(value = EnumType.ORDINAL)
+  @Enumerated(value = EnumType.STRING)
   private ChatRoomStatus status = ChatRoomStatus.ACTIVE;
 
   @JsonBackReference
