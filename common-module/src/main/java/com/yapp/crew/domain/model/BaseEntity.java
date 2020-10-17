@@ -1,10 +1,11 @@
 package com.yapp.crew.domain.model;
 
-import java.time.LocalDateTime;
-import javax.persistence.Column;
-import javax.persistence.MappedSuperclass;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+
+import javax.persistence.Column;
+import javax.persistence.MappedSuperclass;
+import java.time.LocalDateTime;
 
 @MappedSuperclass
 public class BaseEntity {

@@ -1,8 +1,11 @@
 package com.yapp.crew.domain.model;
 
 import com.yapp.crew.domain.status.UserStatus;
-import java.util.ArrayList;
-import java.util.List;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -14,10 +17,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -87,7 +88,6 @@ public class User extends BaseEntity {
   @OneToMany(mappedBy = "guest", fetch = FetchType.LAZY)
   private List<ChatRoom> guestList = new ArrayList<>();
 
-  // TODO: add, delete, increase, decrease, update function
   public void addBoard(Board board) {
     board.setUser(this);
     this.boards.add(board);
