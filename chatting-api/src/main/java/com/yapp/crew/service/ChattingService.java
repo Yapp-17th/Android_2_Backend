@@ -3,9 +3,11 @@ package com.yapp.crew.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.yapp.crew.domain.model.Board;
 import com.yapp.crew.domain.model.ChatRoom;
+import com.yapp.crew.domain.model.Message;
 import com.yapp.crew.domain.model.User;
 import com.yapp.crew.domain.repository.BoardRepository;
 import com.yapp.crew.domain.repository.ChatRoomRepository;
+import com.yapp.crew.domain.repository.MessageRepository;
 import com.yapp.crew.domain.repository.UserRepository;
 import com.yapp.crew.domain.type.MessageType;
 import com.yapp.crew.payload.ChatRoomPayload;
@@ -15,12 +17,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Slf4j
 @Service
 public class ChattingService {
 
   @Autowired
   private ChatRoomRepository chatRoomRepository;
+
+  @Autowired
+  private MessageRepository messageRepository;
 
   @Autowired
   private UserRepository userRepository;
@@ -50,6 +57,10 @@ public class ChattingService {
     chatRoomRepository.save(chatRoom);
 
     sendWelcomeBotMessage(chatRoom.getId());
+  }
+
+  public List<Message> receiveChatMessages(Long chatRoomId) {
+    return messageRepository.findAllByChatRoomIdOrderByCreatedAtDesc(chatRoomId);
   }
 
   private void sendWelcomeBotMessage(Long chatRoomId) throws JsonProcessingException {

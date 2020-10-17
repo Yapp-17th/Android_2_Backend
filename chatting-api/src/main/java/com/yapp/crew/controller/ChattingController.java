@@ -1,6 +1,7 @@
 package com.yapp.crew.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.yapp.crew.domain.model.Message;
 import com.yapp.crew.payload.ChatRoomPayload;
 import com.yapp.crew.payload.MessagePayload;
 import com.yapp.crew.producer.ChattingProducer;
@@ -10,10 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
@@ -58,6 +62,13 @@ public class ChattingController {
     log.info("After-sendMessageSynchronously");
 
     return ResponseEntity.status(HttpStatus.CREATED).body(messagePayload);
+  }
+
+  @GetMapping(path = "/v1/chat/message/{chatRoomId}")
+  public ResponseEntity<List<Message>> receiveChatMessages(@PathVariable("chatRoomId") Long chatRoomId) {
+    log.info("Receive chat messages");
+    List<Message> responseBody = chattingService.receiveChatMessages(chatRoomId);
+    return ResponseEntity.status(HttpStatus.OK).body(responseBody);
   }
 
   @PostMapping(path = "/v1/chat/room")
