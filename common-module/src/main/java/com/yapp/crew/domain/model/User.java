@@ -30,19 +30,19 @@ public class User extends BaseEntity {
   private Long id;
 
   @Setter(value = AccessLevel.PRIVATE)
-  @Column(nullable = false)
+  @Column(nullable = false, length = 100)
   private String username;
 
   @Setter(value = AccessLevel.PRIVATE)
-  @Column(nullable = false, unique = true)
+  @Column(nullable = false, unique = true, length = 100)
   private String nickname;
 
   @Setter(value = AccessLevel.PRIVATE)
-  @Column(nullable = false, unique = true)
+  @Column(nullable = false, unique = true, length = 100)
   private String email;
 
   @Setter(value = AccessLevel.PRIVATE)
-  @Column(name = "access_token", nullable = false, unique = true)
+  @Column(name = "access_token", nullable = false, unique = true, length = 100)
   private String accessToken;
 
   @Setter(value = AccessLevel.PRIVATE)
