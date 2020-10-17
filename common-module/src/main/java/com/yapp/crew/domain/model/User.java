@@ -60,7 +60,7 @@ public class User extends BaseEntity {
   private Integer reportPoints = 0;
 
   @Setter(value = AccessLevel.PRIVATE)
-  @Enumerated(value = EnumType.ORDINAL)
+  @Enumerated(value = EnumType.STRING)
   @Column(nullable = false)
   private UserStatus status = UserStatus.ACTIVE;
 

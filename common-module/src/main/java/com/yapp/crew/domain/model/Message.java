@@ -33,7 +33,7 @@ public class Message extends BaseEntity {
 
   @Setter(value = AccessLevel.PRIVATE)
   @Column(nullable = false)
-  @Enumerated(value = EnumType.ORDINAL)
+  @Enumerated(value = EnumType.STRING)
   private MessageType type;
 
   @Setter(value = AccessLevel.PRIVATE)

@@ -56,8 +56,8 @@ public class Board extends BaseEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   private Tag tag;
 
-  @Enumerated(value = EnumType.ORDINAL)
   @Column(nullable = false)
+  @Enumerated(value = EnumType.STRING)
   private GroupStatus status = GroupStatus.RECRUITING;
 
   @Column(name = "recruit_count", nullable = false)
