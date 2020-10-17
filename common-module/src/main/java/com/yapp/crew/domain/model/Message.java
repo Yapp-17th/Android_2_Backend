@@ -59,6 +59,7 @@ public class Message extends BaseEntity {
   public static class MessageBuilder {
     private String content;
     private MessageType type;
+    private boolean isRead;
     private User sender;
     private ChatRoom chatRoom;
 
@@ -71,6 +72,11 @@ public class Message extends BaseEntity {
       this.type = type;
       return this;
     }
+
+    public MessageBuilder withIsRead(boolean isRead) {
+    	this.isRead = isRead;
+    	return this;
+		}
 
     public MessageBuilder withSender(User sender) {
       this.sender = sender;
@@ -86,6 +92,7 @@ public class Message extends BaseEntity {
       Message message = new Message();
       message.setContent(content);
       message.setType(type);
+      message.setRead(isRead);
       message.setSender(sender);
       message.setChatRoom(chatRoom);
       return message;
