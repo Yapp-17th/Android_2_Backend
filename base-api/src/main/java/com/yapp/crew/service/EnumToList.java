@@ -1,7 +1,7 @@
 package com.yapp.crew.service;
 
-import com.yapp.crew.domain.status.CityType;
-import com.yapp.crew.domain.status.ExerciseType;
+import com.yapp.crew.domain.type.CityType;
+import com.yapp.crew.domain.type.ExerciseType;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
