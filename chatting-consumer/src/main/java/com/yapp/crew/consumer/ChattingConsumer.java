@@ -62,7 +62,7 @@ public class ChattingConsumer {
 
     chattingConsumerService.processMessage(message);
 
-		simpMessagingTemplate.convertAndSend("/topic/" + message.getChatRoom().getId().toString(), message);
+		simpMessagingTemplate.convertAndSend("/sub/chat/room/" + message.getChatRoom().getId().toString(), message);
 
 		String messageJson = objectMapper.writeValueAsString(message);
     log.info("Successfully consumed message: {}", messageJson);

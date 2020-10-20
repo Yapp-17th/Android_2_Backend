@@ -3,22 +3,18 @@ server:
 
 spring:
   profiles:
-    active: local
-
-  devtools:
-    restart:
-      enabled: true
+    active: dev
 
   kafka:
     consumer:
       bootstrap-servers:
-        - localhost:9092
+        - 172.31.18.97:9092
       key-deserializer: org.apache.kafka.common.serialization.LongDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       group-id: explanet-dev-group
 
   datasource:
-    url: jdbc:mysql://localhost:3306/explanet_dev?useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC&createDatabaseIfNotExist=true
+    url: jdbc:mysql://172.31.18.97:3306/explanet_dev?useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC&createDatabaseIfNotExist=true
     username: root
     password: Dnjscksdn98@
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -29,19 +25,7 @@ spring:
         bootstrap-mode: default
 
   jpa:
-    show-sql: true
     generate-ddl: true
-    properties:
-      hibernate:
-        generate_statistics: true
-        format_sql: true
     database-platform: org.hibernate.dialect.MySQL5Dialect
     hibernate:
       ddl-auto: create
-
-logging:
-  level:
-    org:
-      hibernate:
-        stat: debug
-        type: trace
