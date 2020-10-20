@@ -13,14 +13,14 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
 		registry
-						.addEndpoint("/chat")
+						.addEndpoint("/ws/chat")
 						.setAllowedOrigins("*")
 						.withSockJS();
 	}
 
 	@Override
 	public void configureMessageBroker(MessageBrokerRegistry registry) {
-		registry.setApplicationDestinationPrefixes("/app");  // 메시지를 보낼 URL - /app/message
-		registry.enableSimpleBroker("/topic");
+		registry.setApplicationDestinationPrefixes("/pub");
+		registry.enableSimpleBroker("/sub");
 	}
 }

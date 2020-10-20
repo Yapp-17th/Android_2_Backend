@@ -1,0 +1,14 @@
+spring:
+  profiles:
+    active: dev
+
+  datasource:
+    url: jdbc:mysql://172.31.18.97:3306/explanet_dev?useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC&createDatabaseIfNotExist=true
+    username: root
+    password: Dnjscksdn98@
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5Dialect
+    hibernate:
+      ddl-auto: create
