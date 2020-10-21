@@ -1,8 +1,10 @@
 package com.yapp.crew.dto;
 
+import com.yapp.crew.config.ResponseMessage;
 import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.http.HttpStatus;
 
 @NoArgsConstructor
 @Getter
@@ -16,8 +18,8 @@ public class EnumListSuccessDto {
   public static EnumListSuccessDto builder(String type) {
     EnumListSuccessDto enumListSuccessDto = new EnumListSuccessDto();
     enumListSuccessDto.type = type;
-    enumListSuccessDto.status = 200;
-    enumListSuccessDto.message = "거주 지역 리스트 조회 성공";
+    enumListSuccessDto.status = HttpStatus.OK.value();
+    enumListSuccessDto.message = ResponseMessage.SUCCESS.getMessage();
     return enumListSuccessDto;
   }
 

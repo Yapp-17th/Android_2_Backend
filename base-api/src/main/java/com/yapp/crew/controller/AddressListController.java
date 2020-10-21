@@ -1,5 +1,7 @@
 package com.yapp.crew.controller;
 
+import com.yapp.crew.config.ResponseDomain;
+import com.yapp.crew.domain.model.Address;
 import com.yapp.crew.dto.EnumListDto;
 import com.yapp.crew.dto.EnumListFailDto;
 import com.yapp.crew.dto.EnumListSuccessDto;
@@ -11,11 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class AddressListController {
 
-  @GetMapping("/v1/address/city")
+  @GetMapping(path = "/v1/address/city")
   public EnumListDto getAddressCityList() {
     try {
       List<String> addressList = EnumToList.addressEnumToList();
-      EnumListSuccessDto enumListSuccessDto= EnumListSuccessDto.builder("city");
+      EnumListSuccessDto enumListSuccessDto= EnumListSuccessDto.builder(ResponseDomain.ADDRESSCITY.getName());
       enumListSuccessDto.setData(addressList);
 
       return EnumListDto.pass(enumListSuccessDto);
