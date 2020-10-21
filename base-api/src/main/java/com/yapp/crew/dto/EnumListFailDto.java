@@ -1,7 +1,9 @@
 package com.yapp.crew.dto;
 
+import com.yapp.crew.config.ResponseMessage;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.http.HttpStatus;
 
 @NoArgsConstructor
 @Getter
@@ -14,8 +16,8 @@ public class EnumListFailDto {
   public static EnumListFailDto builder(String type) {
     EnumListFailDto enumListFailDto = new EnumListFailDto();
     enumListFailDto.type = type;
-    enumListFailDto.status = 500;
-    enumListFailDto.message = "거주 지역 리스트 조회 실패";
+    enumListFailDto.status = HttpStatus.BAD_REQUEST.value();
+    enumListFailDto.message = ResponseMessage.FAIL.getMessage();
     return enumListFailDto;
   }
 
