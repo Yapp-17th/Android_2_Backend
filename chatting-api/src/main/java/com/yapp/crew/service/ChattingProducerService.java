@@ -61,6 +61,10 @@ public class ChattingProducerService {
     sendWelcomeBotMessage(chatRoom.getId());
   }
 
+  public List<ChatRoom> receiveChatRooms() {
+  	return chatRoomRepository.findAll();
+	}
+
   public List<Message> receiveChatMessages(Long chatRoomId) {
     return messageRepository.findAllByChatRoomIdOrderByCreatedAtDesc(chatRoomId);
   }
