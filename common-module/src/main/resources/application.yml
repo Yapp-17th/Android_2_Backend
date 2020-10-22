@@ -28,9 +28,9 @@ spring:
     hibernate:
       ddl-auto: create
 
-logging:
-  level:
-    org:
-      hibernate:
-        stat: debug
-        type: trace
+  logging:
+    level:
+      org:
+        hibernate:
+          stat: debug
+          type: trace
