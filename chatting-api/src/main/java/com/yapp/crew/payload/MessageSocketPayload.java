@@ -2,8 +2,6 @@ package com.yapp.crew.payload;
 
 import java.time.LocalDateTime;
 
-import com.yapp.crew.domain.model.Message;
-import com.yapp.crew.domain.model.User;
 import com.yapp.crew.domain.type.MessageType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,16 +24,9 @@ public class MessageSocketPayload {
 
 	private boolean isRead;
 
-	private UserPayload user;
+	private Long senderId;
+
+	private String senderNickname;
 
 	private LocalDateTime createdAt;
-
-	public void setUser(Message message) {
-		User sender = message.getSender();
-		UserPayload payload = UserPayload.builder()
-						.id(sender.getId())
-						.nickname(sender.getNickname())
-						.username(sender.getUsername())
-						.build();
-	}
 }
