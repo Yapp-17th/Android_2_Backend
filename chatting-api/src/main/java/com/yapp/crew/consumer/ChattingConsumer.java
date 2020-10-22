@@ -71,15 +71,14 @@ public class ChattingConsumer {
   }
 
   private MessageSocketPayload buildMessageSocketPayload(Message message) {
-  	MessageSocketPayload payload = MessageSocketPayload.builder()
+  	return MessageSocketPayload.builder()
 						.id(message.getId())
 						.content(message.getContent())
 						.type(message.getType())
 						.isRead(message.isRead())
+						.senderId(message.getSender().getId())
+						.senderNickname(message.getSender().getNickname())
 						.createdAt(message.getCreatedAt())
 						.build();
-
-  	payload.setUser(message);
-  	return payload;
 	}
 }
