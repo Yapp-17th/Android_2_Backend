@@ -15,6 +15,14 @@ spring:
       properties:
         acks: all
         retries: 10
+
+    consumer:
+      bootstrap-servers:
+        - localhost:9092
+      key-deserializer: org.apache.kafka.common.serialization.LongDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      group-id: explanet-dev-group
+
     admin:
       properties:
         bootstrap.servers: localhost:9092
