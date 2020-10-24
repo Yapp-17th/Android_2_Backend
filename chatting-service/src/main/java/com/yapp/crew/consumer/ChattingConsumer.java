@@ -8,7 +8,7 @@ import com.yapp.crew.domain.model.User;
 import com.yapp.crew.domain.repository.ChatRoomRepository;
 import com.yapp.crew.domain.repository.UserRepository;
 import com.yapp.crew.payload.MessageRequestPayload;
-import com.yapp.crew.payload.MessageSocketPayload;
+import com.yapp.crew.payload.MessageResponsePayload;
 import com.yapp.crew.service.ChattingConsumerService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -63,15 +63,15 @@ public class ChattingConsumer {
 
     chattingConsumerService.processMessage(message);
 
-    MessageSocketPayload payload = buildMessageSocketPayload(message);
+    MessageResponsePayload payload = buildMessageResponsePayload(message);
 		simpMessagingTemplate.convertAndSend("/sub/chat/room/" + message.getChatRoom().getId().toString(), payload);
 
 		String messageJson = objectMapper.writeValueAsString(message);
     log.info("Successfully consumed message: {}", messageJson);
   }
 
-  private MessageSocketPayload buildMessageSocketPayload(Message message) {
-  	return MessageSocketPayload.builder()
+  private MessageResponsePayload buildMessageResponsePayload(Message message) {
+  	return MessageResponsePayload.builder()
 						.id(message.getId())
 						.content(message.getContent())
 						.type(message.getType())
