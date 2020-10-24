@@ -5,8 +5,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.yapp.crew.domain.model.ChatRoom;
-import com.yapp.crew.domain.model.Message;
+import com.yapp.crew.network.HttpResponseBody;
 import com.yapp.crew.payload.ChatRoomRequestPayload;
 import com.yapp.crew.payload.ChatRoomResponsePayload;
 import com.yapp.crew.payload.MessageRequestPayload;
@@ -71,9 +70,9 @@ public class ChattingController {
   }
 
   @GetMapping(path = "/v1/chat/message/{chatRoomId}")
-  public ResponseEntity<List<MessageResponsePayload>> receiveChatMessages(@PathVariable("chatRoomId") Long chatRoomId) {
+  public ResponseEntity<?> receiveChatMessages(@PathVariable("chatRoomId") Long chatRoomId) {
     log.info("Receive chat messages");
-    List<MessageResponsePayload> responseBody = chattingProducerService.receiveChatMessages(chatRoomId);
+    HttpResponseBody<List<MessageResponsePayload>> responseBody = chattingProducerService.receiveChatMessages(chatRoomId);
     return ResponseEntity.status(HttpStatus.OK).body(responseBody);
   }
 

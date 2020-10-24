@@ -1,6 +1,7 @@
 package com.yapp.crew.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -13,6 +14,7 @@ import com.yapp.crew.domain.repository.ChatRoomRepository;
 import com.yapp.crew.domain.repository.MessageRepository;
 import com.yapp.crew.domain.repository.UserRepository;
 import com.yapp.crew.domain.type.MessageType;
+import com.yapp.crew.network.HttpResponseBody;
 import com.yapp.crew.payload.ChatRoomRequestPayload;
 import com.yapp.crew.payload.ChatRoomResponsePayload;
 import com.yapp.crew.payload.MessageRequestPayload;
@@ -69,9 +71,10 @@ public class ChattingProducerService {
 		return buildChatRoomResponsePayload(chatRooms);
 	}
 
-  public List<MessageResponsePayload> receiveChatMessages(Long chatRoomId) {
+  public HttpResponseBody<List<MessageResponsePayload>> receiveChatMessages(Long chatRoomId) {
     List<Message> messages = messageRepository.findAllByChatRoomIdOrderByCreatedAtDesc(chatRoomId);
-    return buildMessageResponsePayload(messages);
+    Long firstUnreadChatMessageId = findFirstUnreadChatMessage(messages);
+		return HttpResponseBody.buildChatMessagesResponse(buildMessageResponsePayload(messages), firstUnreadChatMessageId);
   }
 
   private void sendWelcomeBotMessage(Long chatRoomId) throws JsonProcessingException {
@@ -87,6 +90,17 @@ public class ChattingProducerService {
 
     chattingProducer.sendMessage(welcomeBotMessage);
   }
+
+  private Long findFirstUnreadChatMessage(List<Message> messages) {
+  	Optional<Message> firstUnreadChatMessage = messages.stream()
+						.filter(message -> !message.isRead())
+						.findFirst();
+
+  	if (firstUnreadChatMessage.isPresent()) {
+  		return firstUnreadChatMessage.get().getId();
+		}
+  	return -1L;
+	}
 
   private List<ChatRoomResponsePayload> buildChatRoomResponsePayload(List<ChatRoom> chatRooms) {
   	return chatRooms.stream()
