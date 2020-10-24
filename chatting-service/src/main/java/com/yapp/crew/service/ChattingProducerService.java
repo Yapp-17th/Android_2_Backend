@@ -106,17 +106,24 @@ public class ChattingProducerService {
   	return chatRooms.stream()
 						.map(chatRoom -> {
 							List<Message> messages = chatRoom.getMessages();
-							Message lastMessage = messages.get(messages.size() - 1);
 
-							MessageResponsePayload messagePayload = MessageResponsePayload.builder()
-											.id(lastMessage.getId())
-											.content(lastMessage.getContent())
-											.type(lastMessage.getType())
-											.isRead(lastMessage.isRead())
-											.senderId(lastMessage.getSender().getId())
-											.senderNickname(lastMessage.getSender().getNickname())
-											.createdAt(lastMessage.getCreatedAt())
-											.build();
+							Message lastMessage = null;
+							if (messages.size() > 0) {
+								lastMessage = messages.get(messages.size() - 1);
+							}
+
+							MessageResponsePayload messagePayload = null;
+							if (lastMessage != null) {
+								messagePayload = MessageResponsePayload.builder()
+												.id(lastMessage.getId())
+												.content(lastMessage.getContent())
+												.type(lastMessage.getType())
+												.isRead(lastMessage.isRead())
+												.senderId(lastMessage.getSender().getId())
+												.senderNickname(lastMessage.getSender().getNickname())
+												.createdAt(lastMessage.getCreatedAt())
+												.build();
+							}
 
 							return ChatRoomResponsePayload.builder()
 											.id(chatRoom.getId())
