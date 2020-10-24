@@ -1,0 +1,44 @@
+server:
+  port: 8081
+
+spring:
+  profiles:
+    active: dev
+
+  kafka:
+    producer:
+      bootstrap-servers:
+        - 172.31.18.97:9092
+      key-serializer: org.apache.kafka.common.serialization.LongSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      properties:
+        acks: all
+        retries: 10
+
+    consumer:
+      bootstrap-servers:
+        - 172.31.18.97:9092
+      key-deserializer: org.apache.kafka.common.serialization.LongDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      group-id: explanet-dev-group
+
+    admin:
+      properties:
+        bootstrap.servers: 172.31.18.97:9092
+
+  datasource:
+    url: jdbc:mysql://172.31.18.97:3306/explanet_dev?useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC&createDatabaseIfNotExist=true
+    username: root
+    password: Dnjscksdn98@
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  data:
+    jpa:
+      repositories:
+        bootstrap-mode: default
+
+  jpa:
+    generate-ddl: true
+    database-platform: org.hibernate.dialect.MySQL5Dialect
+    hibernate:
+      ddl-auto: create
