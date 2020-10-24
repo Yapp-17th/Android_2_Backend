@@ -8,7 +8,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.yapp.crew.domain.model.ChatRoom;
 import com.yapp.crew.domain.model.Message;
 import com.yapp.crew.payload.ChatRoomPayload;
-import com.yapp.crew.payload.MessagePayload;
+import com.yapp.crew.payload.MessageRequestPayload;
 import com.yapp.crew.producer.ChattingProducer;
 import com.yapp.crew.service.ChattingProducerService;
 import lombok.extern.slf4j.Slf4j;
@@ -36,36 +36,36 @@ public class ChattingController {
   private ChattingProducerService chattingProducerService;
 
   @MessageMapping(value = "/v1/chat/message")
-  public void sendMessageByWebsocket(MessagePayload messagePayload) throws JsonProcessingException {
+  public void sendMessageByWebsocket(MessageRequestPayload messageRequestPayload) throws JsonProcessingException {
     log.info("Before-sendMessageByWebsocket");
 
-    chattingProducer.sendMessage(messagePayload);
+    chattingProducer.sendMessage(messageRequestPayload);
 
     log.info("After-sendMessageByWebsocket");
   }
 
   @PostMapping(path = "/v1/chat/message")
-  public ResponseEntity<?> sendMessageByHttpRequest(@RequestBody MessagePayload messagePayload) throws JsonProcessingException {
+  public ResponseEntity<?> sendMessageByHttpRequest(@RequestBody MessageRequestPayload messageRequestPayload) throws JsonProcessingException {
     log.info("Before-sendMessageByHttpRequest");
 
-    chattingProducer.sendMessage(messagePayload);
+    chattingProducer.sendMessage(messageRequestPayload);
 
     log.info("After-sendMessageByHttpRequest");
 
-    return ResponseEntity.status(HttpStatus.CREATED).body(messagePayload);
+    return ResponseEntity.status(HttpStatus.CREATED).body(messageRequestPayload);
   }
 
   @PostMapping(path = "/v2/chat/message")
-  public ResponseEntity<?> sendMessageSynchronously(@RequestBody MessagePayload messagePayload)
+  public ResponseEntity<?> sendMessageSynchronously(@RequestBody MessageRequestPayload messageRequestPayload)
           throws JsonProcessingException, InterruptedException, ExecutionException, TimeoutException {
 
     log.info("Before-sendMessageSynchronously");
 
-    chattingProducer.sendMessageSynchronously(messagePayload);
+    chattingProducer.sendMessageSynchronously(messageRequestPayload);
 
     log.info("After-sendMessageSynchronously");
 
-    return ResponseEntity.status(HttpStatus.CREATED).body(messagePayload);
+    return ResponseEntity.status(HttpStatus.CREATED).body(messageRequestPayload);
   }
 
   @GetMapping(path = "/v1/chat/message/{chatRoomId}")

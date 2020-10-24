@@ -13,7 +13,7 @@ import com.yapp.crew.domain.repository.MessageRepository;
 import com.yapp.crew.domain.repository.UserRepository;
 import com.yapp.crew.domain.type.MessageType;
 import com.yapp.crew.payload.ChatRoomPayload;
-import com.yapp.crew.payload.MessagePayload;
+import com.yapp.crew.payload.MessageRequestPayload;
 import com.yapp.crew.producer.ChattingProducer;
 import lombok.extern.slf4j.Slf4j;
 
@@ -73,7 +73,7 @@ public class ChattingProducerService {
     User bot = userRepository.findUserById(-1L)
             .orElseThrow(() -> new RuntimeException("Cannot find bot"));
 
-    MessagePayload welcomeBotMessage = MessagePayload.builder()
+    MessageRequestPayload welcomeBotMessage = MessageRequestPayload.builder()
             .content("봇 환영 메시지")
             .type(MessageType.BOT_MESSAGE)
             .senderId(bot.getId())
