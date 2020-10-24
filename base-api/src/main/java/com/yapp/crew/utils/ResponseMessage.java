@@ -1,4 +1,4 @@
-package com.yapp.crew.config;
+package com.yapp.crew.utils;
 
 public enum ResponseMessage {
   SUCCESS("리스트 조회 성공"),

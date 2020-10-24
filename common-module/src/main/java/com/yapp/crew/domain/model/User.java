@@ -49,6 +49,10 @@ public class User extends BaseEntity {
   private String accessToken;
 
   @Setter(value = AccessLevel.PRIVATE)
+  @Column(name = "oauth_id", nullable = false, unique = true, length = 100)
+  private String oauthId;
+
+  @Setter(value = AccessLevel.PRIVATE)
   @Column(nullable = false)
   private Integer likes = 0;
 
@@ -137,6 +141,7 @@ public class User extends BaseEntity {
     private String nickname;
     private String email;
     private String accessToken;
+    private String oauthId;
     private Address address;
     private Category category;
 
@@ -160,6 +165,11 @@ public class User extends BaseEntity {
       return this;
     }
 
+    public UserBuilder withOauthId(String oauthId) {
+      this.oauthId = oauthId;
+      return this;
+    }
+
     public UserBuilder withAddress(Address address) {
       this.address = address;
       return this;
@@ -176,6 +186,7 @@ public class User extends BaseEntity {
       user.setNickname(nickname);
       user.setEmail(email);
       user.setAccessToken(accessToken);
+      user.setAccessToken(oauthId);
       user.setAddress(address);
       user.setCategory(category);
       return user;

@@ -1,6 +1,6 @@
 package com.yapp.crew.controller;
 
-import com.yapp.crew.config.ResponseDomain;
+import com.yapp.crew.utils.ResponseDomain;
 import com.yapp.crew.dto.EnumListDto;
 import com.yapp.crew.dto.EnumListFailDto;
 import com.yapp.crew.dto.EnumListSuccessDto;

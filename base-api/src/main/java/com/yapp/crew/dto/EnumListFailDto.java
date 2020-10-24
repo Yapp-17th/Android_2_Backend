@@ -1,6 +1,6 @@
 package com.yapp.crew.dto;
 
-import com.yapp.crew.config.ResponseMessage;
+import com.yapp.crew.utils.ResponseMessage;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
