@@ -72,7 +72,7 @@ public class ChattingProducerService {
 	}
 
   public HttpResponseBody<List<MessageResponsePayload>> receiveChatMessages(Long chatRoomId) {
-    List<Message> messages = messageRepository.findAllByChatRoomIdOrderByCreatedAtDesc(chatRoomId);
+    List<Message> messages = messageRepository.findAllByChatRoomIdOrderByCreatedAt(chatRoomId);
     Long firstUnreadChatMessageId = findFirstUnreadChatMessage(messages);
 		return HttpResponseBody.buildChatMessagesResponse(buildMessageResponsePayload(messages), firstUnreadChatMessageId);
   }
