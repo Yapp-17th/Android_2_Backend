@@ -9,12 +9,21 @@ import org.springframework.kafka.config.TopicBuilder;
 
 @Configuration
 @Profile(value = "dev")
-public class AutoCreateConfig {
+public class KafkaTopicConfig {
 
 	@Bean
-	public NewTopic exPlanetBot_dev() {
+	public NewTopic requestUserProfile() {
 		return TopicBuilder
-						.name("explanet-bot-dev")
+						.name("request-user-profile")
+						.partitions(1)
+						.replicas(1)
+						.build();
+	}
+
+	@Bean
+	public NewTopic acceptUser() {
+		return TopicBuilder
+						.name("accept-user")
 						.partitions(1)
 						.replicas(1)
 						.build();
