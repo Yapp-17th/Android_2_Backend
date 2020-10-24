@@ -31,4 +31,11 @@ public class HttpResponseBody<T> {
 						.data(data)
 						.build();
 	}
+
+	public static <T> HttpResponseBody<T> buildChatRoomsResponse(T data) {
+		return (HttpResponseBody<T>) HttpResponseBody.builder()
+						.transactionTime(LocalDateTime.now())
+						.data(data)
+						.build();
+	}
 }
