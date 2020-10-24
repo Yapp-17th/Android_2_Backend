@@ -52,6 +52,10 @@ public class Message extends BaseEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   private ChatRoom chatRoom;
 
+  public void readMessage() {
+  	this.setRead(true);
+	}
+
   public static MessageBuilder getBuilder() {
     return new MessageBuilder();
   }
