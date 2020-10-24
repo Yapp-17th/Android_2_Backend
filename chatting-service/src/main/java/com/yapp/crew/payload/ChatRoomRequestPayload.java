@@ -11,7 +11,7 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ChatRoomPayload {
+public class ChatRoomRequestPayload {
 
   private Long hostId;
 
