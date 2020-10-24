@@ -7,7 +7,7 @@ import java.util.concurrent.TimeoutException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.yapp.crew.domain.model.ChatRoom;
 import com.yapp.crew.domain.model.Message;
-import com.yapp.crew.payload.ChatRoomPayload;
+import com.yapp.crew.payload.ChatRoomRequestPayload;
 import com.yapp.crew.payload.MessageRequestPayload;
 import com.yapp.crew.producer.ChattingProducer;
 import com.yapp.crew.service.ChattingProducerService;
@@ -83,9 +83,9 @@ public class ChattingController {
 	}
 
   @PostMapping(path = "/v1/chat/room")
-  public ResponseEntity<?> createChatRoom(@RequestBody ChatRoomPayload chatRoomPayload) throws JsonProcessingException {
+  public ResponseEntity<?> createChatRoom(@RequestBody ChatRoomRequestPayload chatRoomRequestPayload) throws JsonProcessingException {
   	log.info("Create chat room");
-    chattingProducerService.createChatRoom(chatRoomPayload);
-    return ResponseEntity.status(HttpStatus.CREATED).body(chatRoomPayload);
+    chattingProducerService.createChatRoom(chatRoomRequestPayload);
+    return ResponseEntity.status(HttpStatus.CREATED).body(chatRoomRequestPayload);
   }
 }
