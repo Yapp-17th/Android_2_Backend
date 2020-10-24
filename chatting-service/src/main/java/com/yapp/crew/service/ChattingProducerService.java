@@ -12,7 +12,7 @@ import com.yapp.crew.domain.repository.ChatRoomRepository;
 import com.yapp.crew.domain.repository.MessageRepository;
 import com.yapp.crew.domain.repository.UserRepository;
 import com.yapp.crew.domain.type.MessageType;
-import com.yapp.crew.payload.ChatRoomPayload;
+import com.yapp.crew.payload.ChatRoomRequestPayload;
 import com.yapp.crew.payload.MessageRequestPayload;
 import com.yapp.crew.producer.ChattingProducer;
 import lombok.extern.slf4j.Slf4j;
@@ -39,14 +39,14 @@ public class ChattingProducerService {
   @Autowired
   private ChattingProducer chattingProducer;
 
-  public void createChatRoom(ChatRoomPayload chatRoomPayload) throws JsonProcessingException {
-    User host = userRepository.findUserById(chatRoomPayload.getHostId())
+  public void createChatRoom(ChatRoomRequestPayload chatRoomRequestPayload) throws JsonProcessingException {
+    User host = userRepository.findUserById(chatRoomRequestPayload.getHostId())
             .orElseThrow(() -> new RuntimeException("Cannot find host user with id"));
 
-    User guest = userRepository.findUserById(chatRoomPayload.getGuestId())
+    User guest = userRepository.findUserById(chatRoomRequestPayload.getGuestId())
             .orElseThrow(() -> new RuntimeException("Cannot find guest user"));
 
-    Board board = boardRepository.findById(chatRoomPayload.getBoardId())
+    Board board = boardRepository.findById(chatRoomRequestPayload.getBoardId())
             .orElseThrow(() -> new RuntimeException("Cannot find board"));
 
     ChatRoom chatRoom = ChatRoom.getBuilder()
