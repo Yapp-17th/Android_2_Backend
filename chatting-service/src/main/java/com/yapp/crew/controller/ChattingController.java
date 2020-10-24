@@ -10,6 +10,7 @@ import com.yapp.crew.domain.model.Message;
 import com.yapp.crew.payload.ChatRoomRequestPayload;
 import com.yapp.crew.payload.ChatRoomResponsePayload;
 import com.yapp.crew.payload.MessageRequestPayload;
+import com.yapp.crew.payload.MessageResponsePayload;
 import com.yapp.crew.producer.ChattingProducer;
 import com.yapp.crew.service.ChattingProducerService;
 import lombok.extern.slf4j.Slf4j;
@@ -70,9 +71,9 @@ public class ChattingController {
   }
 
   @GetMapping(path = "/v1/chat/message/{chatRoomId}")
-  public ResponseEntity<List<Message>> receiveChatMessages(@PathVariable("chatRoomId") Long chatRoomId) {
+  public ResponseEntity<List<MessageResponsePayload>> receiveChatMessages(@PathVariable("chatRoomId") Long chatRoomId) {
     log.info("Receive chat messages");
-    List<Message> responseBody = chattingProducerService.receiveChatMessages(chatRoomId);
+    List<MessageResponsePayload> responseBody = chattingProducerService.receiveChatMessages(chatRoomId);
     return ResponseEntity.status(HttpStatus.OK).body(responseBody);
   }
 
