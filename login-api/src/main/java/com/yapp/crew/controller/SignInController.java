@@ -3,40 +3,27 @@ package com.yapp.crew.controller;
 import com.yapp.crew.domain.model.User;
 import com.yapp.crew.domain.model.User.UserBuilder;
 import com.yapp.crew.dto.LoginResponseDto;
-import com.yapp.crew.dto.UserInfoDto;
+import com.yapp.crew.dto.LoginRequestDto;
 import com.yapp.crew.service.SignInService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 
 @Slf4j
-@CrossOrigin
 @RestController
 public class SignInController {
-
-  private RestTemplate restTemplate;
   private SignInService signInService;
 
   @Autowired
-  public SignInController(RestTemplate restTemplate, SignInService signInService) {
-    this.restTemplate = restTemplate;
+  public SignInController(SignInService signInService) {
     this.signInService = signInService;
   }
 
-  @PostMapping("/v1/user/sign-in")
-  public LoginResponseDto postSignIn(UserInfoDto userInfoDto) {
-    UserBuilder userBuilder = User.getBuilder();
-    User user = userBuilder
-        .withAccessToken(userInfoDto.getAccessToken())
-        .withEmail(userInfoDto.getEmail())
-        .withUsername(userInfoDto.getUserName())
-        .withNickname(userInfoDto.getNickName())
-        .withOauthId(userInfoDto.getUserId())
-        .build();
-
-    return signInService.signIn(user);
+  @PostMapping(path = "/v1/user/sign-in", produces = MediaType.APPLICATION_JSON_VALUE)
+  public LoginResponseDto postSignIn(@RequestBody LoginRequestDto loginRequestDto) {
+    return signInService.signIn(loginRequestDto);
   }
 }

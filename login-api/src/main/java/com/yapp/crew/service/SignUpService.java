@@ -1,6 +1,11 @@
 package com.yapp.crew.service;
 
-import com.yapp.crew.utils.ResponseDomain;
+import com.yapp.crew.domain.model.Address;
+import com.yapp.crew.domain.model.Category;
+import com.yapp.crew.domain.model.User.UserBuilder;
+import com.yapp.crew.domain.type.CityType;
+import com.yapp.crew.domain.type.ExerciseType;
+import com.yapp.crew.dto.SignUpRequestDto;
 import com.yapp.crew.utils.ResponseMessage;
 import com.yapp.crew.domain.model.User;
 import com.yapp.crew.domain.repository.UserRepository;
@@ -20,12 +25,21 @@ public class SignUpService {
     this.userRepository = userRepository;
   }
 
-  public LoginResponseDto signUp(User user) {
+  public LoginResponseDto signUp(SignUpRequestDto signUpRequestDto) {
     try {
+      UserBuilder userBuilder = User.getBuilder();
+      User user = userBuilder
+          .withOauthId(signUpRequestDto.getUserId())
+          .withAccessToken(signUpRequestDto.getAccessToken())
+          .withEmail(signUpRequestDto.getEmail())
+          .withNickname(signUpRequestDto.getNickName())
+          .withUsername(signUpRequestDto.getUserName())
+          .build();
       saveUser(user);
-      return LoginResponseDto.pass(ResponseDomain.SIGN_UP, ResponseMessage.SIGNUP_SUCCESS.getMessage());
+      return LoginResponseDto.pass(ResponseMessage.SIGNUP_SUCCESS.getMessage());
     } catch (Exception e) {
-      return LoginResponseDto.fail(ResponseDomain.SIGN_UP, ResponseMessage.SIGNUP_FAIL.getMessage());
+      log.info(e.getMessage());
+      return LoginResponseDto.fail(ResponseMessage.SIGNUP_FAIL.getMessage());
     }
   }
 
