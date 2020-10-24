@@ -97,6 +97,7 @@ public class ChattingController {
 	/**
 	 * - 채팅방 개설
 	 * - TODO: HttpResponseBody 를 통한 응답 객체 수정
+	 * - TODO: guestId 는 JWT 내의 페이로드에서 가져오기
 	 *
 	 */
   @PostMapping(path = "/v1/chat/room")

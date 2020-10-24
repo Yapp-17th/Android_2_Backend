@@ -17,8 +17,8 @@ import com.yapp.crew.domain.type.MessageType;
 import com.yapp.crew.network.HttpResponseBody;
 import com.yapp.crew.payload.ChatRoomRequestPayload;
 import com.yapp.crew.payload.ChatRoomResponsePayload;
-import com.yapp.crew.payload.MessageRequestPayload;
 import com.yapp.crew.payload.MessageResponsePayload;
+import com.yapp.crew.payload.WelcomeMessageRequestPayload;
 import com.yapp.crew.producer.ChattingProducer;
 import lombok.extern.slf4j.Slf4j;
 
@@ -63,7 +63,7 @@ public class ChattingProducerService {
     chatRoomRepository.save(chatRoom);
     log.info("Successfully created a new chat room");
 
-    sendWelcomeBotMessage(chatRoom.getId());
+    produceWelcomeBotMessage(chatRoom.getId());
   }
 
   public HttpResponseBody<List<ChatRoomResponsePayload>> receiveChatRooms() {
@@ -77,18 +77,18 @@ public class ChattingProducerService {
 		return HttpResponseBody.buildChatMessagesResponse(buildMessageResponsePayload(messages), firstUnreadChatMessageId);
   }
 
-  private void sendWelcomeBotMessage(Long chatRoomId) throws JsonProcessingException {
+  private void produceWelcomeBotMessage(Long chatRoomId) throws JsonProcessingException {
     User bot = userRepository.findUserById(-1L)
-            .orElseThrow(() -> new RuntimeException("Cannot find bot"));
+            .orElseThrow(() -> new RuntimeException("Cannot find chat bot"));
 
-    MessageRequestPayload welcomeBotMessage = MessageRequestPayload.builder()
+		WelcomeMessageRequestPayload welcomeMessageRequestPayload = WelcomeMessageRequestPayload.builder()
             .content("봇 환영 메시지")
             .type(MessageType.BOT_MESSAGE)
             .senderId(bot.getId())
             .chatRoomId(chatRoomId)
             .build();
 
-    chattingProducer.sendMessage(welcomeBotMessage);
+    chattingProducer.sendWelcomeBotMessage(welcomeMessageRequestPayload);
   }
 
   private Long findFirstUnreadChatMessage(List<Message> messages) {
