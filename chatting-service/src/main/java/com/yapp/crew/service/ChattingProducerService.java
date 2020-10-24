@@ -64,6 +64,8 @@ public class ChattingProducerService {
             .withBoard(board)
             .build();
 
+    host.addChatRoomHost(chatRoom);
+    guest.addChatRoomGuest(chatRoom);
     chatRoomRepository.save(chatRoom);
     log.info("Successfully created a new chat room");
 
