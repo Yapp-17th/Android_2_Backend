@@ -8,6 +8,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.yapp.crew.domain.model.ChatRoom;
 import com.yapp.crew.domain.model.Message;
 import com.yapp.crew.payload.ChatRoomRequestPayload;
+import com.yapp.crew.payload.ChatRoomResponsePayload;
 import com.yapp.crew.payload.MessageRequestPayload;
 import com.yapp.crew.producer.ChattingProducer;
 import com.yapp.crew.service.ChattingProducerService;
@@ -76,9 +77,9 @@ public class ChattingController {
   }
 
 	@GetMapping(path = "/v1/chat/room")
-	public ResponseEntity<List<ChatRoom>> receiveChatRooms() {
+	public ResponseEntity<List<ChatRoomResponsePayload>> receiveChatRooms() {
 		log.info("Receive chat rooms");
-		List<ChatRoom> responseBody = chattingProducerService.receiveChatRooms();
+		List<ChatRoomResponsePayload> responseBody = chattingProducerService.receiveChatRooms();
 		return ResponseEntity.status(HttpStatus.OK).body(responseBody);
 	}
 
