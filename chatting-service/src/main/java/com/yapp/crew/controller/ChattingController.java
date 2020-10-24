@@ -77,9 +77,9 @@ public class ChattingController {
   }
 
 	@GetMapping(path = "/v1/chat/room")
-	public ResponseEntity<List<ChatRoomResponsePayload>> receiveChatRooms() {
+	public ResponseEntity<?> receiveChatRooms() {
 		log.info("Receive chat rooms");
-		List<ChatRoomResponsePayload> responseBody = chattingProducerService.receiveChatRooms();
+		HttpResponseBody<List<ChatRoomResponsePayload>> responseBody = chattingProducerService.receiveChatRooms();
 		return ResponseEntity.status(HttpStatus.OK).body(responseBody);
 	}
 

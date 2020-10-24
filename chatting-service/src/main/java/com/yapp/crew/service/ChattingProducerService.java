@@ -66,9 +66,9 @@ public class ChattingProducerService {
     sendWelcomeBotMessage(chatRoom.getId());
   }
 
-  public List<ChatRoomResponsePayload> receiveChatRooms() {
+  public HttpResponseBody<List<ChatRoomResponsePayload>> receiveChatRooms() {
   	List<ChatRoom> chatRooms = chatRoomRepository.findAll();
-		return buildChatRoomResponsePayload(chatRooms);
+		return HttpResponseBody.buildChatRoomsResponse(buildChatRoomResponsePayload(chatRooms));
 	}
 
   public HttpResponseBody<List<MessageResponsePayload>> receiveChatMessages(Long chatRoomId) {
