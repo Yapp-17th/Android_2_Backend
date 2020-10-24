@@ -69,8 +69,9 @@ public class ChattingProducerService {
 		return buildChatRoomResponsePayload(chatRooms);
 	}
 
-  public List<Message> receiveChatMessages(Long chatRoomId) {
-    return messageRepository.findAllByChatRoomIdOrderByCreatedAtDesc(chatRoomId);
+  public List<MessageResponsePayload> receiveChatMessages(Long chatRoomId) {
+    List<Message> messages = messageRepository.findAllByChatRoomIdOrderByCreatedAtDesc(chatRoomId);
+    return buildMessageResponsePayload(messages);
   }
 
   private void sendWelcomeBotMessage(Long chatRoomId) throws JsonProcessingException {
@@ -111,6 +112,25 @@ public class ChattingProducerService {
 											.status(chatRoom.getStatus())
 											.lastMessage(messagePayload)
 											.createdAt(chatRoom.getCreatedAt())
+											.build();
+						})
+						.collect(Collectors.toList());
+	}
+
+	private List<MessageResponsePayload> buildMessageResponsePayload(List<Message> messages) {
+  	return messages.stream()
+						.map(message -> {
+							message.readMessage();
+							messageRepository.save(message);
+
+							return MessageResponsePayload.builder()
+											.id(message.getId())
+											.content(message.getContent())
+											.type(message.getType())
+											.isRead(message.isRead())
+											.senderId(message.getSender().getId())
+											.senderNickname(message.getSender().getNickname())
+											.createdAt(message.getCreatedAt())
 											.build();
 						})
 						.collect(Collectors.toList());
