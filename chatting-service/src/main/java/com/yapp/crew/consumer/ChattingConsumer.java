@@ -7,7 +7,7 @@ import com.yapp.crew.domain.model.Message;
 import com.yapp.crew.domain.model.User;
 import com.yapp.crew.domain.repository.ChatRoomRepository;
 import com.yapp.crew.domain.repository.UserRepository;
-import com.yapp.crew.payload.MessagePayload;
+import com.yapp.crew.payload.MessageRequestPayload;
 import com.yapp.crew.payload.MessageSocketPayload;
 import com.yapp.crew.service.ChattingConsumerService;
 import lombok.extern.slf4j.Slf4j;
@@ -43,17 +43,17 @@ public class ChattingConsumer {
   public void consumeChatMessage(ConsumerRecord<Long, String> consumerRecord) throws JsonProcessingException {
     log.info("Consumer Record: {}", consumerRecord);
 
-    MessagePayload messagePayload = objectMapper.readValue(consumerRecord.value(), MessagePayload.class);
+    MessageRequestPayload messageRequestPayload = objectMapper.readValue(consumerRecord.value(), MessageRequestPayload.class);
 
-    ChatRoom chatRoom = chatRoomRepository.findById(messagePayload.getChatRoomId())
+    ChatRoom chatRoom = chatRoomRepository.findById(messageRequestPayload.getChatRoomId())
             .orElseThrow(() -> new RuntimeException("Chat room not found"));
 
-    User sender = userRepository.findById(messagePayload.getSenderId())
+    User sender = userRepository.findById(messageRequestPayload.getSenderId())
             .orElseThrow(() -> new RuntimeException("User not found"));
 
     Message message = Message.getBuilder()
-            .withContent(messagePayload.getContent())
-            .withType(messagePayload.getType())
+            .withContent(messageRequestPayload.getContent())
+            .withType(messageRequestPayload.getType())
 						.withIsRead(false)
             .withSender(sender)
             .withChatRoom(chatRoom)

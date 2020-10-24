@@ -7,7 +7,7 @@ import java.util.concurrent.TimeoutException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.yapp.crew.payload.MessagePayload;
+import com.yapp.crew.payload.MessageRequestPayload;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.header.Header;
@@ -30,9 +30,9 @@ public class ChattingProducer {
   @Autowired
   private ObjectMapper objectMapper;
 
-  public ListenableFuture<SendResult<Long, String>> sendMessage(MessagePayload messagePayload) throws JsonProcessingException {
-    Long key = messagePayload.getChatRoomId();
-    String value = objectMapper.writeValueAsString(messagePayload);
+  public ListenableFuture<SendResult<Long, String>> sendMessage(MessageRequestPayload messageRequestPayload) throws JsonProcessingException {
+    Long key = messageRequestPayload.getChatRoomId();
+    String value = objectMapper.writeValueAsString(messageRequestPayload);
 
     ProducerRecord<Long, String> producerRecord = buildProducerRecord(key, value, "explanet-dev");
     ListenableFuture<SendResult<Long, String>> listenableFuture = kafkaTemplate.send(producerRecord);
@@ -50,9 +50,9 @@ public class ChattingProducer {
     return listenableFuture;
   }
 
-  public SendResult<Long, String> sendMessageSynchronously(MessagePayload messagePayload) throws JsonProcessingException, InterruptedException, ExecutionException, TimeoutException {
-    Long key = messagePayload.getChatRoomId();
-    String value = objectMapper.writeValueAsString(messagePayload);
+  public SendResult<Long, String> sendMessageSynchronously(MessageRequestPayload messageRequestPayload) throws JsonProcessingException, InterruptedException, ExecutionException, TimeoutException {
+    Long key = messageRequestPayload.getChatRoomId();
+    String value = objectMapper.writeValueAsString(messageRequestPayload);
     SendResult<Long, String> sendResult = null;
 
     try {

@@ -12,7 +12,7 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class MessagePayload {
+public class MessageRequestPayload {
 
   private String content;
 
