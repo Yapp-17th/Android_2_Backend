@@ -69,6 +69,11 @@ public class ChattingController {
     return ResponseEntity.status(HttpStatus.CREATED).body(messageRequestPayload);
   }
 
+	/**
+	 * - 해당 채팅방의 모든 메시지들을 시간순으로 가져옴
+	 * - 가장 첫 안읽은 메시지를 firstUnreadChatMessageId 필드에 추가, 안읽은 메시지가 없으면 -1
+	 *
+	 */
   @GetMapping(path = "/v1/chat/message/{chatRoomId}")
   public ResponseEntity<?> receiveChatMessages(@PathVariable("chatRoomId") Long chatRoomId) {
     log.info("Receive chat messages");
@@ -76,6 +81,12 @@ public class ChattingController {
     return ResponseEntity.status(HttpStatus.OK).body(responseBody);
   }
 
+	/**
+	 * - 모든 채팅방 목록 가져옴
+	 * - 각 방의 마지막 메시지도 함께 가져옴
+	 * - TODO: 사용자 ID도 전달해서 해당 사용자가 가진 채팅방 목록만 가져올 수 있도록 수정
+	 *
+	 */
 	@GetMapping(path = "/v1/chat/room")
 	public ResponseEntity<?> receiveChatRooms() {
 		log.info("Receive chat rooms");
@@ -83,6 +94,11 @@ public class ChattingController {
 		return ResponseEntity.status(HttpStatus.OK).body(responseBody);
 	}
 
+	/**
+	 * - 채팅방 개설
+	 * - TODO: HttpResponseBody 를 통한 응답 객체 수정
+	 *
+	 */
   @PostMapping(path = "/v1/chat/room")
   public ResponseEntity<?> createChatRoom(@RequestBody ChatRoomRequestPayload chatRoomRequestPayload) throws JsonProcessingException {
   	log.info("Create chat room");
