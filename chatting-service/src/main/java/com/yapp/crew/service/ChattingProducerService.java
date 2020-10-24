@@ -1,5 +1,6 @@
 package com.yapp.crew.service;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -14,6 +15,7 @@ import com.yapp.crew.domain.repository.ChatRoomRepository;
 import com.yapp.crew.domain.repository.MessageRepository;
 import com.yapp.crew.domain.repository.UserRepository;
 import com.yapp.crew.domain.type.MessageType;
+import com.yapp.crew.json.BotMessages;
 import com.yapp.crew.network.HttpResponseBody;
 import com.yapp.crew.payload.ChatRoomRequestPayload;
 import com.yapp.crew.payload.ChatRoomResponsePayload;
@@ -43,6 +45,9 @@ public class ChattingProducerService {
 
   @Autowired
   private ChattingProducer chattingProducer;
+
+  @Autowired
+	private BotMessages botMessages;
 
   public void createChatRoom(ChatRoomRequestPayload chatRoomRequestPayload) throws JsonProcessingException {
     User host = userRepository.findUserById(chatRoomRequestPayload.getHostId())
@@ -82,7 +87,7 @@ public class ChattingProducerService {
             .orElseThrow(() -> new RuntimeException("Cannot find chat bot"));
 
 		WelcomeMessageRequestPayload welcomeMessageRequestPayload = WelcomeMessageRequestPayload.builder()
-            .content("봇 환영 메시지")
+            .content(botMessages.getWelcomeMessage())
             .type(MessageType.BOT_MESSAGE)
             .senderId(bot.getId())
             .chatRoomId(chatRoomId)
