@@ -61,7 +61,7 @@ public class ChattingConsumer {
 
     chatRoom.addMessage(message);
 
-    chattingConsumerService.processMessage(message);
+    chattingConsumerService.processMessage(message);  // TODO: 바로 리포지토리에 저장하기
 
     MessageResponsePayload payload = buildMessageResponsePayload(message);
 		simpMessagingTemplate.convertAndSend("/sub/chat/room/" + message.getChatRoom().getId().toString(), payload);

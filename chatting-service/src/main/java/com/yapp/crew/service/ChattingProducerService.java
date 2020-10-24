@@ -1,6 +1,5 @@
 package com.yapp.crew.service;
 
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -87,7 +86,7 @@ public class ChattingProducerService {
             .orElseThrow(() -> new RuntimeException("Cannot find chat bot"));
 
 		WelcomeMessageRequestPayload welcomeMessageRequestPayload = WelcomeMessageRequestPayload.builder()
-            .content(botMessages.getWelcomeMessage())
+            .content(botMessages.getWelcomeMessage().replace("\"", ""))
             .type(MessageType.BOT_MESSAGE)
             .senderId(bot.getId())
             .chatRoomId(chatRoomId)
