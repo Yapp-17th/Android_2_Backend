@@ -23,6 +23,12 @@ public class ChatBotConsumer {
 	@Autowired
 	private ObjectMapper objectMapper;
 
+	@KafkaListener(topics = {"welcome-message"}, groupId = "welcome-message-group")
+	public void consumeBotWelcomeMessage(ConsumerRecord<Long, String> consumerRecord) {
+		log.info("[Chat Bot Event - Welcome Message] Consumer Record: {}", consumerRecord);
+
+	}
+
 	@KafkaListener(topics = {"request-user-profile"}, groupId = "request-user-profile-group")
 	public void consumeBotEventRequestUserProfile(ConsumerRecord<Long, String> consumerRecord) {
 		log.info("[Chat Bot Event - Request User Profile] Consumer Record: {}", consumerRecord);
@@ -32,7 +38,6 @@ public class ChatBotConsumer {
 	@KafkaListener(topics = {"accept-user"}, groupId = "accept-user-group")
 	public void consumeBotEventAcceptUser(ConsumerRecord<Long, String> consumerRecord) {
 		log.info("[Chat Bot Event - Accept User] Consumer Record: {}", consumerRecord);
-
 
 	}
 }

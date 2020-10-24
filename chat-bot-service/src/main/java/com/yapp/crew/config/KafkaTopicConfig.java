@@ -12,6 +12,15 @@ import org.springframework.kafka.config.TopicBuilder;
 public class KafkaTopicConfig {
 
 	@Bean
+	public NewTopic welcomeMessage() {
+		return TopicBuilder
+						.name("welcome-message")
+						.partitions(1)
+						.replicas(1)
+						.build();
+	}
+
+	@Bean
 	public NewTopic requestUserProfile() {
 		return TopicBuilder
 						.name("request-user-profile")
