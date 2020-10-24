@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 @NoArgsConstructor
 @AllArgsConstructor
 @Component
-@PropertySource(value = "classpath:bot-messages.json")
+@PropertySource(value = "classpath:bot-messages.json", encoding = "UTF-8")
 @ConfigurationProperties
 public class BotMessages {
 
