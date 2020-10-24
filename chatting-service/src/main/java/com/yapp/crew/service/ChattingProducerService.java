@@ -1,6 +1,7 @@
 package com.yapp.crew.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.yapp.crew.domain.model.Board;
@@ -13,7 +14,9 @@ import com.yapp.crew.domain.repository.MessageRepository;
 import com.yapp.crew.domain.repository.UserRepository;
 import com.yapp.crew.domain.type.MessageType;
 import com.yapp.crew.payload.ChatRoomRequestPayload;
+import com.yapp.crew.payload.ChatRoomResponsePayload;
 import com.yapp.crew.payload.MessageRequestPayload;
+import com.yapp.crew.payload.MessageResponsePayload;
 import com.yapp.crew.producer.ChattingProducer;
 import lombok.extern.slf4j.Slf4j;
 
@@ -61,8 +64,9 @@ public class ChattingProducerService {
     sendWelcomeBotMessage(chatRoom.getId());
   }
 
-  public List<ChatRoom> receiveChatRooms() {
-  	return chatRoomRepository.findAll();
+  public List<ChatRoomResponsePayload> receiveChatRooms() {
+  	List<ChatRoom> chatRooms = chatRoomRepository.findAll();
+		return buildChatRoomResponsePayload(chatRooms);
 	}
 
   public List<Message> receiveChatMessages(Long chatRoomId) {
@@ -82,4 +86,33 @@ public class ChattingProducerService {
 
     chattingProducer.sendMessage(welcomeBotMessage);
   }
+
+  private List<ChatRoomResponsePayload> buildChatRoomResponsePayload(List<ChatRoom> chatRooms) {
+  	return chatRooms.stream()
+						.map(chatRoom -> {
+							List<Message> messages = chatRoom.getMessages();
+							Message lastMessage = messages.get(messages.size() - 1);
+
+							MessageResponsePayload messagePayload = MessageResponsePayload.builder()
+											.id(lastMessage.getId())
+											.content(lastMessage.getContent())
+											.type(lastMessage.getType())
+											.isRead(lastMessage.isRead())
+											.senderId(lastMessage.getSender().getId())
+											.senderNickname(lastMessage.getSender().getNickname())
+											.createdAt(lastMessage.getCreatedAt())
+											.build();
+
+							return ChatRoomResponsePayload.builder()
+											.id(chatRoom.getId())
+											.hostId(chatRoom.getHost().getId())
+											.guestId(chatRoom.getGuest().getId())
+											.boardId(chatRoom.getBoard().getId())
+											.status(chatRoom.getStatus())
+											.lastMessage(messagePayload)
+											.createdAt(chatRoom.getCreatedAt())
+											.build();
+						})
+						.collect(Collectors.toList());
+	}
 }

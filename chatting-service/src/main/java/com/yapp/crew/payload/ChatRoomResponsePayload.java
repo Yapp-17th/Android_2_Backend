@@ -29,5 +29,5 @@ public class ChatRoomResponsePayload {
 
 	private LocalDateTime createdAt;
 
-	private List<MessageResponsePayload> messages;
+	private MessageResponsePayload lastMessage;
 }
