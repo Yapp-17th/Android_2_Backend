@@ -8,6 +8,7 @@ import java.util.concurrent.TimeoutException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yapp.crew.payload.MessageRequestPayload;
+import com.yapp.crew.payload.WelcomeMessageRequestPayload;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.header.Header;
@@ -49,6 +50,26 @@ public class ChattingProducer {
     });
     return listenableFuture;
   }
+
+  public ListenableFuture<SendResult<Long, String>> sendWelcomeBotMessage(WelcomeMessageRequestPayload welcomeMessageRequestPayload) throws JsonProcessingException {
+		Long key = welcomeMessageRequestPayload.getChatRoomId();
+		String value = objectMapper.writeValueAsString(welcomeMessageRequestPayload);
+
+		ProducerRecord<Long, String> producerRecord = buildProducerRecord(key, value, "welcome-message");
+		ListenableFuture<SendResult<Long, String>> listenableFuture = kafkaTemplate.send(producerRecord);
+		listenableFuture.addCallback(new ListenableFutureCallback<>() {
+			@Override
+			public void onFailure(Throwable ex) {
+				handleFailure(key, value, ex);
+			}
+
+			@Override
+			public void onSuccess(SendResult<Long, String> result) {
+				handleSuccess(key, value, result);
+			}
+		});
+		return listenableFuture;
+	}
 
   public SendResult<Long, String> sendMessageSynchronously(MessageRequestPayload messageRequestPayload) throws JsonProcessingException, InterruptedException, ExecutionException, TimeoutException {
     Long key = messageRequestPayload.getChatRoomId();
