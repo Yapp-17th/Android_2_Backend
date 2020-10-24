@@ -1,4 +1,4 @@
-package com.yapp.crew.config;
+package com.yapp.crew.utils;
 
 public enum ResponseDomain {
   ADDRESSCITY("city"),
