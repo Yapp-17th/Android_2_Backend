@@ -2,8 +2,6 @@ package com.yapp.crew.consumer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.yapp.crew.domain.model.ChatRoom;
-import com.yapp.crew.domain.model.User;
 import com.yapp.crew.domain.repository.ChatRoomRepository;
 import com.yapp.crew.domain.repository.UserRepository;
 import com.yapp.crew.payload.MessageRequestPayload;
@@ -40,7 +38,7 @@ public class ChatBotConsumer {
 		this.objectMapper = objectMapper;
 	}
 
-	@KafkaListener(topics = {"welcome-message"}, groupId = "welcome-message-group")
+	@KafkaListener(topics = "${kafka.topics.welcome-message}", groupId = "${kafka.groups.welcome-message-group}")
 	public void consumeBotWelcomeMessage(ConsumerRecord<Long, String> consumerRecord) throws JsonProcessingException {
 		log.info("[Chat Bot Event - Welcome Message] Consumer Record: {}", consumerRecord);
 
@@ -49,13 +47,13 @@ public class ChatBotConsumer {
 		chatBotProducer.sendBotMessage(messageRequestPayload);
 	}
 
-	@KafkaListener(topics = {"request-user-profile"}, groupId = "request-user-profile-group")
+	@KafkaListener(topics = "${kafka.groups.request-user-profile}", groupId = "${kafka.groups.request-user-profile-group}")
 	public void consumeBotEventRequestUserProfile(ConsumerRecord<Long, String> consumerRecord) {
 		log.info("[Chat Bot Event - Request User Profile] Consumer Record: {}", consumerRecord);
 
 	}
 
-	@KafkaListener(topics = {"accept-user"}, groupId = "accept-user-group")
+	@KafkaListener(topics = "${kafka.topics.accept-user}", groupId = "${kafka.groups.accept-user-group}")
 	public void consumeBotEventAcceptUser(ConsumerRecord<Long, String> consumerRecord) {
 		log.info("[Chat Bot Event - Accept User] Consumer Record: {}", consumerRecord);
 
