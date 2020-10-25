@@ -31,7 +31,7 @@ public class ChatBotProducer {
 		Long key = messageRequestPayload.getChatRoomId();
 		String value = objectMapper.writeValueAsString(messageRequestPayload);
 
-		ProducerRecord<Long, String> producerRecord = buildProducerRecord(key, value, "explanet-dev");
+		ProducerRecord<Long, String> producerRecord = buildProducerRecord(key, value, "chat-message");
 		ListenableFuture<SendResult<Long, String>> listenableFuture = kafkaTemplate.send(producerRecord);
 		listenableFuture.addCallback(new ListenableFutureCallback<>() {
 			@Override

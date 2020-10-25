@@ -9,12 +9,12 @@ import org.springframework.kafka.config.TopicBuilder;
 
 @Configuration
 @Profile(value = "dev")
-public class AutoCreateConfig {
+public class KafkaTopicConfig {
 
   @Bean
-  public NewTopic exPlanetChat_dev() {
+  public NewTopic chatMessage() {
     return TopicBuilder
-            .name("explanet-dev")
+            .name("chat-message")
             .partitions(1)
             .replicas(1)
             .build();
