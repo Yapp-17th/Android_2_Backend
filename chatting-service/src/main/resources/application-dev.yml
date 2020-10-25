@@ -39,3 +39,11 @@ spring:
     database-platform: org.hibernate.dialect.MySQL5Dialect
     hibernate:
       ddl-auto: create
+
+kafka:
+  topics:
+    chat-message: chat-message
+    welcome-message: welcome-message
+
+  groups:
+    chat-message-group: chat-message-group

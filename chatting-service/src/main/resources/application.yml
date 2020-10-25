@@ -55,3 +55,11 @@ spring:
         hibernate:
           stat: debug
           type: trace
+
+kafka:
+  topics:
+    chat-message: chat-message
+    welcome-message: welcome-message
+
+  groups:
+    chat-message-group: chat-message-group

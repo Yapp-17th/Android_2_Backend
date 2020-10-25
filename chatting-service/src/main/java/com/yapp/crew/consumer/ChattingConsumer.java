@@ -49,7 +49,7 @@ public class ChattingConsumer {
 	}
 
   @Transactional
-  @KafkaListener(topics = {"chat-message"}, groupId = "chat-message-group")
+  @KafkaListener(topics = "${kafka.topics.chat-message}", groupId = "${kafka.groups.chat-message-group}")
   public void consumeChatMessage(ConsumerRecord<Long, String> consumerRecord) throws JsonProcessingException {
     log.info("Consumer Record: {}", consumerRecord);
 
