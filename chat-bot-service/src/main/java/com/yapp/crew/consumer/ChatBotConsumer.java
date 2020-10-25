@@ -19,17 +19,26 @@ import org.springframework.stereotype.Component;
 @Component
 public class ChatBotConsumer {
 
-	@Autowired
-	private ChatBotProducer chatBotProducer;
+	private final ChatBotProducer chatBotProducer;
+
+	private final ChatRoomRepository chatRoomRepository;
+
+	private final UserRepository userRepository;
+
+	private final ObjectMapper objectMapper;
 
 	@Autowired
-	private ChatRoomRepository chatRoomRepository;
-
-	@Autowired
-	private UserRepository userRepository;
-
-	@Autowired
-	private ObjectMapper objectMapper;
+	public ChatBotConsumer(
+					ChatBotProducer chatBotProducer,
+					ChatRoomRepository chatRoomRepository,
+					UserRepository userRepository,
+					ObjectMapper objectMapper
+	) {
+		this.chatBotProducer = chatBotProducer;
+		this.chatRoomRepository = chatRoomRepository;
+		this.userRepository = userRepository;
+		this.objectMapper = objectMapper;
+	}
 
 	@KafkaListener(topics = {"welcome-message"}, groupId = "welcome-message-group")
 	public void consumeBotWelcomeMessage(ConsumerRecord<Long, String> consumerRecord) throws JsonProcessingException {
