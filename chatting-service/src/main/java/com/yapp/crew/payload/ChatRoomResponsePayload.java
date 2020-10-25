@@ -1,8 +1,9 @@
 package com.yapp.crew.payload;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.yapp.crew.domain.status.ChatRoomStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,5 +30,6 @@ public class ChatRoomResponsePayload {
 
 	private LocalDateTime createdAt;
 
+	@JsonInclude(value = Include.NON_NULL)
 	private MessageResponsePayload lastMessage;
 }
