@@ -12,11 +12,18 @@ import org.springframework.stereotype.Service;
 @Service
 public class ChattingConsumerService {
 
-  @Autowired
-  private ChatRoomRepository chatRoomRepository;
+  private final ChatRoomRepository chatRoomRepository;
+
+  private final MessageRepository messageRepository;
 
   @Autowired
-  private MessageRepository messageRepository;
+	public ChattingConsumerService(
+					ChatRoomRepository chatRoomRepository,
+					MessageRepository messageRepository
+	) {
+  	this.chatRoomRepository = chatRoomRepository;
+  	this.messageRepository = messageRepository;
+	}
 
   public void processMessage(Message message) {
     switch (message.getType()) {

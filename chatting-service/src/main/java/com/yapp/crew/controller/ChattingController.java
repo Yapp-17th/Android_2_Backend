@@ -30,11 +30,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ChattingController {
 
-  @Autowired
-  private ChattingProducer chattingProducer;
+  private final ChattingProducer chattingProducer;
+
+  private final ChattingProducerService chattingProducerService;
 
   @Autowired
-  private ChattingProducerService chattingProducerService;
+	public ChattingController(
+					ChattingProducer chattingProducer,
+					ChattingProducerService chattingProducerService
+	) {
+  	this.chattingProducer = chattingProducer;
+  	this.chattingProducerService = chattingProducerService;
+	}
 
   @MessageMapping(value = "/v1/chat/message")
   public void sendMessageByWebsocket(MessageRequestPayload messageRequestPayload) throws JsonProcessingException {

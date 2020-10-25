@@ -21,11 +21,18 @@ import org.springframework.util.concurrent.ListenableFutureCallback;
 @Component
 public class ChatBotProducer {
 
-	@Autowired
-	private KafkaTemplate<Long, String> kafkaTemplate;
+	private final KafkaTemplate<Long, String> kafkaTemplate;
+
+	private final ObjectMapper objectMapper;
 
 	@Autowired
-	private ObjectMapper objectMapper;
+	public ChatBotProducer(
+					KafkaTemplate<Long, String> kafkaTemplate,
+					ObjectMapper objectMapper
+	) {
+		this.kafkaTemplate = kafkaTemplate;
+		this.objectMapper = objectMapper;
+	}
 
 	public ListenableFuture<SendResult<Long, String>> sendBotMessage(MessageRequestPayload messageRequestPayload) throws JsonProcessingException {
 		Long key = messageRequestPayload.getChatRoomId();

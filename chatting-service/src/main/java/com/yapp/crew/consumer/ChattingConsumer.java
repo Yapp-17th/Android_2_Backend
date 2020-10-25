@@ -23,20 +23,30 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 public class ChattingConsumer {
 
-  @Autowired
-  private ChattingConsumerService chattingConsumerService;
+  private final ChattingConsumerService chattingConsumerService;
+
+  private final SimpMessagingTemplate simpMessagingTemplate;
+
+  private final ChatRoomRepository chatRoomRepository;
+
+  private final UserRepository userRepository;
+
+  private final ObjectMapper objectMapper;
 
   @Autowired
-  private SimpMessagingTemplate simpMessagingTemplate;
-
-  @Autowired
-  private ChatRoomRepository chatRoomRepository;
-
-  @Autowired
-  private UserRepository userRepository;
-
-  @Autowired
-  private ObjectMapper objectMapper;
+	public ChattingConsumer(
+					ChattingConsumerService chattingConsumerService,
+					SimpMessagingTemplate simpMessagingTemplate,
+					ChatRoomRepository chatRoomRepository,
+					UserRepository userRepository,
+					ObjectMapper objectMapper
+	) {
+  	this.chattingConsumerService = chattingConsumerService;
+  	this.simpMessagingTemplate = simpMessagingTemplate;
+  	this.chatRoomRepository = chatRoomRepository;
+  	this.userRepository = userRepository;
+  	this.objectMapper = objectMapper;
+	}
 
   @Transactional
   @KafkaListener(topics = {"chat-message"}, groupId = "chat-message-group")

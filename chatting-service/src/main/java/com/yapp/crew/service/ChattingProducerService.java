@@ -30,23 +30,34 @@ import org.springframework.stereotype.Service;
 @Service
 public class ChattingProducerService {
 
-  @Autowired
-  private ChatRoomRepository chatRoomRepository;
+	private final ChattingProducer chattingProducer;
 
-  @Autowired
-  private MessageRepository messageRepository;
+  private final ChatRoomRepository chatRoomRepository;
 
-  @Autowired
-  private UserRepository userRepository;
+  private final MessageRepository messageRepository;
 
-  @Autowired
-  private BoardRepository boardRepository;
+  private final BoardRepository boardRepository;
 
-  @Autowired
-  private ChattingProducer chattingProducer;
+  private final UserRepository userRepository;
 
-  @Autowired
-	private BotMessages botMessages;
+	private final BotMessages botMessages;
+
+	@Autowired
+	public ChattingProducerService(
+					ChattingProducer chattingProducer,
+					ChatRoomRepository chatRoomRepository,
+					MessageRepository messageRepository,
+					BoardRepository boardRepository,
+					UserRepository userRepository,
+					BotMessages botMessages
+	) {
+		this.chattingProducer = chattingProducer;
+		this.chatRoomRepository = chatRoomRepository;
+		this.messageRepository = messageRepository;
+		this.boardRepository = boardRepository;
+		this.userRepository = userRepository;
+		this.botMessages = botMessages;
+	}
 
   public void createChatRoom(ChatRoomRequestPayload chatRoomRequestPayload) throws JsonProcessingException {
     User host = userRepository.findUserById(chatRoomRequestPayload.getHostId())
