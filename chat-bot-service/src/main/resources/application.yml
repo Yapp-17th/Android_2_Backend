@@ -58,3 +58,14 @@ spring:
         hibernate:
           stat: debug
           type: trace
+
+kafka:
+  topics:
+    welcome-message: welcome-message
+    request-user-profile: request-user-profile
+    accept-user: accept-user
+
+  groups:
+    welcome-message-group: welcome-message-group
+    request-user-profile-group: request-user-profile-group
+    accept-user-group: accept-user-group
