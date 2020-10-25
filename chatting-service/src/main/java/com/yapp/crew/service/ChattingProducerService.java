@@ -24,6 +24,7 @@ import com.yapp.crew.producer.ChattingProducer;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -59,7 +60,7 @@ public class ChattingProducerService {
 		this.botMessages = botMessages;
 	}
 
-  public void createChatRoom(ChatRoomRequestPayload chatRoomRequestPayload) throws JsonProcessingException {
+  public HttpResponseBody<ChatRoomResponsePayload> createChatRoom(ChatRoomRequestPayload chatRoomRequestPayload) throws JsonProcessingException {
     User host = userRepository.findUserById(chatRoomRequestPayload.getHostId())
             .orElseThrow(() -> new RuntimeException("Cannot find host user with id"));
 
@@ -69,29 +70,34 @@ public class ChattingProducerService {
     Board board = boardRepository.findById(chatRoomRequestPayload.getBoardId())
             .orElseThrow(() -> new RuntimeException("Cannot find board"));
 
-    ChatRoom chatRoom = ChatRoom.getBuilder()
-            .withHost(host)
-            .withGuest(guest)
-            .withBoard(board)
-            .build();
+		Optional<ChatRoom> chatRoom = chatRoomRepository.findByGuestIdAndBoardId(guest.getId(), board.getId());
+		if (chatRoom.isPresent()) {
+			return HttpResponseBody.buildChatRoomResponse(buildChatRoomResponsePayload(chatRoom.get()), HttpStatus.OK.value());
+		}
 
-    host.addChatRoomHost(chatRoom);
-    guest.addChatRoomGuest(chatRoom);
-    chatRoomRepository.save(chatRoom);
-    log.info("Successfully created a new chat room");
+		ChatRoom newChatRoom = ChatRoom.getBuilder()
+						.withHost(host)
+						.withGuest(guest)
+						.withBoard(board)
+						.build();
 
-    produceWelcomeBotMessage(chatRoom.getId());
+    host.addChatRoomHost(newChatRoom);
+    guest.addChatRoomGuest(newChatRoom);
+    chatRoomRepository.save(newChatRoom);
+
+    produceWelcomeBotMessage(newChatRoom.getId());
+    return HttpResponseBody.buildChatRoomResponse(buildChatRoomResponsePayload(newChatRoom), HttpStatus.CREATED.value());
   }
 
   public HttpResponseBody<List<ChatRoomResponsePayload>> receiveChatRooms() {
   	List<ChatRoom> chatRooms = chatRoomRepository.findAll();
-		return HttpResponseBody.buildChatRoomsResponse(buildChatRoomResponsePayload(chatRooms));
+		return HttpResponseBody.buildChatRoomsResponse(buildChatRoomResponsePayload(chatRooms), HttpStatus.OK.value());
 	}
 
   public HttpResponseBody<List<MessageResponsePayload>> receiveChatMessages(Long chatRoomId) {
     List<Message> messages = messageRepository.findAllByChatRoomIdOrderByCreatedAt(chatRoomId);
     Long firstUnreadChatMessageId = findFirstUnreadChatMessage(messages);
-		return HttpResponseBody.buildChatMessagesResponse(buildMessageResponsePayload(messages), firstUnreadChatMessageId);
+		return HttpResponseBody.buildChatMessagesResponse(buildMessageResponsePayload(messages), HttpStatus.OK.value(), firstUnreadChatMessageId);
   }
 
   private void produceWelcomeBotMessage(Long chatRoomId) throws JsonProcessingException {
@@ -117,6 +123,17 @@ public class ChattingProducerService {
   		return firstUnreadChatMessage.get().getId();
 		}
   	return -1L;
+	}
+
+	private ChatRoomResponsePayload buildChatRoomResponsePayload(ChatRoom chatRoom) {
+		return ChatRoomResponsePayload.builder()
+						.id(chatRoom.getId())
+						.hostId(chatRoom.getHost().getId())
+						.guestId(chatRoom.getGuest().getId())
+						.boardId(chatRoom.getBoard().getId())
+						.status(chatRoom.getStatus())
+						.createdAt(chatRoom.getCreatedAt())
+						.build();
 	}
 
   private List<ChatRoomResponsePayload> buildChatRoomResponsePayload(List<ChatRoom> chatRooms) {

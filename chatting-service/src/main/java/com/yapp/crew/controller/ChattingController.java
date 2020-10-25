@@ -85,7 +85,7 @@ public class ChattingController {
   public ResponseEntity<?> receiveChatMessages(@PathVariable("chatRoomId") Long chatRoomId) {
     log.info("Receive chat messages");
     HttpResponseBody<List<MessageResponsePayload>> responseBody = chattingProducerService.receiveChatMessages(chatRoomId);
-    return ResponseEntity.status(HttpStatus.OK).body(responseBody);
+    return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
   }
 
 	/**
@@ -98,19 +98,17 @@ public class ChattingController {
 	public ResponseEntity<?> receiveChatRooms() {
 		log.info("Receive chat rooms");
 		HttpResponseBody<List<ChatRoomResponsePayload>> responseBody = chattingProducerService.receiveChatRooms();
-		return ResponseEntity.status(HttpStatus.OK).body(responseBody);
+		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
 	}
 
 	/**
 	 * - 채팅방 개설
-	 * - TODO: HttpResponseBody 를 통한 응답 객체 수정
 	 * - TODO: guestId 는 JWT 내의 페이로드에서 가져오기
 	 *
 	 */
   @PostMapping(path = "/v1/chat/room")
   public ResponseEntity<?> createChatRoom(@RequestBody ChatRoomRequestPayload chatRoomRequestPayload) throws JsonProcessingException {
-  	log.info("Create chat room");
-    chattingProducerService.createChatRoom(chatRoomRequestPayload);
-    return ResponseEntity.status(HttpStatus.CREATED).body(chatRoomRequestPayload);
+    HttpResponseBody<ChatRoomResponsePayload> responseBody = chattingProducerService.createChatRoom(chatRoomRequestPayload);
+    return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
   }
 }

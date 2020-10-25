@@ -114,13 +114,17 @@ public class User extends BaseEntity {
   }
 
   public void addChatRoomHost(ChatRoom chatRoom) {
-    chatRoom.setHost(this);
-    this.hostList.add(chatRoom);
+  	if (hostList.contains(chatRoom)) {
+  		return;
+		}
+    hostList.add(chatRoom);
   }
 
   public void addChatRoomGuest(ChatRoom chatRoom) {
-    chatRoom.setGuest(this);
-    this.guestList.add(chatRoom);
+		if (guestList.contains(chatRoom)) {
+			return;
+		}
+    guestList.add(chatRoom);
   }
 
   public static UserBuilder getBuilder() {

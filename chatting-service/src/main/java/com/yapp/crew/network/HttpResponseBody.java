@@ -18,23 +18,35 @@ public class HttpResponseBody<T> {
 
 	private LocalDateTime transactionTime;
 
+	private Integer status;
+
 	@JsonInclude(NON_NULL)
 	private Long firstUnreadMessageId;
 
 	@JsonInclude(NON_NULL)
 	private T data;
 
-	public static <T> HttpResponseBody<T> buildChatMessagesResponse(T data, Long firstUnreadMessageId) {
+	public static <T> HttpResponseBody<T> buildChatMessagesResponse(T data, Integer status, Long firstUnreadMessageId) {
 		return (HttpResponseBody<T>) HttpResponseBody.builder()
 						.transactionTime(LocalDateTime.now())
+						.status(status)
 						.firstUnreadMessageId(firstUnreadMessageId)
 						.data(data)
 						.build();
 	}
 
-	public static <T> HttpResponseBody<T> buildChatRoomsResponse(T data) {
+	public static <T> HttpResponseBody<T> buildChatRoomsResponse(T data, Integer status) {
 		return (HttpResponseBody<T>) HttpResponseBody.builder()
 						.transactionTime(LocalDateTime.now())
+						.status(status)
+						.data(data)
+						.build();
+	}
+
+	public static <T> HttpResponseBody<T> buildChatRoomResponse(T data, Integer status) {
+		return (HttpResponseBody<T>) HttpResponseBody.builder()
+						.transactionTime(LocalDateTime.now())
+						.status(status)
 						.data(data)
 						.build();
 	}
