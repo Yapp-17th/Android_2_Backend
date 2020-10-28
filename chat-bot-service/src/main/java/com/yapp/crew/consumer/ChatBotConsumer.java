@@ -47,7 +47,7 @@ public class ChatBotConsumer {
 		chatBotProducer.sendBotMessage(messageRequestPayload);
 	}
 
-	@KafkaListener(topics = "${kafka.groups.request-user-profile}", groupId = "${kafka.groups.request-user-profile-group}")
+	@KafkaListener(topics = "${kafka.topics.request-user-profile}", groupId = "${kafka.groups.request-user-profile-group}")
 	public void consumeBotEventRequestUserProfile(ConsumerRecord<Long, String> consumerRecord) {
 		log.info("[Chat Bot Event - Request User Profile] Consumer Record: {}", consumerRecord);
 

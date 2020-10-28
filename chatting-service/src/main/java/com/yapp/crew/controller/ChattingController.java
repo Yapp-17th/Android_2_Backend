@@ -81,7 +81,7 @@ public class ChattingController {
 	 * - 가장 첫 안읽은 메시지를 firstUnreadChatMessageId 필드에 추가, 안읽은 메시지가 없으면 -1
 	 *
 	 */
-  @GetMapping(path = "/v1/chat/message/{chatRoomId}")
+  @GetMapping(path = "/v1/chat/room/{chatRoomId}/message")
   public ResponseEntity<?> receiveChatMessages(@PathVariable("chatRoomId") Long chatRoomId) {
     log.info("Receive chat messages");
     HttpResponseBody<List<MessageResponsePayload>> responseBody = chattingProducerService.receiveChatMessages(chatRoomId);
@@ -91,13 +91,11 @@ public class ChattingController {
 	/**
 	 * - 모든 채팅방 목록 가져옴
 	 * - 각 방의 마지막 메시지도 함께 가져옴
-	 * - TODO: 사용자 ID도 전달해서 해당 사용자가 가진 채팅방 목록만 가져올 수 있도록 수정
 	 *
 	 */
-	@GetMapping(path = "/v1/chat/room")
-	public ResponseEntity<?> receiveChatRooms() {
-		log.info("Receive chat rooms");
-		HttpResponseBody<List<ChatRoomResponsePayload>> responseBody = chattingProducerService.receiveChatRooms();
+	@GetMapping(path = "/v1/user/{userId}/chat/room")
+	public ResponseEntity<?> receiveChatRooms(@PathVariable("userId") Long userId) {
+		HttpResponseBody<List<ChatRoomResponsePayload>> responseBody = chattingProducerService.receiveChatRooms(userId);
 		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
 	}
 

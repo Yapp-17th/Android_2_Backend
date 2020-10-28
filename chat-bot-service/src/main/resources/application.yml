@@ -61,6 +61,7 @@ spring:
 
 kafka:
   topics:
+    chat-message: chat-message
     welcome-message: welcome-message
     request-user-profile: request-user-profile
     accept-user: accept-user

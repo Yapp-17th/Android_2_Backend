@@ -22,8 +22,8 @@ import org.springframework.util.concurrent.ListenableFutureCallback;
 @Component
 public class ChatBotProducer {
 
-	@Value(value = "${kafka.topics.welcome-message}")
-	private String welcomeMessageTopic;
+	@Value(value = "${kafka.topics.chat-message}")
+	private String chatMessageTopic;
 
 	private final KafkaTemplate<Long, String> kafkaTemplate;
 
@@ -42,7 +42,7 @@ public class ChatBotProducer {
 		Long key = messageRequestPayload.getChatRoomId();
 		String value = objectMapper.writeValueAsString(messageRequestPayload);
 
-		ProducerRecord<Long, String> producerRecord = buildProducerRecord(key, value, welcomeMessageTopic);
+		ProducerRecord<Long, String> producerRecord = buildProducerRecord(key, value, chatMessageTopic);
 		ListenableFuture<SendResult<Long, String>> listenableFuture = kafkaTemplate.send(producerRecord);
 		listenableFuture.addCallback(new ListenableFutureCallback<>() {
 			@Override
