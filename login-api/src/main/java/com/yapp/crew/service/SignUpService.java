@@ -7,13 +7,14 @@ import com.yapp.crew.domain.model.User.UserBuilder;
 import com.yapp.crew.domain.repository.AddressRepository;
 import com.yapp.crew.domain.repository.CategoryRepository;
 import com.yapp.crew.domain.repository.UserRepository;
-import com.yapp.crew.domain.type.ExerciseType;
-import com.yapp.crew.dto.LoginResponseDto;
+import com.yapp.crew.model.LoginResponse;
+import com.yapp.crew.model.LoginResponseBody;
 import com.yapp.crew.model.SignupUserInfo;
 import com.yapp.crew.utils.ResponseMessage;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -23,15 +24,17 @@ public class SignUpService {
   private UserRepository userRepository;
   private CategoryRepository categoryRepository;
   private AddressRepository addressRepository;
+  private TokenService tokenService;
 
   @Autowired
-  public SignUpService(UserRepository userRepository, CategoryRepository categoryRepository, AddressRepository addressRepository) {
+  public SignUpService(UserRepository userRepository, CategoryRepository categoryRepository, AddressRepository addressRepository, TokenService tokenService) {
     this.userRepository = userRepository;
     this.categoryRepository = categoryRepository;
     this.addressRepository = addressRepository;
+    this.tokenService = tokenService;
   }
 
-  public LoginResponseDto signUp(SignupUserInfo signupUserInfo) {
+  public LoginResponse signUp(SignupUserInfo signupUserInfo) {
     try {
       UserBuilder userBuilder = User.getBuilder();
 
@@ -50,10 +53,14 @@ public class SignUpService {
           .build();
       saveUser(user);
 
-      return LoginResponseDto.pass(ResponseMessage.SIGNUP_SUCCESS.getMessage());
+      HttpHeaders httpHeaders = tokenService.setToken(user);
+      LoginResponseBody loginResponseBody = LoginResponseBody.pass(ResponseMessage.SIGNUP_SUCCESS.getMessage());
+
+      return new LoginResponse(httpHeaders, loginResponseBody);
     } catch (Exception e) {
       log.info(e.getMessage());
-      return LoginResponseDto.fail(ResponseMessage.SIGNUP_FAIL.getMessage());
+      LoginResponseBody loginResponseBody = LoginResponseBody.fail(ResponseMessage.SIGNUP_FAIL.getMessage());
+      return new LoginResponse(loginResponseBody);
     }
   }
 

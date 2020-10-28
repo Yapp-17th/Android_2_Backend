@@ -12,3 +12,8 @@ spring:
     database-platform: org.hibernate.dialect.MySQL5Dialect
     hibernate:
       ddl-auto: update
+
+jwt:
+  header: X-Auth-Token
+  secret: secretkeytest1234
+  expiration: 1
