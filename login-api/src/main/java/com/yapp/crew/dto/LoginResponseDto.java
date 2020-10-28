@@ -1,5 +1,7 @@
 package com.yapp.crew.dto;
 
+import com.yapp.crew.model.LoginResponse;
+import com.yapp.crew.model.LoginResponseBody;
 import com.yapp.crew.utils.ResponseDomain;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,19 +15,11 @@ public class LoginResponseDto {
   private boolean isSuccess;
   private String message;
 
-  public static LoginResponseDto pass(String message) {
+  public static LoginResponseDto build(LoginResponseBody loginResponseBody) {
     LoginResponseDto loginResponseDto = new LoginResponseDto();
-    loginResponseDto.status = HttpStatus.OK.value();
-    loginResponseDto.isSuccess = true;
-    loginResponseDto.message = message;
-    return loginResponseDto;
-  }
-
-  public static LoginResponseDto fail(String message) {
-    LoginResponseDto loginResponseDto = new LoginResponseDto();
-    loginResponseDto.status = HttpStatus.BAD_REQUEST.value();
-    loginResponseDto.isSuccess = false;
-    loginResponseDto.message = message;
+    loginResponseDto.status = loginResponseBody.getStatus();
+    loginResponseDto.isSuccess = loginResponseBody.isSuccess();
+    loginResponseDto.message = loginResponseBody.getMessage();
     return loginResponseDto;
   }
 }
