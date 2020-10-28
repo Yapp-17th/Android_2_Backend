@@ -9,7 +9,9 @@ public enum ResponseMessage {
   SIGNUP_FAIL("회원 가입 실패, 서버 내부 오류"),
 
   SIGNOUT_SUCCESS("로그아웃 성공"),
-  SIGNOUT_FAIL("로그아웃 실패");
+  SIGNOUT_FAIL("로그아웃 실패"),
+
+  TOKEN_NOT_CREATED("토큰이 생성되지 않았습니다");
 
   private String message;
 
