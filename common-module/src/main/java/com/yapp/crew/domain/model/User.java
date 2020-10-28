@@ -45,6 +45,10 @@ public class User extends BaseEntity {
   private String email;
 
   @Setter(value = AccessLevel.PRIVATE)
+  @Column(nullable = false, length = 255)
+  private String intro;
+
+  @Setter(value = AccessLevel.PRIVATE)
   @Column(name = "access_token", nullable = false, unique = true, length = 100)
   private String accessToken;
 
@@ -144,6 +148,7 @@ public class User extends BaseEntity {
     private String oauthId;
     private Address address;
     private Category category;
+    private String intro;
 
     public UserBuilder withUsername(String username) {
       this.username = username;
@@ -170,6 +175,11 @@ public class User extends BaseEntity {
       return this;
     }
 
+    public UserBuilder withIntro(String intro) {
+      this.intro = intro;
+      return this;
+    }
+
     public UserBuilder withAddress(Address address) {
       this.address = address;
       return this;
@@ -186,9 +196,10 @@ public class User extends BaseEntity {
       user.setNickname(nickname);
       user.setEmail(email);
       user.setAccessToken(accessToken);
-      user.setAccessToken(oauthId);
       user.setAddress(address);
       user.setCategory(category);
+      user.setIntro(intro);
+      user.setOauthId(oauthId);
       return user;
     }
   }

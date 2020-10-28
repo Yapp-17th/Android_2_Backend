@@ -32,11 +32,11 @@ public class Category extends BaseEntity {
   @Setter(value = AccessLevel.PRIVATE)
   @Enumerated(value = EnumType.STRING)
   @Column(nullable = false)
-  private ExerciseType name;
+  private ExerciseType exercise;
 
   @JsonManagedReference
   @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
-  private List<User> users = new ArrayList<>();;
+  private List<User> users = new ArrayList<>();
 
   @JsonManagedReference
   @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)

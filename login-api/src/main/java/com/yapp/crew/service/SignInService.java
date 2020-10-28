@@ -1,6 +1,7 @@
 package com.yapp.crew.service;
 
 import com.yapp.crew.dto.LoginRequestDto;
+import com.yapp.crew.model.LoginUserInfo;
 import com.yapp.crew.utils.ResponseDomain;
 import com.yapp.crew.utils.ResponseMessage;
 import com.yapp.crew.domain.model.User;
@@ -22,9 +23,9 @@ public class SignInService {
     this.userRepository = userRepository;
   }
 
-  public LoginResponseDto signIn(LoginRequestDto loginRequestDto) {
+  public LoginResponseDto signIn(LoginUserInfo loginUserInfo) {
     try {
-      Optional<User> existingUser = getUserByOauthId(loginRequestDto.getUserId());
+      Optional<User> existingUser = getUserByOauthId(loginUserInfo.getOauthId());
       if (existingUser.isPresent()) {
         return LoginResponseDto.pass(ResponseMessage.SIGNIN_SUCCESS.getMessage());
       }
