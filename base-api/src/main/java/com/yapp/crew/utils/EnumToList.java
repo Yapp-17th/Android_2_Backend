@@ -1,4 +1,4 @@
-package com.yapp.crew.service;
+package com.yapp.crew.utils;
 
 import com.yapp.crew.domain.type.CityType;
 import com.yapp.crew.domain.type.ExerciseType;

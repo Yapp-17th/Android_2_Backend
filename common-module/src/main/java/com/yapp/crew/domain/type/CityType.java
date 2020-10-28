@@ -1,5 +1,7 @@
 package com.yapp.crew.domain.type;
 
+import java.util.Arrays;
+
 public enum CityType {
   JONGNO_GU("종로구"),
   JUNG_GU("중구"),
@@ -35,5 +37,16 @@ public enum CityType {
 
   public String getName() {
     return name;
+  }
+
+  public static CityType getCityType(final String name) throws Exception {
+    for (final CityType cityType : values()) {
+      if (cityType.name.equalsIgnoreCase(name)) {
+        return cityType;
+      }
+    }
+
+    final String message = "Unknown cityType " + name + ", allowed values are " + Arrays.toString(values());
+    throw new Exception(message);
   }
 }
