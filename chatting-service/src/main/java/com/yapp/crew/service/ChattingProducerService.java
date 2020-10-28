@@ -89,8 +89,8 @@ public class ChattingProducerService {
     return HttpResponseBody.buildChatRoomResponse(buildChatRoomResponsePayload(newChatRoom), HttpStatus.CREATED.value());
   }
 
-  public HttpResponseBody<List<ChatRoomResponsePayload>> receiveChatRooms() {
-  	List<ChatRoom> chatRooms = chatRoomRepository.findAll();
+  public HttpResponseBody<List<ChatRoomResponsePayload>> receiveChatRooms(Long userId) {
+  	List<ChatRoom> chatRooms = chatRoomRepository.findAllByUserId(userId);
 		return HttpResponseBody.buildChatRoomsResponse(buildChatRoomResponsePayload(chatRooms), HttpStatus.OK.value());
 	}
 
