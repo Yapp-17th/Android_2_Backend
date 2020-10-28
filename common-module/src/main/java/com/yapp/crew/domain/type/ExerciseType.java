@@ -1,5 +1,7 @@
 package com.yapp.crew.domain.type;
 
+import java.util.Arrays;
+
 public enum ExerciseType {
   SOCCER("축구"),
   BASKETBALL("농구"),
@@ -26,5 +28,16 @@ public enum ExerciseType {
 
   public String getName() {
     return this.name;
+  }
+
+  public static ExerciseType exerciseType(final String name) throws Exception {
+    for (final ExerciseType exerciseType : values()) {
+      if (exerciseType.name.equalsIgnoreCase(name)) {
+        return exerciseType;
+      }
+    }
+
+    final String message = "Unknown exerciseType " + name + ", allowed values are " + Arrays.toString(values());
+    throw new Exception(message);
   }
 }
