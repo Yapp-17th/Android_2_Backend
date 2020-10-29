@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: dev
+    active: local
 
   datasource:
     url: jdbc:mysql://localhost:3306/explanet_dev?useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC&createDatabaseIfNotExist=true
