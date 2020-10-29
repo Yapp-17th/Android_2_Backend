@@ -30,12 +30,15 @@ public class SignInService {
       Optional<User> existingUser = getUserByOauthId(loginUserInfo.getOauthId());
       if (existingUser.isPresent()) {
         HttpHeaders httpHeaders = tokenService.setToken(existingUser.get());
+        log.info(String.valueOf(httpHeaders));
+
         LoginResponseBody loginResponseBody = LoginResponseBody.pass(ResponseMessage.SIGNIN_SUCCESS.getMessage());
         return new LoginResponse(httpHeaders, loginResponseBody);
       }
 
       return new LoginResponse(LoginResponseBody.fail(ResponseMessage.SIGNIN_FAIL_NEEDS_SIGN_UP.getMessage()));
     } catch (Exception e) {
+      log.info(e.getMessage());
       return new LoginResponse(LoginResponseBody.fail(ResponseMessage.SIGNIN_FAIL.getMessage()));
     }
   }

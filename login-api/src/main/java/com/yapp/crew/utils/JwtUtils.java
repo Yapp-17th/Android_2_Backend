@@ -5,9 +5,11 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import java.nio.charset.StandardCharsets;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -15,28 +17,34 @@ import org.springframework.stereotype.Component;
 @Component
 public class JwtUtils {
 
-  private static final String secret = "secretkeytest1234";
+  private static final String secret = "secretkeytest1234secretkeytest1234";
   private static final int expiration = 1;
   private static final String header = "X-Auth-Token";
 
-  public String getHeader(){
+  public static String getHeader() {
     return header;
   }
 
-  public String createToken(User user) {
+  public static String createToken(User user) throws Exception {
+    log.info("userId: " + user.getId());
+    log.info("oauthId: " + user.getOauthId());
+    log.info("accessToken: " + user.getAccessToken());
+
     String token = Jwts.builder()
-        .claim("userId", user.getId())
-        .claim("oauthId", user.getOauthId())
-        .claim("accessToken", user.getAccessToken())
         .setExpiration(generateExpirationDate())
-        .signWith(Keys.hmacShaKeyFor(secret.getBytes()), SignatureAlgorithm.HS256)
+        .setIssuedAt(new Date())
+        .setId(UUID.randomUUID().toString())
+        .claim("userId", String.valueOf(user.getId()))
+        .claim("oauthId", String.valueOf(user.getOauthId()))
+        .claim("accessToken", user.getAccessToken())
+        .signWith(SignatureAlgorithm.HS256, Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8)))
         .compact();
 
-    log.info("create token:", token);
+    log.info("create token:" + token);
     return token;
   }
 
-  private Date generateExpirationDate() {
+  private static Date generateExpirationDate() {
     Date now = new Date();
     Calendar calendar = new GregorianCalendar();
     calendar.setTime(now);
@@ -44,20 +52,20 @@ public class JwtUtils {
     return calendar.getTime();
   }
 
-  public Boolean validateToken(String token, User user) {
-    final String userId = this.getUserIdFromToken(token);
+  public static Boolean validateToken(String token, User user) {
+    final String userId = getUserIdFromToken(token);
     return (userId.equals(String.valueOf(user.getId()))) && !(isTokenExpired(token));
   }
 
-  public boolean isTokenExpired(String token) {
-    final Date expiration = this.getExpirationDateFromToken(token);
+  public static boolean isTokenExpired(String token) {
+    final Date expiration = getExpirationDateFromToken(token);
     return expiration.before(new Date(System.currentTimeMillis()));
   }
 
-  private String getUserIdFromToken(String token) {
+  private static String getUserIdFromToken(String token) {
     String userId;
     try {
-      final Claims claims = this.getClaimsFromToken(token);
+      final Claims claims = getClaimsFromToken(token);
       userId = claims.getSubject();
     } catch (Exception e) {
       userId = null;
@@ -65,10 +73,10 @@ public class JwtUtils {
     return userId;
   }
 
-  private Date getExpirationDateFromToken(String token) {
+  private static Date getExpirationDateFromToken(String token) {
     Date expiration;
     try {
-      final Claims claims = this.getClaimsFromToken(token);
+      final Claims claims = getClaimsFromToken(token);
       expiration = claims.getExpiration();
     } catch (Exception e) {
       expiration = null;
@@ -76,7 +84,7 @@ public class JwtUtils {
     return expiration;
   }
 
-  private Claims getClaimsFromToken(String token) {
+  private static Claims getClaimsFromToken(String token) {
     Claims claims;
     try {
       claims = Jwts.parserBuilder()
