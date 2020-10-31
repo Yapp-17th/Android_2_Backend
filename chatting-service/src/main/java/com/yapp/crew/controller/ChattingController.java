@@ -94,9 +94,14 @@ public class ChattingController {
 	 *
 	 */
   @GetMapping(path = "/v1/chat/room/{chatRoomId}/message")
-  public ResponseEntity<?> receiveChatMessages(@PathVariable("chatRoomId") Long chatRoomId) {
-    log.info("Receive chat messages");
-    HttpResponseBody<List<MessageResponsePayload>> responseBody = chattingProducerService.receiveChatMessages(chatRoomId);
+  public ResponseEntity<?> receiveChatMessages(
+					@RequestHeader(value = "Authorization") String token,
+  				@PathVariable("chatRoomId") Long chatRoomId
+	) {
+		auth.verifyToken(token);
+		Long userId = auth.parseUserIdFromToken(token.replace(jwtPrefix + " ", ""));
+
+    HttpResponseBody<List<MessageResponsePayload>> responseBody = chattingProducerService.receiveChatMessages(chatRoomId, userId);
     return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
   }
 
