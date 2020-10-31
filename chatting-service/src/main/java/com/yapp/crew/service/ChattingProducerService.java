@@ -94,10 +94,11 @@ public class ChattingProducerService {
 		return HttpResponseBody.buildChatRoomsResponse(buildChatRoomResponsePayload(chatRooms), HttpStatus.OK.value());
 	}
 
-  public HttpResponseBody<List<MessageResponsePayload>> receiveChatMessages(Long chatRoomId) {
+  public HttpResponseBody<List<MessageResponsePayload>> receiveChatMessages(Long chatRoomId, Long userId) {
     List<Message> messages = messageRepository.findAllByChatRoomIdOrderByCreatedAt(chatRoomId);
-    Long firstUnreadChatMessageId = findFirstUnreadChatMessage(messages);
-		return HttpResponseBody.buildChatMessagesResponse(buildMessageResponsePayload(messages), HttpStatus.OK.value(), firstUnreadChatMessageId);
+    boolean isHost = isSenderChatRoomHost(chatRoomId, userId);
+    Long firstUnreadChatMessageId = findFirstUnreadChatMessage(messages, isHost);
+		return HttpResponseBody.buildChatMessagesResponse(buildMessageResponsePayload(messages, isHost), HttpStatus.OK.value(), firstUnreadChatMessageId);
   }
 
   private void produceWelcomeBotMessage(Long chatRoomId) throws JsonProcessingException {
@@ -114,10 +115,26 @@ public class ChattingProducerService {
     chattingProducer.sendWelcomeBotMessage(welcomeMessageRequestPayload);
   }
 
-  private Long findFirstUnreadChatMessage(List<Message> messages) {
-  	Optional<Message> firstUnreadChatMessage = messages.stream()
-						.filter(message -> !message.isRead())
-						.findFirst();
+  private boolean isSenderChatRoomHost(Long chatRoomId, Long userId) {
+		ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
+						.orElseThrow(() -> new RuntimeException("Cannot find chat room"));
+
+		return userId.equals(chatRoom.getHost().getId());
+	}
+
+  private Long findFirstUnreadChatMessage(List<Message> messages, boolean isHost) {
+  	Optional<Message> firstUnreadChatMessage = null;
+
+  	if (isHost) {
+			firstUnreadChatMessage = messages.stream()
+							.filter(message -> !message.isHostRead())
+							.findFirst();
+		}
+  	else {
+			firstUnreadChatMessage = messages.stream()
+							.filter(message -> !message.isGuestRead())
+							.findFirst();
+		}
 
   	if (firstUnreadChatMessage.isPresent()) {
   		return firstUnreadChatMessage.get().getId();
@@ -152,7 +169,8 @@ public class ChattingProducerService {
 												.id(lastMessage.getId())
 												.content(lastMessage.getContent())
 												.type(lastMessage.getType())
-												.isRead(lastMessage.isRead())
+												.isHostRead(lastMessage.isHostRead())
+												.isGuestRead(lastMessage.isGuestRead())
 												.senderId(lastMessage.getSender().getId())
 												.senderNickname(lastMessage.getSender().getNickname())
 												.createdAt(lastMessage.getCreatedAt())
@@ -172,17 +190,19 @@ public class ChattingProducerService {
 						.collect(Collectors.toList());
 	}
 
-	private List<MessageResponsePayload> buildMessageResponsePayload(List<Message> messages) {
+	private List<MessageResponsePayload> buildMessageResponsePayload(List<Message> messages, boolean isHost) {
   	return messages.stream()
 						.map(message -> {
-							message.readMessage();
+							message.readMessage(isHost);
+
 							messageRepository.save(message);
 
 							return MessageResponsePayload.builder()
 											.id(message.getId())
 											.content(message.getContent())
 											.type(message.getType())
-											.isRead(message.isRead())
+											.isHostRead(message.isHostRead())
+											.isGuestRead(message.isGuestRead())
 											.senderId(message.getSender().getId())
 											.senderNickname(message.getSender().getNickname())
 											.createdAt(message.getCreatedAt())

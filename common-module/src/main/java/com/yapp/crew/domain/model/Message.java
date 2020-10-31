@@ -37,8 +37,12 @@ public class Message extends BaseEntity {
   private MessageType type;
 
   @Setter(value = AccessLevel.PRIVATE)
-  @Column(name = "is_read", nullable = false)
-  private boolean isRead = false;
+  @Column(name = "is_host_read", nullable = false)
+  private boolean isHostRead = false;
+
+	@Setter(value = AccessLevel.PRIVATE)
+	@Column(name = "is_guest_read", nullable = false)
+	private boolean isGuestRead = false;
 
   @JsonBackReference
   @Setter(value = AccessLevel.PRIVATE)
@@ -52,8 +56,12 @@ public class Message extends BaseEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   private ChatRoom chatRoom;
 
-  public void readMessage() {
-  	this.setRead(true);
+  public void readMessage(boolean isHost) {
+  	if (isHost) {
+			setHostRead(true);
+  		return;
+		}
+  	setGuestRead(true);
 	}
 
   public static MessageBuilder getBuilder() {
@@ -63,7 +71,8 @@ public class Message extends BaseEntity {
   public static class MessageBuilder {
     private String content;
     private MessageType type;
-    private boolean isRead;
+    private boolean isHostRead;
+    private boolean isGuestRead;
     private User sender;
     private ChatRoom chatRoom;
 
@@ -77,9 +86,14 @@ public class Message extends BaseEntity {
       return this;
     }
 
-    public MessageBuilder withIsRead(boolean isRead) {
-    	this.isRead = isRead;
+    public MessageBuilder withIsHostRead(boolean isHostRead) {
+    	this.isHostRead = isHostRead;
     	return this;
+		}
+
+		public MessageBuilder withisGuestRead(boolean isGuestRead) {
+			this.isGuestRead = isGuestRead;
+			return this;
 		}
 
     public MessageBuilder withSender(User sender) {
@@ -96,7 +110,8 @@ public class Message extends BaseEntity {
       Message message = new Message();
       message.setContent(content);
       message.setType(type);
-      message.setRead(isRead);
+      message.setHostRead(isHostRead);
+      message.setGuestRead(isGuestRead);
       message.setSender(sender);
       message.setChatRoom(chatRoom);
       return message;

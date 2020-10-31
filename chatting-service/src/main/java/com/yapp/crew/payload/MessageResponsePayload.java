@@ -22,7 +22,9 @@ public class MessageResponsePayload {
 
 	private MessageType type;
 
-	private boolean isRead;
+	private boolean isHostRead;
+
+	private boolean isGuestRead;
 
 	private Long senderId;
 
