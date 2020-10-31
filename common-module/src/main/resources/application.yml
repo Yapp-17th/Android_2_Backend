@@ -34,3 +34,8 @@ spring:
         hibernate:
           stat: debug
           type: trace
+
+jwt:
+  header: Authorization
+  prefix: Bearer
+  secret: secretkeytest1234secretkeytest1234secretkeytest1234secretkeytest1234

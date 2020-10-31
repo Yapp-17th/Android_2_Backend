@@ -54,3 +54,8 @@ kafka:
     welcome-message-group: welcome-message-group
     request-user-profile-group: request-user-profile-group
     accept-user-group: accept-user-group
+
+jwt:
+  header: Authorization
+  prefix: Bearer
+  secret: secretkeytest1234secretkeytest1234secretkeytest1234secretkeytest1234

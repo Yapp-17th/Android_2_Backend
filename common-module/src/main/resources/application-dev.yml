@@ -12,3 +12,8 @@ spring:
     database-platform: org.hibernate.dialect.MySQL5Dialect
     hibernate:
       ddl-auto: update
+
+jwt:
+  header: Authorization
+  prefix: Bearer
+  secret: secretkeytest1234secretkeytest1234secretkeytest1234secretkeytest1234

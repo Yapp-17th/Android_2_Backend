@@ -63,3 +63,8 @@ kafka:
 
   groups:
     chat-message-group: chat-message-group
+
+jwt:
+  header: Authorization
+  prefix: Bearer
+  secret: secretkeytest1234secretkeytest1234secretkeytest1234secretkeytest1234
