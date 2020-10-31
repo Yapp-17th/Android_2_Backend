@@ -100,17 +100,15 @@ public class ChattingController {
     return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
   }
 
-	/**
-	 * - 모든 채팅방 목록 가져옴
-	 * - 각 방의 마지막 메시지도 함께 가져옴
-	 *
-	 */
-	@GetMapping(path = "/v1/user/{userId}/chat/room")
-	public ResponseEntity<?> receiveChatRooms(@PathVariable("userId") Long userId) {
+	@GetMapping(path = "/v1/chat/room")
+	public ResponseEntity<?> receiveChatRooms(@RequestHeader(value = "Authorization") String token) {
+		auth.verifyToken(token);
+		Long userId = auth.parseUserIdFromToken(token.replace(jwtPrefix + " ", ""));
+
 		HttpResponseBody<List<ChatRoomResponsePayload>> responseBody = chattingProducerService.receiveChatRooms(userId);
 		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
 	}
-	
+
   @PostMapping(path = "/v1/chat/room")
   public ResponseEntity<?> createChatRoom(
   				@RequestHeader(value = "Authorization") String token,
