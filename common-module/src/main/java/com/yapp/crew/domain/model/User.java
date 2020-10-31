@@ -92,6 +92,9 @@ public class User extends BaseEntity {
   @OneToMany(mappedBy = "user")
   private Set<BookMark> userBookmark = new HashSet<>();
 
+  @OneToMany(mappedBy = "user")
+  private Set<HiddenBoard> userHiddenBoard = new HashSet<>();
+
   @JsonManagedReference
   @OneToMany(mappedBy = "reporter", fetch = FetchType.LAZY)
   private List<Report> reportList = new ArrayList<>();

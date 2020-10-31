@@ -47,6 +47,9 @@ public class Board extends BaseEntity {
   @OneToMany(mappedBy = "board")
   private Set<BookMark> bookMarkUser = new HashSet<>();
 
+  @OneToMany(mappedBy = "board")
+  private Set<HiddenBoard> hiddenBoardUser = new HashSet<>();
+
   @JsonBackReference
   @Setter(value = AccessLevel.PRIVATE)
   @JoinColumn(nullable = false)
