@@ -88,11 +88,6 @@ public class ChattingController {
     return ResponseEntity.status(HttpStatus.CREATED).body(messageRequestPayload);
   }
 
-	/**
-	 * - 해당 채팅방의 모든 메시지들을 시간순으로 가져옴
-	 * - 가장 첫 안읽은 메시지를 firstUnreadChatMessageId 필드에 추가, 안읽은 메시지가 없으면 -1
-	 *
-	 */
   @GetMapping(path = "/v1/chat/room/{chatRoomId}/message")
   public ResponseEntity<?> receiveChatMessages(
 					@RequestHeader(value = "Authorization") String token,
