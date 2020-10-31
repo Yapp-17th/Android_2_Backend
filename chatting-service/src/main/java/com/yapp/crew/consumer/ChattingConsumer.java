@@ -6,10 +6,10 @@ import com.yapp.crew.domain.model.ChatRoom;
 import com.yapp.crew.domain.model.Message;
 import com.yapp.crew.domain.model.User;
 import com.yapp.crew.domain.repository.ChatRoomRepository;
+import com.yapp.crew.domain.repository.MessageRepository;
 import com.yapp.crew.domain.repository.UserRepository;
 import com.yapp.crew.payload.MessageRequestPayload;
 import com.yapp.crew.payload.MessageResponsePayload;
-import com.yapp.crew.service.ChattingConsumerService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 
@@ -23,11 +23,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 public class ChattingConsumer {
 
-  private final ChattingConsumerService chattingConsumerService;
-
   private final SimpMessagingTemplate simpMessagingTemplate;
 
   private final ChatRoomRepository chatRoomRepository;
+
+  private final MessageRepository messageRepository;
 
   private final UserRepository userRepository;
 
@@ -35,15 +35,15 @@ public class ChattingConsumer {
 
   @Autowired
 	public ChattingConsumer(
-					ChattingConsumerService chattingConsumerService,
 					SimpMessagingTemplate simpMessagingTemplate,
 					ChatRoomRepository chatRoomRepository,
+					MessageRepository messageRepository,
 					UserRepository userRepository,
 					ObjectMapper objectMapper
 	) {
-  	this.chattingConsumerService = chattingConsumerService;
   	this.simpMessagingTemplate = simpMessagingTemplate;
   	this.chatRoomRepository = chatRoomRepository;
+  	this.messageRepository = messageRepository;
   	this.userRepository = userRepository;
   	this.objectMapper = objectMapper;
 	}
@@ -71,8 +71,7 @@ public class ChattingConsumer {
             .build();
 
     chatRoom.addMessage(message);
-
-    chattingConsumerService.processMessage(message);  // TODO: 바로 리포지토리에 저장하기
+    messageRepository.save(message);
 
     MessageResponsePayload payload = buildMessageResponsePayload(message);
 		simpMessagingTemplate.convertAndSend("/sub/chat/room/" + message.getChatRoom().getId().toString(), payload);
