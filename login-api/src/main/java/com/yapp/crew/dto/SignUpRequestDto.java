@@ -31,7 +31,7 @@ public class SignUpRequestDto {
   private String accessToken;
 
   @NotNull
-  private long category;
+  private List<Long> category;
 
   @NotNull
   private long address;
