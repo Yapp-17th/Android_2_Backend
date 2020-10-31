@@ -50,6 +50,9 @@ public class Board extends BaseEntity {
   @OneToMany(mappedBy = "board")
   private Set<HiddenBoard> hiddenBoardUser = new HashSet<>();
 
+  @OneToMany(mappedBy = "board")
+  private Set<Evaluation> evaluations;
+
   @JsonBackReference
   @Setter(value = AccessLevel.PRIVATE)
   @JoinColumn(nullable = false)
