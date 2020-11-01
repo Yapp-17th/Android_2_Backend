@@ -1,9 +1,10 @@
 package com.yapp.crew.controller;
 
 import com.yapp.crew.dto.LoginRequestDto;
-import com.yapp.crew.dto.LoginResponseDto;
-import com.yapp.crew.model.LoginResponse;
-import com.yapp.crew.model.LoginResponseBody;
+import com.yapp.crew.dto.UserAuthResponseDto;
+import com.yapp.crew.exception.InternalServerErrorException;
+import com.yapp.crew.model.UserAuthResponse;
+import com.yapp.crew.model.UserAuthResponseBody;
 import com.yapp.crew.model.LoginUserInfo;
 import com.yapp.crew.service.SignInService;
 import javax.validation.Valid;
@@ -32,22 +33,22 @@ public class SignInController {
 
   @PostMapping(path = "/v1/user/sign-in", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> postSignIn(@RequestBody @Valid LoginRequestDto loginRequestDto) {
-    LoginResponse loginResponse = null;
+    UserAuthResponse userAuthResponse;
 
     try {
       LoginUserInfo loginUserInfo = new LoginUserInfo(loginRequestDto.getUserId());
-      loginResponse = signInService.signIn(loginUserInfo);
+      userAuthResponse = signInService.signIn(loginUserInfo);
 
-      HttpHeaders httpHeaders = loginResponse.getHttpHeaders();
-      LoginResponseDto loginResponseDto = LoginResponseDto.build(loginResponse.getLoginResponseBody());
+      HttpHeaders httpHeaders = userAuthResponse.getHttpHeaders();
+      UserAuthResponseDto userAuthResponseDto = UserAuthResponseDto.build(userAuthResponse.getUserAuthResponseBody());
       if (httpHeaders != null) {
-        return ResponseEntity.ok().headers(httpHeaders).body(loginResponseDto);
+        return ResponseEntity.ok().headers(httpHeaders).body(userAuthResponseDto);
       }
 
     } catch (Exception e) {
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(LoginResponseDto.build(LoginResponseBody.fail(e.getMessage())));
+      throw new InternalServerErrorException();
     }
 
-    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(LoginResponseDto.build(loginResponse.getLoginResponseBody()));
+    throw new InternalServerErrorException();
   }
 }

@@ -144,6 +144,10 @@ public class User extends BaseEntity {
         .count();
   }
 
+  public void setUserStatusInActive() {
+    this.setStatus(UserStatus.INACTIVE);
+  }
+
   public static UserBuilder getBuilder() {
     return new UserBuilder();
   }
