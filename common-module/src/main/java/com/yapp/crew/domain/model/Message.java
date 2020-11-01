@@ -1,6 +1,7 @@
 package com.yapp.crew.domain.model;
 
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -44,6 +45,10 @@ public class Message extends BaseEntity {
 	@Column(name = "is_guest_read", nullable = false)
 	private boolean isGuestRead = false;
 
+	@Embedded
+	@Setter(value = AccessLevel.PRIVATE)
+	private ProfileMessage profileMessage;
+
   @JsonBackReference
   @Setter(value = AccessLevel.PRIVATE)
   @JoinColumn(nullable = false)
@@ -73,6 +78,10 @@ public class Message extends BaseEntity {
     private MessageType type;
     private boolean isHostRead;
     private boolean isGuestRead;
+    private Integer likes;
+    private Integer dislikes;
+    private String label;
+    private String buttonLabel;
     private User sender;
     private ChatRoom chatRoom;
 
@@ -96,6 +105,26 @@ public class Message extends BaseEntity {
 			return this;
 		}
 
+		public MessageBuilder withLikes(Integer likes) {
+    	this.likes = likes;
+    	return this;
+		}
+
+		public MessageBuilder withDislikes(Integer dislikes) {
+    	this.dislikes = dislikes;
+    	return this;
+		}
+
+		public MessageBuilder withLabel(String label) {
+    	this.label = label;
+    	return this;
+		}
+
+		public MessageBuilder withButtonLabel(String buttonLabel) {
+    	this.buttonLabel = buttonLabel;
+    	return this;
+		}
+
     public MessageBuilder withSender(User sender) {
       this.sender = sender;
       return this;
@@ -112,6 +141,7 @@ public class Message extends BaseEntity {
       message.setType(type);
       message.setHostRead(isHostRead);
       message.setGuestRead(isGuestRead);
+      message.setProfileMessage(new ProfileMessage(likes, dislikes, label, buttonLabel));
       message.setSender(sender);
       message.setChatRoom(chatRoom);
       return message;
