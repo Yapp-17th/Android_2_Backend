@@ -16,6 +16,7 @@ import com.yapp.crew.model.SignupUserInfo;
 import com.yapp.crew.utils.ResponseMessage;
 import java.util.List;
 import java.util.Optional;
+import javax.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -57,7 +58,6 @@ public class SignUpService {
           .withIntro(signupUserInfo.getIntro())
           .build();
 
-      // TODO: transaction 처리 추가 필요
       save(user, signupUserInfo.getCategory());
 
       HttpHeaders httpHeaders = tokenService.setToken(user);
@@ -86,18 +86,17 @@ public class SignUpService {
     userExerciseRepository.save(userExercise);
   }
 
-  private void save(User user, List<Long> category) throws Exception {
+  @Transactional
+  public void save(User user, List<Long> category) throws Exception {
     saveUser(user);
-    Optional<User> savedUser = findUserByOauthId(user.getOauthId());
+    User savedUser = findUserByOauthId(user.getOauthId())
+        .orElseThrow(() -> new RuntimeException("not found"));
 
     for (long categoryId : category) {
-      Optional<Category> userCategory = findCategoryById(categoryId);
+      Category userCategory = findCategoryById(categoryId)
+          .orElseThrow(() -> new RuntimeException("not found"));
 
-      if (savedUser.isPresent() && userCategory.isPresent()) {
-        saveUserExercise(savedUser.get(), userCategory.get());
-      } else {
-        throw new Exception("user 또는 category가 존재하지 않습니다.");
-      }
+      saveUserExercise(savedUser, userCategory);
     }
   }
 
