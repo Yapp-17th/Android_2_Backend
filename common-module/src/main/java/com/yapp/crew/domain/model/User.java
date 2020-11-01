@@ -148,6 +148,10 @@ public class User extends BaseEntity {
     this.setStatus(UserStatus.INACTIVE);
   }
 
+  public void setUserStatusActive() {
+    this.setStatus(UserStatus.ACTIVE);
+  }
+
   public static UserBuilder getBuilder() {
     return new UserBuilder();
   }
