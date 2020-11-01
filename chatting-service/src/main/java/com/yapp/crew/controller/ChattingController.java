@@ -9,6 +9,7 @@ import javax.validation.Valid;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.yapp.crew.domain.auth.Auth;
 import com.yapp.crew.network.HttpResponseBody;
+import com.yapp.crew.payload.ApplyRequestPayload;
 import com.yapp.crew.payload.ChatRoomRequestPayload;
 import com.yapp.crew.payload.ChatRoomResponsePayload;
 import com.yapp.crew.payload.MessageRequestPayload;
@@ -119,4 +120,21 @@ public class ChattingController {
     HttpResponseBody<ChatRoomResponsePayload> responseBody = chattingProducerService.createChatRoom(chatRoomRequestPayload);
     return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
   }
+
+  @PostMapping(path = "/v1/board/{boardId}/apply")
+	public ResponseEntity<?> applyUser(
+					@RequestHeader(value = "Authorization") String token,
+					@Valid @RequestBody ApplyRequestPayload applyRequestPayload,
+					@PathVariable("boardId") Long boardId
+	) throws JsonProcessingException {
+
+  	auth.verifyToken(token);
+  	Long applierId = auth.parseUserIdFromToken(token);
+
+		applyRequestPayload.setBoardId(boardId);
+		applyRequestPayload.setApplierId(applierId);
+		chattingProducerService.applyUser(applyRequestPayload);
+
+		return ResponseEntity.status(HttpStatus.CREATED).body(applyRequestPayload);
+	}
 }

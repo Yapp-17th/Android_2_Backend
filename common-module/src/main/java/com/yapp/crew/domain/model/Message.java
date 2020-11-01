@@ -78,8 +78,8 @@ public class Message extends BaseEntity {
     private MessageType type;
     private boolean isHostRead;
     private boolean isGuestRead;
-    private Integer likes;
-    private Integer dislikes;
+    private Long likes;
+    private Long dislikes;
     private String label;
     private String buttonLabel;
     private User sender;
@@ -100,17 +100,17 @@ public class Message extends BaseEntity {
     	return this;
 		}
 
-		public MessageBuilder withisGuestRead(boolean isGuestRead) {
+		public MessageBuilder withIsGuestRead(boolean isGuestRead) {
 			this.isGuestRead = isGuestRead;
 			return this;
 		}
 
-		public MessageBuilder withLikes(Integer likes) {
+		public MessageBuilder withLikes(Long likes) {
     	this.likes = likes;
     	return this;
 		}
 
-		public MessageBuilder withDislikes(Integer dislikes) {
+		public MessageBuilder withDislikes(Long dislikes) {
     	this.dislikes = dislikes;
     	return this;
 		}

@@ -21,4 +21,6 @@ public class MessageRequestPayload {
   private Long senderId;
 
   private Long chatRoomId;
+
+  private Long boardId;
 }

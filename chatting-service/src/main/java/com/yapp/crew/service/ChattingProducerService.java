@@ -19,6 +19,7 @@ import com.yapp.crew.domain.repository.UserRepository;
 import com.yapp.crew.domain.type.MessageType;
 import com.yapp.crew.json.BotMessages;
 import com.yapp.crew.network.HttpResponseBody;
+import com.yapp.crew.payload.ApplyRequestPayload;
 import com.yapp.crew.payload.ChatRoomRequestPayload;
 import com.yapp.crew.payload.ChatRoomResponsePayload;
 import com.yapp.crew.payload.MessageResponsePayload;
@@ -103,6 +104,10 @@ public class ChattingProducerService {
     Long firstUnreadChatMessageId = findFirstUnreadChatMessage(messages, isHost);
 		return HttpResponseBody.buildChatMessagesResponse(buildMessageResponsePayload(messages, isHost), HttpStatus.OK.value(), firstUnreadChatMessageId);
   }
+
+  public void applyUser(ApplyRequestPayload applyRequestPayload) throws JsonProcessingException {
+		chattingProducer.applyUser(applyRequestPayload);
+	}
 
   private void produceWelcomeBotMessage(Long chatRoomId) throws JsonProcessingException {
     User bot = userRepository.findUserById(-1L)
@@ -189,6 +194,10 @@ public class ChattingProducerService {
 												.isGuestRead(lastMessage.isGuestRead())
 												.senderId(lastMessage.getSender().getId())
 												.senderNickname(lastMessage.getSender().getNickname())
+												.likes(lastMessage.getProfileMessage().getLikes())
+												.dislikes(lastMessage.getProfileMessage().getDislikes())
+												.label(lastMessage.getProfileMessage().getLabel())
+												.buttonLabel(lastMessage.getProfileMessage().getButtonLabel())
 												.createdAt(lastMessage.getCreatedAt())
 												.build();
 							}
@@ -214,6 +223,18 @@ public class ChattingProducerService {
 
 							messageRepository.save(message);
 
+							if (message.getProfileMessage() == null) {
+								return MessageResponsePayload.builder()
+												.id(message.getId())
+												.content(message.getContent())
+												.type(message.getType())
+												.isHostRead(message.isHostRead())
+												.isGuestRead(message.isGuestRead())
+												.senderId(message.getSender().getId())
+												.senderNickname(message.getSender().getNickname())
+												.createdAt(message.getCreatedAt())
+												.build();
+							}
 							return MessageResponsePayload.builder()
 											.id(message.getId())
 											.content(message.getContent())
@@ -222,6 +243,10 @@ public class ChattingProducerService {
 											.isGuestRead(message.isGuestRead())
 											.senderId(message.getSender().getId())
 											.senderNickname(message.getSender().getNickname())
+											.likes(message.getProfileMessage().getLikes())
+											.dislikes(message.getProfileMessage().getDislikes())
+											.label(message.getProfileMessage().getLabel())
+											.buttonLabel(message.getProfileMessage().getButtonLabel())
 											.createdAt(message.getCreatedAt())
 											.build();
 						})

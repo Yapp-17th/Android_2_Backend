@@ -16,9 +16,9 @@ import lombok.Setter;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ProfileMessage {
 
-	private Integer likes;
+	private Long likes;
 
-	private Integer dislikes;
+	private Long dislikes;
 
 	private String label;
 

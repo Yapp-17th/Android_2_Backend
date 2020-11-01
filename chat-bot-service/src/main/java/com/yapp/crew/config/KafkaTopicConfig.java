@@ -15,8 +15,8 @@ public class KafkaTopicConfig {
 	@Value(value = "${kafka.topics.welcome-message}")
 	private String welcomeMessageTopic;
 
-	@Value(value = "${kafka.topics.request-user-profile}")
-	private String requestUserProfileTopic;
+	@Value(value = "${kafka.topics.apply-user}")
+	private String applyUserTopic;
 
 	@Value(value = "${kafka.topics.accept-user}")
 	private String acceptUserTopic;
@@ -31,9 +31,9 @@ public class KafkaTopicConfig {
 	}
 
 	@Bean
-	public NewTopic requestUserProfile() {
+	public NewTopic applyUser() {
 		return TopicBuilder
-						.name(requestUserProfileTopic)
+						.name(applyUserTopic)
 						.partitions(1)
 						.replicas(1)
 						.build();

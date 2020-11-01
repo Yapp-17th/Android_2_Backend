@@ -134,13 +134,13 @@ public class User extends BaseEntity {
     guestList.add(chatRoom);
   }
 
-  public long calculateLikes(List<Evaluation> evaluations) {
+  public Long calculateLikes(List<Evaluation> evaluations) {
     return evaluations.stream()
         .filter(Evaluation::getIsLike)
         .count();
   }
 
-  public long calculateDislikes(List<Evaluation> evaluations) {
+  public Long calculateDislikes(List<Evaluation> evaluations) {
     return evaluations.stream()
         .filter(Evaluation::getIsDislike)
         .count();
