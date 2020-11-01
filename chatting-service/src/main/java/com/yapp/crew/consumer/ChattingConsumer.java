@@ -2,6 +2,8 @@ package com.yapp.crew.consumer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.yapp.crew.domain.errors.ChatRoomNotFoundException;
+import com.yapp.crew.domain.errors.UserNotFoundException;
 import com.yapp.crew.domain.model.ChatRoom;
 import com.yapp.crew.domain.model.Message;
 import com.yapp.crew.domain.model.User;
@@ -56,10 +58,10 @@ public class ChattingConsumer {
     MessageRequestPayload messageRequestPayload = objectMapper.readValue(consumerRecord.value(), MessageRequestPayload.class);
 
     ChatRoom chatRoom = chatRoomRepository.findById(messageRequestPayload.getChatRoomId())
-            .orElseThrow(() -> new RuntimeException("Chat room not found"));
+            .orElseThrow(() -> new ChatRoomNotFoundException("Chat room not found"));
 
     User sender = userRepository.findById(messageRequestPayload.getSenderId())
-            .orElseThrow(() -> new RuntimeException("User not found"));
+            .orElseThrow(() -> new UserNotFoundException("User not found"));
 
     Message message = Message.getBuilder()
             .withContent(messageRequestPayload.getContent())

@@ -5,6 +5,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.yapp.crew.domain.errors.BoardNotFoundException;
+import com.yapp.crew.domain.errors.ChatRoomNotFoundException;
+import com.yapp.crew.domain.errors.UserNotFoundException;
 import com.yapp.crew.domain.model.Board;
 import com.yapp.crew.domain.model.ChatRoom;
 import com.yapp.crew.domain.model.Message;
@@ -62,13 +65,13 @@ public class ChattingProducerService {
 
   public HttpResponseBody<ChatRoomResponsePayload> createChatRoom(ChatRoomRequestPayload chatRoomRequestPayload) throws JsonProcessingException {
     User host = userRepository.findUserById(chatRoomRequestPayload.getHostId())
-            .orElseThrow(() -> new RuntimeException("Cannot find host user with id"));
+            .orElseThrow(() -> new UserNotFoundException("Cannot find host user with id"));
 
     User guest = userRepository.findUserById(chatRoomRequestPayload.getGuestId())
-            .orElseThrow(() -> new RuntimeException("Cannot find guest user"));
+            .orElseThrow(() -> new UserNotFoundException("Cannot find guest user"));
 
     Board board = boardRepository.findById(chatRoomRequestPayload.getBoardId())
-            .orElseThrow(() -> new RuntimeException("Cannot find board"));
+            .orElseThrow(() -> new BoardNotFoundException("Cannot find board"));
 
 		Optional<ChatRoom> chatRoom = chatRoomRepository.findByGuestIdAndBoardId(guest.getId(), board.getId());
 		if (chatRoom.isPresent()) {
@@ -103,7 +106,7 @@ public class ChattingProducerService {
 
   private void produceWelcomeBotMessage(Long chatRoomId) throws JsonProcessingException {
     User bot = userRepository.findUserById(-1L)
-            .orElseThrow(() -> new RuntimeException("Cannot find chat bot"));
+            .orElseThrow(() -> new UserNotFoundException("Cannot find chat bot"));
 
 		WelcomeMessageRequestPayload welcomeMessageRequestPayload = WelcomeMessageRequestPayload.builder()
             .content(botMessages.getWelcomeMessage().replace("\"", ""))
@@ -117,7 +120,7 @@ public class ChattingProducerService {
 
   private boolean isSenderChatRoomHost(Long chatRoomId, Long userId) {
 		ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
-						.orElseThrow(() -> new RuntimeException("Cannot find chat room"));
+						.orElseThrow(() -> new ChatRoomNotFoundException("Cannot find chat room"));
 
 		return userId.equals(chatRoom.getHost().getId());
 	}
