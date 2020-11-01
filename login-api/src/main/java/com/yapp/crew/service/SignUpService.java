@@ -10,6 +10,7 @@ import com.yapp.crew.domain.repository.AddressRepository;
 import com.yapp.crew.domain.repository.CategoryRepository;
 import com.yapp.crew.domain.repository.UserExerciseRepository;
 import com.yapp.crew.domain.repository.UserRepository;
+import com.yapp.crew.domain.status.UserStatus;
 import com.yapp.crew.exception.InternalServerErrorException;
 import com.yapp.crew.exception.InvalidRequestBodyException;
 import com.yapp.crew.model.SignupUserInfo;
@@ -23,7 +24,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpServerErrorException.InternalServerError;
 
 @Slf4j
 @Service
@@ -46,6 +49,15 @@ public class SignUpService {
   }
 
   public UserAuthResponse signUp(SignupUserInfo signupUserInfo) {
+    Optional<User> existingUser = findUserByOauthId(signupUserInfo.getOauthId());
+    if (existingUser.isPresent()) {
+      return signUpExistingUser(existingUser.get());
+    }
+
+    return signUpNewUser(signupUserInfo);
+  }
+
+  public UserAuthResponse signUpNewUser(SignupUserInfo signupUserInfo) {
     UserBuilder userBuilder = User.getBuilder();
 
     Address address = findAddressById(signupUserInfo.getAddress())
@@ -83,6 +95,26 @@ public class SignUpService {
       log.info("Internal server error: " + e.getMessage());
       throw new InternalServerErrorException(e.getCause());
     }
+  }
+
+  public UserAuthResponse signUpExistingUser(User user) {
+    if (user.getStatus() == UserStatus.INACTIVE) {
+      updateUserActive(user);
+      HttpHeaders httpHeaders = null;
+
+      try {
+        httpHeaders = tokenService.setToken(user);
+      } catch (Exception e) {
+        throw new InternalServerErrorException();
+      }
+
+      if (httpHeaders != null) {
+        UserAuthResponseBody userAuthResponseBody = UserAuthResponseBody.pass(ResponseMessage.SIGNUP_SUCCESS.getMessage());
+        return new UserAuthResponse(httpHeaders, userAuthResponseBody);
+      }
+    }
+
+    return new UserAuthResponse(UserAuthResponseBody.fail(HttpStatus.BAD_REQUEST, ResponseMessage.INTERNAL_SERVER_FAIL.getMessage()));
   }
 
   private void saveUser(User user) {
@@ -127,5 +159,12 @@ public class SignUpService {
   private Optional<Address> findAddressById(Long id) {
     log.info("find address by address_id");
     return addressRepository.findAddressById(id);
+  }
+
+  @Transactional
+  public void updateUserActive(User user) {
+    user.setUserStatusActive();
+    userRepository.save(user);
+    log.info("user update 완료");
   }
 }
