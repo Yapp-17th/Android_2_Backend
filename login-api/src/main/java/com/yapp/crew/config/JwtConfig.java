@@ -15,9 +15,11 @@ public class JwtConfig {
   private int expiration;
   @Value(value = "${jwt.header}")
   private String header;
+  @Value(value = "${jwt.prefix}")
+  private String prefix;
 
   @Bean
   public JwtUtils jwtUtils() {
-    return new JwtUtils(secret, header, expiration);
+    return new JwtUtils(secret, header, expiration, prefix);
   }
 }
