@@ -1,10 +1,15 @@
 package com.yapp.crew.domain.type;
 
 public enum ReportType {
-  NON_MANNERS(1, "욕설 및 비매너 행위"),
-  NON_PARTICIPATION(2, "미참여 및 연락두절"),
-  EAT_AND_RUN(3, "대관비, 음료 관련 정산 중 잠수"),
-  BOTHERING(4, "원치 않는 지속적인 연락 및 강요"),
+  BOARD_NO_MANNERS(1, "욕설 및 악의성 내용이 포함돼있어요"),
+  BOARD_BOTHERING_CONTENTS(2, "선정적인 내용이 포함돼있어요"),
+  BOARD_ADVERTISE(3, "활동과 관련 없는 홍보성 글이에요"),
+  USER_LOST_CONTACT(4, "중간에 연락이 두절됐어요"),
+  USER_NO_PARTICIPATE(5, "활동에 참여하지 않았어요"),
+  USER_LATE(6, "사전 연락없이 30분 이상 지각했어요"),
+  USER_BOTHERING(7, "원치 않는 연락을 계속 보내요"),
+  USER_NO_MANNERS(8, "욕설 및 비 매너 행위를 했어요"),
+  USER_RUN(9, "대관비 등 활동 내 비용을 내지 않았어요"),
   OTHERS(0, "기타");
 
   private final int code;
