@@ -14,6 +14,7 @@ spring:
       ddl-auto: update
 
 jwt:
-  header: X-Auth-Token
-  secret: secretkeytest1234secretkeytest1234
+  header: Authorization
+  prefix: Bearer
+  secret: secretkeytest1234secretkeytest1234secretkeytest1234secretkeytest1234
   expiration: 1

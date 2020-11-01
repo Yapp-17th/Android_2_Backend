@@ -1,9 +1,10 @@
 package com.yapp.crew.controller;
 
-import com.yapp.crew.dto.LoginResponseDto;
+import com.yapp.crew.dto.UserAuthResponseDto;
 import com.yapp.crew.dto.SignUpRequestDto;
-import com.yapp.crew.model.LoginResponse;
-import com.yapp.crew.model.LoginResponseBody;
+import com.yapp.crew.exception.InternalServerErrorException;
+import com.yapp.crew.model.UserAuthResponse;
+import com.yapp.crew.model.UserAuthResponseBody;
 import com.yapp.crew.model.SignupUserInfo;
 import com.yapp.crew.service.SignUpService;
 import com.yapp.crew.utils.ResponseMessage;
@@ -33,23 +34,23 @@ public class SignUpController {
 
   @PostMapping(path = "/v1/user/sign-up", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> postSignIn(@RequestBody @Valid SignUpRequestDto signUpRequestDto) {
-    LoginResponse loginResponse = null;
+    UserAuthResponse userAuthResponse = null;
 
     try {
       SignupUserInfo signupUserInfo = SignupUserInfo.build(signUpRequestDto);
-      loginResponse = signUpService.signUp(signupUserInfo);
+      userAuthResponse = signUpService.signUp(signupUserInfo);
 
-      LoginResponseDto loginResponseDto = LoginResponseDto.build(loginResponse.getLoginResponseBody());
-      HttpHeaders httpHeaders = loginResponse.getHttpHeaders();
+      UserAuthResponseDto userAuthResponseDto = UserAuthResponseDto.build(userAuthResponse.getUserAuthResponseBody());
+      HttpHeaders httpHeaders = userAuthResponse.getHttpHeaders();
 
       if (httpHeaders != null) {
-        return ResponseEntity.ok().headers(httpHeaders).body(loginResponseDto);
+        return ResponseEntity.ok().headers(httpHeaders).body(userAuthResponseDto);
       }
 
     } catch (Exception e) {
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(LoginResponseDto.build(LoginResponseBody.fail(e.getMessage())));
+      throw new InternalServerErrorException();
     }
 
-    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(LoginResponseDto.build(LoginResponseBody.fail(ResponseMessage.TOKEN_NOT_CREATED.getMessage())));
+    throw new InternalServerErrorException();
   }
 }

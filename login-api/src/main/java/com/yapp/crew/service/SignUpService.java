@@ -10,14 +10,17 @@ import com.yapp.crew.domain.repository.AddressRepository;
 import com.yapp.crew.domain.repository.CategoryRepository;
 import com.yapp.crew.domain.repository.UserExerciseRepository;
 import com.yapp.crew.domain.repository.UserRepository;
-import com.yapp.crew.model.LoginResponse;
-import com.yapp.crew.model.LoginResponseBody;
+import com.yapp.crew.exception.InternalServerErrorException;
+import com.yapp.crew.exception.InvalidRequestBodyException;
 import com.yapp.crew.model.SignupUserInfo;
+import com.yapp.crew.model.UserAuthResponse;
+import com.yapp.crew.model.UserAuthResponseBody;
 import com.yapp.crew.utils.ResponseMessage;
 import java.util.List;
 import java.util.Optional;
 import javax.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
@@ -42,32 +45,43 @@ public class SignUpService {
     this.tokenService = tokenService;
   }
 
-  public LoginResponse signUp(SignupUserInfo signupUserInfo) {
+  public UserAuthResponse signUp(SignupUserInfo signupUserInfo) {
+    UserBuilder userBuilder = User.getBuilder();
+
+    Address address = findAddressById(signupUserInfo.getAddress())
+        .orElseThrow(InternalError::new);
+
+    User user = userBuilder
+        .withOauthId(signupUserInfo.getOauthId())
+        .withAccessToken(signupUserInfo.getAccessToken())
+        .withEmail(signupUserInfo.getEmail())
+        .withNickname(signupUserInfo.getNickName())
+        .withUsername(signupUserInfo.getUserName())
+        .withAddress(address)
+        .withIntro(signupUserInfo.getIntro())
+        .build();
+
     try {
-      UserBuilder userBuilder = User.getBuilder();
-
-      Optional<Address> address = findAddressById(signupUserInfo.getAddress());
-
-      User user = userBuilder
-          .withOauthId(signupUserInfo.getOauthId())
-          .withAccessToken(signupUserInfo.getAccessToken())
-          .withEmail(signupUserInfo.getEmail())
-          .withNickname(signupUserInfo.getNickName())
-          .withUsername(signupUserInfo.getUserName())
-          .withAddress(address.get())
-          .withIntro(signupUserInfo.getIntro())
-          .build();
-
       save(user, signupUserInfo.getCategory());
-
-      HttpHeaders httpHeaders = tokenService.setToken(user);
-      LoginResponseBody loginResponseBody = LoginResponseBody.pass(ResponseMessage.SIGNUP_SUCCESS.getMessage());
-
-      return new LoginResponse(httpHeaders, loginResponseBody);
     } catch (Exception e) {
-      log.info(e.getMessage());
-      LoginResponseBody loginResponseBody = LoginResponseBody.fail(ResponseMessage.SIGNUP_FAIL.getMessage());
-      return new LoginResponse(loginResponseBody);
+      if (e.getCause() instanceof ConstraintViolationException) {
+        // TODO: 어떤 필드가 duplicate인지 어떻게 뽑아내지?
+        log.info("Request server error: " + e.getLocalizedMessage());
+        throw new InvalidRequestBodyException(ResponseMessage.INVALID_REQUEST_BODY.getMessage());
+      }
+
+      log.info("Internal server error: " + e.getMessage());
+      throw new InternalServerErrorException();
+    }
+
+    try {
+      HttpHeaders httpHeaders = tokenService.setToken(user);
+      UserAuthResponseBody userAuthResponseBody = UserAuthResponseBody.pass(ResponseMessage.SIGNUP_SUCCESS.getMessage());
+
+      return new UserAuthResponse(httpHeaders, userAuthResponseBody);
+    } catch (Exception e) {
+      log.info("Internal server error: " + e.getMessage());
+      throw new InternalServerErrorException(e.getCause());
     }
   }
 
@@ -87,31 +101,31 @@ public class SignUpService {
   }
 
   @Transactional
-  public void save(User user, List<Long> category) throws Exception {
+  public void save(User user, List<Long> category) {
     saveUser(user);
     User savedUser = findUserByOauthId(user.getOauthId())
-        .orElseThrow(() -> new RuntimeException("not found"));
+        .orElseThrow(InternalServerErrorException::new);
 
     for (long categoryId : category) {
       Category userCategory = findCategoryById(categoryId)
-          .orElseThrow(() -> new RuntimeException("not found"));
+          .orElseThrow(InternalServerErrorException::new);
 
       saveUserExercise(savedUser, userCategory);
     }
   }
 
   private Optional<Category> findCategoryById(Long id) {
-    log.info("find category by id");
+    log.info("find category by category_id");
     return categoryRepository.findCategoryById(id);
   }
 
   private Optional<User> findUserByOauthId(String oauthId) {
-    log.info("find user by id");
+    log.info("find user by oauth_id");
     return userRepository.findByOauthId(oauthId);
   }
 
   private Optional<Address> findAddressById(Long id) {
-    log.info("find address by id");
+    log.info("find address by address_id");
     return addressRepository.findAddressById(id);
   }
 }

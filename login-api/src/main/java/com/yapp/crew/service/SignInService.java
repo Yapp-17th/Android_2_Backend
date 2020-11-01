@@ -2,8 +2,12 @@ package com.yapp.crew.service;
 
 import com.yapp.crew.domain.model.User;
 import com.yapp.crew.domain.repository.UserRepository;
-import com.yapp.crew.model.LoginResponse;
-import com.yapp.crew.model.LoginResponseBody;
+import com.yapp.crew.domain.status.UserStatus;
+import com.yapp.crew.exception.InactiveUserException;
+import com.yapp.crew.exception.InternalServerErrorException;
+import com.yapp.crew.exception.SuspendedUserException;
+import com.yapp.crew.model.UserAuthResponse;
+import com.yapp.crew.model.UserAuthResponseBody;
 import com.yapp.crew.model.LoginUserInfo;
 import com.yapp.crew.utils.ResponseMessage;
 import java.util.Optional;
@@ -25,27 +29,31 @@ public class SignInService {
     this.tokenService = tokenService;
   }
 
-  public LoginResponse signIn(LoginUserInfo loginUserInfo) {
+  public UserAuthResponse signIn(LoginUserInfo loginUserInfo) {
+    User existingUser = getUserByOauthId(loginUserInfo.getOauthId())
+        .orElseThrow(InactiveUserException::new);
+
+    if (existingUser.getStatus() == UserStatus.SUSPENDED) {
+      log.info("suspended user가 로그인을 시도했습니다.");
+      throw new SuspendedUserException();
+    } else if (existingUser.getStatus() == UserStatus.INACTIVE) {
+      log.info("inactive user가 로그인을 시도했습니다.");
+      throw new InactiveUserException();
+    }
+
     try {
-      Optional<User> existingUser = getUserByOauthId(loginUserInfo.getOauthId());
-      if (existingUser.isPresent()) {
-        HttpHeaders httpHeaders = tokenService.setToken(existingUser.get());
-        log.info(String.valueOf(httpHeaders));
+      HttpHeaders httpHeaders = tokenService.setToken(existingUser);
 
-        LoginResponseBody loginResponseBody = LoginResponseBody.pass(ResponseMessage.SIGNIN_SUCCESS.getMessage());
-        return new LoginResponse(httpHeaders, loginResponseBody);
-      }
-
-      return new LoginResponse(LoginResponseBody.fail(ResponseMessage.SIGNIN_FAIL_NEEDS_SIGN_UP.getMessage()));
+      UserAuthResponseBody userAuthResponseBody = UserAuthResponseBody.pass(ResponseMessage.SIGNIN_SUCCESS.getMessage());
+      return new UserAuthResponse(httpHeaders, userAuthResponseBody);
     } catch (Exception e) {
-      log.info(e.getMessage());
-      return new LoginResponse(LoginResponseBody.fail(ResponseMessage.SIGNIN_FAIL.getMessage()));
+      log.info("Internal server error: " + e.getMessage());
+      throw new InternalServerErrorException(e.getCause());
     }
   }
 
   private Optional<User> getUserByOauthId(String oauthId) {
     log.info("user 가져오기 성공");
-    Optional<User> user = userRepository.findByOauthId(oauthId);
-    return user;
+    return userRepository.findByOauthId(oauthId);
   }
 }
