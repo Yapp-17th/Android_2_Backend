@@ -91,7 +91,7 @@ public class ChattingProducerService {
 
   public HttpResponseBody<List<ChatRoomResponsePayload>> receiveChatRooms(Long userId) {
   	List<ChatRoom> chatRooms = chatRoomRepository.findAllByUserId(userId);
-		return HttpResponseBody.buildChatRoomsResponse(buildChatRoomResponsePayload(chatRooms), HttpStatus.OK.value());
+		return HttpResponseBody.buildChatRoomsResponse(buildChatRoomResponsePayload(chatRooms, userId), HttpStatus.OK.value());
 	}
 
   public HttpResponseBody<List<MessageResponsePayload>> receiveChatMessages(Long chatRoomId, Long userId) {
@@ -142,6 +142,17 @@ public class ChattingProducerService {
   	return -1L;
 	}
 
+	private long countUnreadMessages(List<Message> messages, boolean isHost) {
+		if (isHost) {
+			return messages.stream()
+							.filter(message -> !message.isHostRead())
+							.count();
+		}
+		return messages.stream()
+						.filter(message -> !message.isGuestRead())
+						.count();
+	}
+
 	private ChatRoomResponsePayload buildChatRoomResponsePayload(ChatRoom chatRoom) {
 		return ChatRoomResponsePayload.builder()
 						.id(chatRoom.getId())
@@ -153,10 +164,12 @@ public class ChattingProducerService {
 						.build();
 	}
 
-  private List<ChatRoomResponsePayload> buildChatRoomResponsePayload(List<ChatRoom> chatRooms) {
+  private List<ChatRoomResponsePayload> buildChatRoomResponsePayload(List<ChatRoom> chatRooms, Long userId) {
   	return chatRooms.stream()
 						.map(chatRoom -> {
 							List<Message> messages = chatRoom.getMessages();
+							boolean isHost = isSenderChatRoomHost(chatRoom.getId(), userId);
+							long unreadMessages = countUnreadMessages(messages, isHost);
 
 							Message lastMessage = null;
 							if (messages.size() > 0) {
@@ -184,6 +197,7 @@ public class ChattingProducerService {
 											.boardId(chatRoom.getBoard().getId())
 											.status(chatRoom.getStatus())
 											.lastMessage(messagePayload)
+											.unreadMessages(unreadMessages)
 											.createdAt(chatRoom.getCreatedAt())
 											.build();
 						})

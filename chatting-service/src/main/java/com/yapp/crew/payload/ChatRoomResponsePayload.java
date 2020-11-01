@@ -32,4 +32,7 @@ public class ChatRoomResponsePayload {
 
 	@JsonInclude(value = Include.NON_NULL)
 	private MessageResponsePayload lastMessage;
+
+	@JsonInclude(value = Include.NON_NULL)
+	private long unreadMessages;
 }
