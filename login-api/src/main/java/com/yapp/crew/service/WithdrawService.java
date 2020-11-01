@@ -35,7 +35,7 @@ public class WithdrawService {
       User user = getUserByUserId(userId)
           .orElseThrow(InternalServerErrorException::new);
 
-      updateUser(user);
+      updateUserInActive(user);
     } catch (Exception e) {
       throw new InternalServerErrorException();
     }
@@ -44,7 +44,7 @@ public class WithdrawService {
   }
 
   @Transactional
-  public void updateUser(User user) {
+  public void updateUserInActive(User user) {
     user.setUserStatusInActive();
     userRepository.save(user);
     log.info("user update 완료");
