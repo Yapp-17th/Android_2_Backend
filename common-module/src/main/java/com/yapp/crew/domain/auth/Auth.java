@@ -1,15 +1,19 @@
 package com.yapp.crew.domain.auth;
 
+import java.util.Date;
+
 import com.yapp.crew.domain.errors.TokenRequiredException;
 import com.yapp.crew.domain.errors.WrongTokenPrefixException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 public class Auth {
 
@@ -20,15 +24,13 @@ public class Auth {
 	private String jwtPrefix;
 
 	public void verifyToken(String token) {
-		if (token == null) {
+		if (token == null || token.isBlank()) {
 			throw new TokenRequiredException("[Auth] Token is required but wasn't sent");
 		}
 
 		if (!token.startsWith("Bearer")) {
 			throw new WrongTokenPrefixException("[Auth] Bearer is required for token prefix");
 		}
-
-		// verify expiration
 	}
 
 	public Long parseUserIdFromToken(String token) {

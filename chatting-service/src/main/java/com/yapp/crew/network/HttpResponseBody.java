@@ -21,6 +21,9 @@ public class HttpResponseBody<T> {
 	private Integer status;
 
 	@JsonInclude(NON_NULL)
+	private String message;
+
+	@JsonInclude(NON_NULL)
 	private Long firstUnreadMessageId;
 
 	@JsonInclude(NON_NULL)
@@ -48,6 +51,14 @@ public class HttpResponseBody<T> {
 						.transactionTime(LocalDateTime.now())
 						.status(status)
 						.data(data)
+						.build();
+	}
+
+	public static <T> HttpResponseBody<T> buildErrorResponse(Integer status, String message) {
+		return (HttpResponseBody<T>) HttpResponseBody.builder()
+						.transactionTime(LocalDateTime.now())
+						.status(status)
+						.message(message)
 						.build();
 	}
 }
