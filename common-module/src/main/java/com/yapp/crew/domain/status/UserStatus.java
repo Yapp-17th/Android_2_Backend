@@ -2,7 +2,8 @@ package com.yapp.crew.domain.status;
 
 public enum UserStatus {
   ACTIVE(1),
-  INACTIVE(0);
+  INACTIVE(0),
+  SUSPENDED(-1);
 
   private final int code;
 

@@ -1,6 +1,7 @@
 package com.yapp.crew.model;
 
 import com.yapp.crew.dto.SignUpRequestDto;
+import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -13,7 +14,7 @@ public class SignupUserInfo {
   private String userName;
   private String nickName;
   private String email;
-  private Long category;
+  private List<Long> category;
   private Long address;
   private String intro;
 

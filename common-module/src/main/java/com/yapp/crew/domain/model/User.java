@@ -1,8 +1,10 @@
 package com.yapp.crew.domain.model;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -57,14 +59,6 @@ public class User extends BaseEntity {
   private String oauthId;
 
   @Setter(value = AccessLevel.PRIVATE)
-  @Column(nullable = false)
-  private Integer likes = 0;
-
-  @Setter(value = AccessLevel.PRIVATE)
-  @Column(nullable = false)
-  private Integer dislikes = 0;
-
-  @Setter(value = AccessLevel.PRIVATE)
   @Column(name = "report_points", nullable = false)
   private Integer reportPoints = 0;
 
@@ -80,15 +74,18 @@ public class User extends BaseEntity {
 
   @JsonBackReference
   @Setter(value = AccessLevel.PRIVATE)
-  @ManyToOne(fetch = FetchType.LAZY)
-  private Category category;
+  @OneToMany(mappedBy = "user")
+  private Set<UserExercise> userExercise = new HashSet<>();
 
   @JsonManagedReference
   @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
   private List<Board> boards = new ArrayList<>();
 
-  @Transient
-  private List<Board> bookmarks = new ArrayList<>();
+  @OneToMany(mappedBy = "user")
+  private Set<BookMark> userBookmark = new HashSet<>();
+
+  @OneToMany(mappedBy = "user")
+  private Set<HiddenBoard> userHiddenBoard = new HashSet<>();
 
   @JsonManagedReference
   @OneToMany(mappedBy = "reporter", fetch = FetchType.LAZY)
@@ -122,17 +119,29 @@ public class User extends BaseEntity {
   }
 
   public void addChatRoomHost(ChatRoom chatRoom) {
-  	if (hostList.contains(chatRoom)) {
-  		return;
-		}
+    if (hostList.contains(chatRoom)) {
+      return;
+    }
     hostList.add(chatRoom);
   }
 
   public void addChatRoomGuest(ChatRoom chatRoom) {
-		if (guestList.contains(chatRoom)) {
-			return;
-		}
+    if (guestList.contains(chatRoom)) {
+      return;
+    }
     guestList.add(chatRoom);
+  }
+
+  public long calculateLikes(List<Evaluation> evaluations) {
+    return evaluations.stream()
+        .filter(Evaluation::getIsLike)
+        .count();
+  }
+
+  public long calculateDislikes(List<Evaluation> evaluations) {
+    return evaluations.stream()
+        .filter(Evaluation::getIsDislike)
+        .count();
   }
 
   public static UserBuilder getBuilder() {
@@ -147,7 +156,6 @@ public class User extends BaseEntity {
     private String accessToken;
     private String oauthId;
     private Address address;
-    private Category category;
     private String intro;
 
     public UserBuilder withUsername(String username) {
@@ -185,11 +193,6 @@ public class User extends BaseEntity {
       return this;
     }
 
-    public UserBuilder withCategory(Category category) {
-      this.category = category;
-      return this;
-    }
-
     public User build() {
       User user = new User();
       user.setUsername(username);
@@ -197,7 +200,6 @@ public class User extends BaseEntity {
       user.setEmail(email);
       user.setAccessToken(accessToken);
       user.setAddress(address);
-      user.setCategory(category);
       user.setIntro(intro);
       user.setOauthId(oauthId);
       return user;

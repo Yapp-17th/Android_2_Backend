@@ -1,8 +1,10 @@
 package com.yapp.crew.domain.model;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -34,9 +36,8 @@ public class Category extends BaseEntity {
   @Column(nullable = false)
   private ExerciseType exercise;
 
-  @JsonManagedReference
-  @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
-  private List<User> users = new ArrayList<>();
+  @OneToMany(mappedBy = "category")
+  private Set<UserExercise> exerciseUser = new HashSet<>();
 
   @JsonManagedReference
   @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
