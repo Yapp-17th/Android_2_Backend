@@ -6,8 +6,8 @@ public enum ResponseMessage {
 
   private String message;
 
-  ResponseMessage(String message){
-    this.message=message;
+  ResponseMessage(String message) {
+    this.message = message;
   }
 
   public String getMessage() {

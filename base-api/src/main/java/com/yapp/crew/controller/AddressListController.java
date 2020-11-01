@@ -21,7 +21,7 @@ public class AddressListController {
 
       return EnumListDto.pass(enumListSuccessDto);
     } catch (Exception e) {
-      EnumListFailDto enumListFailDto=EnumListFailDto.builder("city");
+      EnumListFailDto enumListFailDto=EnumListFailDto.builder(ResponseDomain.ADDRESSCITY.getName());
       enumListFailDto.addMessage(e.getMessage());
 
       return EnumListDto.fail(enumListFailDto);
