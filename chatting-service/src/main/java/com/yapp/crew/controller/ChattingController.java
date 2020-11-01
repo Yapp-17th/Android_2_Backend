@@ -18,7 +18,6 @@ import com.yapp.crew.service.ChattingProducerService;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -34,9 +33,6 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin
 @RestController
 public class ChattingController {
-
-	@Value(value = "${jwt.prefix}")
-	private String jwtPrefix;
 
 	private final Auth auth;
 
@@ -94,7 +90,7 @@ public class ChattingController {
   				@PathVariable("chatRoomId") Long chatRoomId
 	) {
 		auth.verifyToken(token);
-		Long userId = auth.parseUserIdFromToken(token.replace(jwtPrefix + " ", ""));
+		Long userId = auth.parseUserIdFromToken(token);
 
     HttpResponseBody<List<MessageResponsePayload>> responseBody = chattingProducerService.receiveChatMessages(chatRoomId, userId);
     return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
@@ -103,7 +99,7 @@ public class ChattingController {
 	@GetMapping(path = "/v1/chat/room")
 	public ResponseEntity<?> receiveChatRooms(@RequestHeader(value = "Authorization") String token) {
 		auth.verifyToken(token);
-		Long userId = auth.parseUserIdFromToken(token.replace(jwtPrefix + " ", ""));
+		Long userId = auth.parseUserIdFromToken(token);
 
 		HttpResponseBody<List<ChatRoomResponsePayload>> responseBody = chattingProducerService.receiveChatRooms(userId);
 		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
@@ -116,7 +112,7 @@ public class ChattingController {
 	) throws JsonProcessingException {
 
   	auth.verifyToken(token);
-		Long guestId = auth.parseUserIdFromToken(token.replace(jwtPrefix + " ", ""));
+		Long guestId = auth.parseUserIdFromToken(token);
 
 		chatRoomRequestPayload.setGuestId(guestId);
 

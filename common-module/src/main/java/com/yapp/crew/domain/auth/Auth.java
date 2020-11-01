@@ -16,6 +16,9 @@ public class Auth {
 	@Value(value = "${jwt.secret}")
 	private String jwtSecret;
 
+	@Value(value = "${jwt.prefix}")
+	private String jwtPrefix;
+
 	public void verifyToken(String token) {
 		if (token == null) {
 			throw new TokenRequiredException("[Auth] Token is required but wasn't sent");
@@ -29,6 +32,7 @@ public class Auth {
 	}
 
 	public Long parseUserIdFromToken(String token) {
+		token = token.replace(jwtPrefix + " ", "");
 		Jws<Claims> claimsJws = Jwts.parserBuilder()
 						.setSigningKey(Keys.hmacShaKeyFor(jwtSecret.getBytes()))
 						.build()
