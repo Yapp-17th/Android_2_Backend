@@ -80,6 +80,7 @@ public class Board extends BaseEntity {
   @Column(name = "starts_at", nullable = false)
   private LocalDateTime startsAt;
 
+
   @OneToMany(mappedBy = "board")
 	private Set<AppliedUser> appliedUsers = new HashSet<>();
 
@@ -93,6 +94,10 @@ public class Board extends BaseEntity {
 	private Set<Evaluation> evaluations = new HashSet<>();
 
   // TODO: add, increase, decrease function
+  public void addBookMark(BookMark bookMark) {
+    bookMarkUser.add(bookMark);
+  }
+
   public static BoardBuilder getBuilder() {
     return new BoardBuilder();
   }
