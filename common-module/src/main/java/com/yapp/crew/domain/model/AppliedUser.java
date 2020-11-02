@@ -41,6 +41,14 @@ public class AppliedUser {
 	@Enumerated(value = EnumType.STRING)
 	private AppliedStatus status = AppliedStatus.PENDING;
 
+	public static AppliedUser buildAppliedUser(User user, Board board, AppliedStatus status) {
+		return AppliedUser.getBuilder()
+						.withUser(user)
+						.withBoard(board)
+						.withStatus(status)
+						.build();
+	}
+
 	public static AppliedUserBuilder getBuilder() {
 		return new AppliedUserBuilder();
 	}

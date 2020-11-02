@@ -86,41 +86,21 @@ public class ChattingConsumer {
     User sender = userRepository.findById(messageRequestPayload.getSenderId())
             .orElseThrow(() -> new UserNotFoundException("User not found"));
 
-    Message message = null;
+    Message message;
 		if (messageRequestPayload.getType().equals(MessageType.PROFILE)) {
 			List<Evaluation> evaluations = evaluationRepository.findAllByUserId(sender.getId());
 
-			message = Message.getBuilder()
-							.withContent(messageRequestPayload.getContent())
-							.withType(messageRequestPayload.getType())
-							.withIsHostRead(false)
-							.withIsGuestRead(false)
-							.withSender(sender)
-							.withChatRoom(chatRoom)
-							.withLikes(sender.calculateLikes(evaluations))
-							.withDislikes(sender.calculateDislikes(evaluations))
-							.build();
+			message = Message.buildProfileMessage(messageRequestPayload.getContent(), sender, chatRoom, evaluations);
 
 			Board board = boardRepository.findById(messageRequestPayload.getBoardId())
 							.orElseThrow(() -> new BoardNotFoundException("Board not found"));
 
-			AppliedUser appliedUser = AppliedUser.getBuilder()
-							.withUser(sender)
-							.withBoard(board)
-							.withStatus(AppliedStatus.PENDING)
-							.build();
+			AppliedUser appliedUser = AppliedUser.buildAppliedUser(sender, board, AppliedStatus.PENDING);
 
 			appliedUserRepository.save(appliedUser);
 		}
 		else {
-			message = Message.getBuilder()
-							.withContent(messageRequestPayload.getContent())
-							.withType(messageRequestPayload.getType())
-							.withIsHostRead(false)
-							.withIsGuestRead(false)
-							.withSender(sender)
-							.withChatRoom(chatRoom)
-							.build();
+			message = Message.buildChatMessage(messageRequestPayload.getContent(), messageRequestPayload.getType(), sender, chatRoom);
 		}
     chatRoom.addMessage(message);
     messageRepository.save(message);
@@ -134,28 +114,8 @@ public class ChattingConsumer {
 
   private MessageResponsePayload buildMessageResponsePayload(Message message) {
   	if (message.getProfileMessage() == null) {
-			return MessageResponsePayload.builder()
-							.id(message.getId())
-							.content(message.getContent())
-							.type(message.getType())
-							.isHostRead(message.isHostRead())
-							.isGuestRead(message.isGuestRead())
-							.senderId(message.getSender().getId())
-							.senderNickname(message.getSender().getNickname())
-							.createdAt(message.getCreatedAt())
-							.build();
+			return MessageResponsePayload.buildChatMessageResponsePayload(message);
 		}
-		return MessageResponsePayload.builder()
-						.id(message.getId())
-						.content(message.getContent())
-						.type(message.getType())
-						.isHostRead(message.isHostRead())
-						.isGuestRead(message.isGuestRead())
-						.senderId(message.getSender().getId())
-						.senderNickname(message.getSender().getNickname())
-						.likes(message.getProfileMessage().getLikes())
-						.dislikes(message.getProfileMessage().getDislikes())
-						.createdAt(message.getCreatedAt())
-						.build();
+  	return MessageResponsePayload.buildProfileMessageResponsePayload(message);
 	}
 }

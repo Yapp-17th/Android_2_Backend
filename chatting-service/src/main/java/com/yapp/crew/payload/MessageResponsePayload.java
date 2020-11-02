@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.yapp.crew.domain.model.Message;
 import com.yapp.crew.domain.type.MessageType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -38,11 +39,33 @@ public class MessageResponsePayload {
 	@JsonInclude(value = Include.NON_NULL)
 	private Long dislikes;
 
-	@JsonInclude(value = Include.NON_NULL)
-	private String label;
-
-	@JsonInclude(value = Include.NON_NULL)
-	private String buttonLabel;
-
 	private LocalDateTime createdAt;
+
+	public static MessageResponsePayload buildChatMessageResponsePayload(Message message) {
+		return MessageResponsePayload.builder()
+						.id(message.getId())
+						.content(message.getContent())
+						.type(message.getType())
+						.isHostRead(message.isHostRead())
+						.isGuestRead(message.isGuestRead())
+						.senderId(message.getSender().getId())
+						.senderNickname(message.getSender().getNickname())
+						.createdAt(message.getCreatedAt())
+						.build();
+	}
+
+	public static MessageResponsePayload buildProfileMessageResponsePayload(Message message) {
+		return MessageResponsePayload.builder()
+						.id(message.getId())
+						.content(message.getContent())
+						.type(message.getType())
+						.isHostRead(message.isHostRead())
+						.isGuestRead(message.isGuestRead())
+						.senderId(message.getSender().getId())
+						.senderNickname(message.getSender().getNickname())
+						.likes(message.getProfileMessage().getLikes())
+						.dislikes(message.getProfileMessage().getDislikes())
+						.createdAt(message.getCreatedAt())
+						.build();
+	}
 }

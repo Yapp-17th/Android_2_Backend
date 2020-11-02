@@ -1,5 +1,7 @@
 package com.yapp.crew.domain.model;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -67,6 +69,30 @@ public class Message extends BaseEntity {
   		return;
 		}
   	setGuestRead(true);
+	}
+
+	public static Message buildChatMessage(String content, MessageType type, User sender, ChatRoom chatRoom) {
+		return Message.getBuilder()
+						.withContent(content)
+						.withType(type)
+						.withIsHostRead(false)
+						.withIsGuestRead(false)
+						.withSender(sender)
+						.withChatRoom(chatRoom)
+						.build();
+	}
+
+	public static Message buildProfileMessage(String content, User sender, ChatRoom chatRoom, List<Evaluation> evaluations) {
+		return Message.getBuilder()
+						.withContent(content)
+						.withType(MessageType.PROFILE)
+						.withIsHostRead(false)
+						.withIsGuestRead(false)
+						.withSender(sender)
+						.withChatRoom(chatRoom)
+						.withLikes(sender.calculateLikes(evaluations))
+						.withDislikes(sender.calculateDislikes(evaluations))
+						.build();
 	}
 
   public static MessageBuilder getBuilder() {
