@@ -2,6 +2,7 @@ package com.yapp.crew.domain.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -61,6 +62,49 @@ public class ChatRoom extends BaseEntity {
     message.setChatRoom(this);
     this.messages.add(message);
   }
+
+	public boolean isSenderChatRoomHost(Long userId) {
+		return userId.equals(getHost().getId());
+	}
+
+	public Long countUnreadMessages(boolean isHost) {
+		if (isHost) {
+			return getMessages().stream()
+							.filter(message -> !message.isHostRead())
+							.count();
+		}
+		return getMessages().stream()
+						.filter(message -> !message.isGuestRead())
+						.count();
+	}
+
+	public Long findFirstUnreadChatMessage(boolean isHost) {
+		Optional<Message> firstUnreadChatMessage;
+
+		if (isHost) {
+			firstUnreadChatMessage = getMessages().stream()
+							.filter(message -> !message.isHostRead())
+							.findFirst();
+		}
+		else {
+			firstUnreadChatMessage = getMessages().stream()
+							.filter(message -> !message.isGuestRead())
+							.findFirst();
+		}
+
+		if (firstUnreadChatMessage.isPresent()) {
+			return firstUnreadChatMessage.get().getId();
+		}
+		return -1L;
+	}
+
+  public static ChatRoom buildChatRoom(User host, User guest, Board board) {
+  	return ChatRoom.getBuilder()
+						.withHost(host)
+						.withGuest(guest)
+						.withBoard(board)
+						.build();
+	}
 
   public static ChatRoomBuilder getBuilder() {
     return new ChatRoomBuilder();

@@ -3,8 +3,8 @@ package com.yapp.crew.domain.model;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-
 import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -15,7 +15,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -77,6 +76,9 @@ public class User extends BaseEntity {
   @OneToMany(mappedBy = "user")
   private Set<UserExercise> userExercise = new HashSet<>();
 
+	@OneToMany(mappedBy = "board")
+	private Set<AppliedUser> appliedUsers = new HashSet<>();
+
   @JsonManagedReference
   @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
   private List<Board> boards = new ArrayList<>();
@@ -132,13 +134,13 @@ public class User extends BaseEntity {
     guestList.add(chatRoom);
   }
 
-  public long calculateLikes(List<Evaluation> evaluations) {
+  public Long calculateLikes(List<Evaluation> evaluations) {
     return evaluations.stream()
         .filter(Evaluation::getIsLike)
         .count();
   }
 
-  public long calculateDislikes(List<Evaluation> evaluations) {
+  public Long calculateDislikes(List<Evaluation> evaluations) {
     return evaluations.stream()
         .filter(Evaluation::getIsDislike)
         .count();

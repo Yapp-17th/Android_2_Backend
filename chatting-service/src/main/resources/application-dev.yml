@@ -44,6 +44,7 @@ kafka:
   topics:
     chat-message: chat-message
     welcome-message: welcome-message
+    apply-user: apply-user
 
   groups:
     chat-message-group: chat-message-group
