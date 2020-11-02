@@ -38,6 +38,14 @@ public class Board extends BaseEntity {
   @Column(nullable = false)
   private String title;
 
+  @Setter(value = AccessLevel.PRIVATE)
+  @Column(nullable = false)
+  private String content;
+
+  @Setter(value = AccessLevel.PRIVATE)
+  @Column(nullable = false)
+  private String place;
+
   @JsonBackReference
   @Setter(value = AccessLevel.PROTECTED)
   @JoinColumn(nullable = false)
@@ -76,21 +84,40 @@ public class Board extends BaseEntity {
   private GroupStatus status = GroupStatus.RECRUITING;
 
   @Column(name = "recruit_count", nullable = false)
+  @Setter(value = AccessLevel.PRIVATE)
   private Integer recruitCount = 0;
 
   @Setter(value = AccessLevel.PRIVATE)
   @Column(name = "starts_at", nullable = false)
   private LocalDateTime startsAt;
 
-  // TODO: add, delete, increase, decrease, update function
+  // TODO: add, increase, decrease function
 
   public static BoardBuilder getBuilder() {
     return new BoardBuilder();
   }
 
+  public void deleteBoard() {
+    this.status = GroupStatus.COMPLETE;
+  }
+
+  public void updateBoard(String title, String content, String place, int recruitCount, Category category, Address address, Tag tag, LocalDateTime startsAt) {
+    this.title = title;
+    this.content = content;
+    this.place = place;
+    this.recruitCount = recruitCount;
+    this.category = category;
+    this.address = address;
+    this.tag = tag;
+    this.startsAt = startsAt;
+  }
+
   public static class BoardBuilder {
 
     private String title;
+    private String content;
+    private String place;
+    private int recruitCount;
     private User user;
     private Category category;
     private Address address;
@@ -99,6 +126,21 @@ public class Board extends BaseEntity {
 
     public BoardBuilder withTitle(String title) {
       this.title = title;
+      return this;
+    }
+
+    public BoardBuilder withContent(String content) {
+      this.content = content;
+      return this;
+    }
+
+    public BoardBuilder withPlace(String place) {
+      this.place = place;
+      return this;
+    }
+
+    public BoardBuilder withRecruitCount(int recruitCount) {
+      this.recruitCount = recruitCount;
       return this;
     }
 
@@ -135,6 +177,9 @@ public class Board extends BaseEntity {
       board.setAddress(address);
       board.setTag(tag);
       board.setStartsAt(startsAt);
+      board.setContent(content);
+      board.setPlace(place);
+      board.setRecruitCount(recruitCount);
       return board;
     }
   }
