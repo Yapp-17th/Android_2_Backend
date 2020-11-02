@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
@@ -70,6 +71,7 @@ public class BoardController {
     return ResponseEntity.ok().body(simpleResponse);
   }
 
+  @PutMapping(path = "/v1/board/{boardId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> editBoard(@RequestHeader(value = "Authorization") String token, @PathVariable Long boardId, @RequestBody @Valid BoardRequestDto boardRequestDto) {
     auth.verifyToken(token);
     // TODO: try - catch

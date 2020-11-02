@@ -92,6 +92,9 @@ public class Board extends BaseEntity {
   private LocalDateTime startsAt;
 
   // TODO: add, increase, decrease function
+  public void addBookMark(BookMark bookMark) {
+    bookMarkUser.add(bookMark);
+  }
 
   public static BoardBuilder getBuilder() {
     return new BoardBuilder();
