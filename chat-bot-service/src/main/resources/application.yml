@@ -63,12 +63,12 @@ kafka:
   topics:
     chat-message: chat-message
     welcome-message: welcome-message
-    request-user-profile: request-user-profile
+    apply-user: apply-user
     accept-user: accept-user
 
   groups:
     welcome-message-group: welcome-message-group
-    request-user-profile-group: request-user-profile-group
+    apply-user-group: apply-user-group
     accept-user-group: accept-user-group
 
 jwt:

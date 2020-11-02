@@ -1,7 +1,13 @@
 package com.yapp.crew.payload;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.yapp.crew.domain.model.Message;
+import com.yapp.crew.domain.repository.MessageRepository;
 import com.yapp.crew.domain.type.MessageType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,5 +36,54 @@ public class MessageResponsePayload {
 
 	private String senderNickname;
 
+	@JsonInclude(value = Include.NON_NULL)
+	private Long likes;
+
+	@JsonInclude(value = Include.NON_NULL)
+	private Long dislikes;
+
 	private LocalDateTime createdAt;
+
+	public static MessageResponsePayload buildChatMessageResponsePayload(Message message) {
+		return MessageResponsePayload.builder()
+						.id(message.getId())
+						.content(message.getContent())
+						.type(message.getType())
+						.isHostRead(message.isHostRead())
+						.isGuestRead(message.isGuestRead())
+						.senderId(message.getSender().getId())
+						.senderNickname(message.getSender().getNickname())
+						.createdAt(message.getCreatedAt())
+						.build();
+	}
+
+	public static MessageResponsePayload buildProfileMessageResponsePayload(Message message) {
+		return MessageResponsePayload.builder()
+						.id(message.getId())
+						.content(message.getContent())
+						.type(message.getType())
+						.isHostRead(message.isHostRead())
+						.isGuestRead(message.isGuestRead())
+						.senderId(message.getSender().getId())
+						.senderNickname(message.getSender().getNickname())
+						.likes(message.getProfileMessage().getLikes())
+						.dislikes(message.getProfileMessage().getDislikes())
+						.createdAt(message.getCreatedAt())
+						.build();
+	}
+
+	public static List<MessageResponsePayload> buildMessageResponsePayload(MessageRepository messageRepository, List<Message> messages, boolean isHost) {
+		return messages.stream()
+						.map(message -> {
+							message.readMessage(isHost);
+
+							messageRepository.save(message);
+
+							if (message.getProfileMessage() == null) {
+								return MessageResponsePayload.buildChatMessageResponsePayload(message);
+							}
+							return MessageResponsePayload.buildProfileMessageResponsePayload(message);
+						})
+						.collect(Collectors.toList());
+	}
 }
