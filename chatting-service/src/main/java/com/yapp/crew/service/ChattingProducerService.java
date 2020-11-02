@@ -131,7 +131,7 @@ public class ChattingProducerService {
 	}
 
   private Long findFirstUnreadChatMessage(List<Message> messages, boolean isHost) {
-  	Optional<Message> firstUnreadChatMessage = null;
+  	Optional<Message> firstUnreadChatMessage;
 
   	if (isHost) {
 			firstUnreadChatMessage = messages.stream()
@@ -196,8 +196,6 @@ public class ChattingProducerService {
 												.senderNickname(lastMessage.getSender().getNickname())
 												.likes(lastMessage.getProfileMessage().getLikes())
 												.dislikes(lastMessage.getProfileMessage().getDislikes())
-												.label(lastMessage.getProfileMessage().getLabel())
-												.buttonLabel(lastMessage.getProfileMessage().getButtonLabel())
 												.createdAt(lastMessage.getCreatedAt())
 												.build();
 							}
@@ -245,8 +243,6 @@ public class ChattingProducerService {
 											.senderNickname(message.getSender().getNickname())
 											.likes(message.getProfileMessage().getLikes())
 											.dislikes(message.getProfileMessage().getDislikes())
-											.label(message.getProfileMessage().getLabel())
-											.buttonLabel(message.getProfileMessage().getButtonLabel())
 											.createdAt(message.getCreatedAt())
 											.build();
 						})

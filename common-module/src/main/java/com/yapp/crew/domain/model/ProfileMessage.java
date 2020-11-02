@@ -1,6 +1,5 @@
 package com.yapp.crew.domain.model;
 
-import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 import lombok.AccessLevel;
@@ -19,9 +18,4 @@ public class ProfileMessage {
 	private Long likes;
 
 	private Long dislikes;
-
-	private String label;
-
-	@Column(name = "button_label")
-	private String buttonLabel;
 }

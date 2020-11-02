@@ -99,8 +99,6 @@ public class ChattingConsumer {
 							.withChatRoom(chatRoom)
 							.withLikes(sender.calculateLikes(evaluations))
 							.withDislikes(sender.calculateDislikes(evaluations))
-							.withLabel("기본 소개")
-							.withButtonLabel("프로필 놀러가기")
 							.build();
 
 			Board board = boardRepository.findById(messageRequestPayload.getBoardId())
@@ -157,8 +155,6 @@ public class ChattingConsumer {
 						.senderNickname(message.getSender().getNickname())
 						.likes(message.getProfileMessage().getLikes())
 						.dislikes(message.getProfileMessage().getDislikes())
-						.label(message.getProfileMessage().getLabel())
-						.buttonLabel(message.getProfileMessage().getButtonLabel())
 						.createdAt(message.getCreatedAt())
 						.build();
 	}

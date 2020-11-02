@@ -80,8 +80,6 @@ public class Message extends BaseEntity {
     private boolean isGuestRead;
     private Long likes;
     private Long dislikes;
-    private String label;
-    private String buttonLabel;
     private User sender;
     private ChatRoom chatRoom;
 
@@ -115,16 +113,6 @@ public class Message extends BaseEntity {
     	return this;
 		}
 
-		public MessageBuilder withLabel(String label) {
-    	this.label = label;
-    	return this;
-		}
-
-		public MessageBuilder withButtonLabel(String buttonLabel) {
-    	this.buttonLabel = buttonLabel;
-    	return this;
-		}
-
     public MessageBuilder withSender(User sender) {
       this.sender = sender;
       return this;
@@ -141,7 +129,7 @@ public class Message extends BaseEntity {
       message.setType(type);
       message.setHostRead(isHostRead);
       message.setGuestRead(isGuestRead);
-      message.setProfileMessage(new ProfileMessage(likes, dislikes, label, buttonLabel));
+      message.setProfileMessage(new ProfileMessage(likes, dislikes));
       message.setSender(sender);
       message.setChatRoom(chatRoom);
       return message;
