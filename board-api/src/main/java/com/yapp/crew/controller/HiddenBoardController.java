@@ -28,7 +28,7 @@ public class HiddenBoardController {
   @PostMapping(path = "/v1/board/hidden", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> postBoard(@RequestHeader(value = "Authorization") String token, @RequestBody @Valid BoardIdRequestDto boardIdRequestDto) {
     auth.verifyToken(token);
-    // TODO: try - catch
+
     long userId = auth.parseUserIdFromToken(token);
     SimpleResponse simpleResponse = hiddenBoardService.hiddenBoard(boardIdRequestDto.getBoardId(), userId);
 

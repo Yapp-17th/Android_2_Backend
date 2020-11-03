@@ -34,7 +34,7 @@ public class BookmarkController {
   @PostMapping(path = "/v1/board/bookMark", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> postBoard(@RequestHeader(value = "Authorization") String token, @RequestBody @Valid BoardIdRequestDto boardIdRequestDto) {
     auth.verifyToken(token);
-    // TODO: try - catch
+
     long userId = auth.parseUserIdFromToken(token);
     SimpleResponse simpleResponse = bookMarkService.createBookMark(boardIdRequestDto.getBoardId(), userId);
 
@@ -44,7 +44,7 @@ public class BookmarkController {
   @DeleteMapping(path = "/v1/board/bookMark/{boardId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> deleteBoard(@RequestHeader(value = "Authorization") String token, @PathVariable Long boardId) {
     auth.verifyToken(token);
-    // TODO: try - catch
+
     long userId = auth.parseUserIdFromToken(token);
     SimpleResponse simpleResponse = bookMarkService.deleteBookMark(boardId, userId);
 

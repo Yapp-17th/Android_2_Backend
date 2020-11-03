@@ -29,7 +29,7 @@ public class ReportController {
   @PostMapping(path = "/v1/board/report", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> postBoard(@RequestHeader(value = "Authorization") String token, @RequestBody @Valid BoardReportRequestDto boardReportRequestDto) {
     auth.verifyToken(token);
-    // TODO: try - catch
+
     long userId = auth.parseUserIdFromToken(token);
     SimpleResponse simpleResponse = reportService.postBoardReport(BoardReport.build(boardReportRequestDto, userId));
 

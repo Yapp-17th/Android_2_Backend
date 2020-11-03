@@ -34,21 +34,15 @@ public class SignUpController {
 
   @PostMapping(path = "/v1/user/sign-up", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> postSignIn(@RequestBody @Valid SignUpRequestDto signUpRequestDto) {
-    UserAuthResponse userAuthResponse = null;
 
-    try {
-      SignupUserInfo signupUserInfo = SignupUserInfo.build(signUpRequestDto);
-      userAuthResponse = signUpService.signUp(signupUserInfo);
+    SignupUserInfo signupUserInfo = SignupUserInfo.build(signUpRequestDto);
+    UserAuthResponse userAuthResponse = signUpService.signUp(signupUserInfo);
 
-      UserAuthResponseDto userAuthResponseDto = UserAuthResponseDto.build(userAuthResponse.getUserAuthResponseBody());
-      HttpHeaders httpHeaders = userAuthResponse.getHttpHeaders();
+    UserAuthResponseDto userAuthResponseDto = UserAuthResponseDto.build(userAuthResponse.getUserAuthResponseBody());
+    HttpHeaders httpHeaders = userAuthResponse.getHttpHeaders();
 
-      if (httpHeaders != null) {
-        return ResponseEntity.ok().headers(httpHeaders).body(userAuthResponseDto);
-      }
-
-    } catch (Exception e) {
-      throw new InternalServerErrorException();
+    if (httpHeaders != null) {
+      return ResponseEntity.ok().headers(httpHeaders).body(userAuthResponseDto);
     }
 
     throw new InternalServerErrorException();

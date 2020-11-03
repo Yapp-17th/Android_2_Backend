@@ -48,7 +48,7 @@ public class BoardController {
   @PostMapping(path = "/v1/board/post", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> postBoard(@RequestHeader(value = "Authorization") String token, @RequestBody @Valid BoardRequestDto boardRequestDto) {
     auth.verifyToken(token);
-    // TODO: try - catch
+
     long userId = auth.parseUserIdFromToken(token);
     BoardPostRequiredInfo boardPostRequiredInfo = BoardPostRequiredInfo.build(boardRequestDto);
     SimpleResponse simpleResponse = boardService.postBoard(boardPostRequiredInfo, userId);
@@ -59,7 +59,7 @@ public class BoardController {
   @PostMapping(path = "/v1/board/retrieve", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> getBoardList(@RequestHeader(value = "Authorization") String token, @PageableDefault(size = 20, page = 0) Pageable pageable, @RequestBody @Valid BoardFilterRequestDto boardFilterRequestDto) {
     auth.verifyToken(token);
-    // TODO: try - catch
+
     List<BoardResponseInfo> boardResponseInfoList = boardService.getBoardList(new BoardFilter(boardFilterRequestDto));
 
     PagedListHolder page = new PagedListHolder(boardResponseInfoList);
@@ -73,7 +73,7 @@ public class BoardController {
   @GetMapping(path = "/v1/board/{boardId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> getBoardContent(@RequestHeader(value = "Authorization") String token, @PathVariable Long boardId) {
     auth.verifyToken(token);
-    // TODO: try - catch
+
     long userId = auth.parseUserIdFromToken(token);
     BoardContentResponseInfo boardContentResponseInfo = boardService.getBoardContent(boardId, userId);
     if (boardContentResponseInfo == null) {
