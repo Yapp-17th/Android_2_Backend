@@ -83,6 +83,10 @@ public class Board extends BaseEntity {
 	@OneToMany(mappedBy = "board")
 	private Set<Evaluation> evaluations = new HashSet<>();
 
+	public void increaseRecruitCount() {
+		recruitCount += 1;
+	}
+
   public static BoardBuilder getBuilder() {
     return new BoardBuilder();
   }

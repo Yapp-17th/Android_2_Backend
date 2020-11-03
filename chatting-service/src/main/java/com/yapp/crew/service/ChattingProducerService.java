@@ -35,6 +35,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -122,6 +123,7 @@ public class ChattingProducerService {
 		chattingProducer.applyUser(applyRequestPayload);
 	}
 
+	@Transactional
 	public HttpResponseBody<?> approveUser(ApproveRequestPayload approveRequestPayload) {
 		Board board = boardRepository.findById(approveRequestPayload.getBoardId())
 						.orElseThrow(() -> new BoardNotFoundException("Board not found"));
@@ -152,6 +154,9 @@ public class ChattingProducerService {
 
 		isApplied.approveUser();
 		appliedUserRepository.save(isApplied);
+
+		board.increaseRecruitCount();
+		boardRepository.save(board);
 
 		return HttpResponseBody.buildSuccessResponse(HttpStatus.OK.value(), "Successfully approved guest");
 	}
