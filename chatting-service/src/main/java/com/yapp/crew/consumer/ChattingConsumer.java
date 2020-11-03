@@ -96,8 +96,10 @@ public class ChattingConsumer {
 							.orElseThrow(() -> new BoardNotFoundException("Board not found"));
 
 			AppliedUser appliedUser = AppliedUser.buildAppliedUser(sender, board, AppliedStatus.PENDING);
-
 			appliedUserRepository.save(appliedUser);
+
+			sender.addAppliedUser(appliedUser);
+			board.addAppliedUser(appliedUser);
 		}
 		else {
 			message = Message.buildChatMessage(messageRequestPayload.getContent(), messageRequestPayload.getType(), sender, chatRoom);

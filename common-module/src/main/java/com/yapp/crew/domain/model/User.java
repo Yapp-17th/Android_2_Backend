@@ -105,6 +105,13 @@ public class User extends BaseEntity {
   @OneToMany(mappedBy = "guest", fetch = FetchType.LAZY)
   private List<ChatRoom> guestList = new ArrayList<>();
 
+  public void addAppliedUser(AppliedUser appliedUser) {
+		if (appliedUsers.contains(appliedUser)) {
+			return;
+		}
+  	appliedUsers.add(appliedUser);
+	}
+
   public void addBoard(Board board) {
     board.setUser(this);
     this.boards.add(board);
