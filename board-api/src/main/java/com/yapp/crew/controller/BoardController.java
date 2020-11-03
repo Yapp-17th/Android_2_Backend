@@ -51,7 +51,7 @@ public class BoardController {
 
     List<BoardResponseInfo> boardResponseInfoList = boardService.getBoardList(new BoardFilter(boardFilterRequestDto));
 
-    PagedListHolder page = new PagedListHolder(boardResponseInfoList);
+    PagedListHolder<BoardResponseInfo> page = new PagedListHolder<>(boardResponseInfoList);
     page.setPageSize(pageable.getPageSize());
     page.setPage(pageable.getPageNumber());
 
@@ -86,7 +86,7 @@ public class BoardController {
   @DeleteMapping(path = "/v1/board/{boardId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> deleteBoard(@RequestHeader(value = "Authorization") String token, @PathVariable Long boardId) {
     auth.verifyToken(token);
-    // TODO: try - catch
+
     long userId = auth.parseUserIdFromToken(token);
     SimpleResponse simpleResponse = boardService.deleteBoard(boardId, userId);
 
@@ -96,7 +96,7 @@ public class BoardController {
   @PutMapping(path = "/v1/board/{boardId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> editBoard(@RequestHeader(value = "Authorization") String token, @PathVariable Long boardId, @RequestBody @Valid BoardRequestDto boardRequestDto) {
     auth.verifyToken(token);
-    // TODO: try - catch
+
     long userId = auth.parseUserIdFromToken(token);
     BoardPostRequiredInfo boardPostRequiredInfo = BoardPostRequiredInfo.build(boardRequestDto);
     BoardContentResponseInfo boardContentResponseInfo = boardService.editBoardContent(boardId, userId, boardPostRequiredInfo);
