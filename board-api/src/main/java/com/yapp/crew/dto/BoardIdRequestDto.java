@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class BookMarkRequestDto {
+public class BoardIdRequestDto {
 
   @NotNull
   private Long boardId;

@@ -1,7 +1,7 @@
 package com.yapp.crew.controller;
 
 import com.yapp.crew.domain.auth.Auth;
-import com.yapp.crew.dto.BookMarkRequestDto;
+import com.yapp.crew.dto.BoardIdRequestDto;
 import com.yapp.crew.model.SimpleResponse;
 import com.yapp.crew.service.HiddenBoardService;
 import javax.validation.Valid;
@@ -26,11 +26,11 @@ public class HiddenBoardController {
   }
 
   @PostMapping(path = "/v1/board/hidden", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<?> postBoard(@RequestHeader(value = "Authorization") String token, @RequestBody @Valid BookMarkRequestDto bookMarkRequestDto) {
+  public ResponseEntity<?> postBoard(@RequestHeader(value = "Authorization") String token, @RequestBody @Valid BoardIdRequestDto boardIdRequestDto) {
     auth.verifyToken(token);
     // TODO: try - catch
     long userId = auth.parseUserIdFromToken(token);
-    SimpleResponse simpleResponse = hiddenBoardService.hiddenBoard(bookMarkRequestDto.getBoardId(), userId);
+    SimpleResponse simpleResponse = hiddenBoardService.hiddenBoard(boardIdRequestDto.getBoardId(), userId);
 
     return ResponseEntity.ok().body(simpleResponse);
   }
