@@ -20,11 +20,13 @@ public class SimpleResponse {
     return simpleResponse;
   }
 
-  public static SimpleResponse fail(String message) {
+  public static SimpleResponse fail(HttpStatus httpStatus, String message) {
     SimpleResponse simpleResponse = new SimpleResponse();
-    simpleResponse.status = HttpStatus.BAD_REQUEST.value();
+    simpleResponse.status = httpStatus.value();
     simpleResponse.isSuccess = false;
     simpleResponse.message = message;
     return simpleResponse;
   }
+
+
 }
