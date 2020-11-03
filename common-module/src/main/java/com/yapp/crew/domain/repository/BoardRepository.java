@@ -16,4 +16,6 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
   Optional<Board> findBoardById(Long boardId);
 
   Board save(Board board);
+
+  List<Board> findByContentIsContaining(String keyWord);
 }
