@@ -45,18 +45,7 @@ public class BoardController {
     this.auth = auth;
   }
 
-  @PostMapping(path = "/v1/board/post", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<?> postBoard(@RequestHeader(value = "Authorization") String token, @RequestBody @Valid BoardRequestDto boardRequestDto) {
-    auth.verifyToken(token);
-
-    long userId = auth.parseUserIdFromToken(token);
-    BoardPostRequiredInfo boardPostRequiredInfo = BoardPostRequiredInfo.build(boardRequestDto);
-    SimpleResponse simpleResponse = boardService.postBoard(boardPostRequiredInfo, userId);
-
-    return ResponseEntity.ok().body(simpleResponse);
-  }
-
-  @PostMapping(path = "/v1/board/retrieve", produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(path = "/v1/board", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> getBoardList(@RequestHeader(value = "Authorization") String token, @PageableDefault(size = 20, page = 0) Pageable pageable, @RequestBody @Valid BoardFilterRequestDto boardFilterRequestDto) {
     auth.verifyToken(token);
 
@@ -68,6 +57,17 @@ public class BoardController {
 
     BoardListResponseDto boardListResponseDto = BoardListResponseDto.build(page.getPageList());
     return ResponseEntity.ok().body(boardListResponseDto);
+  }
+
+  @PostMapping(path = "/v1/board", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<?> postBoard(@RequestHeader(value = "Authorization") String token, @RequestBody @Valid BoardRequestDto boardRequestDto) {
+    auth.verifyToken(token);
+
+    long userId = auth.parseUserIdFromToken(token);
+    BoardPostRequiredInfo boardPostRequiredInfo = BoardPostRequiredInfo.build(boardRequestDto);
+    SimpleResponse simpleResponse = boardService.postBoard(boardPostRequiredInfo, userId);
+
+    return ResponseEntity.ok().body(simpleResponse);
   }
 
   @GetMapping(path = "/v1/board/{boardId}", produces = MediaType.APPLICATION_JSON_VALUE)

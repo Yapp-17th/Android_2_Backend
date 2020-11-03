@@ -1,6 +1,7 @@
 package com.yapp.crew.dto;
 
 import java.time.LocalDateTime;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,9 +10,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class BoardRequestDto {
 
-  @NotNull
+  @NotBlank
   private String title;
-  @NotNull
+  @NotBlank
   private String content;
   @NotNull
   private Long category;
@@ -23,6 +24,6 @@ public class BoardRequestDto {
   private Integer recruitNumber;
   @NotNull
   private LocalDateTime date;
-  @NotNull
+  @NotBlank
   private String place;
 }

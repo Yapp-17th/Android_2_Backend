@@ -110,7 +110,7 @@ public class Board extends BaseEntity {
     this.hiddenBoardUser.add(hiddenBoard);
   }
 
-  public int getRemianRecruitNumber() {
+  public int getRemainRecruitNumber() {
     int approvedCount = (int) appliedUsers.stream().filter(appliedUser -> appliedUser.getStatus() == AppliedStatus.APPROVED).count();
     return this.recruitCount - approvedCount;
   }

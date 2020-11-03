@@ -30,7 +30,7 @@ public class HiddenBoardService {
     this.userRepository = userRepository;
   }
 
-  public SimpleResponse hiddenBoard(Long boardId, Long userId) {
+  public SimpleResponse createHiddenBoard(Long boardId, Long userId) {
     Board board = findBoardById(boardId)
         .orElseThrow(InternalServerErrorException::new);
     User user = findUserById(userId)

@@ -222,7 +222,7 @@ public class BoardService {
   private List<Board> sortBoardList(List<Board> boards, String sorting) {
     if (StringUtils.equalsIgnoreCase(sorting, "remain")) {
       return boards.stream()
-          .sorted(Comparator.comparing(Board::getRemianRecruitNumber, Comparator.reverseOrder()))
+          .sorted(Comparator.comparing(Board::getRemainRecruitNumber, Comparator.reverseOrder()))
           .collect(Collectors.toList());
     } else if (StringUtils.equalsIgnoreCase(sorting, "deadline")) {
       return boards.stream()

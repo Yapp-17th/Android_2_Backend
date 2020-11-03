@@ -30,7 +30,7 @@ public class HiddenBoardController {
     auth.verifyToken(token);
 
     long userId = auth.parseUserIdFromToken(token);
-    SimpleResponse simpleResponse = hiddenBoardService.hiddenBoard(boardIdRequestDto.getBoardId(), userId);
+    SimpleResponse simpleResponse = hiddenBoardService.createHiddenBoard(boardIdRequestDto.getBoardId(), userId);
 
     return ResponseEntity.ok().body(simpleResponse);
   }
