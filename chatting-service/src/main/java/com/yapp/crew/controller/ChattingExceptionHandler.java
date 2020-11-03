@@ -4,6 +4,8 @@ import com.yapp.crew.domain.errors.BoardNotFoundException;
 import com.yapp.crew.domain.errors.ChatRoomNotFoundException;
 import com.yapp.crew.domain.errors.TokenRequiredException;
 import com.yapp.crew.domain.errors.UserNotFoundException;
+import com.yapp.crew.domain.errors.WrongGuestException;
+import com.yapp.crew.domain.errors.WrongHostException;
 import com.yapp.crew.domain.errors.WrongTokenPrefixException;
 import com.yapp.crew.network.HttpResponseBody;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -77,6 +79,18 @@ public class ChattingExceptionHandler {
 	@ExceptionHandler(value = BoardNotFoundException.class)
 	public ResponseEntity<?> handleBoardNotFoundException(BoardNotFoundException ex) {
 		HttpResponseBody<?> responseBody = HttpResponseBody.buildErrorResponse(HttpStatus.NOT_FOUND.value(), ex.getMessage());
+		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
+	}
+
+	@ExceptionHandler(value = WrongHostException.class)
+	public ResponseEntity<?> handleWrongHostException(WrongHostException ex) {
+		HttpResponseBody<?> responseBody = HttpResponseBody.buildErrorResponse(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
+		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
+	}
+
+	@ExceptionHandler(value = WrongGuestException.class)
+	public ResponseEntity<?> handleWrongGuestException(WrongGuestException ex) {
+		HttpResponseBody<?> responseBody = HttpResponseBody.buildErrorResponse(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
 		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
 	}
 }

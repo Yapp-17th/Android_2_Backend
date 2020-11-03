@@ -61,4 +61,12 @@ public class HttpResponseBody<T> {
 						.message(message)
 						.build();
 	}
+
+	public static <T> HttpResponseBody<T> buildSuccessResponse(Integer status, String message) {
+		return (HttpResponseBody<T>) HttpResponseBody.builder()
+						.transactionTime(LocalDateTime.now())
+						.status(status)
+						.message(message)
+						.build();
+	}
 }

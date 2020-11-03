@@ -20,5 +20,8 @@ public class ApproveRequestPayload {
 
 	private Long boardId;
 	
-	private Long approverId;
+	private Long hostId;
+
+	@NotNull
+	private Long guestId;
 }

@@ -10,6 +10,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.yapp.crew.domain.auth.Auth;
 import com.yapp.crew.network.HttpResponseBody;
 import com.yapp.crew.payload.ApplyRequestPayload;
+import com.yapp.crew.payload.ApproveRequestPayload;
 import com.yapp.crew.payload.ChatRoomRequestPayload;
 import com.yapp.crew.payload.ChatRoomResponsePayload;
 import com.yapp.crew.payload.MessageRequestPayload;
@@ -136,5 +137,21 @@ public class ChattingController {
 		chattingProducerService.applyUser(applyRequestPayload);
 
 		return ResponseEntity.status(HttpStatus.CREATED).body(applyRequestPayload);
+	}
+
+	@PostMapping(path = "/v1/board/{boardId}/approve")
+	public ResponseEntity<?> approveUser(
+					@RequestHeader(value = "Authorization") String token,
+					@Valid @RequestBody ApproveRequestPayload approveRequestPayload,
+					@PathVariable("boardId") Long boardId
+	) {
+  	auth.verifyToken(token);
+  	Long hostId = auth.parseUserIdFromToken(token);
+
+  	approveRequestPayload.setBoardId(boardId);
+  	approveRequestPayload.setHostId(hostId);
+
+  	HttpResponseBody<?> responseBody = chattingProducerService.approveUser(approveRequestPayload);
+  	return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
 	}
 }
