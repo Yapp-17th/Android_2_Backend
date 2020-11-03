@@ -31,6 +31,7 @@ import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -131,7 +132,7 @@ public class BoardService {
         .orElseThrow(InternalServerErrorException::new);
 
     if (!board.getUser().getId().equals(userId)) {
-      SimpleResponse.fail(ResponseMessage.BOARD_DIFF_USERID.getMessage());
+      SimpleResponse.fail(HttpStatus.UNAUTHORIZED, ResponseMessage.BOARD_DIFF_USERID.getMessage());
     }
     // TODO: try - catch: internal server error
     deleteBoard(board);
