@@ -106,6 +106,10 @@ public class Board extends BaseEntity {
     this.status = GroupStatus.COMPLETE;
   }
 
+  public void addHiddenBoard(HiddenBoard hiddenBoard) {
+    this.hiddenBoardUser.add(hiddenBoard);
+  }
+
   public int getRemianRecruitNumber() {
     int approvedCount = (int) appliedUsers.stream().filter(appliedUser -> appliedUser.getStatus() == AppliedStatus.APPROVED).count();
     return this.recruitCount - approvedCount;

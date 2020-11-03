@@ -76,8 +76,8 @@ public class User extends BaseEntity {
   @OneToMany(mappedBy = "user")
   private Set<UserExercise> userExercise = new HashSet<>();
 
-	@OneToMany(mappedBy = "board")
-	private Set<AppliedUser> appliedUsers = new HashSet<>();
+  @OneToMany(mappedBy = "board")
+  private Set<AppliedUser> appliedUsers = new HashSet<>();
 
   @JsonManagedReference
   @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
@@ -107,6 +107,10 @@ public class User extends BaseEntity {
 
   public void addBookMark(BookMark bookMark) {
     userBookmark.add(bookMark);
+  }
+
+  public void addHiddenBoard(HiddenBoard hiddenBoard) {
+    this.userHiddenBoard.add(hiddenBoard);
   }
 
   public void addBoard(Board board) {

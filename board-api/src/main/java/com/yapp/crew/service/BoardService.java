@@ -6,6 +6,8 @@ import com.yapp.crew.domain.model.Board;
 import com.yapp.crew.domain.model.Board.BoardBuilder;
 import com.yapp.crew.domain.model.Category;
 import com.yapp.crew.domain.model.Evaluation;
+import com.yapp.crew.domain.model.HiddenBoard;
+import com.yapp.crew.domain.model.HiddenBoard.HiddenBoardBuilder;
 import com.yapp.crew.domain.model.Tag;
 import com.yapp.crew.domain.model.User;
 import com.yapp.crew.domain.repository.AddressRepository;
