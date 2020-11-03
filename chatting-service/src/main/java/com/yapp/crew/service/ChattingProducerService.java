@@ -124,7 +124,7 @@ public class ChattingProducerService {
 	}
 
 	@Transactional
-	public HttpResponseBody<?> approveUser(ApproveRequestPayload approveRequestPayload) {
+	public HttpResponseBody<?> approveUser(ApproveRequestPayload approveRequestPayload) throws JsonProcessingException {
 		Board board = boardRepository.findById(approveRequestPayload.getBoardId())
 						.orElseThrow(() -> new BoardNotFoundException("Board not found"));
 
@@ -157,6 +157,8 @@ public class ChattingProducerService {
 
 		board.increaseRecruitCount();
 		boardRepository.save(board);
+
+		chattingProducer.approveUser(approveRequestPayload);
 
 		return HttpResponseBody.buildSuccessResponse(HttpStatus.OK.value(), "Successfully approved guest");
 	}

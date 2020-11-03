@@ -144,7 +144,8 @@ public class ChattingController {
 					@RequestHeader(value = "Authorization") String token,
 					@Valid @RequestBody ApproveRequestPayload approveRequestPayload,
 					@PathVariable("boardId") Long boardId
-	) {
+	) throws JsonProcessingException {
+
   	auth.verifyToken(token);
   	Long hostId = auth.parseUserIdFromToken(token);
 
