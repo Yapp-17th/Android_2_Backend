@@ -1,6 +1,7 @@
 package com.yapp.crew.service;
 
 import com.yapp.crew.domain.model.Address;
+import com.yapp.crew.domain.model.BaseEntity;
 import com.yapp.crew.domain.model.Board;
 import com.yapp.crew.domain.model.Board.BoardBuilder;
 import com.yapp.crew.domain.model.Category;
@@ -13,15 +14,21 @@ import com.yapp.crew.domain.repository.CategoryRepository;
 import com.yapp.crew.domain.repository.EvaluationRepository;
 import com.yapp.crew.domain.repository.TagRepository;
 import com.yapp.crew.domain.repository.UserRepository;
-import com.yapp.crew.domain.type.ExerciseType;
+import com.yapp.crew.domain.status.GroupStatus;
 import com.yapp.crew.exception.InternalServerErrorException;
 import com.yapp.crew.model.BoardContentResponseInfo;
+import com.yapp.crew.model.BoardFilter;
 import com.yapp.crew.model.BoardPostRequiredInfo;
+import com.yapp.crew.model.BoardResponseInfo;
 import com.yapp.crew.model.SimpleResponse;
 import com.yapp.crew.utils.ResponseMessage;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -72,6 +79,38 @@ public class BoardService {
     saveBoard(board);
 
     return SimpleResponse.pass(ResponseMessage.BOARD_POST_SUCCESS.getMessage());
+  }
+
+  public List<BoardResponseInfo> getBoardList(BoardFilter boardFilter) {
+    List<Category> categories;
+    List<Address> addresses;
+
+    if (boardFilter.getCategory() != null) {
+      categories = findAllCategory().stream()
+          .filter(category -> boardFilter.getCategory().contains(category.getId()))
+          .collect(Collectors.toList());
+    } else {
+      categories = findAllCategory();
+    }
+
+    if (boardFilter.getCity() != null) {
+      addresses = findAllAddress().stream()
+          .filter(address -> boardFilter.getCity().contains(address.getId()))
+          .collect(Collectors.toList());
+    } else {
+      addresses = findAllAddress();
+    }
+
+    List<Board> filteredBoard = filterBoardList(findAllBoards(), addresses, categories);
+
+    List<BoardResponseInfo> boardResponseInfoPage = sortBoardList(filteredBoard, boardFilter.getSorting())
+        .stream()
+        .map(board -> BoardResponseInfo.build(board, board.getUser()))
+        .collect(Collectors.toList());
+
+    log.info("결과 리스트: " + boardResponseInfoPage);
+
+    return boardResponseInfoPage;
   }
 
   public BoardContentResponseInfo getBoardContent(Long boardId, Long userId) {
@@ -154,5 +193,43 @@ public class BoardService {
   private Optional<Tag> findTagById(Long tagId) {
     log.info("tag 가져오기 성공");
     return tagRepository.findTagById(tagId);
+  }
+
+  private List<Board> findAllBoards() {
+    log.info("모든 board 리스트 가져오기 성공");
+    return boardRepository.findAll();
+  }
+
+  private List<Category> findAllCategory() {
+    log.info("모든 category 리스트 가져오기 성공");
+    return categoryRepository.findAll();
+  }
+
+  private List<Address> findAllAddress() {
+    log.info("모든 address 리스트 가져오기 성공");
+    return addressRepository.findAll();
+  }
+
+  private List<Board> filterBoardList(List<Board> boards, List<Address> addresses, List<Category> categories) {
+    return boards.stream()
+        .filter(board -> addresses.contains(board.getAddress()))
+        .filter(board -> categories.contains(board.getCategory()))
+        .filter(board -> board.getStatus().getCode() < GroupStatus.CANCELED.getCode())
+        .collect(Collectors.toList());
+  }
+
+  private List<Board> sortBoardList(List<Board> boards, String sorting) {
+    if (StringUtils.equalsIgnoreCase(sorting, "remain")) {
+      return boards.stream()
+          .sorted(Comparator.comparing(Board::getRemianRecruitNumber, Comparator.reverseOrder()))
+          .collect(Collectors.toList());
+    } else if (StringUtils.equalsIgnoreCase(sorting, "deadline")) {
+      return boards.stream()
+          .sorted(Comparator.comparing(Board::getStartsAt, Comparator.naturalOrder()))
+          .collect(Collectors.toList());
+    }
+    return boards.stream()
+        .sorted(Comparator.comparing(BaseEntity::getCreatedAt, Comparator.reverseOrder()))
+        .collect(Collectors.toList());
   }
 }

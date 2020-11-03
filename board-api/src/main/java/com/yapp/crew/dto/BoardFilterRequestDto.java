@@ -9,14 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class BoardFilterRequestDto {
 
-  @NotNull
-  private Integer limit;
-  @NotNull
-  private Integer offset;
-  @NotNull
-  private String sorting;
-  @NotNull
-  List<Integer> category;
-  @NotNull
-  List<Integer> city;
+  private String sorting = "latest";
+  List<Long> category = null;
+  List<Long> city = null;
 }

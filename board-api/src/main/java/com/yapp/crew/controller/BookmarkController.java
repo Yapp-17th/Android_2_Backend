@@ -41,7 +41,7 @@ public class BookmarkController {
     return ResponseEntity.ok().body(simpleResponse);
   }
 
-  @DeleteMapping(path = "/v1/board/{boardId}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @DeleteMapping(path = "/v1/board/bookMark/{boardId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> deleteBoard(@RequestHeader(value = "Authorization") String token, @PathVariable Long boardId) {
     auth.verifyToken(token);
     // TODO: try - catch

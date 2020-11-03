@@ -19,16 +19,16 @@ public class BoardResponseInfo {
   private String city;
   private Boolean isBookMark;
 
-  public BoardResponseInfo build(Board board, User user) {
+  public static BoardResponseInfo build(Board board, User user) {
     BoardResponseInfo boardResponseInfo = new BoardResponseInfo();
-    this.boardId = board.getId();
-    this.hostId = board.getUser().getId();
-    this.hostName = board.getUser().getNickname();
-    this.title = board.getTitle();
-    this.groupStatus = board.getStatus().getName();
-    this.exercise = board.getCategory().getExercise().getName();
-    this.city = board.getAddress().getCity().getName();
-    this.isBookMark = user.getUserBookmark().stream()
+    boardResponseInfo.boardId = board.getId();
+    boardResponseInfo.hostId = board.getUser().getId();
+    boardResponseInfo.hostName = board.getUser().getNickname();
+    boardResponseInfo.title = board.getTitle();
+    boardResponseInfo.groupStatus = board.getStatus().getName();
+    boardResponseInfo.exercise = board.getCategory().getExercise().getName();
+    boardResponseInfo.city = board.getAddress().getCity().getName();
+    boardResponseInfo.isBookMark = user.getUserBookmark().stream()
         .map(bookMark -> bookMark.getBoard().getId())
         .anyMatch(Predicate.isEqual(board.getId()));
 

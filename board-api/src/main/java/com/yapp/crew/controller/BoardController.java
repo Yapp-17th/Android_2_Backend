@@ -2,15 +2,24 @@ package com.yapp.crew.controller;
 
 import com.yapp.crew.domain.auth.Auth;
 import com.yapp.crew.dto.BoardContentResponseDto;
+import com.yapp.crew.dto.BoardFilterRequestDto;
 import com.yapp.crew.dto.BoardRequestDto;
 import com.yapp.crew.exception.InternalServerErrorException;
 import com.yapp.crew.model.BoardContentResponseInfo;
+import com.yapp.crew.model.BoardFilter;
 import com.yapp.crew.model.BoardPostRequiredInfo;
+import com.yapp.crew.model.BoardResponseInfo;
 import com.yapp.crew.model.SimpleResponse;
 import com.yapp.crew.service.BoardService;
+import java.util.List;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.support.PagedListHolder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -46,6 +55,19 @@ public class BoardController {
     SimpleResponse simpleResponse = boardService.postBoard(boardPostRequiredInfo, userId);
 
     return ResponseEntity.ok().body(simpleResponse);
+  }
+
+  @PostMapping(path = "/v1/board/retrieve", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<?> getBoardList(@RequestHeader(value = "Authorization") String token, @PageableDefault(size = 20, page = 0) Pageable pageable, @RequestBody @Valid BoardFilterRequestDto boardFilterRequestDto) {
+    auth.verifyToken(token);
+    // TODO: try - catch
+    List<BoardResponseInfo> boardResponseInfoList = boardService.getBoardList(new BoardFilter(boardFilterRequestDto));
+
+    PagedListHolder page = new PagedListHolder(boardResponseInfoList);
+    page.setPageSize(pageable.getPageSize());
+    page.setPage(pageable.getPageNumber());
+
+    return ResponseEntity.ok().body(page.getPageList());
   }
 
   @GetMapping(path = "/v1/board/{boardId}", produces = MediaType.APPLICATION_JSON_VALUE)

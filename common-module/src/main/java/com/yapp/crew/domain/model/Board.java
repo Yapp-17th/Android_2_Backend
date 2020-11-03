@@ -1,5 +1,6 @@
 package com.yapp.crew.domain.model;
 
+import com.yapp.crew.domain.status.AppliedStatus;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -80,18 +81,17 @@ public class Board extends BaseEntity {
   @Column(name = "starts_at", nullable = false)
   private LocalDateTime startsAt;
 
+  @OneToMany(mappedBy = "board")
+  private Set<AppliedUser> appliedUsers = new HashSet<>();
 
   @OneToMany(mappedBy = "board")
-	private Set<AppliedUser> appliedUsers = new HashSet<>();
+  private Set<BookMark> bookMarkUser = new HashSet<>();
 
-	@OneToMany(mappedBy = "board")
-	private Set<BookMark> bookMarkUser = new HashSet<>();
+  @OneToMany(mappedBy = "board")
+  private Set<HiddenBoard> hiddenBoardUser = new HashSet<>();
 
-	@OneToMany(mappedBy = "board")
-	private Set<HiddenBoard> hiddenBoardUser = new HashSet<>();
-
-	@OneToMany(mappedBy = "board")
-	private Set<Evaluation> evaluations = new HashSet<>();
+  @OneToMany(mappedBy = "board")
+  private Set<Evaluation> evaluations = new HashSet<>();
 
   // TODO: add, increase, decrease function
   public void addBookMark(BookMark bookMark) {
@@ -104,6 +104,11 @@ public class Board extends BaseEntity {
 
   public void deleteBoard() {
     this.status = GroupStatus.COMPLETE;
+  }
+
+  public int getRemianRecruitNumber() {
+    int approvedCount = (int) appliedUsers.stream().filter(appliedUser -> appliedUser.getStatus() == AppliedStatus.APPROVED).count();
+    return this.recruitCount - approvedCount;
   }
 
   public void updateBoard(String title, String content, String place, int recruitCount, Category category, Address address, Tag tag, LocalDateTime startsAt) {
