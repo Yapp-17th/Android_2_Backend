@@ -18,8 +18,8 @@ public class KafkaTopicConfig {
 	@Value(value = "${kafka.topics.apply-user}")
 	private String applyUserTopic;
 
-	@Value(value = "${kafka.topics.accept-user}")
-	private String acceptUserTopic;
+	@Value(value = "${kafka.topics.approve-user}")
+	private String approveUserTopic;
 
 	@Bean
 	public NewTopic welcomeMessage() {
@@ -40,9 +40,9 @@ public class KafkaTopicConfig {
 	}
 
 	@Bean
-	public NewTopic acceptUser() {
+	public NewTopic approveUser() {
 		return TopicBuilder
-						.name(acceptUserTopic)
+						.name(approveUserTopic)
 						.partitions(1)
 						.replicas(1)
 						.build();

@@ -8,6 +8,7 @@ import java.util.concurrent.TimeoutException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yapp.crew.payload.ApplyRequestPayload;
+import com.yapp.crew.payload.ApproveRequestPayload;
 import com.yapp.crew.payload.MessageRequestPayload;
 import com.yapp.crew.payload.WelcomeMessageRequestPayload;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +36,9 @@ public class ChattingProducer {
 
 	@Value(value = "${kafka.topics.apply-user}")
 	private String applyUserTopic;
+
+	@Value(value = "${kafka.topics.approve-user}")
+	private String approveUserTopic;
 
   private final KafkaTemplate<Long, String> kafkaTemplate;
 
@@ -94,6 +98,26 @@ public class ChattingProducer {
 		String value = objectMapper.writeValueAsString(applyRequestPayload);
 
 		ProducerRecord<Long, String> producerRecord = buildProducerRecord(key, value, applyUserTopic);
+		ListenableFuture<SendResult<Long, String>> listenableFuture = kafkaTemplate.send(producerRecord);
+		listenableFuture.addCallback(new ListenableFutureCallback<>() {
+			@Override
+			public void onFailure(Throwable ex) {
+				handleFailure(key, value, ex);
+			}
+
+			@Override
+			public void onSuccess(SendResult<Long, String> result) {
+				handleSuccess(key, value, result);
+			}
+		});
+		return listenableFuture;
+	}
+
+	public ListenableFuture<SendResult<Long, String>> approveUser(ApproveRequestPayload approveRequestPayload) throws JsonProcessingException {
+		Long key = approveRequestPayload.getBoardId();
+		String value = objectMapper.writeValueAsString(approveRequestPayload);
+
+		ProducerRecord<Long, String> producerRecord = buildProducerRecord(key, value, approveUserTopic);
 		ListenableFuture<SendResult<Long, String>> listenableFuture = kafkaTemplate.send(producerRecord);
 		listenableFuture.addCallback(new ListenableFutureCallback<>() {
 			@Override

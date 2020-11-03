@@ -61,6 +61,7 @@ kafka:
     chat-message: chat-message
     welcome-message: welcome-message
     apply-user: apply-user
+    approve-user: approve-user
 
   groups:
     chat-message-group: chat-message-group
