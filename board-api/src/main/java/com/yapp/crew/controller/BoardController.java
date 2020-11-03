@@ -3,6 +3,7 @@ package com.yapp.crew.controller;
 import com.yapp.crew.domain.auth.Auth;
 import com.yapp.crew.dto.BoardContentResponseDto;
 import com.yapp.crew.dto.BoardFilterRequestDto;
+import com.yapp.crew.dto.BoardListResponseDto;
 import com.yapp.crew.dto.BoardRequestDto;
 import com.yapp.crew.exception.InternalServerErrorException;
 import com.yapp.crew.model.BoardContentResponseInfo;
@@ -67,7 +68,8 @@ public class BoardController {
     page.setPageSize(pageable.getPageSize());
     page.setPage(pageable.getPageNumber());
 
-    return ResponseEntity.ok().body(page.getPageList());
+    BoardListResponseDto boardListResponseDto = BoardListResponseDto.build(page.getPageList());
+    return ResponseEntity.ok().body(boardListResponseDto);
   }
 
   @GetMapping(path = "/v1/board/{boardId}", produces = MediaType.APPLICATION_JSON_VALUE)
