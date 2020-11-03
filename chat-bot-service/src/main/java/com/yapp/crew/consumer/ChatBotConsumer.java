@@ -86,9 +86,9 @@ public class ChatBotConsumer {
 		chatBotProducer.sendBotMessage(messageRequestPayload);
 	}
 
-	@KafkaListener(topics = "${kafka.topics.accept-user}", groupId = "${kafka.groups.accept-user-group}")
+	@KafkaListener(topics = "${kafka.topics.approve-user}", groupId = "${kafka.groups.approve-user-group}")
 	public void consumeBotEventAcceptUser(ConsumerRecord<Long, String> consumerRecord) {
-		log.info("[Chat Bot Event - Accept User] Consumer Record: {}", consumerRecord);
+		log.info("[Chat Bot Event - Approve User] Consumer Record: {}", consumerRecord);
 
 	}
 }
