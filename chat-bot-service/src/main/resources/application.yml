@@ -64,12 +64,12 @@ kafka:
     chat-message: chat-message
     welcome-message: welcome-message
     apply-user: apply-user
-    accept-user: accept-user
+    approve-user: approve-user
 
   groups:
     welcome-message-group: welcome-message-group
     apply-user-group: apply-user-group
-    accept-user-group: accept-user-group
+    approve-user-group: approve-user-group
 
 jwt:
   header: Authorization

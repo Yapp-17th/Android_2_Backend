@@ -49,6 +49,10 @@ public class AppliedUser {
 						.build();
 	}
 
+	public void approveUser() {
+		setStatus(AppliedStatus.APPROVED);
+	}
+
 	public static AppliedUserBuilder getBuilder() {
 		return new AppliedUserBuilder();
 	}

@@ -98,6 +98,17 @@ public class Board extends BaseEntity {
     bookMarkUser.add(bookMark);
   }
 
+	public void increaseRecruitCount() {
+		recruitCount += 1;
+	}
+
+	public void addAppliedUser(AppliedUser appliedUser) {
+		if (appliedUsers.contains(appliedUser)) {
+			return;
+		}
+		appliedUsers.add(appliedUser);
+	}
+
   public static BoardBuilder getBuilder() {
     return new BoardBuilder();
   }
