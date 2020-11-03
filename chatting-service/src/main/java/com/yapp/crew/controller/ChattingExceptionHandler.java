@@ -1,5 +1,6 @@
 package com.yapp.crew.controller;
 
+import com.yapp.crew.domain.errors.AlreadyApprovedException;
 import com.yapp.crew.domain.errors.BoardNotFoundException;
 import com.yapp.crew.domain.errors.ChatRoomNotFoundException;
 import com.yapp.crew.domain.errors.TokenRequiredException;
@@ -90,6 +91,12 @@ public class ChattingExceptionHandler {
 
 	@ExceptionHandler(value = WrongGuestException.class)
 	public ResponseEntity<?> handleWrongGuestException(WrongGuestException ex) {
+		HttpResponseBody<?> responseBody = HttpResponseBody.buildErrorResponse(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
+		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
+	}
+
+	@ExceptionHandler(value = AlreadyApprovedException.class)
+	public ResponseEntity<?> handleAlreadyApprovedException(AlreadyApprovedException ex) {
 		HttpResponseBody<?> responseBody = HttpResponseBody.buildErrorResponse(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
 		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
 	}

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.yapp.crew.domain.errors.AlreadyApprovedException;
 import com.yapp.crew.domain.errors.BoardNotFoundException;
 import com.yapp.crew.domain.errors.ChatRoomNotFoundException;
 import com.yapp.crew.domain.errors.GuestApplyNotFoundException;
@@ -20,6 +21,7 @@ import com.yapp.crew.domain.repository.BoardRepository;
 import com.yapp.crew.domain.repository.ChatRoomRepository;
 import com.yapp.crew.domain.repository.MessageRepository;
 import com.yapp.crew.domain.repository.UserRepository;
+import com.yapp.crew.domain.status.AppliedStatus;
 import com.yapp.crew.domain.type.MessageType;
 import com.yapp.crew.json.BotMessages;
 import com.yapp.crew.network.HttpResponseBody;
@@ -151,6 +153,10 @@ public class ChattingProducerService {
 
 		AppliedUser isApplied = appliedUserRepository.findByBoardIdAndUserId(board.getId(), guest.getId())
 						.orElseThrow(() -> new GuestApplyNotFoundException("This user did not apply"));
+
+		if (isApplied.getStatus().equals(AppliedStatus.APPROVED)) {
+			throw new AlreadyApprovedException("This user is already approved");
+		}
 
 		isApplied.approveUser();
 		appliedUserRepository.save(isApplied);
