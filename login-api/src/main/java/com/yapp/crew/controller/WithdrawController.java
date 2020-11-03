@@ -26,17 +26,12 @@ public class WithdrawController {
 
   @DeleteMapping("/v1/user/withdraw")
   public ResponseEntity<?> deleteUser(@RequestHeader(value = "Authorization") String token) {
-    try {
-      log.info("input token: " + token);
 
-      UserAuthResponse userAuthResponse = withdrawService.withdraw(token);
-      if (userAuthResponse.getUserAuthResponseBody().isSuccess()) {
-        return ResponseEntity.ok(userAuthResponse.getUserAuthResponseBody());
-      }
-
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(userAuthResponse.getUserAuthResponseBody());
-    } catch (Exception e) {
-      throw new InternalServerErrorException();
+    UserAuthResponse userAuthResponse = withdrawService.withdraw(token);
+    if (userAuthResponse.getUserAuthResponseBody().isSuccess()) {
+      return ResponseEntity.ok(userAuthResponse.getUserAuthResponseBody());
     }
+
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(userAuthResponse.getUserAuthResponseBody());
   }
 }

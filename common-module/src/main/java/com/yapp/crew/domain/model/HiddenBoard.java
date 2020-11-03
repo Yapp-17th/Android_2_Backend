@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class HiddenBoard extends BaseEntity{
+public class HiddenBoard extends BaseEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,4 +26,31 @@ public class HiddenBoard extends BaseEntity{
   @ManyToOne
   @JoinColumn(name = "board_id")
   private Board board;
+
+  public static HiddenBoardBuilder getBuilder() {
+    return new HiddenBoardBuilder();
+  }
+
+  public static class HiddenBoardBuilder {
+
+    private User user;
+    private Board board;
+
+    public HiddenBoardBuilder withUser(User user) {
+      this.user = user;
+      return this;
+    }
+
+    public HiddenBoardBuilder withBoard(Board board) {
+      this.board = board;
+      return this;
+    }
+
+    public HiddenBoard build() {
+      HiddenBoard hiddenBoard = new HiddenBoard();
+      hiddenBoard.user = user;
+      hiddenBoard.board = board;
+      return hiddenBoard;
+    }
+  }
 }

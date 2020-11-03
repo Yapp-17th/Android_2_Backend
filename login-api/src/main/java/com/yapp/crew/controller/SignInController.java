@@ -33,20 +33,14 @@ public class SignInController {
 
   @PostMapping(path = "/v1/user/sign-in", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> postSignIn(@RequestBody @Valid LoginRequestDto loginRequestDto) {
-    UserAuthResponse userAuthResponse;
 
-    try {
-      LoginUserInfo loginUserInfo = new LoginUserInfo(loginRequestDto.getUserId());
-      userAuthResponse = signInService.signIn(loginUserInfo);
+    LoginUserInfo loginUserInfo = new LoginUserInfo(loginRequestDto.getUserId());
+    UserAuthResponse userAuthResponse = signInService.signIn(loginUserInfo);
 
-      HttpHeaders httpHeaders = userAuthResponse.getHttpHeaders();
-      UserAuthResponseDto userAuthResponseDto = UserAuthResponseDto.build(userAuthResponse.getUserAuthResponseBody());
-      if (httpHeaders != null) {
-        return ResponseEntity.ok().headers(httpHeaders).body(userAuthResponseDto);
-      }
-
-    } catch (Exception e) {
-      throw new InternalServerErrorException();
+    HttpHeaders httpHeaders = userAuthResponse.getHttpHeaders();
+    UserAuthResponseDto userAuthResponseDto = UserAuthResponseDto.build(userAuthResponse.getUserAuthResponseBody());
+    if (httpHeaders != null) {
+      return ResponseEntity.ok().headers(httpHeaders).body(userAuthResponseDto);
     }
 
     throw new InternalServerErrorException();
