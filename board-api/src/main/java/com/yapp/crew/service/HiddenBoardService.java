@@ -10,12 +10,14 @@ import com.yapp.crew.domain.repository.BoardRepository;
 import com.yapp.crew.domain.repository.HiddenBoardRepository;
 import com.yapp.crew.domain.repository.UserRepository;
 import com.yapp.crew.domain.errors.InternalServerErrorException;
+import com.yapp.crew.domain.status.GroupStatus;
 import com.yapp.crew.model.SimpleResponse;
 import com.yapp.crew.utils.ResponseMessage;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -32,6 +34,7 @@ public class HiddenBoardService {
     this.userRepository = userRepository;
   }
 
+  @Transactional
   public SimpleResponse createHiddenBoard(Long boardId, Long userId) {
     Board board = findBoardById(boardId)
         .orElseThrow(() -> new BoardNotFoundException("board not found"));
@@ -57,7 +60,7 @@ public class HiddenBoardService {
 
   private Optional<Board> findBoardById(Long boardId) {
     log.info("board 가져오기 성공");
-    return boardRepository.findBoardById(boardId);
+    return boardRepository.findBoardById(boardId).filter(board -> board.getStatus().getCode() < GroupStatus.CANCELED.getCode());
   }
 
   private Optional<User> findUserById(Long userId) {

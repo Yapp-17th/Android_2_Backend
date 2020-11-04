@@ -121,8 +121,8 @@ public class BoardService {
   public BoardContentResponseInfo getBoardContent(Long boardId, Long userId) {
     Board board = findBoardById(boardId)
         .orElseThrow(() -> new BoardNotFoundException("board not found"));
-    List<Evaluation> evaluations = findAllByUserId(userId);
 
+    List<Evaluation> evaluations = findAllByUserId(userId);
     return BoardContentResponseInfo.build(board, evaluations);
   }
 
@@ -175,7 +175,7 @@ public class BoardService {
 
   private Optional<Board> findBoardById(Long boardId) {
     log.info("board 가져오기 성공");
-    return boardRepository.findBoardById(boardId);
+    return boardRepository.findBoardById(boardId).filter(board -> board.getStatus().getCode() < GroupStatus.CANCELED.getCode());
   }
 
   private Optional<User> findUserById(Long userId) {
@@ -200,7 +200,9 @@ public class BoardService {
 
   private List<Board> findAllBoards() {
     log.info("모든 board 리스트 가져오기 성공");
-    return boardRepository.findAll();
+    return boardRepository.findAll().stream()
+        .filter(board -> board.getStatus().getCode() < GroupStatus.CANCELED.getCode())
+        .collect(Collectors.toList());
   }
 
   private List<Category> findAllCategory() {
@@ -217,7 +219,6 @@ public class BoardService {
     return boards.stream()
         .filter(board -> addresses.contains(board.getAddress()))
         .filter(board -> categories.contains(board.getCategory()))
-        .filter(board -> board.getStatus().getCode() < GroupStatus.CANCELED.getCode())
         .collect(Collectors.toList());
   }
 

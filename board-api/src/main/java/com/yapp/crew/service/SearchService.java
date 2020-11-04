@@ -3,6 +3,7 @@ package com.yapp.crew.service;
 import com.yapp.crew.domain.model.BaseEntity;
 import com.yapp.crew.domain.model.Board;
 import com.yapp.crew.domain.repository.BoardRepository;
+import com.yapp.crew.domain.status.GroupStatus;
 import com.yapp.crew.model.BoardResponseInfo;
 import com.yapp.crew.model.BoardSearch;
 import java.util.ArrayList;
@@ -48,6 +49,9 @@ public class SearchService {
       boards.retainAll(nextBoard);
     }
 
-    return boards.stream().sorted(Comparator.comparing(BaseEntity::getCreatedAt, Comparator.reverseOrder())).collect(Collectors.toList());
+    return boards.stream()
+        .filter(board -> board.getStatus().getCode() < GroupStatus.CANCELED.getCode())
+        .sorted(Comparator.comparing(BaseEntity::getCreatedAt, Comparator.reverseOrder()))
+        .collect(Collectors.toList());
   }
 }
