@@ -1,5 +1,7 @@
 package com.yapp.crew.service;
 
+import com.yapp.crew.domain.errors.BoardNotFoundException;
+import com.yapp.crew.domain.errors.UserNotFoundException;
 import com.yapp.crew.domain.model.Board;
 import com.yapp.crew.domain.model.Report;
 import com.yapp.crew.domain.model.Report.ReportBuilder;
@@ -7,7 +9,7 @@ import com.yapp.crew.domain.model.User;
 import com.yapp.crew.domain.repository.BoardRepository;
 import com.yapp.crew.domain.repository.ReportRepository;
 import com.yapp.crew.domain.repository.UserRepository;
-import com.yapp.crew.exception.InternalServerErrorException;
+import com.yapp.crew.domain.errors.InternalServerErrorException;
 import com.yapp.crew.model.BoardReport;
 import com.yapp.crew.model.SimpleResponse;
 import com.yapp.crew.utils.ResponseMessage;
@@ -33,9 +35,9 @@ public class ReportService {
 
   public SimpleResponse postBoardReport(BoardReport boardReport) {
     User user = findUserById(boardReport.getReporter())
-        .orElseThrow(InternalServerErrorException::new);
+        .orElseThrow(() -> new UserNotFoundException("user not found"));
     Board board = findBoardById(boardReport.getBoardId())
-        .orElseThrow(InternalServerErrorException::new);
+        .orElseThrow(() -> new BoardNotFoundException("board not found"));
 
     ReportBuilder reportBuilder = Report.getBuilder();
     Report report = reportBuilder

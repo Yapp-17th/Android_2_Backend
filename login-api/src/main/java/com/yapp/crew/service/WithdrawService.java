@@ -1,11 +1,12 @@
 package com.yapp.crew.service;
 
+import com.yapp.crew.domain.errors.InternalServerErrorException;
+import com.yapp.crew.domain.errors.UserNotFoundException;
 import com.yapp.crew.domain.model.User;
 import com.yapp.crew.domain.repository.UserRepository;
-import com.yapp.crew.exception.InternalServerErrorException;
 import com.yapp.crew.model.UserAuthResponse;
 import com.yapp.crew.model.UserAuthResponseBody;
-import com.yapp.crew.utils.JwtUtils;
+import com.yapp.crew.config.JwtUtils;
 import com.yapp.crew.utils.ResponseMessage;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
@@ -33,11 +34,11 @@ public class WithdrawService {
       log.info("userId: " + userId);
 
       User user = getUserByUserId(userId)
-          .orElseThrow(InternalServerErrorException::new);
+          .orElseThrow(() -> new UserNotFoundException("user not found"));
 
       updateUserInActive(user);
     } catch (Exception e) {
-      throw new InternalServerErrorException();
+      throw new InternalServerErrorException("internal server error");
     }
 
     return new UserAuthResponse(UserAuthResponseBody.pass(ResponseMessage.WITHDRAW_SUCCESS.getMessage()));

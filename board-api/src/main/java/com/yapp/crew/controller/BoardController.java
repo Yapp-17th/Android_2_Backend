@@ -5,7 +5,7 @@ import com.yapp.crew.dto.BoardContentResponseDto;
 import com.yapp.crew.dto.BoardFilterRequestDto;
 import com.yapp.crew.dto.BoardListResponseDto;
 import com.yapp.crew.dto.BoardRequestDto;
-import com.yapp.crew.exception.InternalServerErrorException;
+import com.yapp.crew.domain.errors.InternalServerErrorException;
 import com.yapp.crew.model.BoardContentResponseInfo;
 import com.yapp.crew.model.BoardFilter;
 import com.yapp.crew.model.BoardPostRequiredInfo;
@@ -74,7 +74,7 @@ public class BoardController {
     long userId = auth.parseUserIdFromToken(token);
     BoardContentResponseInfo boardContentResponseInfo = boardService.getBoardContent(boardId, userId);
     if (boardContentResponseInfo == null) {
-      throw new InternalServerErrorException();
+      throw new InternalServerErrorException("internal server error");
     }
 
     return ResponseEntity.ok().body(BoardContentResponseDto.build(boardContentResponseInfo));

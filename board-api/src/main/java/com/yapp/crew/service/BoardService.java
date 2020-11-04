@@ -1,13 +1,16 @@
 package com.yapp.crew.service;
 
+import com.yapp.crew.domain.errors.AddressNotFoundException;
+import com.yapp.crew.domain.errors.BoardNotFoundException;
+import com.yapp.crew.domain.errors.CategoryNotFoundException;
+import com.yapp.crew.domain.errors.TagNotFoundException;
+import com.yapp.crew.domain.errors.UserNotFoundException;
 import com.yapp.crew.domain.model.Address;
 import com.yapp.crew.domain.model.BaseEntity;
 import com.yapp.crew.domain.model.Board;
 import com.yapp.crew.domain.model.Board.BoardBuilder;
 import com.yapp.crew.domain.model.Category;
 import com.yapp.crew.domain.model.Evaluation;
-import com.yapp.crew.domain.model.HiddenBoard;
-import com.yapp.crew.domain.model.HiddenBoard.HiddenBoardBuilder;
 import com.yapp.crew.domain.model.Tag;
 import com.yapp.crew.domain.model.User;
 import com.yapp.crew.domain.repository.AddressRepository;
@@ -17,16 +20,14 @@ import com.yapp.crew.domain.repository.EvaluationRepository;
 import com.yapp.crew.domain.repository.TagRepository;
 import com.yapp.crew.domain.repository.UserRepository;
 import com.yapp.crew.domain.status.GroupStatus;
-import com.yapp.crew.exception.InternalServerErrorException;
-import com.yapp.crew.exception.InvalidRequestBodyException;
-import com.yapp.crew.exception.WrongTokenException;
+import com.yapp.crew.domain.errors.InternalServerErrorException;
+import com.yapp.crew.domain.errors.InvalidRequestBodyException;
 import com.yapp.crew.model.BoardContentResponseInfo;
 import com.yapp.crew.model.BoardFilter;
 import com.yapp.crew.model.BoardPostRequiredInfo;
 import com.yapp.crew.model.BoardResponseInfo;
 import com.yapp.crew.model.SimpleResponse;
 import com.yapp.crew.utils.ResponseMessage;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -34,7 +35,6 @@ import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -64,13 +64,13 @@ public class BoardService {
     BoardBuilder boardBuilder = Board.getBuilder();
 
     User user = findUserById(userId)
-        .orElseThrow(InternalServerErrorException::new);
+        .orElseThrow(() -> new UserNotFoundException("user not found"));
     Category category = findCategoryById(boardPostRequiredInfo.getCategory())
-        .orElseThrow(InternalServerErrorException::new);
+        .orElseThrow(() -> new CategoryNotFoundException("category not found"));
     Address address = findAddressById(boardPostRequiredInfo.getCity())
-        .orElseThrow(InternalServerErrorException::new);
+        .orElseThrow(() -> new AddressNotFoundException("address not found"));
     Tag tag = findTagById(boardPostRequiredInfo.getUserTag())
-        .orElseThrow(InternalServerErrorException::new);
+        .orElseThrow(() -> new TagNotFoundException("tag not found"));
 
     Board board = boardBuilder
         .withUser(user)
@@ -120,7 +120,7 @@ public class BoardService {
   @Transactional
   public BoardContentResponseInfo getBoardContent(Long boardId, Long userId) {
     Board board = findBoardById(boardId)
-        .orElseThrow(InternalServerErrorException::new);
+        .orElseThrow(() -> new BoardNotFoundException("board not found"));
     List<Evaluation> evaluations = findAllByUserId(userId);
 
     return BoardContentResponseInfo.build(board, evaluations);
@@ -129,7 +129,7 @@ public class BoardService {
   @Transactional
   public SimpleResponse deleteBoard(Long boardId, Long userId) {
     Board board = findBoardById(boardId)
-        .orElseThrow(InternalServerErrorException::new);
+        .orElseThrow(() -> new BoardNotFoundException("board not found"));
 
     if (!board.getUser().getId().equals(userId)) {
       throw new InvalidRequestBodyException(ResponseMessage.INVALID_REQUEST_BODY.getMessage());
@@ -142,13 +142,13 @@ public class BoardService {
   @Transactional
   public BoardContentResponseInfo editBoardContent(Long boardId, Long userId, BoardPostRequiredInfo boardPostRequiredInfo) {
     Board board = findBoardById(boardId)
-        .orElseThrow(InternalServerErrorException::new);
+        .orElseThrow(() -> new BoardNotFoundException("board not found"));
     Category category = findCategoryById(boardPostRequiredInfo.getCategory())
-        .orElseThrow(InternalServerErrorException::new);
+        .orElseThrow(() -> new CategoryNotFoundException("category not found"));
     Address address = findAddressById(boardPostRequiredInfo.getCity())
-        .orElseThrow(InternalServerErrorException::new);
+        .orElseThrow(() -> new AddressNotFoundException("address not found"));
     Tag tag = findTagById(boardPostRequiredInfo.getUserTag())
-        .orElseThrow(InternalServerErrorException::new);
+        .orElseThrow(() -> new TagNotFoundException("tag not found"));
     List<Evaluation> evaluations = findAllByUserId(board.getUser().getId());
 
     board.updateBoard(boardPostRequiredInfo.getTitle(), boardPostRequiredInfo.getContent(), boardPostRequiredInfo.getPlace(), boardPostRequiredInfo.getRecruitNumber(), category, address, tag, boardPostRequiredInfo.getDate());

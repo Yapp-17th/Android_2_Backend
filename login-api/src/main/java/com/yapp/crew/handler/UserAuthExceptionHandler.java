@@ -1,13 +1,21 @@
 package com.yapp.crew.handler;
 
-import com.yapp.crew.exception.InactiveUserException;
-import com.yapp.crew.exception.InternalServerErrorException;
-import com.yapp.crew.exception.InvalidRequestBodyException;
-import com.yapp.crew.exception.SuspendedUserException;
-import com.yapp.crew.exception.WrongTokenException;
+import com.yapp.crew.domain.errors.BoardNotFoundException;
+import com.yapp.crew.domain.errors.InactiveUserException;
+import com.yapp.crew.domain.errors.InternalServerErrorException;
+import com.yapp.crew.domain.errors.InvalidRequestBodyException;
+import com.yapp.crew.domain.errors.SuspendedUserException;
+import com.yapp.crew.domain.errors.TokenRequiredException;
+import com.yapp.crew.domain.errors.UserNotFoundException;
+import com.yapp.crew.domain.errors.WrongTokenPrefixException;
 import com.yapp.crew.model.UserAuthResponseBody;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.security.SignatureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -38,9 +46,58 @@ public class UserAuthExceptionHandler {
     return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
   }
 
-  @ExceptionHandler(value = WrongTokenException.class)
-  public ResponseEntity<?> handleTokenRequiredException(WrongTokenException ex) {
-    UserAuthResponseBody responseBody = UserAuthResponseBody.fail(HttpStatus.UNAUTHORIZED, ex.getMessage());
+
+  @ExceptionHandler(value = TokenRequiredException.class)
+  public ResponseEntity<?> handleTokenRequiredException(TokenRequiredException ex) {
+    UserAuthResponseBody responseBody = UserAuthResponseBody.fail(HttpStatus.FORBIDDEN, ex.getMessage());
+    return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
+  }
+
+  @ExceptionHandler(value = WrongTokenPrefixException.class)
+  public ResponseEntity<?> handleWrongTokenPrefixException(WrongTokenPrefixException ex) {
+    UserAuthResponseBody responseBody = UserAuthResponseBody.fail(HttpStatus.FORBIDDEN, ex.getMessage());
+    return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
+  }
+
+  @ExceptionHandler(value = ExpiredJwtException.class)
+  public ResponseEntity<?> handleExpiredJwtException(ExpiredJwtException ex) {
+    UserAuthResponseBody responseBody = UserAuthResponseBody.fail(HttpStatus.FORBIDDEN, ex.getMessage());
+    return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
+  }
+
+  @ExceptionHandler(value = MalformedJwtException.class)
+  public ResponseEntity<?> handleMalformedJwtException(MalformedJwtException ex) {
+    UserAuthResponseBody responseBody = UserAuthResponseBody.fail(HttpStatus.FORBIDDEN, ex.getMessage());
+    return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
+  }
+
+  @ExceptionHandler(value = MissingRequestHeaderException.class)
+  public ResponseEntity<?> handleMissingRequestHeaderException(MissingRequestHeaderException ex) {
+    UserAuthResponseBody responseBody = UserAuthResponseBody.fail(HttpStatus.FORBIDDEN, ex.getMessage());
+    return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
+  }
+
+  @ExceptionHandler(value = SignatureException.class)
+  public ResponseEntity<?> handleSignatureException(SignatureException ex) {
+    UserAuthResponseBody responseBody = UserAuthResponseBody.fail(HttpStatus.FORBIDDEN, ex.getMessage());
+    return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
+  }
+
+  @ExceptionHandler(value = MethodArgumentNotValidException.class)
+  public ResponseEntity<?> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+    UserAuthResponseBody responseBody = UserAuthResponseBody.fail(HttpStatus.BAD_REQUEST, ex.getMessage());
+    return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
+  }
+
+  @ExceptionHandler(value = UserNotFoundException.class)
+  public ResponseEntity<?> handleUserNotFoundException(UserNotFoundException ex) {
+    UserAuthResponseBody responseBody = UserAuthResponseBody.fail(HttpStatus.NOT_FOUND, ex.getMessage());
+    return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
+  }
+
+  @ExceptionHandler(value = BoardNotFoundException.class)
+  public ResponseEntity<?> handleBoardNotFoundException(BoardNotFoundException ex) {
+    UserAuthResponseBody responseBody = UserAuthResponseBody.fail(HttpStatus.NOT_FOUND, ex.getMessage());
     return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
   }
 }

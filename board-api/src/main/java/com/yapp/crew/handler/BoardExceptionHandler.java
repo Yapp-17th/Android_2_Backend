@@ -1,18 +1,13 @@
 package com.yapp.crew.handler;
 
-import com.yapp.crew.domain.errors.AlreadyApprovedException;
 import com.yapp.crew.domain.errors.BoardNotFoundException;
-import com.yapp.crew.domain.errors.ChatRoomNotFoundException;
+import com.yapp.crew.domain.errors.InactiveUserException;
+import com.yapp.crew.domain.errors.InternalServerErrorException;
+import com.yapp.crew.domain.errors.InvalidRequestBodyException;
+import com.yapp.crew.domain.errors.SuspendedUserException;
 import com.yapp.crew.domain.errors.TokenRequiredException;
 import com.yapp.crew.domain.errors.UserNotFoundException;
-import com.yapp.crew.domain.errors.WrongGuestException;
-import com.yapp.crew.domain.errors.WrongHostException;
 import com.yapp.crew.domain.errors.WrongTokenPrefixException;
-import com.yapp.crew.exception.InactiveUserException;
-import com.yapp.crew.exception.InternalServerErrorException;
-import com.yapp.crew.exception.InvalidRequestBodyException;
-import com.yapp.crew.exception.SuspendedUserException;
-import com.yapp.crew.exception.WrongTokenException;
 import com.yapp.crew.model.SimpleResponse;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
@@ -48,12 +43,6 @@ public class BoardExceptionHandler {
   @ExceptionHandler(value = SuspendedUserException.class)
   public ResponseEntity<?> handleTokenRequiredException(SuspendedUserException ex) {
     SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.FORBIDDEN, ex.getMessage());
-    return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
-  }
-
-  @ExceptionHandler(value = WrongTokenException.class)
-  public ResponseEntity<?> handleTokenRequiredException(WrongTokenException ex) {
-    SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.UNAUTHORIZED, ex.getMessage());
     return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
   }
 
@@ -99,12 +88,6 @@ public class BoardExceptionHandler {
     return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
   }
 
-  @ExceptionHandler(value = ChatRoomNotFoundException.class)
-  public ResponseEntity<?> handleChatRoomNotFoundException(ChatRoomNotFoundException ex) {
-    SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.NOT_FOUND, ex.getMessage());
-    return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
-  }
-
   @ExceptionHandler(value = UserNotFoundException.class)
   public ResponseEntity<?> handleUserNotFoundException(UserNotFoundException ex) {
     SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.NOT_FOUND, ex.getMessage());
@@ -114,24 +97,6 @@ public class BoardExceptionHandler {
   @ExceptionHandler(value = BoardNotFoundException.class)
   public ResponseEntity<?> handleBoardNotFoundException(BoardNotFoundException ex) {
     SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.NOT_FOUND, ex.getMessage());
-    return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
-  }
-
-  @ExceptionHandler(value = WrongHostException.class)
-  public ResponseEntity<?> handleWrongHostException(WrongHostException ex) {
-    SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.BAD_REQUEST, ex.getMessage());
-    return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
-  }
-
-  @ExceptionHandler(value = WrongGuestException.class)
-  public ResponseEntity<?> handleWrongGuestException(WrongGuestException ex) {
-    SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.BAD_REQUEST, ex.getMessage());
-    return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
-  }
-
-  @ExceptionHandler(value = AlreadyApprovedException.class)
-  public ResponseEntity<?> handleAlreadyApprovedException(AlreadyApprovedException ex) {
-    SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.BAD_REQUEST, ex.getMessage());
     return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
   }
 }

@@ -1,6 +1,5 @@
 package com.yapp.crew.controller;
 
-import com.yapp.crew.exception.InternalServerErrorException;
 import com.yapp.crew.model.UserAuthResponse;
 import com.yapp.crew.service.WithdrawService;
 import lombok.extern.slf4j.Slf4j;

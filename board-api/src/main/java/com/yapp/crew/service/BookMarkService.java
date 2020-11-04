@@ -1,5 +1,7 @@
 package com.yapp.crew.service;
 
+import com.yapp.crew.domain.errors.BoardNotFoundException;
+import com.yapp.crew.domain.errors.UserNotFoundException;
 import com.yapp.crew.domain.model.Board;
 import com.yapp.crew.domain.model.BookMark;
 import com.yapp.crew.domain.model.BookMark.BookMarkBuilder;
@@ -7,7 +9,7 @@ import com.yapp.crew.domain.model.User;
 import com.yapp.crew.domain.repository.BoardRepository;
 import com.yapp.crew.domain.repository.BookMarkRepository;
 import com.yapp.crew.domain.repository.UserRepository;
-import com.yapp.crew.exception.InternalServerErrorException;
+import com.yapp.crew.domain.errors.InternalServerErrorException;
 import com.yapp.crew.model.SimpleResponse;
 import com.yapp.crew.utils.ResponseMessage;
 import java.util.Optional;
@@ -32,9 +34,9 @@ public class BookMarkService {
 
   public SimpleResponse createBookMark(Long boardId, Long userId) {
     Board board = findBoardById(boardId)
-        .orElseThrow(InternalServerErrorException::new);
+        .orElseThrow(() -> new BoardNotFoundException("board not found"));
     User user = findUserById(userId)
-        .orElseThrow(InternalServerErrorException::new);
+        .orElseThrow(() -> new UserNotFoundException("user not found"));
 
     saveBookMark(board, user);
     return SimpleResponse.pass(ResponseMessage.BOOKMARK_POST_SUCCESS.getMessage());
@@ -42,9 +44,9 @@ public class BookMarkService {
 
   public SimpleResponse deleteBookMark(Long boardId, Long userId) {
     Board board = findBoardById(boardId)
-        .orElseThrow(InternalServerErrorException::new);
+        .orElseThrow(() -> new BoardNotFoundException("board not found"));
     User user = findUserById(userId)
-        .orElseThrow(InternalServerErrorException::new);
+        .orElseThrow(() -> new UserNotFoundException("user not found"));
 
     deleteBookMark(board, user);
     return SimpleResponse.pass(ResponseMessage.BOOKMARK_DELETE_SUCCESS.getMessage());

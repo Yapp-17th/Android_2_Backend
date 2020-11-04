@@ -1,4 +1,4 @@
-package com.yapp.crew.utils;
+package com.yapp.crew.config;
 
 import com.yapp.crew.domain.model.User;
 import io.jsonwebtoken.Claims;
@@ -8,24 +8,22 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.UUID;
-import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
-@NoArgsConstructor
 @Slf4j
+@Component
 public class JwtUtils {
 
+  @Value(value = "${jwt.secret}")
   private String secret;
+  @Value(value = "${jwt.expiration}")
+  private String expiration;
+  @Value(value = "${jwt.header}")
   private String header;
-  private int expiration;
+  @Value(value = "${jwt.prefix}")
   private String prefix;
-
-  public JwtUtils(String secret, String header, int expiration, String prefix) {
-    this.secret = secret;
-    this.header = header;
-    this.expiration = expiration;
-    this.prefix = prefix;
-  }
 
   public String getHeader() {
     return this.header;
@@ -50,18 +48,8 @@ public class JwtUtils {
   private Date generateExpirationDate(Date now) {
     Calendar calendar = new GregorianCalendar();
     calendar.setTime(now);
-    calendar.add(Calendar.DAY_OF_WEEK, expiration);
+    calendar.add(Calendar.DAY_OF_WEEK, Integer.parseInt(expiration));
     return calendar.getTime();
-  }
-
-  public Boolean validateToken(String token, User user) {
-    final String userId = getUserIdFromToken(token);
-    return (userId.equals(String.valueOf(user.getId()))) && !(isTokenExpired(token));
-  }
-
-  public boolean isTokenExpired(String token) {
-    final Date expiration = getExpirationDateFromToken(token);
-    return expiration.before(new Date(System.currentTimeMillis()));
   }
 
   public String getUserIdFromToken(String token) {
@@ -77,17 +65,6 @@ public class JwtUtils {
       userId = null;
     }
     return userId;
-  }
-
-  private Date getExpirationDateFromToken(String token) {
-    Date expiration;
-    try {
-      final Claims claims = getClaimsFromToken(token);
-      expiration = claims.getExpiration();
-    } catch (Exception e) {
-      expiration = null;
-    }
-    return expiration;
   }
 
   private Claims getClaimsFromToken(String token) {
