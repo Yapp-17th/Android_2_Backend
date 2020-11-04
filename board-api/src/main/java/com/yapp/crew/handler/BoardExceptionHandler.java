@@ -1,13 +1,26 @@
 package com.yapp.crew.handler;
 
+import com.yapp.crew.domain.errors.AlreadyApprovedException;
+import com.yapp.crew.domain.errors.BoardNotFoundException;
+import com.yapp.crew.domain.errors.ChatRoomNotFoundException;
+import com.yapp.crew.domain.errors.TokenRequiredException;
+import com.yapp.crew.domain.errors.UserNotFoundException;
+import com.yapp.crew.domain.errors.WrongGuestException;
+import com.yapp.crew.domain.errors.WrongHostException;
+import com.yapp.crew.domain.errors.WrongTokenPrefixException;
 import com.yapp.crew.exception.InactiveUserException;
 import com.yapp.crew.exception.InternalServerErrorException;
 import com.yapp.crew.exception.InvalidRequestBodyException;
 import com.yapp.crew.exception.SuspendedUserException;
 import com.yapp.crew.exception.WrongTokenException;
 import com.yapp.crew.model.SimpleResponse;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.security.SignatureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -41,6 +54,84 @@ public class BoardExceptionHandler {
   @ExceptionHandler(value = WrongTokenException.class)
   public ResponseEntity<?> handleTokenRequiredException(WrongTokenException ex) {
     SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.UNAUTHORIZED, ex.getMessage());
+    return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
+  }
+
+  @ExceptionHandler(value = TokenRequiredException.class)
+  public ResponseEntity<?> handleTokenRequiredException(TokenRequiredException ex) {
+    SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.FORBIDDEN, ex.getMessage());
+    return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
+  }
+
+  @ExceptionHandler(value = WrongTokenPrefixException.class)
+  public ResponseEntity<?> handleWrongTokenPrefixException(WrongTokenPrefixException ex) {
+    SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.FORBIDDEN, ex.getMessage());
+    return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
+  }
+
+  @ExceptionHandler(value = ExpiredJwtException.class)
+  public ResponseEntity<?> handleExpiredJwtException(ExpiredJwtException ex) {
+    SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.FORBIDDEN, ex.getMessage());
+    return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
+  }
+
+  @ExceptionHandler(value = MalformedJwtException.class)
+  public ResponseEntity<?> handleMalformedJwtException(MalformedJwtException ex) {
+    SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.FORBIDDEN, ex.getMessage());
+    return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
+  }
+
+  @ExceptionHandler(value = MissingRequestHeaderException.class)
+  public ResponseEntity<?> handleMissingRequestHeaderException(MissingRequestHeaderException ex) {
+    SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.FORBIDDEN, ex.getMessage());
+    return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
+  }
+
+  @ExceptionHandler(value = SignatureException.class)
+  public ResponseEntity<?> handleSignatureException(SignatureException ex) {
+    SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.FORBIDDEN, ex.getMessage());
+    return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
+  }
+
+  @ExceptionHandler(value = MethodArgumentNotValidException.class)
+  public ResponseEntity<?> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+    SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.BAD_REQUEST, ex.getMessage());
+    return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
+  }
+
+  @ExceptionHandler(value = ChatRoomNotFoundException.class)
+  public ResponseEntity<?> handleChatRoomNotFoundException(ChatRoomNotFoundException ex) {
+    SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.NOT_FOUND, ex.getMessage());
+    return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
+  }
+
+  @ExceptionHandler(value = UserNotFoundException.class)
+  public ResponseEntity<?> handleUserNotFoundException(UserNotFoundException ex) {
+    SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.NOT_FOUND, ex.getMessage());
+    return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
+  }
+
+  @ExceptionHandler(value = BoardNotFoundException.class)
+  public ResponseEntity<?> handleBoardNotFoundException(BoardNotFoundException ex) {
+    SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.NOT_FOUND, ex.getMessage());
+    return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
+  }
+
+  @ExceptionHandler(value = WrongHostException.class)
+  public ResponseEntity<?> handleWrongHostException(WrongHostException ex) {
+    SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.BAD_REQUEST, ex.getMessage());
+    return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
+  }
+
+  @ExceptionHandler(value = WrongGuestException.class)
+  public ResponseEntity<?> handleWrongGuestException(WrongGuestException ex) {
+    SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.BAD_REQUEST, ex.getMessage());
+    return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
+  }
+
+  @ExceptionHandler(value = AlreadyApprovedException.class)
+  public ResponseEntity<?> handleAlreadyApprovedException(AlreadyApprovedException ex) {
+    SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.BAD_REQUEST, ex.getMessage());
     return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
   }
 }
