@@ -1,10 +1,8 @@
 package com.yapp.crew.controller;
 
 import com.yapp.crew.domain.auth.Auth;
-import com.yapp.crew.dto.BoardFilterRequestDto;
 import com.yapp.crew.dto.BoardListResponseDto;
 import com.yapp.crew.dto.BoardSearchDto;
-import com.yapp.crew.model.BoardFilter;
 import com.yapp.crew.model.BoardResponseInfo;
 import com.yapp.crew.model.BoardSearch;
 import com.yapp.crew.service.SearchService;

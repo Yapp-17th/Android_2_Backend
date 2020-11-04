@@ -1,11 +1,11 @@
 package com.yapp.crew.controller;
 
 import com.yapp.crew.domain.auth.Auth;
+import com.yapp.crew.domain.errors.InternalServerErrorException;
 import com.yapp.crew.dto.BoardContentResponseDto;
 import com.yapp.crew.dto.BoardFilterRequestDto;
 import com.yapp.crew.dto.BoardListResponseDto;
 import com.yapp.crew.dto.BoardRequestDto;
-import com.yapp.crew.domain.errors.InternalServerErrorException;
 import com.yapp.crew.model.BoardContentResponseInfo;
 import com.yapp.crew.model.BoardFilter;
 import com.yapp.crew.model.BoardPostRequiredInfo;

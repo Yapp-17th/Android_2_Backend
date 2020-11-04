@@ -6,8 +6,6 @@ import com.yapp.crew.domain.errors.UserNotFoundException;
 import com.yapp.crew.domain.model.User;
 import com.yapp.crew.domain.repository.UserRepository;
 import com.yapp.crew.domain.status.UserStatus;
-import com.yapp.crew.domain.errors.SuspendedUserException;
-import com.yapp.crew.utils.ResponseMessage;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

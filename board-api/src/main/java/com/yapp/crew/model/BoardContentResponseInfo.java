@@ -3,7 +3,6 @@ package com.yapp.crew.model;
 import com.yapp.crew.domain.model.Board;
 import com.yapp.crew.domain.model.Evaluation;
 import java.util.List;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
