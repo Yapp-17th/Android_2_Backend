@@ -129,7 +129,7 @@ public class BoardService {
         .orElseThrow(() -> new BoardNotFoundException("board not found"));
 
     List<Evaluation> evaluations = findAllByUserId(userId);
-    return BoardContentResponseInfo.build(board, evaluations, user);
+    return BoardContentResponseInfo.build(board, evaluations);
   }
 
   @Transactional
@@ -147,8 +147,6 @@ public class BoardService {
 
   @Transactional
   public BoardContentResponseInfo editBoardContent(Long boardId, Long userId, BoardPostRequiredInfo boardPostRequiredInfo) {
-    User user = findUserById(userId)
-        .orElseThrow(() -> new UserNotFoundException("user not found"));
     Board board = findBoardById(boardId)
         .orElseThrow(() -> new BoardNotFoundException("board not found"));
     Category category = findCategoryById(boardPostRequiredInfo.getCategory())
@@ -162,7 +160,7 @@ public class BoardService {
     board.updateBoard(boardPostRequiredInfo.getTitle(), boardPostRequiredInfo.getContent(), boardPostRequiredInfo.getPlace(), boardPostRequiredInfo.getRecruitNumber(), category, address, tag, boardPostRequiredInfo.getDate());
     saveBoard(board);
 
-    return BoardContentResponseInfo.build(board, evaluations, user);
+    return BoardContentResponseInfo.build(board, evaluations);
   }
 
   private void deleteBoard(Board board) {

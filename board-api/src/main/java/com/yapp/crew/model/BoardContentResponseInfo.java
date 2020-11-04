@@ -25,7 +25,7 @@ public class BoardContentResponseInfo {
   private Boolean isBookMark;
   private HostInfo host;
 
-  public static BoardContentResponseInfo build(Board board, List<Evaluation> evaluationList, User user) {
+  public static BoardContentResponseInfo build(Board board, List<Evaluation> evaluationList) {
     BoardContentResponseInfo boardContentResponseInfo = new BoardContentResponseInfo();
     boardContentResponseInfo.boardId = board.getId();
     boardContentResponseInfo.title = board.getTitle();
@@ -36,8 +36,8 @@ public class BoardContentResponseInfo {
     boardContentResponseInfo.city = board.getAddress().getCity().getName();
     boardContentResponseInfo.recruitNumber = board.getRecruitCount();
     boardContentResponseInfo.recruitedNumber = board.getRemainRecruitNumber();
-    boardContentResponseInfo.isBookMark = user.getUserBookmark().stream().map(BookMark::getBoard).collect(Collectors.toSet()).contains(board);
-    boardContentResponseInfo.host = HostInfo.build(user, evaluationList);
+    boardContentResponseInfo.isBookMark = board.getUser().getUserBookmark().stream().map(BookMark::getBoard).collect(Collectors.toSet()).contains(board);
+    boardContentResponseInfo.host = HostInfo.build(board.getUser(), evaluationList);
 
     return boardContentResponseInfo;
   }
