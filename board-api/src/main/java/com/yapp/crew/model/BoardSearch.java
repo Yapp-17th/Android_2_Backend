@@ -12,10 +12,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class BoardSearch {
 
+  private Long userId;
   private List<String> keywords = new ArrayList<>();
 
-  public static BoardSearch build(BoardSearchDto boardSearchDto) {
+  public static BoardSearch build(BoardSearchDto boardSearchDto, Long userId) {
     BoardSearch boardSearch = new BoardSearch();
+    boardSearch.userId = userId;
     boardSearch.keywords = Arrays.stream(boardSearchDto.getKeywords().split(" "))
         .collect(Collectors.toList());
     return boardSearch;
