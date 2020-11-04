@@ -47,8 +47,8 @@ public class BoardController {
 
   @GetMapping(path = "/v1/board", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> getBoardList(@RequestHeader(value = "Authorization") String token, @PageableDefault(size = 20, page = 0) Pageable pageable, @RequestBody @Valid BoardFilterRequestDto boardFilterRequestDto) {
-
-    List<BoardResponseInfo> boardResponseInfoList = boardService.getBoardList(new BoardFilter(boardFilterRequestDto));
+    Long userId = auth.parseUserIdFromToken(token);
+    List<BoardResponseInfo> boardResponseInfoList = boardService.getBoardList(new BoardFilter(boardFilterRequestDto, userId));
 
     PagedListHolder<BoardResponseInfo> page = new PagedListHolder<>(boardResponseInfoList);
     page.setPageSize(pageable.getPageSize());

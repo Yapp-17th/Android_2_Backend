@@ -12,6 +12,7 @@ import com.yapp.crew.domain.model.Board;
 import com.yapp.crew.domain.model.Board.BoardBuilder;
 import com.yapp.crew.domain.model.Category;
 import com.yapp.crew.domain.model.Evaluation;
+import com.yapp.crew.domain.model.HiddenBoard;
 import com.yapp.crew.domain.model.Tag;
 import com.yapp.crew.domain.model.User;
 import com.yapp.crew.domain.repository.AddressRepository;
@@ -30,6 +31,7 @@ import com.yapp.crew.utils.ResponseMessage;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -92,6 +94,9 @@ public class BoardService {
     List<Category> categories;
     List<Address> addresses;
 
+    User user = findUserById(boardFilter.getUserId())
+        .orElseThrow(() -> new UserNotFoundException("user not found"));
+
     if (boardFilter.getCategory() != null) {
       categories = findAllCategory().stream()
           .filter(category -> boardFilter.getCategory().contains(category.getId()))
@@ -108,7 +113,7 @@ public class BoardService {
       addresses = findAllAddress();
     }
 
-    List<Board> filteredBoard = filterBoardList(findAllBoards(), addresses, categories);
+    List<Board> filteredBoard = filterBoardList(findAllBoards(user), addresses, categories, user);
 
     return sortBoardList(filteredBoard, boardFilter.getSorting())
         .stream()
@@ -197,10 +202,13 @@ public class BoardService {
     return tagRepository.findTagById(tagId);
   }
 
-  private List<Board> findAllBoards() {
+  private List<Board> findAllBoards(User user) {
+    Set<Board> hiddenBoards = user.getUserHiddenBoard().stream().map(HiddenBoard::getBoard).collect(Collectors.toSet());
+
     log.info("모든 board 리스트 가져오기 성공");
     return boardRepository.findAll().stream()
         .filter(board -> board.getStatus().getCode() < GroupStatus.CANCELED.getCode())
+        .filter(board -> !hiddenBoards.contains(board))
         .collect(Collectors.toList());
   }
 
@@ -214,10 +222,13 @@ public class BoardService {
     return addressRepository.findAll();
   }
 
-  private List<Board> filterBoardList(List<Board> boards, List<Address> addresses, List<Category> categories) {
+  private List<Board> filterBoardList(List<Board> boards, List<Address> addresses, List<Category> categories, User user) {
+    Set<Board> hiddenBoards = user.getUserHiddenBoard().stream().map(HiddenBoard::getBoard).collect(Collectors.toSet());
+
     return boards.stream()
         .filter(board -> addresses.contains(board.getAddress()))
         .filter(board -> categories.contains(board.getCategory()))
+        .filter(board -> !hiddenBoards.contains(board))
         .collect(Collectors.toList());
   }
 
