@@ -1,11 +1,5 @@
 package com.yapp.crew.controller;
 
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeoutException;
-
-import javax.validation.Valid;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.yapp.crew.domain.auth.Auth;
 import com.yapp.crew.network.HttpResponseBody;
@@ -17,8 +11,11 @@ import com.yapp.crew.payload.MessageRequestPayload;
 import com.yapp.crew.payload.MessageResponsePayload;
 import com.yapp.crew.producer.ChattingProducer;
 import com.yapp.crew.service.ChattingProducerService;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
+import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
