@@ -1,5 +1,9 @@
 package com.yapp.crew.service;
 
+import com.yapp.crew.domain.errors.CategoryNotFoundException;
+import com.yapp.crew.domain.errors.InternalServerErrorException;
+import com.yapp.crew.domain.errors.InvalidRequestBodyException;
+import com.yapp.crew.domain.errors.UserNotFoundException;
 import com.yapp.crew.domain.model.Address;
 import com.yapp.crew.domain.model.Category;
 import com.yapp.crew.domain.model.User;
@@ -11,8 +15,6 @@ import com.yapp.crew.domain.repository.CategoryRepository;
 import com.yapp.crew.domain.repository.UserExerciseRepository;
 import com.yapp.crew.domain.repository.UserRepository;
 import com.yapp.crew.domain.status.UserStatus;
-import com.yapp.crew.exception.InternalServerErrorException;
-import com.yapp.crew.exception.InvalidRequestBodyException;
 import com.yapp.crew.model.SignupUserInfo;
 import com.yapp.crew.model.UserAuthResponse;
 import com.yapp.crew.model.UserAuthResponseBody;
@@ -83,7 +85,7 @@ public class SignUpService {
       }
 
       log.info("Internal server error: " + e.getMessage());
-      throw new InternalServerErrorException();
+      throw new InternalServerErrorException("internal server error");
     }
 
     try {
@@ -93,7 +95,7 @@ public class SignUpService {
       return new UserAuthResponse(httpHeaders, userAuthResponseBody);
     } catch (Exception e) {
       log.info("Internal server error: " + e.getMessage());
-      throw new InternalServerErrorException(e.getCause());
+      throw new InternalServerErrorException(e.getMessage());
     }
   }
 
@@ -105,7 +107,7 @@ public class SignUpService {
       try {
         httpHeaders = tokenService.setToken(user);
       } catch (Exception e) {
-        throw new InternalServerErrorException();
+        throw new InternalServerErrorException("internal server error");
       }
 
       if (httpHeaders != null) {
@@ -136,11 +138,11 @@ public class SignUpService {
   public void save(User user, List<Long> category) {
     saveUser(user);
     User savedUser = findUserByOauthId(user.getOauthId())
-        .orElseThrow(InternalServerErrorException::new);
+        .orElseThrow(() -> new UserNotFoundException("user not found"));
 
     for (long categoryId : category) {
       Category userCategory = findCategoryById(categoryId)
-          .orElseThrow(InternalServerErrorException::new);
+          .orElseThrow(() -> new CategoryNotFoundException("category not found"));
 
       saveUserExercise(savedUser, userCategory);
     }

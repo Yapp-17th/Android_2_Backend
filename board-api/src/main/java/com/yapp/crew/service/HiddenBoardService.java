@@ -1,5 +1,7 @@
 package com.yapp.crew.service;
 
+import com.yapp.crew.domain.errors.BoardNotFoundException;
+import com.yapp.crew.domain.errors.UserNotFoundException;
 import com.yapp.crew.domain.model.Board;
 import com.yapp.crew.domain.model.HiddenBoard;
 import com.yapp.crew.domain.model.HiddenBoard.HiddenBoardBuilder;
@@ -7,7 +9,7 @@ import com.yapp.crew.domain.model.User;
 import com.yapp.crew.domain.repository.BoardRepository;
 import com.yapp.crew.domain.repository.HiddenBoardRepository;
 import com.yapp.crew.domain.repository.UserRepository;
-import com.yapp.crew.exception.InternalServerErrorException;
+import com.yapp.crew.domain.errors.InternalServerErrorException;
 import com.yapp.crew.model.SimpleResponse;
 import com.yapp.crew.utils.ResponseMessage;
 import java.util.Optional;
@@ -32,9 +34,9 @@ public class HiddenBoardService {
 
   public SimpleResponse createHiddenBoard(Long boardId, Long userId) {
     Board board = findBoardById(boardId)
-        .orElseThrow(InternalServerErrorException::new);
+        .orElseThrow(() -> new BoardNotFoundException("board not found"));
     User user = findUserById(userId)
-        .orElseThrow(InternalServerErrorException::new);
+        .orElseThrow(() -> new UserNotFoundException("user not found"));
 
     HiddenBoardBuilder hiddenBoardBuilder = HiddenBoard.getBuilder();
     HiddenBoard hiddenBoard = hiddenBoardBuilder

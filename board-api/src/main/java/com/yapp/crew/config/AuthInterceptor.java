@@ -1,11 +1,13 @@
 package com.yapp.crew.config;
 
 import com.yapp.crew.domain.auth.Auth;
+import com.yapp.crew.domain.errors.TokenRequiredException;
+import com.yapp.crew.domain.errors.UserNotFoundException;
 import com.yapp.crew.domain.model.User;
 import com.yapp.crew.domain.repository.UserRepository;
 import com.yapp.crew.domain.status.UserStatus;
-import com.yapp.crew.exception.SuspendedUserException;
-import com.yapp.crew.exception.WrongTokenException;
+import com.yapp.crew.domain.errors.SuspendedUserException;
+import com.yapp.crew.utils.ResponseMessage;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -31,13 +33,14 @@ public class AuthInterceptor implements HandlerInterceptor {
   }
 
   @Override
-  public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+  public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
 
     String token = request.getHeader(HEADER_TOKEN_KEY);
+    log.info("token: " + token);
     verifyToken(token);
     Long userId = auth.parseUserIdFromToken(token);
     User user = findUserById(userId)
-        .orElseThrow(SuspendedUserException::new);
+        .orElseThrow(() -> new UserNotFoundException("user not found"));
 
     return user.getStatus() == UserStatus.ACTIVE;
   }
@@ -47,7 +50,7 @@ public class AuthInterceptor implements HandlerInterceptor {
     return userRepository.findUserById(userId);
   }
 
-  private void verifyToken(String token) throws WrongTokenException {
+  private void verifyToken(String token) throws TokenRequiredException {
     auth.verifyToken(token);
   }
 }
