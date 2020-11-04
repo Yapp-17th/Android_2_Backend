@@ -1,7 +1,6 @@
 package com.yapp.crew.domain.model;
 
 import javax.persistence.Embeddable;
-
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
