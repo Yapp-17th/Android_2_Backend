@@ -123,11 +123,13 @@ public class BoardService {
 
   @Transactional
   public BoardContentResponseInfo getBoardContent(Long boardId, Long userId) {
+    User user = findUserById(userId)
+        .orElseThrow(() -> new UserNotFoundException("user not found"));
     Board board = findBoardById(boardId)
         .orElseThrow(() -> new BoardNotFoundException("board not found"));
 
     List<Evaluation> evaluations = findAllByUserId(userId);
-    return BoardContentResponseInfo.build(board, evaluations);
+    return BoardContentResponseInfo.build(board, evaluations, user);
   }
 
   @Transactional
@@ -145,6 +147,8 @@ public class BoardService {
 
   @Transactional
   public BoardContentResponseInfo editBoardContent(Long boardId, Long userId, BoardPostRequiredInfo boardPostRequiredInfo) {
+    User user = findUserById(userId)
+        .orElseThrow(() -> new UserNotFoundException("user not found"));
     Board board = findBoardById(boardId)
         .orElseThrow(() -> new BoardNotFoundException("board not found"));
     Category category = findCategoryById(boardPostRequiredInfo.getCategory())
@@ -158,7 +162,7 @@ public class BoardService {
     board.updateBoard(boardPostRequiredInfo.getTitle(), boardPostRequiredInfo.getContent(), boardPostRequiredInfo.getPlace(), boardPostRequiredInfo.getRecruitNumber(), category, address, tag, boardPostRequiredInfo.getDate());
     saveBoard(board);
 
-    return BoardContentResponseInfo.build(board, evaluations);
+    return BoardContentResponseInfo.build(board, evaluations, user);
   }
 
   private void deleteBoard(Board board) {
@@ -173,7 +177,7 @@ public class BoardService {
   }
 
   private List<Evaluation> findAllByUserId(Long userId) {
-    log.info("evaluatino 가져오기 성공");
+    log.info("evaluation 가져오기 성공");
     return evaluationRepository.findAllByUserId(userId);
   }
 
