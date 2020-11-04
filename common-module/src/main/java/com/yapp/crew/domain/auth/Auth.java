@@ -1,7 +1,5 @@
 package com.yapp.crew.domain.auth;
 
-import java.util.Date;
-
 import com.yapp.crew.domain.errors.TokenRequiredException;
 import com.yapp.crew.domain.errors.WrongTokenPrefixException;
 import io.jsonwebtoken.Claims;
@@ -9,7 +7,6 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -36,9 +33,9 @@ public class Auth {
 	public Long parseUserIdFromToken(String token) {
 		token = token.replace(jwtPrefix + " ", "");
 		Jws<Claims> claimsJws = Jwts.parserBuilder()
-						.setSigningKey(Keys.hmacShaKeyFor(jwtSecret.getBytes()))
-						.build()
-						.parseClaimsJws(token);
+				.setSigningKey(Keys.hmacShaKeyFor(jwtSecret.getBytes()))
+				.build()
+				.parseClaimsJws(token);
 
 		Claims body = claimsJws.getBody();
 		return Long.parseLong(String.valueOf(body.get("userId")));

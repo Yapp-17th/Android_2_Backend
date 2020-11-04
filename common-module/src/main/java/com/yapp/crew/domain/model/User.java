@@ -107,11 +107,11 @@ public class User extends BaseEntity {
 
 
   public void addAppliedUser(AppliedUser appliedUser) {
-		if (appliedUsers.contains(appliedUser)) {
-			return;
-		}
-  	appliedUsers.add(appliedUser);
-	}
+    if (appliedUsers.contains(appliedUser)) {
+      return;
+    }
+    appliedUsers.add(appliedUser);
+  }
 
   public void addBookMark(BookMark bookMark) {
     userBookmark.add(bookMark);
@@ -151,12 +151,20 @@ public class User extends BaseEntity {
   }
 
   public Long calculateLikes(List<Evaluation> evaluations) {
+    if (evaluations == null) {
+      return 0L;
+    }
+
     return evaluations.stream()
         .filter(Evaluation::getIsLike)
         .count();
   }
 
   public Long calculateDislikes(List<Evaluation> evaluations) {
+    if (evaluations == null) {
+      return 0L;
+    }
+
     return evaluations.stream()
         .filter(Evaluation::getIsDislike)
         .count();

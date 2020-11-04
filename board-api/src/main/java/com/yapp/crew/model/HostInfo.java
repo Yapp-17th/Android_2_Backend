@@ -17,6 +17,7 @@ public class HostInfo {
     HostInfo hostInfo = new HostInfo();
     hostInfo.hostId = user.getId();
     hostInfo.hostName = user.getNickname();
+
     hostInfo.likes = user.calculateLikes(evaluationList);
     hostInfo.dislikes = user.calculateDislikes(evaluationList);
 

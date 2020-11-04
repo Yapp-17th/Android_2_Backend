@@ -3,6 +3,7 @@ package com.yapp.crew.config;
 import com.yapp.crew.domain.auth.Auth;
 import com.yapp.crew.domain.model.User;
 import com.yapp.crew.domain.repository.UserRepository;
+import com.yapp.crew.domain.status.UserStatus;
 import com.yapp.crew.exception.SuspendedUserException;
 import com.yapp.crew.exception.WrongTokenException;
 import java.util.Optional;
@@ -38,7 +39,7 @@ public class AuthInterceptor implements HandlerInterceptor {
     User user = findUserById(userId)
         .orElseThrow(SuspendedUserException::new);
 
-    return true;
+    return user.getStatus() == UserStatus.ACTIVE;
   }
 
   private Optional<User> findUserById(Long userId) {

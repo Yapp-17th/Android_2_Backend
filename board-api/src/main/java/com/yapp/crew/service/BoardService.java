@@ -18,12 +18,15 @@ import com.yapp.crew.domain.repository.TagRepository;
 import com.yapp.crew.domain.repository.UserRepository;
 import com.yapp.crew.domain.status.GroupStatus;
 import com.yapp.crew.exception.InternalServerErrorException;
+import com.yapp.crew.exception.InvalidRequestBodyException;
+import com.yapp.crew.exception.WrongTokenException;
 import com.yapp.crew.model.BoardContentResponseInfo;
 import com.yapp.crew.model.BoardFilter;
 import com.yapp.crew.model.BoardPostRequiredInfo;
 import com.yapp.crew.model.BoardResponseInfo;
 import com.yapp.crew.model.SimpleResponse;
 import com.yapp.crew.utils.ResponseMessage;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -33,6 +36,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -55,6 +59,7 @@ public class BoardService {
     this.evaluationRepository = evaluationRepository;
   }
 
+  @Transactional
   public SimpleResponse postBoard(BoardPostRequiredInfo boardPostRequiredInfo, Long userId) {
     BoardBuilder boardBuilder = Board.getBuilder();
 
@@ -83,6 +88,7 @@ public class BoardService {
     return SimpleResponse.pass(ResponseMessage.BOARD_POST_SUCCESS.getMessage());
   }
 
+  @Transactional
   public List<BoardResponseInfo> getBoardList(BoardFilter boardFilter) {
     List<Category> categories;
     List<Address> addresses;
@@ -105,40 +111,35 @@ public class BoardService {
 
     List<Board> filteredBoard = filterBoardList(findAllBoards(), addresses, categories);
 
-    List<BoardResponseInfo> boardResponseInfoPage = sortBoardList(filteredBoard, boardFilter.getSorting())
+    return sortBoardList(filteredBoard, boardFilter.getSorting())
         .stream()
         .map(board -> BoardResponseInfo.build(board, board.getUser()))
         .collect(Collectors.toList());
-
-    log.info("결과 리스트: " + boardResponseInfoPage);
-
-    return boardResponseInfoPage;
   }
 
+  @Transactional
   public BoardContentResponseInfo getBoardContent(Long boardId, Long userId) {
     Board board = findBoardById(boardId)
         .orElseThrow(InternalServerErrorException::new);
     List<Evaluation> evaluations = findAllByUserId(userId);
 
-    if (evaluations == null) {
-      throw new InternalServerErrorException();
-    }
-
     return BoardContentResponseInfo.build(board, evaluations);
   }
 
+  @Transactional
   public SimpleResponse deleteBoard(Long boardId, Long userId) {
     Board board = findBoardById(boardId)
         .orElseThrow(InternalServerErrorException::new);
 
     if (!board.getUser().getId().equals(userId)) {
-      SimpleResponse.fail(HttpStatus.UNAUTHORIZED, ResponseMessage.BOARD_DIFF_USERID.getMessage());
+      throw new InvalidRequestBodyException(ResponseMessage.INVALID_REQUEST_BODY.getMessage());
     }
-    // TODO: try - catch: internal server error
+
     deleteBoard(board);
     return SimpleResponse.pass(ResponseMessage.BOARD_DELETE_SUCCESS.getMessage());
   }
 
+  @Transactional
   public BoardContentResponseInfo editBoardContent(Long boardId, Long userId, BoardPostRequiredInfo boardPostRequiredInfo) {
     Board board = findBoardById(boardId)
         .orElseThrow(InternalServerErrorException::new);
@@ -148,7 +149,7 @@ public class BoardService {
         .orElseThrow(InternalServerErrorException::new);
     Tag tag = findTagById(boardPostRequiredInfo.getUserTag())
         .orElseThrow(InternalServerErrorException::new);
-    List<Evaluation> evaluations = findAllByUserId(board.getUser().getId()); // TODO: null 체크
+    List<Evaluation> evaluations = findAllByUserId(board.getUser().getId());
 
     board.updateBoard(boardPostRequiredInfo.getTitle(), boardPostRequiredInfo.getContent(), boardPostRequiredInfo.getPlace(), boardPostRequiredInfo.getRecruitNumber(), category, address, tag, boardPostRequiredInfo.getDate());
     saveBoard(board);
