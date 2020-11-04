@@ -10,6 +10,7 @@ import com.yapp.crew.domain.repository.BoardRepository;
 import com.yapp.crew.domain.repository.ReportRepository;
 import com.yapp.crew.domain.repository.UserRepository;
 import com.yapp.crew.domain.errors.InternalServerErrorException;
+import com.yapp.crew.domain.status.GroupStatus;
 import com.yapp.crew.model.BoardReport;
 import com.yapp.crew.model.SimpleResponse;
 import com.yapp.crew.utils.ResponseMessage;
@@ -62,6 +63,6 @@ public class ReportService {
 
   private Optional<Board> findBoardById(Long boardId) {
     log.info("board 가져오기 성공");
-    return boardRepository.findBoardById(boardId);
+    return boardRepository.findBoardById(boardId).filter(board -> board.getStatus().getCode() < GroupStatus.CANCELED.getCode());
   }
 }
