@@ -47,7 +47,6 @@ public class BoardController {
 
   @GetMapping(path = "/v1/board", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> getBoardList(@RequestHeader(value = "Authorization") String token, @PageableDefault(size = 20, page = 0) Pageable pageable, @RequestBody @Valid BoardFilterRequestDto boardFilterRequestDto) {
-    auth.verifyToken(token);
 
     List<BoardResponseInfo> boardResponseInfoList = boardService.getBoardList(new BoardFilter(boardFilterRequestDto));
 
@@ -61,7 +60,6 @@ public class BoardController {
 
   @PostMapping(path = "/v1/board", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> postBoard(@RequestHeader(value = "Authorization") String token, @RequestBody @Valid BoardRequestDto boardRequestDto) {
-    auth.verifyToken(token);
 
     long userId = auth.parseUserIdFromToken(token);
     BoardPostRequiredInfo boardPostRequiredInfo = BoardPostRequiredInfo.build(boardRequestDto);
@@ -72,7 +70,6 @@ public class BoardController {
 
   @GetMapping(path = "/v1/board/{boardId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> getBoardContent(@RequestHeader(value = "Authorization") String token, @PathVariable Long boardId) {
-    auth.verifyToken(token);
 
     long userId = auth.parseUserIdFromToken(token);
     BoardContentResponseInfo boardContentResponseInfo = boardService.getBoardContent(boardId, userId);
@@ -85,7 +82,6 @@ public class BoardController {
 
   @DeleteMapping(path = "/v1/board/{boardId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> deleteBoard(@RequestHeader(value = "Authorization") String token, @PathVariable Long boardId) {
-    auth.verifyToken(token);
 
     long userId = auth.parseUserIdFromToken(token);
     SimpleResponse simpleResponse = boardService.deleteBoard(boardId, userId);
@@ -95,7 +91,6 @@ public class BoardController {
 
   @PutMapping(path = "/v1/board/{boardId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> editBoard(@RequestHeader(value = "Authorization") String token, @PathVariable Long boardId, @RequestBody @Valid BoardRequestDto boardRequestDto) {
-    auth.verifyToken(token);
 
     long userId = auth.parseUserIdFromToken(token);
     BoardPostRequiredInfo boardPostRequiredInfo = BoardPostRequiredInfo.build(boardRequestDto);

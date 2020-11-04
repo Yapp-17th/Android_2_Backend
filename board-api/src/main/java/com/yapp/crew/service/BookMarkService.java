@@ -47,7 +47,7 @@ public class BookMarkService {
         .orElseThrow(InternalServerErrorException::new);
 
     deleteBookMark(board, user);
-    return SimpleResponse.pass(ResponseMessage.BOARD_DELETE_SUCCESS.getMessage());
+    return SimpleResponse.pass(ResponseMessage.BOOKMARK_DELETE_SUCCESS.getMessage());
   }
 
   private void deleteBookMark(Board board, User user) {
