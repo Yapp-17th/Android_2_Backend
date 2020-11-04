@@ -9,7 +9,6 @@ import com.yapp.crew.domain.model.User;
 import com.yapp.crew.domain.repository.BoardRepository;
 import com.yapp.crew.domain.repository.HiddenBoardRepository;
 import com.yapp.crew.domain.repository.UserRepository;
-import com.yapp.crew.domain.errors.InternalServerErrorException;
 import com.yapp.crew.domain.status.GroupStatus;
 import com.yapp.crew.model.SimpleResponse;
 import com.yapp.crew.utils.ResponseMessage;
