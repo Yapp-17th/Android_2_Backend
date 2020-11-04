@@ -1,7 +1,7 @@
 package com.yapp.crew.service;
 
-import com.yapp.crew.domain.model.User;
 import com.yapp.crew.config.JwtUtils;
+import com.yapp.crew.domain.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;

@@ -1,10 +1,11 @@
 package com.yapp.crew.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.yapp.crew.domain.status.AppliedStatus;
+import com.yapp.crew.domain.status.GroupStatus;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -16,9 +17,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.yapp.crew.domain.status.GroupStatus;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
