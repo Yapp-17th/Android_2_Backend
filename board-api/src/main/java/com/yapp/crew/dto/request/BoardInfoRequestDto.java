@@ -1,4 +1,4 @@
-package com.yapp.crew.dto;
+package com.yapp.crew.dto.request;
 
 import java.time.LocalDateTime;
 import javax.validation.constraints.NotBlank;
@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class BoardRequestDto {
+public class BoardInfoRequestDto {
 
   @NotBlank
   private String title;

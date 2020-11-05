@@ -1,14 +1,13 @@
 package com.yapp.crew.payload;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.yapp.crew.domain.model.ChatRoom;
 import com.yapp.crew.domain.model.Message;
 import com.yapp.crew.domain.status.ChatRoomStatus;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

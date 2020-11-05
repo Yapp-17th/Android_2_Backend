@@ -1,15 +1,14 @@
 package com.yapp.crew.controller;
 
 import com.yapp.crew.domain.auth.Auth;
-import com.yapp.crew.dto.BoardContentResponseDto;
-import com.yapp.crew.dto.BoardFilterRequestDto;
-import com.yapp.crew.dto.BoardListResponseDto;
-import com.yapp.crew.dto.BoardRequestDto;
-import com.yapp.crew.exception.InternalServerErrorException;
+import com.yapp.crew.domain.errors.InternalServerErrorException;
+import com.yapp.crew.dto.request.BoardInfoRequestDto;
+import com.yapp.crew.dto.response.BoardContentSuccessResponseDto;
+import com.yapp.crew.dto.response.BoardListSuccessResponseDto;
 import com.yapp.crew.model.BoardContentResponseInfo;
 import com.yapp.crew.model.BoardFilter;
+import com.yapp.crew.model.BoardListResponseInfo;
 import com.yapp.crew.model.BoardPostRequiredInfo;
-import com.yapp.crew.model.BoardResponseInfo;
 import com.yapp.crew.model.SimpleResponse;
 import com.yapp.crew.service.BoardService;
 import java.util.List;
@@ -19,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.support.PagedListHolder;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -46,47 +47,45 @@ public class BoardController {
   }
 
   @GetMapping(path = "/v1/board", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<?> getBoardList(@RequestHeader(value = "Authorization") String token, @PageableDefault(size = 20, page = 0) Pageable pageable, @RequestBody @Valid BoardFilterRequestDto boardFilterRequestDto) {
-    auth.verifyToken(token);
+  public ResponseEntity<?> getBoardList(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token, @PageableDefault(size = 20) Pageable pageable, @RequestParam(required = false) String sorting, @RequestParam(required = false) List<Long> category,
+      @RequestParam(required = false) List<Long> address) {
+    long userId = auth.parseUserIdFromToken(token);
+    log.info("[GET BOARD LIST] user id:" + userId);
+    List<BoardListResponseInfo> boardListResponseInfoList = boardService.getBoardList(BoardFilter.build(sorting, category, address, userId));
 
-    List<BoardResponseInfo> boardResponseInfoList = boardService.getBoardList(new BoardFilter(boardFilterRequestDto));
-
-    PagedListHolder page = new PagedListHolder(boardResponseInfoList);
+    PagedListHolder<BoardListResponseInfo> page = new PagedListHolder<>(boardListResponseInfoList);
     page.setPageSize(pageable.getPageSize());
     page.setPage(pageable.getPageNumber());
 
-    BoardListResponseDto boardListResponseDto = BoardListResponseDto.build(page.getPageList());
-    return ResponseEntity.ok().body(boardListResponseDto);
+    BoardListSuccessResponseDto boardListSuccessResponseDto = BoardListSuccessResponseDto.build(page.getPageList());
+    return ResponseEntity.ok().body(boardListSuccessResponseDto);
   }
 
   @PostMapping(path = "/v1/board", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<?> postBoard(@RequestHeader(value = "Authorization") String token, @RequestBody @Valid BoardRequestDto boardRequestDto) {
-    auth.verifyToken(token);
+  public ResponseEntity<?> postBoard(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token, @RequestBody @Valid BoardInfoRequestDto boardInfoRequestDto) {
 
     long userId = auth.parseUserIdFromToken(token);
-    BoardPostRequiredInfo boardPostRequiredInfo = BoardPostRequiredInfo.build(boardRequestDto);
+    BoardPostRequiredInfo boardPostRequiredInfo = BoardPostRequiredInfo.build(boardInfoRequestDto);
     SimpleResponse simpleResponse = boardService.postBoard(boardPostRequiredInfo, userId);
 
     return ResponseEntity.ok().body(simpleResponse);
   }
 
   @GetMapping(path = "/v1/board/{boardId}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<?> getBoardContent(@RequestHeader(value = "Authorization") String token, @PathVariable Long boardId) {
-    auth.verifyToken(token);
+  public ResponseEntity<?> getBoardContent(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token, @PathVariable Long boardId) {
 
     long userId = auth.parseUserIdFromToken(token);
     BoardContentResponseInfo boardContentResponseInfo = boardService.getBoardContent(boardId, userId);
     if (boardContentResponseInfo == null) {
-      throw new InternalServerErrorException();
+      throw new InternalServerErrorException("internal server error");
     }
 
-    return ResponseEntity.ok().body(BoardContentResponseDto.build(boardContentResponseInfo));
+    return ResponseEntity.ok().body(BoardContentSuccessResponseDto.build(boardContentResponseInfo));
   }
 
   @DeleteMapping(path = "/v1/board/{boardId}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<?> deleteBoard(@RequestHeader(value = "Authorization") String token, @PathVariable Long boardId) {
-    auth.verifyToken(token);
-    // TODO: try - catch
+  public ResponseEntity<?> deleteBoard(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token, @PathVariable Long boardId) {
+
     long userId = auth.parseUserIdFromToken(token);
     SimpleResponse simpleResponse = boardService.deleteBoard(boardId, userId);
 
@@ -94,13 +93,12 @@ public class BoardController {
   }
 
   @PutMapping(path = "/v1/board/{boardId}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<?> editBoard(@RequestHeader(value = "Authorization") String token, @PathVariable Long boardId, @RequestBody @Valid BoardRequestDto boardRequestDto) {
-    auth.verifyToken(token);
-    // TODO: try - catch
+  public ResponseEntity<?> editBoard(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token, @PathVariable Long boardId, @RequestBody @Valid BoardInfoRequestDto boardInfoRequestDto) {
+
     long userId = auth.parseUserIdFromToken(token);
-    BoardPostRequiredInfo boardPostRequiredInfo = BoardPostRequiredInfo.build(boardRequestDto);
+    BoardPostRequiredInfo boardPostRequiredInfo = BoardPostRequiredInfo.build(boardInfoRequestDto);
     BoardContentResponseInfo boardContentResponseInfo = boardService.editBoardContent(boardId, userId, boardPostRequiredInfo);
 
-    return ResponseEntity.ok().body(BoardContentResponseDto.build(boardContentResponseInfo));
+    return ResponseEntity.ok().body(BoardContentSuccessResponseDto.build(boardContentResponseInfo));
   }
 }

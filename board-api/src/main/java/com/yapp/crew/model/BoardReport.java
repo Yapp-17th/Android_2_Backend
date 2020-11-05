@@ -1,7 +1,7 @@
 package com.yapp.crew.model;
 
 import com.yapp.crew.domain.type.ReportType;
-import com.yapp.crew.dto.BoardReportRequestDto;
+import com.yapp.crew.dto.request.BoardReportRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

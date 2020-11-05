@@ -1,4 +1,4 @@
-package com.yapp.crew.dto;
+package com.yapp.crew.dto.response;
 
 import com.yapp.crew.model.UserAuthResponseBody;
 import lombok.Getter;

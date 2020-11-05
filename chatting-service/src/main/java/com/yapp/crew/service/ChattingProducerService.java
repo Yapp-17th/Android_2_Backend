@@ -1,8 +1,5 @@
 package com.yapp.crew.service;
 
-import java.util.List;
-import java.util.Optional;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.yapp.crew.domain.errors.AlreadyApprovedException;
 import com.yapp.crew.domain.errors.BoardNotFoundException;
@@ -31,8 +28,9 @@ import com.yapp.crew.payload.ChatRoomResponsePayload;
 import com.yapp.crew.payload.GuidelineRequestPayload;
 import com.yapp.crew.payload.MessageResponsePayload;
 import com.yapp.crew.producer.ChattingProducer;
+import java.util.List;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;

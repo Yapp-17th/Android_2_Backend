@@ -3,8 +3,10 @@ package com.yapp.crew.model;
 import com.yapp.crew.domain.model.Evaluation;
 import com.yapp.crew.domain.model.User;
 import java.util.List;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Getter
 @NoArgsConstructor
 public class HostInfo {
 

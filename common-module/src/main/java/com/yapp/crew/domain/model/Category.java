@@ -1,9 +1,10 @@
 package com.yapp.crew.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.yapp.crew.domain.type.ExerciseType;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,9 +15,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.yapp.crew.domain.type.ExerciseType;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
