@@ -14,17 +14,17 @@ import javax.servlet.http.HttpServletResponse;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 @Slf4j
 @Component
 @NoArgsConstructor
-public class AuthInterceptor implements HandlerInterceptor {
+public class AuthInterceptor extends HandlerInterceptorAdapter {
 
   private UserRepository userRepository;
   private Auth auth;
-  private static final String HEADER_TOKEN_KEY = "Authorization";
 
   @Autowired
   public AuthInterceptor(UserRepository userRepository, Auth auth) {
@@ -33,30 +33,28 @@ public class AuthInterceptor implements HandlerInterceptor {
   }
 
   @Override
-  public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-    String token = request.getHeader(HEADER_TOKEN_KEY);
-    log.info(token);
+  public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    String token = request.getHeader(HttpHeaders.AUTHORIZATION);
     verifyToken(token);
 
     Long userId = auth.parseUserIdFromToken(token);
-    log.info("user id: " + userId);
+    log.info("[Request User ID] " + userId);
     User user = findUserById(userId)
-        .orElseThrow(() -> new UserNotFoundException("user not found"));
+        .orElseThrow(() -> new UserNotFoundException("[Exception] user not found"));
 
-    return checkUserStatus(user.getStatus());
+    checkUserStatus(user.getStatus());
+    return super.preHandle(request, response, handler);
   }
 
-  private boolean checkUserStatus(UserStatus userStatus) {
+  private void checkUserStatus(UserStatus userStatus) {
     if (userStatus == UserStatus.INACTIVE) {
       throw new InactiveUserException(ResponseMessage.INACTIVE_USER_FAIL.getMessage());
     } else if (userStatus == UserStatus.SUSPENDED) {
       throw new SuspendedUserException(ResponseMessage.SUSPENDED_USER_FAIL.getMessage());
     }
-    return userStatus == UserStatus.ACTIVE;
   }
 
   private Optional<User> findUserById(Long userId) {
-    log.info("user 찾기 성공");
     return userRepository.findUserById(userId);
   }
 
