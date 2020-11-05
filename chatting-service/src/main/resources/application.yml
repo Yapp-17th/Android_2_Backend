@@ -59,7 +59,7 @@ spring:
 kafka:
   topics:
     chat-message: chat-message
-    welcome-message: welcome-message
+    guideline-message: guideline-message
     apply-user: apply-user
     approve-user: approve-user
 
