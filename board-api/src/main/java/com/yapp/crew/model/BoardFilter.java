@@ -1,6 +1,7 @@
 package com.yapp.crew.model;
 
 import com.yapp.crew.dto.request.BoardFilterRequestDto;
+import com.yapp.crew.utils.SortingType;
 import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,15 +11,17 @@ import lombok.NoArgsConstructor;
 public class BoardFilter {
 
   private long userId;
-  private String sorting;
+  private SortingType sorting;
   List<Long> category;
   List<Long> city;
 
-  public BoardFilter(BoardFilterRequestDto boardFilterRequestDto, long userId) {
+  public static BoardFilter build(BoardFilterRequestDto boardFilterRequestDto, long userId) {
     BoardFilter boardFilter = new BoardFilter();
     boardFilter.userId = userId;
-    boardFilter.sorting = boardFilterRequestDto.getSorting();
+    boardFilter.sorting = SortingType.getSortingType(boardFilterRequestDto.getSorting());
     boardFilter.category = boardFilterRequestDto.getCategory();
     boardFilter.city = boardFilterRequestDto.getCity();
+
+    return boardFilter;
   }
 }

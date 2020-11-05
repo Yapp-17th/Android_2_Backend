@@ -8,7 +8,7 @@ import com.yapp.crew.domain.model.User;
 import com.yapp.crew.domain.repository.BoardRepository;
 import com.yapp.crew.domain.repository.UserRepository;
 import com.yapp.crew.domain.status.GroupStatus;
-import com.yapp.crew.model.BoardResponseInfo;
+import com.yapp.crew.model.BoardListResponseInfo;
 import com.yapp.crew.model.BoardSearch;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -34,18 +34,18 @@ public class SearchService {
     this.userRepository = userRepository;
   }
 
-  public List<BoardResponseInfo> searchBoardList(BoardSearch boardSearch) {
+  public List<BoardListResponseInfo> searchBoardList(BoardSearch boardSearch) {
     User user = findUserById(boardSearch.getUserId())
         .orElseThrow(() -> new UserNotFoundException("user not found"));
 
-    List<BoardResponseInfo> boardResponseInfoPage = findByContentIsContaining(boardSearch.getKeywords(), user)
+    List<BoardListResponseInfo> boardListResponseInfoPage = findByContentIsContaining(boardSearch.getKeywords(), user)
         .stream()
-        .map(board -> BoardResponseInfo.build(board, board.getUser()))
+        .map(board -> BoardListResponseInfo.build(board, board.getUser()))
         .collect(Collectors.toList());
 
-    log.info("결과 리스트: " + boardResponseInfoPage);
+    log.info("결과 리스트: " + boardListResponseInfoPage);
 
-    return boardResponseInfoPage;
+    return boardListResponseInfoPage;
   }
 
   private List<Board> findByContentIsContaining(List<String> keywords, User user) {

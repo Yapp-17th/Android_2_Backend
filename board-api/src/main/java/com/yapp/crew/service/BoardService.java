@@ -25,9 +25,10 @@ import com.yapp.crew.domain.status.GroupStatus;
 import com.yapp.crew.model.BoardContentResponseInfo;
 import com.yapp.crew.model.BoardFilter;
 import com.yapp.crew.model.BoardPostRequiredInfo;
-import com.yapp.crew.model.BoardResponseInfo;
+import com.yapp.crew.model.BoardListResponseInfo;
 import com.yapp.crew.model.SimpleResponse;
 import com.yapp.crew.utils.ResponseMessage;
+import com.yapp.crew.utils.SortingType;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -90,7 +91,7 @@ public class BoardService {
   }
 
   @Transactional
-  public List<BoardResponseInfo> getBoardList(BoardFilter boardFilter) {
+  public List<BoardListResponseInfo> getBoardList(BoardFilter boardFilter) {
     List<Category> categories;
     List<Address> addresses;
 
@@ -113,18 +114,14 @@ public class BoardService {
       addresses = findAllAddress();
     }
 
-    List<Board> filteredBoard = filterBoardList(findAllBoards(user), addresses, categories, user);
-
-    return sortBoardList(filteredBoard, boardFilter.getSorting())
+    return sortBoardList(boardFilter.getSorting(), addresses, categories, user)
         .stream()
-        .map(board -> BoardResponseInfo.build(board, board.getUser()))
+        .map(board -> BoardListResponseInfo.build(board, board.getUser()))
         .collect(Collectors.toList());
   }
 
   @Transactional
   public BoardContentResponseInfo getBoardContent(Long boardId, Long userId) {
-    User user = findUserById(userId)
-        .orElseThrow(() -> new UserNotFoundException("user not found"));
     Board board = findBoardById(boardId)
         .orElseThrow(() -> new BoardNotFoundException("board not found"));
 
@@ -164,88 +161,76 @@ public class BoardService {
   }
 
   private void deleteBoard(Board board) {
-    log.info("board 삭제 성공");
     board.deleteBoard();
     boardRepository.save(board);
   }
 
   private void saveBoard(Board board) {
-    log.info("board 저장 성공");
     boardRepository.save(board);
   }
 
   private List<Evaluation> findAllByUserId(Long userId) {
-    log.info("evaluation 가져오기 성공");
     return evaluationRepository.findAllByUserId(userId);
   }
 
   private Optional<Board> findBoardById(Long boardId) {
-    log.info("board 가져오기 성공");
     return boardRepository.findBoardById(boardId).filter(board -> board.getStatus().getCode() < GroupStatus.CANCELED.getCode());
   }
 
   private Optional<User> findUserById(Long userId) {
-    log.info("user 가져오기 성공");
     return userRepository.findUserById(userId);
   }
 
   private Optional<Category> findCategoryById(Long categoryId) {
-    log.info("category 가져오기 성공");
     return categoryRepository.findCategoryById(categoryId);
   }
 
   private Optional<Address> findAddressById(Long addressId) {
-    log.info("address 가져오기 성공");
     return addressRepository.findAddressById(addressId);
   }
 
   private Optional<Tag> findTagById(Long tagId) {
-    log.info("tag 가져오기 성공");
     return tagRepository.findTagById(tagId);
   }
 
-  private List<Board> findAllBoards(User user) {
-    Set<Board> hiddenBoards = user.getUserHiddenBoard().stream().map(HiddenBoard::getBoard).collect(Collectors.toSet());
-
-    log.info("모든 board 리스트 가져오기 성공");
-    return boardRepository.findAll().stream()
-        .filter(board -> board.getStatus().getCode() < GroupStatus.CANCELED.getCode())
-        .filter(board -> !hiddenBoards.contains(board))
-        .collect(Collectors.toList());
-  }
-
   private List<Category> findAllCategory() {
-    log.info("모든 category 리스트 가져오기 성공");
     return categoryRepository.findAll();
   }
 
   private List<Address> findAllAddress() {
-    log.info("모든 address 리스트 가져오기 성공");
     return addressRepository.findAll();
   }
 
-  private List<Board> filterBoardList(List<Board> boards, List<Address> addresses, List<Category> categories, User user) {
-    Set<Board> hiddenBoards = user.getUserHiddenBoard().stream().map(HiddenBoard::getBoard).collect(Collectors.toSet());
+  private List<Board> sortBoardList(SortingType sorting, List<Address> addresses, List<Category> categories, User user) {
+    List<Board> boards = filterBoardList(addresses, categories, user);
 
-    return boards.stream()
-        .filter(board -> addresses.contains(board.getAddress()))
-        .filter(board -> categories.contains(board.getCategory()))
-        .filter(board -> !hiddenBoards.contains(board))
-        .collect(Collectors.toList());
-  }
-
-  private List<Board> sortBoardList(List<Board> boards, String sorting) {
-    if (StringUtils.equalsIgnoreCase(sorting, "remain")) {
+    if (sorting == SortingType.REMAIN) {
       return boards.stream()
           .sorted(Comparator.comparing(Board::getRemainRecruitNumber, Comparator.reverseOrder()))
           .collect(Collectors.toList());
-    } else if (StringUtils.equalsIgnoreCase(sorting, "deadline")) {
+    } else if (sorting == SortingType.DEADLINE) {
       return boards.stream()
           .sorted(Comparator.comparing(Board::getStartsAt, Comparator.naturalOrder()))
           .collect(Collectors.toList());
     }
     return boards.stream()
         .sorted(Comparator.comparing(BaseEntity::getCreatedAt, Comparator.reverseOrder()))
+        .collect(Collectors.toList());
+  }
+
+  private List<Board> filterBoardList(List<Address> addresses, List<Category> categories, User user) {
+    return findAllBoards(user).stream()
+        .filter(board -> addresses.contains(board.getAddress()))
+        .filter(board -> categories.contains(board.getCategory()))
+        .collect(Collectors.toList());
+  }
+
+  private List<Board> findAllBoards(User user) {
+    Set<Board> hiddenBoards = user.getUserHiddenBoard().stream().map(HiddenBoard::getBoard).collect(Collectors.toSet());
+
+    return boardRepository.findAll().stream()
+        .filter(board -> board.getStatus().getCode() < GroupStatus.CANCELED.getCode())
+        .filter(board -> !hiddenBoards.contains(board))
         .collect(Collectors.toList());
   }
 }

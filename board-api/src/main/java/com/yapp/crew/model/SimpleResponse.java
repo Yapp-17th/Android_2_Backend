@@ -27,6 +27,4 @@ public class SimpleResponse {
     simpleResponse.message = message;
     return simpleResponse;
   }
-
-
 }
