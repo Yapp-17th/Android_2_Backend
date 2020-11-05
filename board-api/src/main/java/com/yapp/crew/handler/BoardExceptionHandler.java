@@ -23,25 +23,25 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class BoardExceptionHandler {
 
   @ExceptionHandler(value = InactiveUserException.class)
-  public ResponseEntity<?> handleTokenRequiredException(InactiveUserException ex) {
+  public ResponseEntity<?> handleInactiveUserException(InactiveUserException ex) {
     SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.UNAUTHORIZED, ex.getMessage());
     return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
   }
 
   @ExceptionHandler(value = InternalServerErrorException.class)
-  public ResponseEntity<?> handleTokenRequiredException(InternalServerErrorException ex) {
+  public ResponseEntity<?> handleInternalServerErrorException(InternalServerErrorException ex) {
     SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
     return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
   }
 
   @ExceptionHandler(value = InvalidRequestBodyException.class)
-  public ResponseEntity<?> handleTokenRequiredException(InvalidRequestBodyException ex) {
+  public ResponseEntity<?> handleInvalidRequestBodyException(InvalidRequestBodyException ex) {
     SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.BAD_REQUEST, ex.getMessage());
     return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
   }
 
   @ExceptionHandler(value = SuspendedUserException.class)
-  public ResponseEntity<?> handleTokenRequiredException(SuspendedUserException ex) {
+  public ResponseEntity<?> handleSuspendedUserException(SuspendedUserException ex) {
     SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.FORBIDDEN, ex.getMessage());
     return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
   }

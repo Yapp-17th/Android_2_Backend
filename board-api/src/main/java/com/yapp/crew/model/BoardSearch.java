@@ -1,6 +1,6 @@
 package com.yapp.crew.model;
 
-import com.yapp.crew.dto.BoardSearchDto;
+import com.yapp.crew.dto.request.BoardSearchRequestDto;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -15,10 +15,10 @@ public class BoardSearch {
   private Long userId;
   private List<String> keywords = new ArrayList<>();
 
-  public static BoardSearch build(BoardSearchDto boardSearchDto, Long userId) {
+  public static BoardSearch build(BoardSearchRequestDto boardSearchRequestDto, Long userId) {
     BoardSearch boardSearch = new BoardSearch();
     boardSearch.userId = userId;
-    boardSearch.keywords = Arrays.stream(boardSearchDto.getKeywords().split(" "))
+    boardSearch.keywords = Arrays.stream(boardSearchRequestDto.getKeywords().split(" "))
         .collect(Collectors.toList());
     return boardSearch;
   }

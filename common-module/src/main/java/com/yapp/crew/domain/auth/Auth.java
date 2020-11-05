@@ -21,6 +21,9 @@ public class Auth {
 	private String jwtPrefix;
 
 	public void verifyToken(String token) {
+		log.info(jwtSecret);
+		log.info(jwtPrefix);
+		log.info("****************************");
 		if (token == null || token.isBlank()) {
 			throw new TokenRequiredException("[Auth] Token is required but wasn't sent");
 		}

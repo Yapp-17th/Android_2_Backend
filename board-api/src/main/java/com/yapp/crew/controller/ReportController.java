@@ -1,7 +1,7 @@
 package com.yapp.crew.controller;
 
 import com.yapp.crew.domain.auth.Auth;
-import com.yapp.crew.dto.BoardReportRequestDto;
+import com.yapp.crew.dto.request.BoardReportRequestDto;
 import com.yapp.crew.model.BoardReport;
 import com.yapp.crew.model.SimpleResponse;
 import com.yapp.crew.service.ReportService;

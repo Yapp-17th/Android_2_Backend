@@ -1,6 +1,6 @@
 package com.yapp.crew.model;
 
-import com.yapp.crew.dto.BoardRequestDto;
+import com.yapp.crew.dto.request.BoardInfoRequestDto;
 import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,16 +18,16 @@ public class BoardPostRequiredInfo {
   private LocalDateTime date;
   private String place;
 
-  public static BoardPostRequiredInfo build(BoardRequestDto boardRequestDto) {
+  public static BoardPostRequiredInfo build(BoardInfoRequestDto boardInfoRequestDto) {
     BoardPostRequiredInfo boardPostRequiredInfo = new BoardPostRequiredInfo();
-    boardPostRequiredInfo.title = boardRequestDto.getTitle();
-    boardPostRequiredInfo.content = boardRequestDto.getContent();
-    boardPostRequiredInfo.category = boardRequestDto.getCategory();
-    boardPostRequiredInfo.city = boardRequestDto.getCity();
-    boardPostRequiredInfo.userTag = boardRequestDto.getUserTag();
-    boardPostRequiredInfo.recruitNumber = boardRequestDto.getRecruitNumber();
-    boardPostRequiredInfo.date = boardRequestDto.getDate();
-    boardPostRequiredInfo.place = boardRequestDto.getPlace();
+    boardPostRequiredInfo.title = boardInfoRequestDto.getTitle();
+    boardPostRequiredInfo.content = boardInfoRequestDto.getContent();
+    boardPostRequiredInfo.category = boardInfoRequestDto.getCategory();
+    boardPostRequiredInfo.city = boardInfoRequestDto.getCity();
+    boardPostRequiredInfo.userTag = boardInfoRequestDto.getUserTag();
+    boardPostRequiredInfo.recruitNumber = boardInfoRequestDto.getRecruitNumber();
+    boardPostRequiredInfo.date = boardInfoRequestDto.getDate();
+    boardPostRequiredInfo.place = boardInfoRequestDto.getPlace();
 
     return boardPostRequiredInfo;
   }
