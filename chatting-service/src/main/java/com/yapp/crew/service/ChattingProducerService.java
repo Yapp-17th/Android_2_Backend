@@ -23,6 +23,7 @@ import com.yapp.crew.domain.repository.MessageRepository;
 import com.yapp.crew.domain.repository.UserRepository;
 import com.yapp.crew.domain.status.AppliedStatus;
 import com.yapp.crew.domain.type.MessageType;
+import com.yapp.crew.domain.type.ResponseType;
 import com.yapp.crew.json.BotMessages;
 import com.yapp.crew.network.HttpResponseBody;
 import com.yapp.crew.payload.ApplyRequestPayload;
@@ -88,7 +89,7 @@ public class ChattingProducerService {
 
 		Optional<ChatRoom> chatRoom = chatRoomRepository.findByGuestIdAndBoardId(guest.getId(), board.getId());
 		if (chatRoom.isPresent()) {
-			return HttpResponseBody.buildChatRoomResponse(ChatRoomResponsePayload.buildChatRoomResponsePayload(chatRoom.get()), HttpStatus.OK.value());
+			return HttpResponseBody.buildChatRoomResponse(ChatRoomResponsePayload.buildChatRoomResponsePayload(chatRoom.get()), HttpStatus.OK.value(), ResponseType.CHATROOM_ALREADY_CREATED);
 		}
 
 		ChatRoom newChatRoom = ChatRoom.buildChatRoom(host, guest, board);
@@ -98,12 +99,12 @@ public class ChattingProducerService {
     chatRoomRepository.save(newChatRoom);
 
 		produceGuidelineBotMessage(newChatRoom.getId());
-    return HttpResponseBody.buildChatRoomResponse(ChatRoomResponsePayload.buildChatRoomResponsePayload(newChatRoom), HttpStatus.CREATED.value());
+    return HttpResponseBody.buildChatRoomResponse(ChatRoomResponsePayload.buildChatRoomResponsePayload(newChatRoom), HttpStatus.CREATED.value(), ResponseType.SUCCESS);
   }
 
   public HttpResponseBody<List<ChatRoomResponsePayload>> receiveChatRooms(Long userId) {
   	List<ChatRoom> chatRooms = chatRoomRepository.findAllByUserId(userId);
-		return HttpResponseBody.buildChatRoomsResponse(ChatRoomResponsePayload.buildChatRoomResponsePayload(chatRooms, userId), HttpStatus.OK.value());
+		return HttpResponseBody.buildChatRoomsResponse(ChatRoomResponsePayload.buildChatRoomResponsePayload(chatRooms, userId), HttpStatus.OK.value(), ResponseType.SUCCESS);
 	}
 
   public HttpResponseBody<List<MessageResponsePayload>> receiveChatMessages(Long chatRoomId, Long userId) {
@@ -125,14 +126,16 @@ public class ChattingProducerService {
 		return HttpResponseBody.buildChatMessagesResponse(
 						MessageResponsePayload.buildMessageResponsePayload(messageRepository, messages, isHost),
 						HttpStatus.OK.value(),
+						ResponseType.SUCCESS,
 						firstUnreadChatMessageId,
 						boardTitle,
 						isApplied
 		);
   }
 
-  public void applyUser(ApplyRequestPayload applyRequestPayload) throws JsonProcessingException {
+  public HttpResponseBody<?> applyUser(ApplyRequestPayload applyRequestPayload) throws JsonProcessingException {
 		chattingProducer.applyUser(applyRequestPayload);
+		return HttpResponseBody.buildSuccessResponse(HttpStatus.OK.value(), ResponseType.SUCCESS, ResponseType.SUCCESS.getMessage());
 	}
 
 	@Transactional
@@ -176,7 +179,7 @@ public class ChattingProducerService {
 
 		chattingProducer.approveUser(approveRequestPayload);
 
-		return HttpResponseBody.buildSuccessResponse(HttpStatus.OK.value(), "Successfully approved guest");
+		return HttpResponseBody.buildSuccessResponse(HttpStatus.OK.value(), ResponseType.SUCCESS, ResponseType.SUCCESS.getMessage());
 	}
 
   private void produceGuidelineBotMessage(Long chatRoomId) throws JsonProcessingException {

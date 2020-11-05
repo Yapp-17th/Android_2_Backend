@@ -134,9 +134,9 @@ public class ChattingController {
 
 		applyRequestPayload.setBoardId(boardId);
 		applyRequestPayload.setApplierId(applierId);
-		chattingProducerService.applyUser(applyRequestPayload);
+		HttpResponseBody<?> responseBody = chattingProducerService.applyUser(applyRequestPayload);
 
-		return ResponseEntity.status(HttpStatus.CREATED).body(applyRequestPayload);
+		return ResponseEntity.status(HttpStatus.CREATED).body(responseBody);
 	}
 
 	@PostMapping(path = "/v1/board/{boardId}/approve")
