@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -34,23 +35,18 @@ public class SearchService {
     this.userRepository = userRepository;
   }
 
+  @Transactional
   public List<BoardListResponseInfo> searchBoardList(BoardSearch boardSearch) {
     User user = findUserById(boardSearch.getUserId())
         .orElseThrow(() -> new UserNotFoundException("user not found"));
 
-    List<BoardListResponseInfo> boardListResponseInfoPage = findByContentIsContaining(boardSearch.getKeywords(), user)
+    return findByContentIsContaining(boardSearch.getKeywords(), user)
         .stream()
         .map(board -> BoardListResponseInfo.build(board, board.getUser()))
         .collect(Collectors.toList());
-
-    log.info("결과 리스트: " + boardListResponseInfoPage);
-
-    return boardListResponseInfoPage;
   }
 
   private List<Board> findByContentIsContaining(List<String> keywords, User user) {
-    log.info("search board 성공");
-    Set<Board> hiddenBoards = user.getUserHiddenBoard().stream().map(HiddenBoard::getBoard).collect(Collectors.toSet());
     HashSet<Board> boards = new HashSet<>(boardRepository.findByContentIsContaining(keywords.get(0)));
 
     for (String keyword : keywords) {
@@ -61,15 +57,21 @@ public class SearchService {
       boards.retainAll(nextBoard);
     }
 
-    return boards.stream()
-        .filter(board -> board.getStatus().getCode() < GroupStatus.CANCELED.getCode())
-        .filter(board -> !hiddenBoards.contains(board))
+    return findAllBoards(user).stream()
         .sorted(Comparator.comparing(BaseEntity::getCreatedAt, Comparator.reverseOrder()))
         .collect(Collectors.toList());
   }
 
+  private List<Board> findAllBoards(User user) {
+    Set<Board> hiddenBoards = user.getUserHiddenBoard().stream().map(HiddenBoard::getBoard).collect(Collectors.toSet());
+
+    return boardRepository.findAll().stream()
+        .filter(board -> board.getStatus().getCode() < GroupStatus.CANCELED.getCode())
+        .filter(board -> !hiddenBoards.contains(board))
+        .collect(Collectors.toList());
+  }
+
   private Optional<User> findUserById(Long userId) {
-    log.info("user 가져오기 성공");
     return userRepository.findUserById(userId);
   }
 }
