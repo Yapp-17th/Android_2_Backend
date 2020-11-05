@@ -30,6 +30,9 @@ public class ChatRoomResponsePayload {
 
 	private Long boardId;
 
+	@JsonInclude(value = Include.NON_NULL)
+	private String opponentNickname;
+
 	private ChatRoomStatus status;
 
 	private LocalDateTime createdAt;
@@ -64,12 +67,34 @@ public class ChatRoomResponsePayload {
 						.build();
 	}
 
+	public static ChatRoomResponsePayload buildChatRoomResponsePayload(ChatRoom chatRoom, MessageResponsePayload lastMessage, Long unreadMessages, String opponentNickname) {
+		return ChatRoomResponsePayload.builder()
+						.id(chatRoom.getId())
+						.hostId(chatRoom.getHost().getId())
+						.guestId(chatRoom.getGuest().getId())
+						.boardId(chatRoom.getBoard().getId())
+						.status(chatRoom.getStatus())
+						.lastMessage(lastMessage)
+						.unreadMessages(unreadMessages)
+						.opponentNickname(opponentNickname)
+						.createdAt(chatRoom.getCreatedAt())
+						.build();
+	}
+
 	public static List<ChatRoomResponsePayload> buildChatRoomResponsePayload(List<ChatRoom> chatRooms, Long userId) {
 		return chatRooms.stream()
 						.map(chatRoom -> {
 							List<Message> messages = chatRoom.getMessages();
+
 							boolean isHost = chatRoom.isSenderChatRoomHost(userId);
 							Long unreadMessages = chatRoom.countUnreadMessages(isHost);
+							String opponentNickname;
+							if (isHost) {
+								opponentNickname = chatRoom.getGuest().getNickname();
+							}
+							else {
+								opponentNickname = chatRoom.getHost().getNickname();
+							}
 
 							Message lastMessage = null;
 							if (messages.size() > 0) {
@@ -85,7 +110,7 @@ public class ChatRoomResponsePayload {
 									messagePayload = MessageResponsePayload.buildProfileMessageResponsePayload(lastMessage);
 								}
 							}
-							return ChatRoomResponsePayload.buildChatRoomResponsePayload(chatRoom, messagePayload, unreadMessages);
+							return ChatRoomResponsePayload.buildChatRoomResponsePayload(chatRoom, messagePayload, unreadMessages, opponentNickname);
 						})
 						.collect(Collectors.toList());
 	}
