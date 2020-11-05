@@ -15,6 +15,7 @@ import com.yapp.crew.domain.type.MessageType;
 import com.yapp.crew.json.BotMessages;
 import com.yapp.crew.payload.ApplyRequestPayload;
 import com.yapp.crew.payload.ApproveRequestPayload;
+import com.yapp.crew.payload.GuidelineRequestPayload;
 import com.yapp.crew.payload.MessageRequestPayload;
 import com.yapp.crew.producer.ChatBotProducer;
 import lombok.extern.slf4j.Slf4j;
@@ -61,9 +62,16 @@ public class ChatBotConsumer {
 	public void consumeBotGuidelineMessage(ConsumerRecord<Long, String> consumerRecord) throws JsonProcessingException {
 		log.info("[Chat Bot Event - Guideline Message] Consumer Record: {}", consumerRecord);
 
-		MessageRequestPayload messageRequestPayload = objectMapper.readValue(consumerRecord.value(), MessageRequestPayload.class);
+		GuidelineRequestPayload guidelineRequestPayload = objectMapper.readValue(consumerRecord.value(), GuidelineRequestPayload.class);
 
-		chatBotProducer.sendBotMessage(messageRequestPayload);
+		MessageRequestPayload guidelineMessagePayload = MessageRequestPayload.builder()
+						.content(botMessages.getGuidelineMessage().replace("\"", ""))
+						.type(MessageType.BOT_MESSAGE)
+						.senderId(guidelineRequestPayload.getSenderId())
+						.chatRoomId(guidelineRequestPayload.getChatRoomId())
+						.build();
+
+		chatBotProducer.sendBotMessage(guidelineMessagePayload);
 	}
 
 	@KafkaListener(topics = "${kafka.topics.apply-user}", groupId = "${kafka.groups.apply-user-group}")

@@ -10,7 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yapp.crew.payload.ApplyRequestPayload;
 import com.yapp.crew.payload.ApproveRequestPayload;
 import com.yapp.crew.payload.MessageRequestPayload;
-import com.yapp.crew.payload.WelcomeMessageRequestPayload;
+import com.yapp.crew.payload.GuidelineRequestPayload;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.header.Header;
@@ -73,9 +73,9 @@ public class ChattingProducer {
     return listenableFuture;
   }
 
-  public ListenableFuture<SendResult<Long, String>> sendGuidelineBotMessage(WelcomeMessageRequestPayload welcomeMessageRequestPayload) throws JsonProcessingException {
-		Long key = welcomeMessageRequestPayload.getChatRoomId();
-		String value = objectMapper.writeValueAsString(welcomeMessageRequestPayload);
+  public ListenableFuture<SendResult<Long, String>> sendGuidelineBotMessage(GuidelineRequestPayload guidelineRequestPayload) throws JsonProcessingException {
+		Long key = guidelineRequestPayload.getChatRoomId();
+		String value = objectMapper.writeValueAsString(guidelineRequestPayload);
 
 		ProducerRecord<Long, String> producerRecord = buildProducerRecord(key, value, guidelineMessageTopic);
 		ListenableFuture<SendResult<Long, String>> listenableFuture = kafkaTemplate.send(producerRecord);

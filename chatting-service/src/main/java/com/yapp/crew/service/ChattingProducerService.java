@@ -22,16 +22,14 @@ import com.yapp.crew.domain.repository.ChatRoomRepository;
 import com.yapp.crew.domain.repository.MessageRepository;
 import com.yapp.crew.domain.repository.UserRepository;
 import com.yapp.crew.domain.status.AppliedStatus;
-import com.yapp.crew.domain.type.MessageType;
 import com.yapp.crew.domain.type.ResponseType;
-import com.yapp.crew.json.BotMessages;
 import com.yapp.crew.network.HttpResponseBody;
 import com.yapp.crew.payload.ApplyRequestPayload;
 import com.yapp.crew.payload.ApproveRequestPayload;
 import com.yapp.crew.payload.ChatRoomRequestPayload;
 import com.yapp.crew.payload.ChatRoomResponsePayload;
+import com.yapp.crew.payload.GuidelineRequestPayload;
 import com.yapp.crew.payload.MessageResponsePayload;
-import com.yapp.crew.payload.WelcomeMessageRequestPayload;
 import com.yapp.crew.producer.ChattingProducer;
 import lombok.extern.slf4j.Slf4j;
 
@@ -56,8 +54,6 @@ public class ChattingProducerService {
 
   private final UserRepository userRepository;
 
-	private final BotMessages botMessages;
-
 	@Autowired
 	public ChattingProducerService(
 					ChattingProducer chattingProducer,
@@ -65,8 +61,7 @@ public class ChattingProducerService {
 					MessageRepository messageRepository,
 					AppliedUserRepository appliedUserRepository,
 					BoardRepository boardRepository,
-					UserRepository userRepository,
-					BotMessages botMessages
+					UserRepository userRepository
 	) {
 		this.chattingProducer = chattingProducer;
 		this.chatRoomRepository = chatRoomRepository;
@@ -74,7 +69,6 @@ public class ChattingProducerService {
 		this.appliedUserRepository = appliedUserRepository;
 		this.boardRepository = boardRepository;
 		this.userRepository = userRepository;
-		this.botMessages = botMessages;
 	}
 
   public HttpResponseBody<ChatRoomResponsePayload> createChatRoom(ChatRoomRequestPayload chatRoomRequestPayload) throws JsonProcessingException {
@@ -83,6 +77,9 @@ public class ChattingProducerService {
 
     User guest = userRepository.findUserById(chatRoomRequestPayload.getGuestId())
             .orElseThrow(() -> new UserNotFoundException("Cannot find guest user"));
+
+		User bot = userRepository.findUserById(-1L)
+						.orElseThrow(() -> new UserNotFoundException("Cannot find chat bot"));
 
     Board board = boardRepository.findById(chatRoomRequestPayload.getBoardId())
             .orElseThrow(() -> new BoardNotFoundException("Cannot find board"));
@@ -98,7 +95,11 @@ public class ChattingProducerService {
     guest.addChatRoomGuest(newChatRoom);
     chatRoomRepository.save(newChatRoom);
 
-		produceGuidelineBotMessage(newChatRoom.getId());
+		GuidelineRequestPayload guidelineRequestPayload = GuidelineRequestPayload.builder()
+						.senderId(bot.getId())
+						.chatRoomId(newChatRoom.getId())
+						.build();
+		chattingProducer.sendGuidelineBotMessage(guidelineRequestPayload);
     return HttpResponseBody.buildChatRoomResponse(ChatRoomResponsePayload.buildChatRoomResponsePayload(newChatRoom), HttpStatus.CREATED.value(), ResponseType.SUCCESS);
   }
 
@@ -181,18 +182,4 @@ public class ChattingProducerService {
 
 		return HttpResponseBody.buildSuccessResponse(HttpStatus.OK.value(), ResponseType.SUCCESS, ResponseType.SUCCESS.getMessage());
 	}
-
-  private void produceGuidelineBotMessage(Long chatRoomId) throws JsonProcessingException {
-    User bot = userRepository.findUserById(-1L)
-            .orElseThrow(() -> new UserNotFoundException("Cannot find chat bot"));
-
-		WelcomeMessageRequestPayload welcomeMessageRequestPayload = WelcomeMessageRequestPayload.builder()
-            .content(botMessages.getGuidelineMessage().replace("\"", ""))
-            .type(MessageType.BOT_MESSAGE)
-            .senderId(bot.getId())
-            .chatRoomId(chatRoomId)
-            .build();
-
-    chattingProducer.sendGuidelineBotMessage(welcomeMessageRequestPayload);
-  }
 }
