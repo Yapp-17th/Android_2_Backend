@@ -27,7 +27,24 @@ public class HttpResponseBody<T> {
 	private Long firstUnreadMessageId;
 
 	@JsonInclude(NON_NULL)
+	private String boardTitle;
+
+	@JsonInclude(NON_NULL)
+	private boolean isApplied;
+
+	@JsonInclude(NON_NULL)
 	private T data;
+
+	public static <T> HttpResponseBody<T> buildChatMessagesResponse(T data, Integer status, Long firstUnreadMessageId, String boardTitle, boolean isApplied) {
+		return (HttpResponseBody<T>) HttpResponseBody.builder()
+						.transactionTime(LocalDateTime.now())
+						.status(status)
+						.firstUnreadMessageId(firstUnreadMessageId)
+						.boardTitle(boardTitle)
+						.isApplied(isApplied)
+						.data(data)
+						.build();
+	}
 
 	public static <T> HttpResponseBody<T> buildChatMessagesResponse(T data, Integer status, Long firstUnreadMessageId) {
 		return (HttpResponseBody<T>) HttpResponseBody.builder()

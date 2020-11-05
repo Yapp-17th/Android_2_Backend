@@ -114,10 +114,20 @@ public class ChattingProducerService {
     boolean isHost = chatRoom.isSenderChatRoomHost(userId);
     Long firstUnreadChatMessageId = chatRoom.findFirstUnreadChatMessage(isHost);
 
+    String boardTitle = chatRoom.getBoard().getTitle();
+
+    boolean isApplied = false;
+    Optional<AppliedUser> appliedUser = appliedUserRepository.findByBoardIdAndUserId(chatRoom.getBoard().getId(), userId);
+    if (appliedUser.isPresent()) {
+    	isApplied = appliedUser.get().getStatus().equals(AppliedStatus.APPROVED);
+		}
+
 		return HttpResponseBody.buildChatMessagesResponse(
 						MessageResponsePayload.buildMessageResponsePayload(messageRepository, messages, isHost),
 						HttpStatus.OK.value(),
-						firstUnreadChatMessageId
+						firstUnreadChatMessageId,
+						boardTitle,
+						isApplied
 		);
   }
 
