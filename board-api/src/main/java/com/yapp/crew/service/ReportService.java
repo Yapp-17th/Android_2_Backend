@@ -1,5 +1,7 @@
 package com.yapp.crew.service;
 
+import com.yapp.crew.domain.errors.BoardNotFoundException;
+import com.yapp.crew.domain.errors.UserNotFoundException;
 import com.yapp.crew.domain.model.Board;
 import com.yapp.crew.domain.model.Report;
 import com.yapp.crew.domain.model.Report.ReportBuilder;
@@ -7,10 +9,10 @@ import com.yapp.crew.domain.model.User;
 import com.yapp.crew.domain.repository.BoardRepository;
 import com.yapp.crew.domain.repository.ReportRepository;
 import com.yapp.crew.domain.repository.UserRepository;
-import com.yapp.crew.exception.InternalServerErrorException;
+import com.yapp.crew.domain.status.BoardStatus;
+import com.yapp.crew.domain.type.ResponseType;
 import com.yapp.crew.model.BoardReport;
 import com.yapp.crew.model.SimpleResponse;
-import com.yapp.crew.utils.ResponseMessage;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,9 +35,9 @@ public class ReportService {
 
   public SimpleResponse postBoardReport(BoardReport boardReport) {
     User user = findUserById(boardReport.getReporter())
-        .orElseThrow(InternalServerErrorException::new);
+        .orElseThrow(() -> new UserNotFoundException("user not found"));
     Board board = findBoardById(boardReport.getBoardId())
-        .orElseThrow(InternalServerErrorException::new);
+        .orElseThrow(() -> new BoardNotFoundException("board not found"));
 
     ReportBuilder reportBuilder = Report.getBuilder();
     Report report = reportBuilder
@@ -45,7 +47,7 @@ public class ReportService {
         .withType(boardReport.getReportType())
         .build();
     saveReport(report);
-    return SimpleResponse.pass(ResponseMessage.REPORT_SUCCESS.getMessage());
+    return SimpleResponse.pass(ResponseType.REPORT_SUCCESS);
   }
 
   private void saveReport(Report report) {
@@ -60,6 +62,6 @@ public class ReportService {
 
   private Optional<Board> findBoardById(Long boardId) {
     log.info("board 가져오기 성공");
-    return boardRepository.findBoardById(boardId);
+    return boardRepository.findBoardById(boardId).filter(board -> board.getStatus().getCode() != BoardStatus.CANCELED.getCode());
   }
 }

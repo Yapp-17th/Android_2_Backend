@@ -1,14 +1,15 @@
 package com.yapp.crew.service;
 
+import com.yapp.crew.domain.errors.InactiveUserException;
+import com.yapp.crew.domain.errors.InternalServerErrorException;
+import com.yapp.crew.domain.errors.SuspendedUserException;
+import com.yapp.crew.domain.errors.UserNotFoundException;
 import com.yapp.crew.domain.model.User;
 import com.yapp.crew.domain.repository.UserRepository;
 import com.yapp.crew.domain.status.UserStatus;
-import com.yapp.crew.exception.InactiveUserException;
-import com.yapp.crew.exception.InternalServerErrorException;
-import com.yapp.crew.exception.SuspendedUserException;
+import com.yapp.crew.model.LoginUserInfo;
 import com.yapp.crew.model.UserAuthResponse;
 import com.yapp.crew.model.UserAuthResponseBody;
-import com.yapp.crew.model.LoginUserInfo;
 import com.yapp.crew.utils.ResponseMessage;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
@@ -31,14 +32,14 @@ public class SignInService {
 
   public UserAuthResponse signIn(LoginUserInfo loginUserInfo) {
     User existingUser = getUserByOauthId(loginUserInfo.getOauthId())
-        .orElseThrow(InactiveUserException::new);
+        .orElseThrow(() -> new UserNotFoundException("user not found"));
 
     if (existingUser.getStatus() == UserStatus.SUSPENDED) {
       log.info("suspended user가 로그인을 시도했습니다.");
-      throw new SuspendedUserException();
+      throw new SuspendedUserException("suspend user exception");
     } else if (existingUser.getStatus() == UserStatus.INACTIVE) {
       log.info("inactive user가 로그인을 시도했습니다.");
-      throw new InactiveUserException();
+      throw new InactiveUserException("inactive user exception");
     }
 
     try {
@@ -48,7 +49,7 @@ public class SignInService {
       return new UserAuthResponse(httpHeaders, userAuthResponseBody);
     } catch (Exception e) {
       log.info("Internal server error: " + e.getMessage());
-      throw new InternalServerErrorException(e.getCause());
+      throw new InternalServerErrorException("internal server error");
     }
   }
 

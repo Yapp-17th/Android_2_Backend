@@ -1,17 +1,15 @@
 package com.yapp.crew.controller;
 
-import com.yapp.crew.dto.LoginRequestDto;
-import com.yapp.crew.dto.UserAuthResponseDto;
-import com.yapp.crew.exception.InternalServerErrorException;
-import com.yapp.crew.model.UserAuthResponse;
-import com.yapp.crew.model.UserAuthResponseBody;
+import com.yapp.crew.domain.errors.InternalServerErrorException;
+import com.yapp.crew.dto.request.LoginRequestDto;
+import com.yapp.crew.dto.response.UserAuthResponseDto;
 import com.yapp.crew.model.LoginUserInfo;
+import com.yapp.crew.model.UserAuthResponse;
 import com.yapp.crew.service.SignInService;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -43,6 +41,6 @@ public class SignInController {
       return ResponseEntity.ok().headers(httpHeaders).body(userAuthResponseDto);
     }
 
-    throw new InternalServerErrorException();
+    throw new InternalServerErrorException("internal server error");
   }
 }

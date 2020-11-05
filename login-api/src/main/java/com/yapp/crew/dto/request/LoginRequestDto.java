@@ -1,4 +1,4 @@
-package com.yapp.crew.dto;
+package com.yapp.crew.dto.request;
 
 import javax.validation.constraints.NotNull;
 import lombok.Getter;
