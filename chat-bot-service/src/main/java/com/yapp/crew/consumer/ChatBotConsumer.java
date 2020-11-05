@@ -75,6 +75,9 @@ public class ChatBotConsumer {
 		User applier = userRepository.findUserById(applyRequestPayload.getApplierId())
 						.orElseThrow(() -> new UserNotFoundException("[Not Found] User not found"));
 
+		User bot = userRepository.findUserById(-1L)
+						.orElseThrow(() -> new UserNotFoundException("[Not Found] Bot not found"));
+
 		Board board = boardRepository.findById(applyRequestPayload.getBoardId())
 						.orElseThrow(() -> new BoardNotFoundException("[Not Found] Board not found"));
 
@@ -84,7 +87,7 @@ public class ChatBotConsumer {
 		MessageRequestPayload applyMessagePayload = MessageRequestPayload.builder()
 						.content(String.format(botMessages.getApplyMessage(), applier.getNickname()).replace("\"", ""))
 						.type(MessageType.BOT_MESSAGE)
-						.senderId(applier.getId())
+						.senderId(bot.getId())
 						.chatRoomId(chatRoom.getId())
 						.boardId(board.getId())
 						.build();
