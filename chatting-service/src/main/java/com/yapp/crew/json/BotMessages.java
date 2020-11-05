@@ -19,6 +19,12 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties
 public class BotMessages {
 
-	@JsonProperty(value = "welcome_message")
-	private String welcomeMessage;
+	@JsonProperty(value = "guideline_message")
+	private String guidelineMessage;
+
+	@JsonProperty(value = "apply_message")
+	private String applyMessage;
+
+	@JsonProperty(value = "approve_message")
+	private String approveMessage;
 }

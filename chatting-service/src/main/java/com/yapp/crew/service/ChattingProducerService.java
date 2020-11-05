@@ -97,7 +97,7 @@ public class ChattingProducerService {
     guest.addChatRoomGuest(newChatRoom);
     chatRoomRepository.save(newChatRoom);
 
-    produceWelcomeBotMessage(newChatRoom.getId());
+		produceGuidelineBotMessage(newChatRoom.getId());
     return HttpResponseBody.buildChatRoomResponse(ChatRoomResponsePayload.buildChatRoomResponsePayload(newChatRoom), HttpStatus.CREATED.value());
   }
 
@@ -169,17 +169,17 @@ public class ChattingProducerService {
 		return HttpResponseBody.buildSuccessResponse(HttpStatus.OK.value(), "Successfully approved guest");
 	}
 
-  private void produceWelcomeBotMessage(Long chatRoomId) throws JsonProcessingException {
+  private void produceGuidelineBotMessage(Long chatRoomId) throws JsonProcessingException {
     User bot = userRepository.findUserById(-1L)
             .orElseThrow(() -> new UserNotFoundException("Cannot find chat bot"));
 
 		WelcomeMessageRequestPayload welcomeMessageRequestPayload = WelcomeMessageRequestPayload.builder()
-            .content(botMessages.getWelcomeMessage().replace("\"", ""))
+            .content(botMessages.getGuidelineMessage().replace("\"", ""))
             .type(MessageType.BOT_MESSAGE)
             .senderId(bot.getId())
             .chatRoomId(chatRoomId)
             .build();
 
-    chattingProducer.sendWelcomeBotMessage(welcomeMessageRequestPayload);
+    chattingProducer.sendGuidelineBotMessage(welcomeMessageRequestPayload);
   }
 }

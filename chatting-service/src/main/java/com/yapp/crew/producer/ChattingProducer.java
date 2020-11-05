@@ -31,8 +31,8 @@ public class ChattingProducer {
 	@Value(value = "${kafka.topics.chat-message}")
 	private String chatMessageTopic;
 
-	@Value(value = "${kafka.topics.welcome-message}")
-	private String welcomeMessageTopic;
+	@Value(value = "${kafka.topics.guideline-message}")
+	private String guidelineMessageTopic;
 
 	@Value(value = "${kafka.topics.apply-user}")
 	private String applyUserTopic;
@@ -73,11 +73,11 @@ public class ChattingProducer {
     return listenableFuture;
   }
 
-  public ListenableFuture<SendResult<Long, String>> sendWelcomeBotMessage(WelcomeMessageRequestPayload welcomeMessageRequestPayload) throws JsonProcessingException {
+  public ListenableFuture<SendResult<Long, String>> sendGuidelineBotMessage(WelcomeMessageRequestPayload welcomeMessageRequestPayload) throws JsonProcessingException {
 		Long key = welcomeMessageRequestPayload.getChatRoomId();
 		String value = objectMapper.writeValueAsString(welcomeMessageRequestPayload);
 
-		ProducerRecord<Long, String> producerRecord = buildProducerRecord(key, value, welcomeMessageTopic);
+		ProducerRecord<Long, String> producerRecord = buildProducerRecord(key, value, guidelineMessageTopic);
 		ListenableFuture<SendResult<Long, String>> listenableFuture = kafkaTemplate.send(producerRecord);
 		listenableFuture.addCallback(new ListenableFutureCallback<>() {
 			@Override

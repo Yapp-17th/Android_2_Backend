@@ -57,9 +57,9 @@ public class ChatBotConsumer {
 		this.objectMapper = objectMapper;
 	}
 
-	@KafkaListener(topics = "${kafka.topics.welcome-message}", groupId = "${kafka.groups.welcome-message-group}")
-	public void consumeBotWelcomeMessage(ConsumerRecord<Long, String> consumerRecord) throws JsonProcessingException {
-		log.info("[Chat Bot Event - Welcome Message] Consumer Record: {}", consumerRecord);
+	@KafkaListener(topics = "${kafka.topics.guideline-message}", groupId = "${kafka.groups.guideline-message-group}")
+	public void consumeBotGuidelineMessage(ConsumerRecord<Long, String> consumerRecord) throws JsonProcessingException {
+		log.info("[Chat Bot Event - Guideline Message] Consumer Record: {}", consumerRecord);
 
 		MessageRequestPayload messageRequestPayload = objectMapper.readValue(consumerRecord.value(), MessageRequestPayload.class);
 
@@ -81,7 +81,17 @@ public class ChatBotConsumer {
 		ChatRoom chatRoom = chatRoomRepository.findById(applyRequestPayload.getChatRoomId())
 						.orElseThrow(() -> new ChatRoomNotFoundException("[Not Found] Chat room not found"));
 
-		MessageRequestPayload messageRequestPayload = MessageRequestPayload.builder()
+		MessageRequestPayload applyMessagePayload = MessageRequestPayload.builder()
+						.content(String.format(botMessages.getApplyMessage(), applier.getNickname()))
+						.type(MessageType.BOT_MESSAGE)
+						.senderId(applier.getId())
+						.chatRoomId(chatRoom.getId())
+						.boardId(board.getId())
+						.build();
+
+		chatBotProducer.sendBotMessage(applyMessagePayload);
+
+		MessageRequestPayload profileMessagePayload = MessageRequestPayload.builder()
 						.content(applier.getIntro())
 						.type(MessageType.PROFILE)
 						.senderId(applier.getId())
@@ -89,7 +99,7 @@ public class ChatBotConsumer {
 						.boardId(board.getId())
 						.build();
 
-		chatBotProducer.sendBotMessage(messageRequestPayload);
+		chatBotProducer.sendBotMessage(profileMessagePayload);
 	}
 
 	@KafkaListener(topics = "${kafka.topics.approve-user}", groupId = "${kafka.groups.approve-user-group}")
@@ -104,7 +114,7 @@ public class ChatBotConsumer {
 		User bot = userRepository.findUserById(-1L)
 						.orElseThrow(() -> new UserNotFoundException("[Not Found] Bot not found"));
 
-		MessageRequestPayload messageRequestPayload = MessageRequestPayload.builder()
+		MessageRequestPayload approveMessagePayload = MessageRequestPayload.builder()
 						.content(String.format(botMessages.getApproveMessage(), host.getNickname()))
 						.type(MessageType.BOT_MESSAGE)
 						.senderId(bot.getId())
@@ -112,6 +122,6 @@ public class ChatBotConsumer {
 						.boardId(approveRequestPayload.getBoardId())
 						.build();
 
-		chatBotProducer.sendBotMessage(messageRequestPayload);
+		chatBotProducer.sendBotMessage(approveMessagePayload);
 	}
 }
