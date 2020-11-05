@@ -20,6 +20,7 @@ import com.yapp.crew.service.ChattingProducerService;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -88,7 +89,7 @@ public class ChattingController {
 
   @GetMapping(path = "/v1/chat/room/{chatRoomId}/message")
   public ResponseEntity<?> receiveChatMessages(
-					@RequestHeader(value = "Authorization") String token,
+					@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token,
   				@PathVariable("chatRoomId") Long chatRoomId
 	) {
 		auth.verifyToken(token);
@@ -99,7 +100,7 @@ public class ChattingController {
   }
 
 	@GetMapping(path = "/v1/chat/room")
-	public ResponseEntity<?> receiveChatRooms(@RequestHeader(value = "Authorization") String token) {
+	public ResponseEntity<?> receiveChatRooms(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token) {
 		auth.verifyToken(token);
 		Long userId = auth.parseUserIdFromToken(token);
 
@@ -109,7 +110,7 @@ public class ChattingController {
 
   @PostMapping(path = "/v1/chat/room")
   public ResponseEntity<?> createChatRoom(
-  				@RequestHeader(value = "Authorization") String token,
+  				@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token,
   				@Valid @RequestBody ChatRoomRequestPayload chatRoomRequestPayload
 	) throws JsonProcessingException {
 
@@ -124,7 +125,7 @@ public class ChattingController {
 
   @PostMapping(path = "/v1/board/{boardId}/apply")
 	public ResponseEntity<?> applyUser(
-					@RequestHeader(value = "Authorization") String token,
+					@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token,
 					@Valid @RequestBody ApplyRequestPayload applyRequestPayload,
 					@PathVariable("boardId") Long boardId
 	) throws JsonProcessingException {
@@ -134,14 +135,14 @@ public class ChattingController {
 
 		applyRequestPayload.setBoardId(boardId);
 		applyRequestPayload.setApplierId(applierId);
-		chattingProducerService.applyUser(applyRequestPayload);
+		HttpResponseBody<?> responseBody = chattingProducerService.applyUser(applyRequestPayload);
 
-		return ResponseEntity.status(HttpStatus.CREATED).body(applyRequestPayload);
+		return ResponseEntity.status(HttpStatus.CREATED).body(responseBody);
 	}
 
 	@PostMapping(path = "/v1/board/{boardId}/approve")
 	public ResponseEntity<?> approveUser(
-					@RequestHeader(value = "Authorization") String token,
+					@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token,
 					@Valid @RequestBody ApproveRequestPayload approveRequestPayload,
 					@PathVariable("boardId") Long boardId
 	) throws JsonProcessingException {

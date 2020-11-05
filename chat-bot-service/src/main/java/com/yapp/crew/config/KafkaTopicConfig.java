@@ -12,8 +12,8 @@ import org.springframework.kafka.config.TopicBuilder;
 @Profile(value = "local")
 public class KafkaTopicConfig {
 
-	@Value(value = "${kafka.topics.welcome-message}")
-	private String welcomeMessageTopic;
+	@Value(value = "${kafka.topics.guideline-message}")
+	private String guidelineMessageTopic;
 
 	@Value(value = "${kafka.topics.apply-user}")
 	private String applyUserTopic;
@@ -22,9 +22,9 @@ public class KafkaTopicConfig {
 	private String approveUserTopic;
 
 	@Bean
-	public NewTopic welcomeMessage() {
+	public NewTopic guidelineMessage() {
 		return TopicBuilder
-						.name(welcomeMessageTopic)
+						.name(guidelineMessageTopic)
 						.partitions(1)
 						.replicas(1)
 						.build();

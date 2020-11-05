@@ -3,6 +3,7 @@ package com.yapp.crew.controller;
 import com.yapp.crew.domain.errors.BoardNotFoundException;
 import com.yapp.crew.domain.errors.ChatRoomNotFoundException;
 import com.yapp.crew.domain.errors.UserNotFoundException;
+import com.yapp.crew.domain.type.ResponseType;
 import com.yapp.crew.network.HttpResponseBody;
 
 import org.springframework.http.HttpStatus;
@@ -15,19 +16,19 @@ public class ChatBotExceptionHandler {
 
 	@ExceptionHandler(value = ChatRoomNotFoundException.class)
 	public ResponseEntity<?> handleChatRoomNotFoundException(ChatRoomNotFoundException ex) {
-		HttpResponseBody<?> responseBody = HttpResponseBody.buildErrorResponse(HttpStatus.NOT_FOUND.value(), ex.getMessage());
+		HttpResponseBody<?> responseBody = HttpResponseBody.buildErrorResponse(HttpStatus.NOT_FOUND.value(), ResponseType.CHATROOM_NOT_FOUND, ResponseType.CHATROOM_NOT_FOUND.getMessage());
 		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
 	}
 
 	@ExceptionHandler(value = UserNotFoundException.class)
 	public ResponseEntity<?> handleUserNotFoundException(UserNotFoundException ex) {
-		HttpResponseBody<?> responseBody = HttpResponseBody.buildErrorResponse(HttpStatus.NOT_FOUND.value(), ex.getMessage());
+		HttpResponseBody<?> responseBody = HttpResponseBody.buildErrorResponse(HttpStatus.NOT_FOUND.value(), ResponseType.USER_NOT_FOUND, ResponseType.USER_NOT_FOUND.getMessage());
 		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
 	}
 
 	@ExceptionHandler(value = BoardNotFoundException.class)
 	public ResponseEntity<?> handleBoardNotFoundException(BoardNotFoundException ex) {
-		HttpResponseBody<?> responseBody = HttpResponseBody.buildErrorResponse(HttpStatus.NOT_FOUND.value(), ex.getMessage());
+		HttpResponseBody<?> responseBody = HttpResponseBody.buildErrorResponse(HttpStatus.NOT_FOUND.value(), ResponseType.BOARD_NOT_FOUND, ResponseType.BOARD_NOT_FOUND.getMessage());
 		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
 	}
 }
