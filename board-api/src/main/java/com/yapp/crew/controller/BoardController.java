@@ -2,10 +2,10 @@ package com.yapp.crew.controller;
 
 import com.yapp.crew.domain.auth.Auth;
 import com.yapp.crew.domain.errors.InternalServerErrorException;
-import com.yapp.crew.dto.BoardContentResponseDto;
-import com.yapp.crew.dto.BoardFilterRequestDto;
-import com.yapp.crew.dto.BoardListResponseDto;
-import com.yapp.crew.dto.BoardRequestDto;
+import com.yapp.crew.dto.response.BoardContentSuccessResponseDto;
+import com.yapp.crew.dto.request.BoardFilterRequestDto;
+import com.yapp.crew.dto.response.BoardListSuccessResponseDto;
+import com.yapp.crew.dto.request.BoardInfoRequestDto;
 import com.yapp.crew.model.BoardContentResponseInfo;
 import com.yapp.crew.model.BoardFilter;
 import com.yapp.crew.model.BoardPostRequiredInfo;
@@ -47,22 +47,23 @@ public class BoardController {
 
   @GetMapping(path = "/v1/board", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> getBoardList(@RequestHeader(value = "Authorization") String token, @PageableDefault(size = 20, page = 0) Pageable pageable, @RequestBody @Valid BoardFilterRequestDto boardFilterRequestDto) {
-    Long userId = auth.parseUserIdFromToken(token);
+
+    long userId = auth.parseUserIdFromToken(token);
     List<BoardResponseInfo> boardResponseInfoList = boardService.getBoardList(new BoardFilter(boardFilterRequestDto, userId));
 
     PagedListHolder<BoardResponseInfo> page = new PagedListHolder<>(boardResponseInfoList);
     page.setPageSize(pageable.getPageSize());
     page.setPage(pageable.getPageNumber());
 
-    BoardListResponseDto boardListResponseDto = BoardListResponseDto.build(page.getPageList());
-    return ResponseEntity.ok().body(boardListResponseDto);
+    BoardListSuccessResponseDto boardListSuccessResponseDto = BoardListSuccessResponseDto.build(page.getPageList());
+    return ResponseEntity.ok().body(boardListSuccessResponseDto);
   }
 
   @PostMapping(path = "/v1/board", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<?> postBoard(@RequestHeader(value = "Authorization") String token, @RequestBody @Valid BoardRequestDto boardRequestDto) {
+  public ResponseEntity<?> postBoard(@RequestHeader(value = "Authorization") String token, @RequestBody @Valid BoardInfoRequestDto boardInfoRequestDto) {
 
     long userId = auth.parseUserIdFromToken(token);
-    BoardPostRequiredInfo boardPostRequiredInfo = BoardPostRequiredInfo.build(boardRequestDto);
+    BoardPostRequiredInfo boardPostRequiredInfo = BoardPostRequiredInfo.build(boardInfoRequestDto);
     SimpleResponse simpleResponse = boardService.postBoard(boardPostRequiredInfo, userId);
 
     return ResponseEntity.ok().body(simpleResponse);
@@ -77,7 +78,7 @@ public class BoardController {
       throw new InternalServerErrorException("internal server error");
     }
 
-    return ResponseEntity.ok().body(BoardContentResponseDto.build(boardContentResponseInfo));
+    return ResponseEntity.ok().body(BoardContentSuccessResponseDto.build(boardContentResponseInfo));
   }
 
   @DeleteMapping(path = "/v1/board/{boardId}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -90,12 +91,12 @@ public class BoardController {
   }
 
   @PutMapping(path = "/v1/board/{boardId}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<?> editBoard(@RequestHeader(value = "Authorization") String token, @PathVariable Long boardId, @RequestBody @Valid BoardRequestDto boardRequestDto) {
+  public ResponseEntity<?> editBoard(@RequestHeader(value = "Authorization") String token, @PathVariable Long boardId, @RequestBody @Valid BoardInfoRequestDto boardInfoRequestDto) {
 
     long userId = auth.parseUserIdFromToken(token);
-    BoardPostRequiredInfo boardPostRequiredInfo = BoardPostRequiredInfo.build(boardRequestDto);
+    BoardPostRequiredInfo boardPostRequiredInfo = BoardPostRequiredInfo.build(boardInfoRequestDto);
     BoardContentResponseInfo boardContentResponseInfo = boardService.editBoardContent(boardId, userId, boardPostRequiredInfo);
 
-    return ResponseEntity.ok().body(BoardContentResponseDto.build(boardContentResponseInfo));
+    return ResponseEntity.ok().body(BoardContentSuccessResponseDto.build(boardContentResponseInfo));
   }
 }

@@ -1,4 +1,4 @@
-package com.yapp.crew.dto;
+package com.yapp.crew.dto.request;
 
 import java.util.List;
 import lombok.Getter;

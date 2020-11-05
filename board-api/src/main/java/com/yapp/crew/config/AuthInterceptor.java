@@ -1,11 +1,13 @@
 package com.yapp.crew.config;
 
 import com.yapp.crew.domain.auth.Auth;
-import com.yapp.crew.domain.errors.TokenRequiredException;
+import com.yapp.crew.domain.errors.InactiveUserException;
+import com.yapp.crew.domain.errors.SuspendedUserException;
 import com.yapp.crew.domain.errors.UserNotFoundException;
 import com.yapp.crew.domain.model.User;
 import com.yapp.crew.domain.repository.UserRepository;
 import com.yapp.crew.domain.status.UserStatus;
+import com.yapp.crew.utils.ResponseMessage;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,7 +24,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 
   private UserRepository userRepository;
   private Auth auth;
-  private final String HEADER_TOKEN_KEY = "Authorization";
+  private static final String HEADER_TOKEN_KEY = "Authorization";
 
   @Autowired
   public AuthInterceptor(UserRepository userRepository, Auth auth) {
@@ -32,15 +34,25 @@ public class AuthInterceptor implements HandlerInterceptor {
 
   @Override
   public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-
     String token = request.getHeader(HEADER_TOKEN_KEY);
-    log.info("token: " + token);
+    log.info(token);
     verifyToken(token);
+
     Long userId = auth.parseUserIdFromToken(token);
+    log.info("user id: " + userId);
     User user = findUserById(userId)
         .orElseThrow(() -> new UserNotFoundException("user not found"));
 
-    return user.getStatus() == UserStatus.ACTIVE;
+    return checkUserStatus(user.getStatus());
+  }
+
+  private boolean checkUserStatus(UserStatus userStatus) {
+    if (userStatus == UserStatus.INACTIVE) {
+      throw new InactiveUserException(ResponseMessage.INACTIVE_USER_FAIL.getMessage());
+    } else if (userStatus == UserStatus.SUSPENDED) {
+      throw new SuspendedUserException(ResponseMessage.SUSPENDED_USER_FAIL.getMessage());
+    }
+    return userStatus == UserStatus.ACTIVE;
   }
 
   private Optional<User> findUserById(Long userId) {
@@ -48,7 +60,7 @@ public class AuthInterceptor implements HandlerInterceptor {
     return userRepository.findUserById(userId);
   }
 
-  private void verifyToken(String token) throws TokenRequiredException {
+  private void verifyToken(String token) {
     auth.verifyToken(token);
   }
 }

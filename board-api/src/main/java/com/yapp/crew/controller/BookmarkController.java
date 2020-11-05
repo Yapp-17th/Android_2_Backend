@@ -1,7 +1,7 @@
 package com.yapp.crew.controller;
 
 import com.yapp.crew.domain.auth.Auth;
-import com.yapp.crew.dto.BoardIdRequestDto;
+import com.yapp.crew.dto.request.BoardIdRequestDto;
 import com.yapp.crew.model.SimpleResponse;
 import com.yapp.crew.service.BookMarkService;
 import javax.validation.Valid;
