@@ -9,7 +9,7 @@ import com.yapp.crew.domain.model.User;
 import com.yapp.crew.domain.repository.BoardRepository;
 import com.yapp.crew.domain.repository.BookMarkRepository;
 import com.yapp.crew.domain.repository.UserRepository;
-import com.yapp.crew.domain.status.GroupStatus;
+import com.yapp.crew.domain.status.BoardStatus;
 import com.yapp.crew.model.SimpleResponse;
 import com.yapp.crew.utils.ResponseMessage;
 import java.util.Optional;
@@ -75,7 +75,7 @@ public class BookMarkService {
 
   private Optional<Board> findBoardById(Long boardId) {
     log.info("board 가져오기 성공");
-    return boardRepository.findBoardById(boardId).filter(board -> board.getStatus().getCode() < GroupStatus.CANCELED.getCode());
+    return boardRepository.findBoardById(boardId).filter(board -> board.getStatus().getCode() != BoardStatus.CANCELED.getCode());
   }
 
   private Optional<User> findUserById(Long userId) {

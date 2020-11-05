@@ -17,7 +17,7 @@ public class BoardContentResponseInfo {
   private String title;
   private String content;
   private String place;
-  private String groupStatus;
+  private BoardStatusInfo groupStatus;
   private String exercise;
   private String city;
   private Integer recruitNumber;
@@ -31,7 +31,7 @@ public class BoardContentResponseInfo {
     boardContentResponseInfo.title = board.getTitle();
     boardContentResponseInfo.content = board.getContent();
     boardContentResponseInfo.place = board.getPlace();
-    boardContentResponseInfo.groupStatus = board.getStatus().getName();
+    boardContentResponseInfo.groupStatus = BoardStatusInfo.build(board.getGroupStatus());
     boardContentResponseInfo.exercise = board.getCategory().getExercise().getName();
     boardContentResponseInfo.city = board.getAddress().getCity().getName();
     boardContentResponseInfo.recruitNumber = board.getRecruitCount();

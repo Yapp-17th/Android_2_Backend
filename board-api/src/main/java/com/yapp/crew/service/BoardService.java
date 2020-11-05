@@ -21,11 +21,11 @@ import com.yapp.crew.domain.repository.CategoryRepository;
 import com.yapp.crew.domain.repository.EvaluationRepository;
 import com.yapp.crew.domain.repository.TagRepository;
 import com.yapp.crew.domain.repository.UserRepository;
-import com.yapp.crew.domain.status.GroupStatus;
+import com.yapp.crew.domain.status.BoardStatus;
 import com.yapp.crew.model.BoardContentResponseInfo;
 import com.yapp.crew.model.BoardFilter;
-import com.yapp.crew.model.BoardPostRequiredInfo;
 import com.yapp.crew.model.BoardListResponseInfo;
+import com.yapp.crew.model.BoardPostRequiredInfo;
 import com.yapp.crew.model.SimpleResponse;
 import com.yapp.crew.utils.ResponseMessage;
 import com.yapp.crew.utils.SortingType;
@@ -35,7 +35,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -174,7 +173,7 @@ public class BoardService {
   }
 
   private Optional<Board> findBoardById(Long boardId) {
-    return boardRepository.findBoardById(boardId).filter(board -> board.getStatus().getCode() < GroupStatus.CANCELED.getCode());
+    return boardRepository.findBoardById(boardId).filter(board -> board.getStatus().getCode() != BoardStatus.CANCELED.getCode());
   }
 
   private Optional<User> findUserById(Long userId) {
@@ -229,7 +228,7 @@ public class BoardService {
     Set<Board> hiddenBoards = user.getUserHiddenBoard().stream().map(HiddenBoard::getBoard).collect(Collectors.toSet());
 
     return boardRepository.findAll().stream()
-        .filter(board -> board.getStatus().getCode() < GroupStatus.CANCELED.getCode())
+        .filter(board -> board.getStatus().getCode() != BoardStatus.CANCELED.getCode())
         .filter(board -> !hiddenBoards.contains(board))
         .collect(Collectors.toList());
   }
