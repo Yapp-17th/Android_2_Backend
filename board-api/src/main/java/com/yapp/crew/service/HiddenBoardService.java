@@ -10,8 +10,8 @@ import com.yapp.crew.domain.repository.BoardRepository;
 import com.yapp.crew.domain.repository.HiddenBoardRepository;
 import com.yapp.crew.domain.repository.UserRepository;
 import com.yapp.crew.domain.status.BoardStatus;
+import com.yapp.crew.domain.type.ResponseType;
 import com.yapp.crew.model.SimpleResponse;
-import com.yapp.crew.utils.ResponseMessage;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +49,7 @@ public class HiddenBoardService {
     user.addHiddenBoard(hiddenBoard);
     saveHiddenBoard(hiddenBoard);
 
-    return SimpleResponse.pass(ResponseMessage.HIDDEN_SUCCESS.getMessage());
+    return SimpleResponse.pass(ResponseType.HIDDEN_SUCCESS);
   }
 
   private void saveHiddenBoard(HiddenBoard hiddenBoard) {

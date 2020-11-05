@@ -10,8 +10,8 @@ import com.yapp.crew.domain.repository.BoardRepository;
 import com.yapp.crew.domain.repository.BookMarkRepository;
 import com.yapp.crew.domain.repository.UserRepository;
 import com.yapp.crew.domain.status.BoardStatus;
+import com.yapp.crew.domain.type.ResponseType;
 import com.yapp.crew.model.SimpleResponse;
-import com.yapp.crew.utils.ResponseMessage;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +41,7 @@ public class BookMarkService {
         .orElseThrow(() -> new UserNotFoundException("user not found"));
 
     saveBookMark(board, user);
-    return SimpleResponse.pass(ResponseMessage.BOOKMARK_POST_SUCCESS.getMessage());
+    return SimpleResponse.pass(ResponseType.BOOKMARK_POST_SUCCESS);
   }
 
   @Transactional
@@ -52,7 +52,7 @@ public class BookMarkService {
         .orElseThrow(() -> new UserNotFoundException("user not found"));
 
     deleteBookMark(board, user);
-    return SimpleResponse.pass(ResponseMessage.BOOKMARK_DELETE_SUCCESS.getMessage());
+    return SimpleResponse.pass(ResponseType.BOOKMARK_DELETE_SUCCESS);
   }
 
   private void deleteBookMark(Board board, User user) {

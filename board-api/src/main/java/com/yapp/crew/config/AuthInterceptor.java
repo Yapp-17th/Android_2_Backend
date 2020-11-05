@@ -7,7 +7,7 @@ import com.yapp.crew.domain.errors.UserNotFoundException;
 import com.yapp.crew.domain.model.User;
 import com.yapp.crew.domain.repository.UserRepository;
 import com.yapp.crew.domain.status.UserStatus;
-import com.yapp.crew.utils.ResponseMessage;
+import com.yapp.crew.domain.type.ResponseType;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -48,9 +48,9 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 
   private void checkUserStatus(UserStatus userStatus) {
     if (userStatus == UserStatus.INACTIVE) {
-      throw new InactiveUserException(ResponseMessage.INACTIVE_USER_FAIL.getMessage());
+      throw new InactiveUserException("inactive user");
     } else if (userStatus == UserStatus.SUSPENDED) {
-      throw new SuspendedUserException(ResponseMessage.SUSPENDED_USER_FAIL.getMessage());
+      throw new SuspendedUserException("suspended user");
     }
   }
 

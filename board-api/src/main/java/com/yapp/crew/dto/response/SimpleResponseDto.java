@@ -1,5 +1,6 @@
 package com.yapp.crew.dto.response;
 
+import com.yapp.crew.domain.type.ResponseType;
 import com.yapp.crew.model.SimpleResponse;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

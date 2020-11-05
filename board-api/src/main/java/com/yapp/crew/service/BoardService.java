@@ -22,12 +22,12 @@ import com.yapp.crew.domain.repository.EvaluationRepository;
 import com.yapp.crew.domain.repository.TagRepository;
 import com.yapp.crew.domain.repository.UserRepository;
 import com.yapp.crew.domain.status.BoardStatus;
+import com.yapp.crew.domain.type.ResponseType;
 import com.yapp.crew.model.BoardContentResponseInfo;
 import com.yapp.crew.model.BoardFilter;
 import com.yapp.crew.model.BoardListResponseInfo;
 import com.yapp.crew.model.BoardPostRequiredInfo;
 import com.yapp.crew.model.SimpleResponse;
-import com.yapp.crew.utils.ResponseMessage;
 import com.yapp.crew.utils.SortingType;
 import java.util.Comparator;
 import java.util.List;
@@ -65,7 +65,7 @@ public class BoardService {
     BoardBuilder boardBuilder = Board.getBuilder();
 
     User user = findUserById(userId)
-        .orElseThrow(() -> new UserNotFoundException("user not found"));
+        .orElseThrow(() -> new UserNotFoundException(ResponseType.USER_NOT_FOUND.getMessage()));
     Category category = findCategoryById(boardPostRequiredInfo.getCategory())
         .orElseThrow(() -> new CategoryNotFoundException("category not found"));
     Address address = findAddressById(boardPostRequiredInfo.getCity())
@@ -86,7 +86,7 @@ public class BoardService {
         .build();
     saveBoard(board);
 
-    return SimpleResponse.pass(ResponseMessage.BOARD_POST_SUCCESS.getMessage());
+    return SimpleResponse.pass(ResponseType.BOARD_POST_SUCCESS);
   }
 
   @Transactional
@@ -134,11 +134,11 @@ public class BoardService {
         .orElseThrow(() -> new BoardNotFoundException("board not found"));
 
     if (!board.getUser().getId().equals(userId)) {
-      throw new InvalidRequestBodyException(ResponseMessage.INVALID_REQUEST_BODY.getMessage());
+      throw new InvalidRequestBodyException("invalid user_id");
     }
 
     deleteBoard(board);
-    return SimpleResponse.pass(ResponseMessage.BOARD_DELETE_SUCCESS.getMessage());
+    return SimpleResponse.pass(ResponseType.BOARD_DELETE_SUCCESS);
   }
 
   @Transactional
