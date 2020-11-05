@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.support.PagedListHolder;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -46,7 +47,7 @@ public class BoardController {
   }
 
   @GetMapping(path = "/v1/board", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<?> getBoardList(@RequestHeader(value = "Authorization") String token, @PageableDefault(size = 20, page = 0) Pageable pageable, @RequestBody @Valid BoardFilterRequestDto boardFilterRequestDto) {
+  public ResponseEntity<?> getBoardList(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token, @PageableDefault(size = 20, page = 0) Pageable pageable, @RequestBody @Valid BoardFilterRequestDto boardFilterRequestDto) {
 
     long userId = auth.parseUserIdFromToken(token);
     log.info("[GET BOARD LIST] user id:" + userId);
@@ -61,7 +62,7 @@ public class BoardController {
   }
 
   @PostMapping(path = "/v1/board", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<?> postBoard(@RequestHeader(value = "Authorization") String token, @RequestBody @Valid BoardInfoRequestDto boardInfoRequestDto) {
+  public ResponseEntity<?> postBoard(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token, @RequestBody @Valid BoardInfoRequestDto boardInfoRequestDto) {
 
     long userId = auth.parseUserIdFromToken(token);
     BoardPostRequiredInfo boardPostRequiredInfo = BoardPostRequiredInfo.build(boardInfoRequestDto);
@@ -71,7 +72,7 @@ public class BoardController {
   }
 
   @GetMapping(path = "/v1/board/{boardId}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<?> getBoardContent(@RequestHeader(value = "Authorization") String token, @PathVariable Long boardId) {
+  public ResponseEntity<?> getBoardContent(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token, @PathVariable Long boardId) {
 
     long userId = auth.parseUserIdFromToken(token);
     BoardContentResponseInfo boardContentResponseInfo = boardService.getBoardContent(boardId, userId);
@@ -83,7 +84,7 @@ public class BoardController {
   }
 
   @DeleteMapping(path = "/v1/board/{boardId}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<?> deleteBoard(@RequestHeader(value = "Authorization") String token, @PathVariable Long boardId) {
+  public ResponseEntity<?> deleteBoard(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token, @PathVariable Long boardId) {
 
     long userId = auth.parseUserIdFromToken(token);
     SimpleResponse simpleResponse = boardService.deleteBoard(boardId, userId);
@@ -92,7 +93,7 @@ public class BoardController {
   }
 
   @PutMapping(path = "/v1/board/{boardId}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<?> editBoard(@RequestHeader(value = "Authorization") String token, @PathVariable Long boardId, @RequestBody @Valid BoardInfoRequestDto boardInfoRequestDto) {
+  public ResponseEntity<?> editBoard(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token, @PathVariable Long boardId, @RequestBody @Valid BoardInfoRequestDto boardInfoRequestDto) {
 
     long userId = auth.parseUserIdFromToken(token);
     BoardPostRequiredInfo boardPostRequiredInfo = BoardPostRequiredInfo.build(boardInfoRequestDto);
