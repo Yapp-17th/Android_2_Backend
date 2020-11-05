@@ -8,6 +8,7 @@ import com.yapp.crew.service.ReportService;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -31,7 +32,7 @@ public class ReportController {
   }
 
   @PostMapping(path = "/v1/board/report", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<?> postBoard(@RequestHeader(value = "Authorization") String token, @RequestBody @Valid BoardReportRequestDto boardReportRequestDto) {
+  public ResponseEntity<?> postBoard(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token, @RequestBody @Valid BoardReportRequestDto boardReportRequestDto) {
 
     long userId = auth.parseUserIdFromToken(token);
     SimpleResponse simpleResponse = reportService.postBoardReport(BoardReport.build(boardReportRequestDto, userId));

@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.support.PagedListHolder;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -36,7 +37,7 @@ public class SearchController {
   }
 
   @GetMapping(path = "/v1/board/search", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<?> getBoardList(@RequestHeader(value = "Authorization") String token, @PageableDefault(size = 20, page = 0) Pageable pageable, @RequestBody @Valid BoardSearchRequestDto boardSearchRequestDto) {
+  public ResponseEntity<?> getBoardList(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token, @PageableDefault(size = 20, page = 0) Pageable pageable, @RequestBody @Valid BoardSearchRequestDto boardSearchRequestDto) {
     Long userId = auth.parseUserIdFromToken(token);
     List<BoardListResponseInfo> boardListResponseInfoList = searchService.searchBoardList(BoardSearch.build(boardSearchRequestDto, userId));
 
