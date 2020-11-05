@@ -1,6 +1,6 @@
 package com.yapp.crew.dto.response;
 
-import com.yapp.crew.model.BoardResponseInfo;
+import com.yapp.crew.model.BoardListResponseInfo;
 import com.yapp.crew.utils.ResponseMessage;
 import java.util.List;
 import lombok.Getter;
@@ -14,11 +14,11 @@ public class BoardListSuccessResponseDto {
   private final int status = HttpStatus.OK.value();
   private final boolean success = true;
   private final String message = ResponseMessage.BOARD_CONTENT_SUCCESS.getMessage();
-  private List<BoardResponseInfo> data;
+  private List<BoardListResponseInfo> data;
 
-  public static BoardListSuccessResponseDto build(List<BoardResponseInfo> boardResponseInfoList) {
+  public static BoardListSuccessResponseDto build(List<BoardListResponseInfo> boardListResponseInfoList) {
     BoardListSuccessResponseDto boardListSuccessResponseDto = new BoardListSuccessResponseDto();
-    boardListSuccessResponseDto.data = boardResponseInfoList;
+    boardListSuccessResponseDto.data = boardListResponseInfoList;
     return boardListSuccessResponseDto;
   }
 }

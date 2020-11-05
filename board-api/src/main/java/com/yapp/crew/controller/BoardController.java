@@ -9,7 +9,7 @@ import com.yapp.crew.dto.request.BoardInfoRequestDto;
 import com.yapp.crew.model.BoardContentResponseInfo;
 import com.yapp.crew.model.BoardFilter;
 import com.yapp.crew.model.BoardPostRequiredInfo;
-import com.yapp.crew.model.BoardResponseInfo;
+import com.yapp.crew.model.BoardListResponseInfo;
 import com.yapp.crew.model.SimpleResponse;
 import com.yapp.crew.service.BoardService;
 import java.util.List;
@@ -49,9 +49,10 @@ public class BoardController {
   public ResponseEntity<?> getBoardList(@RequestHeader(value = "Authorization") String token, @PageableDefault(size = 20, page = 0) Pageable pageable, @RequestBody @Valid BoardFilterRequestDto boardFilterRequestDto) {
 
     long userId = auth.parseUserIdFromToken(token);
-    List<BoardResponseInfo> boardResponseInfoList = boardService.getBoardList(new BoardFilter(boardFilterRequestDto, userId));
+    log.info("[GET BOARD LIST] user id:" + userId);
+    List<BoardListResponseInfo> boardListResponseInfoList = boardService.getBoardList(BoardFilter.build(boardFilterRequestDto, userId));
 
-    PagedListHolder<BoardResponseInfo> page = new PagedListHolder<>(boardResponseInfoList);
+    PagedListHolder<BoardListResponseInfo> page = new PagedListHolder<>(boardListResponseInfoList);
     page.setPageSize(pageable.getPageSize());
     page.setPage(pageable.getPageNumber());
 

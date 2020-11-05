@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class BoardFilterRequestDto {
 
-  private String sorting = "latest";
+  private String sorting = "LATEST";
   List<Long> category = null;
   List<Long> city = null;
 }

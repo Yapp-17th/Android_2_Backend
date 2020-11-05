@@ -18,8 +18,9 @@ public class BoardSearch {
   public static BoardSearch build(BoardSearchRequestDto boardSearchRequestDto, Long userId) {
     BoardSearch boardSearch = new BoardSearch();
     boardSearch.userId = userId;
-    boardSearch.keywords = Arrays.stream(boardSearchRequestDto.getKeywords().split(" "))
+    boardSearch.keywords = Arrays.stream(boardSearchRequestDto.getKeywords().split("\\s+"))
         .collect(Collectors.toList());
+
     return boardSearch;
   }
 }

@@ -3,7 +3,7 @@ package com.yapp.crew.controller;
 import com.yapp.crew.domain.auth.Auth;
 import com.yapp.crew.dto.response.BoardListSuccessResponseDto;
 import com.yapp.crew.dto.request.BoardSearchRequestDto;
-import com.yapp.crew.model.BoardResponseInfo;
+import com.yapp.crew.model.BoardListResponseInfo;
 import com.yapp.crew.model.BoardSearch;
 import com.yapp.crew.service.SearchService;
 import java.util.List;
@@ -38,9 +38,9 @@ public class SearchController {
   @GetMapping(path = "/v1/board/search", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> getBoardList(@RequestHeader(value = "Authorization") String token, @PageableDefault(size = 20, page = 0) Pageable pageable, @RequestBody @Valid BoardSearchRequestDto boardSearchRequestDto) {
     Long userId = auth.parseUserIdFromToken(token);
-    List<BoardResponseInfo> boardResponseInfoList = searchService.searchBoardList(BoardSearch.build(boardSearchRequestDto, userId));
+    List<BoardListResponseInfo> boardListResponseInfoList = searchService.searchBoardList(BoardSearch.build(boardSearchRequestDto, userId));
 
-    PagedListHolder<BoardResponseInfo> page = new PagedListHolder<>(boardResponseInfoList);
+    PagedListHolder<BoardListResponseInfo> page = new PagedListHolder<>(boardListResponseInfoList);
     page.setPageSize(pageable.getPageSize());
     page.setPage(pageable.getPageNumber());
 

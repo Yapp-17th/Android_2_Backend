@@ -40,7 +40,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
     Long userId = auth.parseUserIdFromToken(token);
     log.info("[Request User ID] " + userId);
     User user = findUserById(userId)
-        .orElseThrow(() -> new UserNotFoundException("[Exception] user not found"));
+        .orElseThrow(() -> new UserNotFoundException("[INTERCEPTOR Exception] user not found"));
 
     checkUserStatus(user.getStatus());
     return super.preHandle(request, response, handler);
