@@ -13,11 +13,11 @@ public class SimpleResponse {
   private boolean isSuccess;
   private String message;
 
-  public static SimpleResponse pass(ResponseType message) {
+  public static SimpleResponse pass(ResponseType responseType) {
     SimpleResponse simpleResponse = new SimpleResponse();
     simpleResponse.status = HttpStatus.OK.value();
     simpleResponse.isSuccess = true;
-    simpleResponse.message = message.getMessage();
+    simpleResponse.message = responseType.getMessage();
     return simpleResponse;
   }
 

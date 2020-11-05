@@ -2,14 +2,13 @@ package com.yapp.crew.controller;
 
 import com.yapp.crew.domain.auth.Auth;
 import com.yapp.crew.domain.errors.InternalServerErrorException;
-import com.yapp.crew.dto.response.BoardContentSuccessResponseDto;
-import com.yapp.crew.dto.request.BoardFilterRequestDto;
-import com.yapp.crew.dto.response.BoardListSuccessResponseDto;
 import com.yapp.crew.dto.request.BoardInfoRequestDto;
+import com.yapp.crew.dto.response.BoardContentSuccessResponseDto;
+import com.yapp.crew.dto.response.BoardListSuccessResponseDto;
 import com.yapp.crew.model.BoardContentResponseInfo;
 import com.yapp.crew.model.BoardFilter;
-import com.yapp.crew.model.BoardPostRequiredInfo;
 import com.yapp.crew.model.BoardListResponseInfo;
+import com.yapp.crew.model.BoardPostRequiredInfo;
 import com.yapp.crew.model.SimpleResponse;
 import com.yapp.crew.service.BoardService;
 import java.util.List;
@@ -30,6 +29,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -47,11 +47,11 @@ public class BoardController {
   }
 
   @GetMapping(path = "/v1/board", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<?> getBoardList(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token, @PageableDefault(size = 20, page = 0) Pageable pageable, @RequestBody @Valid BoardFilterRequestDto boardFilterRequestDto) {
-
+  public ResponseEntity<?> getBoardList(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token, @PageableDefault(size = 20) Pageable pageable, @RequestParam(required = false) String sorting, @RequestParam(required = false) List<Long> category,
+      @RequestParam(required = false) List<Long> address) {
     long userId = auth.parseUserIdFromToken(token);
     log.info("[GET BOARD LIST] user id:" + userId);
-    List<BoardListResponseInfo> boardListResponseInfoList = boardService.getBoardList(BoardFilter.build(boardFilterRequestDto, userId));
+    List<BoardListResponseInfo> boardListResponseInfoList = boardService.getBoardList(BoardFilter.build(sorting, category, address, userId));
 
     PagedListHolder<BoardListResponseInfo> page = new PagedListHolder<>(boardListResponseInfoList);
     page.setPageSize(pageable.getPageSize());

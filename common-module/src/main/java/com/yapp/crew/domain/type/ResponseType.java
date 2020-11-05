@@ -33,7 +33,8 @@ public enum ResponseType {
   INACTIVE_USER_FAIL("회원 가입이 필요합니다."),
   SUSPENDED_USER_FAIL("신고로 정지된 사용자입니다."),
   INTERNAL_SERVER_FAIL("서버 내부 오류"),
-	INVALID_METHOD("메소드 유형이 잘못 되었습니다.");
+	INVALID_METHOD("메소드 유형이 잘못 되었습니다."),
+  INVALID_REQUEST_PARAM("정확한 값을 Request Parameter에 담아서 요청하시기 바랍니다");
 
   private final String message;
 
