@@ -1,6 +1,6 @@
 package com.yapp.crew.model;
 
-import com.yapp.crew.dto.SignUpRequestDto;
+import com.yapp.crew.dto.request.SignUpRequestDto;
 import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

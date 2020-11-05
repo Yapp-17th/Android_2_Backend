@@ -14,7 +14,7 @@ public class BoardListResponseInfo {
   private Long hostId;
   private String hostName;
   private String title;
-  private String groupStatus;
+  private BoardStatusInfo groupStatus;
   private String exercise;
   private String city;
   private Boolean isBookMark;
@@ -25,7 +25,7 @@ public class BoardListResponseInfo {
     boardListResponseInfo.hostId = board.getUser().getId();
     boardListResponseInfo.hostName = board.getUser().getNickname();
     boardListResponseInfo.title = board.getTitle();
-    boardListResponseInfo.groupStatus = board.getStatus().getName();
+    boardListResponseInfo.groupStatus = BoardStatusInfo.build(board.getGroupStatus());
     boardListResponseInfo.exercise = board.getCategory().getExercise().getName();
     boardListResponseInfo.city = board.getAddress().getCity().getName();
     boardListResponseInfo.isBookMark = user.getUserBookmark().stream()
