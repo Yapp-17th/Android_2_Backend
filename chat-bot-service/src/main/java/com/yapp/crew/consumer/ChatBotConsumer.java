@@ -82,7 +82,7 @@ public class ChatBotConsumer {
 						.orElseThrow(() -> new ChatRoomNotFoundException("[Not Found] Chat room not found"));
 
 		MessageRequestPayload applyMessagePayload = MessageRequestPayload.builder()
-						.content(String.format(botMessages.getApplyMessage(), applier.getNickname()))
+						.content(String.format(botMessages.getApplyMessage(), applier.getNickname()).replace("\"", ""))
 						.type(MessageType.BOT_MESSAGE)
 						.senderId(applier.getId())
 						.chatRoomId(chatRoom.getId())
@@ -115,7 +115,7 @@ public class ChatBotConsumer {
 						.orElseThrow(() -> new UserNotFoundException("[Not Found] Bot not found"));
 
 		MessageRequestPayload approveMessagePayload = MessageRequestPayload.builder()
-						.content(String.format(botMessages.getApproveMessage(), host.getNickname()))
+						.content(String.format(botMessages.getApproveMessage(), host.getNickname()).replace("\"", ""))
 						.type(MessageType.BOT_MESSAGE)
 						.senderId(bot.getId())
 						.chatRoomId(approveRequestPayload.getChatRoomId())
