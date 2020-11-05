@@ -103,6 +103,9 @@ public class ChattingProducerService {
 
   public HttpResponseBody<List<ChatRoomResponsePayload>> receiveChatRooms(Long userId) {
   	List<ChatRoom> chatRooms = chatRoomRepository.findAllByUserId(userId);
+
+
+
 		return HttpResponseBody.buildChatRoomsResponse(ChatRoomResponsePayload.buildChatRoomResponsePayload(chatRooms, userId), HttpStatus.OK.value());
 	}
 

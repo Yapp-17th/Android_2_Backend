@@ -30,12 +30,12 @@ public class HttpResponseBody<T> {
 	private String boardTitle;
 
 	@JsonInclude(NON_NULL)
-	private boolean isApplied;
+	private Boolean isApplied;
 
 	@JsonInclude(NON_NULL)
 	private T data;
 
-	public static <T> HttpResponseBody<T> buildChatMessagesResponse(T data, Integer status, Long firstUnreadMessageId, String boardTitle, boolean isApplied) {
+	public static <T> HttpResponseBody<T> buildChatMessagesResponse(T data, Integer status, Long firstUnreadMessageId, String boardTitle, Boolean isApplied) {
 		return (HttpResponseBody<T>) HttpResponseBody.builder()
 						.transactionTime(LocalDateTime.now())
 						.status(status)
