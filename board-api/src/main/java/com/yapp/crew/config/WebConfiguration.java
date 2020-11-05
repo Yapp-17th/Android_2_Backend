@@ -1,5 +1,6 @@
 package com.yapp.crew.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -7,15 +8,16 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebConfiguration implements WebMvcConfigurer {
 
-  private final String[] INTERCEPTOR_WHITE_LIST = {
-      "**/sign-up",
-      "**/sign-in"
-  };
+  private AuthInterceptor authInterceptor;
+
+  @Autowired
+  public WebConfiguration(AuthInterceptor authInterceptor) {
+    this.authInterceptor = authInterceptor;
+  }
 
   @Override
   public void addInterceptors(InterceptorRegistry registry) {
-    registry.addInterceptor(new AuthInterceptor())
-        .addPathPatterns("/**")
-        .excludePathPatterns("sign-up", "sign-in");
+    registry.addInterceptor(authInterceptor)
+        .addPathPatterns("/**");
   }
 }

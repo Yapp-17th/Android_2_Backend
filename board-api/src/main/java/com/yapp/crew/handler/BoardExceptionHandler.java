@@ -1,10 +1,13 @@
 package com.yapp.crew.handler;
 
+import com.yapp.crew.domain.errors.AddressNotFoundException;
 import com.yapp.crew.domain.errors.BoardNotFoundException;
+import com.yapp.crew.domain.errors.CategoryNotFoundException;
 import com.yapp.crew.domain.errors.InactiveUserException;
 import com.yapp.crew.domain.errors.InternalServerErrorException;
 import com.yapp.crew.domain.errors.InvalidRequestBodyException;
 import com.yapp.crew.domain.errors.SuspendedUserException;
+import com.yapp.crew.domain.errors.TagNotFoundException;
 import com.yapp.crew.domain.errors.TokenRequiredException;
 import com.yapp.crew.domain.errors.UserNotFoundException;
 import com.yapp.crew.domain.errors.WrongTokenPrefixException;
@@ -96,6 +99,24 @@ public class BoardExceptionHandler {
 
   @ExceptionHandler(value = BoardNotFoundException.class)
   public ResponseEntity<?> handleBoardNotFoundException(BoardNotFoundException ex) {
+    SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.NOT_FOUND, ex.getMessage());
+    return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
+  }
+
+  @ExceptionHandler(value = TagNotFoundException.class)
+  public ResponseEntity<?> handleTagNotFoundException(TagNotFoundException ex) {
+    SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.NOT_FOUND, ex.getMessage());
+    return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
+  }
+
+  @ExceptionHandler(value = CategoryNotFoundException.class)
+  public ResponseEntity<?> handleCategoryNotFoundException(CategoryNotFoundException ex) {
+    SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.NOT_FOUND, ex.getMessage());
+    return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
+  }
+
+  @ExceptionHandler(value = AddressNotFoundException.class)
+  public ResponseEntity<?> handleAddressNotFoundException(AddressNotFoundException ex) {
     SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.NOT_FOUND, ex.getMessage());
     return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
   }
