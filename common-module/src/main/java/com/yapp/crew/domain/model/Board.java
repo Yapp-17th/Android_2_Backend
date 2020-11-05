@@ -2,6 +2,7 @@ package com.yapp.crew.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.yapp.crew.domain.status.AppliedStatus;
+import com.yapp.crew.domain.status.BoardStatus;
 import com.yapp.crew.domain.status.GroupStatus;
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -68,8 +69,8 @@ public class Board extends BaseEntity {
   private Tag tag;
 
   @Column(nullable = false)
-  @Enumerated(value = EnumType.STRING)
-  private GroupStatus status = GroupStatus.RECRUITING;
+  @Enumerated(value = EnumType.ORDINAL)
+  private BoardStatus status = BoardStatus.NORMAL;
 
   @Column(name = "recruit_count", nullable = false)
   @Setter(value = AccessLevel.PRIVATE)
@@ -96,23 +97,23 @@ public class Board extends BaseEntity {
     bookMarkUser.add(bookMark);
   }
 
-	public void increaseRecruitCount() {
-		recruitCount += 1;
-	}
+  public void increaseRecruitCount() {
+    recruitCount += 1;
+  }
 
-	public void addAppliedUser(AppliedUser appliedUser) {
-		if (appliedUsers.contains(appliedUser)) {
-			return;
-		}
-		appliedUsers.add(appliedUser);
-	}
+  public void addAppliedUser(AppliedUser appliedUser) {
+    if (appliedUsers.contains(appliedUser)) {
+      return;
+    }
+    appliedUsers.add(appliedUser);
+  }
 
   public static BoardBuilder getBuilder() {
     return new BoardBuilder();
   }
 
   public void deleteBoard() {
-    this.status = GroupStatus.COMPLETE;
+    this.status = BoardStatus.CANCELED;
   }
 
   public void addHiddenBoard(HiddenBoard hiddenBoard) {
@@ -120,8 +121,27 @@ public class Board extends BaseEntity {
   }
 
   public int getRemainRecruitNumber() {
-    int approvedCount = (int) appliedUsers.stream().filter(appliedUser -> appliedUser.getStatus() == AppliedStatus.APPROVED).count();
-    return this.recruitCount - approvedCount;
+    return this.recruitCount - getApprovedCount();
+  }
+
+  public GroupStatus getGroupStatus() {
+    if (status == BoardStatus.CANCELED) {
+      return GroupStatus.CANCELED;
+    }
+
+    if (startsAt.isAfter(LocalDateTime.now())) {
+      return GroupStatus.FINISHED;
+    }
+
+    int approvedCount = getApprovedCount();
+    if (approvedCount < recruitCount) {
+      return GroupStatus.RECRUITING;
+    }
+    return GroupStatus.COMPLETE;
+  }
+
+  private int getApprovedCount() {
+    return (int) appliedUsers.stream().filter(appliedUser -> appliedUser.getStatus() == AppliedStatus.APPROVED).count();
   }
 
   public void updateBoard(String title, String content, String place, int recruitCount, Category category, Address address, Tag tag, LocalDateTime startsAt) {

@@ -7,7 +7,7 @@ import com.yapp.crew.domain.model.HiddenBoard;
 import com.yapp.crew.domain.model.User;
 import com.yapp.crew.domain.repository.BoardRepository;
 import com.yapp.crew.domain.repository.UserRepository;
-import com.yapp.crew.domain.status.GroupStatus;
+import com.yapp.crew.domain.status.BoardStatus;
 import com.yapp.crew.model.BoardListResponseInfo;
 import com.yapp.crew.model.BoardSearch;
 import java.util.ArrayList;
@@ -66,7 +66,7 @@ public class SearchService {
     Set<Board> hiddenBoards = user.getUserHiddenBoard().stream().map(HiddenBoard::getBoard).collect(Collectors.toSet());
 
     return boardRepository.findAll().stream()
-        .filter(board -> board.getStatus().getCode() < GroupStatus.CANCELED.getCode())
+        .filter(board -> board.getStatus().getCode() != BoardStatus.CANCELED.getCode())
         .filter(board -> !hiddenBoards.contains(board))
         .collect(Collectors.toList());
   }

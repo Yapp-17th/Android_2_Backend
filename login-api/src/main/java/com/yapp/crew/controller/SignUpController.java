@@ -1,8 +1,8 @@
 package com.yapp.crew.controller;
 
 import com.yapp.crew.domain.errors.InternalServerErrorException;
-import com.yapp.crew.dto.SignUpRequestDto;
-import com.yapp.crew.dto.UserAuthResponseDto;
+import com.yapp.crew.dto.request.SignUpRequestDto;
+import com.yapp.crew.dto.response.UserAuthResponseDto;
 import com.yapp.crew.model.SignupUserInfo;
 import com.yapp.crew.model.UserAuthResponse;
 import com.yapp.crew.service.SignUpService;
