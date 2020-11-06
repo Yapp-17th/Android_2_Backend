@@ -36,99 +36,106 @@ public class ChattingController {
 
 	private final Auth auth;
 
-  private final ChattingProducer chattingProducer;
+	private final ChattingProducer chattingProducer;
 
-  private final ChattingProducerService chattingProducerService;
+	private final ChattingProducerService chattingProducerService;
 
-  @Autowired
+	@Autowired
 	public ChattingController(
-					Auth auth,
-					ChattingProducer chattingProducer,
-					ChattingProducerService chattingProducerService
+			Auth auth,
+			ChattingProducer chattingProducer,
+			ChattingProducerService chattingProducerService
 	) {
-  	this.auth = auth;
-  	this.chattingProducer = chattingProducer;
-  	this.chattingProducerService = chattingProducerService;
+		this.auth = auth;
+		this.chattingProducer = chattingProducer;
+		this.chattingProducerService = chattingProducerService;
 	}
 
-  @MessageMapping(value = "/v1/chat/message")
-  public void sendMessageByWebsocket(MessageRequestPayload messageRequestPayload) throws JsonProcessingException {
-    log.info("Before-sendMessageByWebsocket");
+	@MessageMapping(value = "/v1/chat/message")
+	public void sendMessageByWebsocket(MessageRequestPayload messageRequestPayload)
+			throws JsonProcessingException {
+		log.info("Before-sendMessageByWebsocket");
 
-    chattingProducer.sendMessage(messageRequestPayload);
+		chattingProducer.sendMessage(messageRequestPayload);
 
-    log.info("After-sendMessageByWebsocket");
-  }
+		log.info("After-sendMessageByWebsocket");
+	}
 
-  @PostMapping(path = "/v1/chat/message")
-  public ResponseEntity<?> sendMessageByHttpRequest(@RequestBody MessageRequestPayload messageRequestPayload) throws JsonProcessingException {
-    log.info("Before-sendMessageByHttpRequest");
+	@PostMapping(path = "/v1/chat/message")
+	public ResponseEntity<?> sendMessageByHttpRequest(
+			@RequestBody MessageRequestPayload messageRequestPayload) throws JsonProcessingException {
+		log.info("Before-sendMessageByHttpRequest");
 
-    chattingProducer.sendMessage(messageRequestPayload);
+		chattingProducer.sendMessage(messageRequestPayload);
 
-    log.info("After-sendMessageByHttpRequest");
+		log.info("After-sendMessageByHttpRequest");
 
-    return ResponseEntity.status(HttpStatus.CREATED).body(messageRequestPayload);
-  }
+		return ResponseEntity.status(HttpStatus.CREATED).body(messageRequestPayload);
+	}
 
-  @PostMapping(path = "/v2/chat/message")
-  public ResponseEntity<?> sendMessageSynchronously(@RequestBody MessageRequestPayload messageRequestPayload)
-          throws JsonProcessingException, InterruptedException, ExecutionException, TimeoutException {
+	@PostMapping(path = "/v2/chat/message")
+	public ResponseEntity<?> sendMessageSynchronously(
+			@RequestBody MessageRequestPayload messageRequestPayload)
+			throws JsonProcessingException, InterruptedException, ExecutionException, TimeoutException {
 
-    log.info("Before-sendMessageSynchronously");
+		log.info("Before-sendMessageSynchronously");
 
-    chattingProducer.sendMessageSynchronously(messageRequestPayload);
+		chattingProducer.sendMessageSynchronously(messageRequestPayload);
 
-    log.info("After-sendMessageSynchronously");
+		log.info("After-sendMessageSynchronously");
 
-    return ResponseEntity.status(HttpStatus.CREATED).body(messageRequestPayload);
-  }
+		return ResponseEntity.status(HttpStatus.CREATED).body(messageRequestPayload);
+	}
 
-  @GetMapping(path = "/v1/chat/room/{chatRoomId}/message")
-  public ResponseEntity<?> receiveChatMessages(
-					@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token,
-  				@PathVariable("chatRoomId") Long chatRoomId
+	@GetMapping(path = "/v1/chat/room/{chatRoomId}/message")
+	public ResponseEntity<?> receiveChatMessages(
+			@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token,
+			@PathVariable("chatRoomId") Long chatRoomId
 	) {
 		auth.verifyToken(token);
 		Long userId = auth.parseUserIdFromToken(token);
 
-    HttpResponseBody<List<MessageResponsePayload>> responseBody = chattingProducerService.receiveChatMessages(chatRoomId, userId);
-    return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
-  }
-
-	@GetMapping(path = "/v1/chat/room")
-	public ResponseEntity<?> receiveChatRooms(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token) {
-		auth.verifyToken(token);
-		Long userId = auth.parseUserIdFromToken(token);
-
-		HttpResponseBody<List<ChatRoomResponsePayload>> responseBody = chattingProducerService.receiveChatRooms(userId);
+		HttpResponseBody<List<MessageResponsePayload>> responseBody = chattingProducerService
+				.receiveChatMessages(chatRoomId, userId);
 		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
 	}
 
-  @PostMapping(path = "/v1/chat/room")
-  public ResponseEntity<?> createChatRoom(
-  				@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token,
-  				@Valid @RequestBody ChatRoomRequestPayload chatRoomRequestPayload
+	@GetMapping(path = "/v1/chat/room")
+	public ResponseEntity<?> receiveChatRooms(
+			@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token) {
+		auth.verifyToken(token);
+		Long userId = auth.parseUserIdFromToken(token);
+
+		HttpResponseBody<List<ChatRoomResponsePayload>> responseBody = chattingProducerService
+				.receiveChatRooms(userId);
+		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
+	}
+
+	@PostMapping(path = "/v1/chat/room")
+	public ResponseEntity<?> createChatRoom(
+			@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token,
+			@Valid @RequestBody ChatRoomRequestPayload chatRoomRequestPayload
 	) throws JsonProcessingException {
 
-  	auth.verifyToken(token);
+		auth.verifyToken(token);
 		Long guestId = auth.parseUserIdFromToken(token);
 
 		chatRoomRequestPayload.setGuestId(guestId);
 
-    HttpResponseBody<ChatRoomResponsePayload> responseBody = chattingProducerService.createChatRoom(chatRoomRequestPayload);
-    return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
-  }
+		HttpResponseBody<ChatRoomResponsePayload> responseBody = chattingProducerService
+				.createChatRoom(chatRoomRequestPayload);
+		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
+	}
 
-  @PostMapping(path = "/v1/board/{boardId}/apply")
+	@PostMapping(path = "/v1/board/{boardId}/apply")
 	public ResponseEntity<?> applyUser(
-					@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token,
-					@Valid @RequestBody ApplyRequestPayload applyRequestPayload,
-					@PathVariable("boardId") Long boardId
+			@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token,
+			@Valid @RequestBody ApplyRequestPayload applyRequestPayload,
+			@PathVariable("boardId") Long boardId
 	) throws JsonProcessingException {
 
-  	auth.verifyToken(token);
-  	Long applierId = auth.parseUserIdFromToken(token);
+		auth.verifyToken(token);
+		Long applierId = auth.parseUserIdFromToken(token);
 
 		applyRequestPayload.setBoardId(boardId);
 		applyRequestPayload.setApplierId(applierId);
@@ -139,18 +146,18 @@ public class ChattingController {
 
 	@PostMapping(path = "/v1/board/{boardId}/approve")
 	public ResponseEntity<?> approveUser(
-					@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token,
-					@Valid @RequestBody ApproveRequestPayload approveRequestPayload,
-					@PathVariable("boardId") Long boardId
+			@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token,
+			@Valid @RequestBody ApproveRequestPayload approveRequestPayload,
+			@PathVariable("boardId") Long boardId
 	) throws JsonProcessingException {
 
-  	auth.verifyToken(token);
-  	Long hostId = auth.parseUserIdFromToken(token);
+		auth.verifyToken(token);
+		Long hostId = auth.parseUserIdFromToken(token);
 
-  	approveRequestPayload.setBoardId(boardId);
-  	approveRequestPayload.setHostId(hostId);
+		approveRequestPayload.setBoardId(boardId);
+		approveRequestPayload.setHostId(hostId);
 
-  	HttpResponseBody<?> responseBody = chattingProducerService.approveUser(approveRequestPayload);
-  	return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
+		HttpResponseBody<?> responseBody = chattingProducerService.approveUser(approveRequestPayload);
+		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
 	}
 }

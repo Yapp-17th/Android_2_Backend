@@ -14,13 +14,13 @@ import lombok.Setter;
 @AllArgsConstructor
 public class MessageRequestPayload {
 
-  private String content;
+	private String content;
 
-  private MessageType type;
+	private MessageType type;
 
-  private Long senderId;
+	private Long senderId;
 
-  private Long chatRoomId;
+	private Long chatRoomId;
 
-  private Long boardId;
+	private Long boardId;
 }

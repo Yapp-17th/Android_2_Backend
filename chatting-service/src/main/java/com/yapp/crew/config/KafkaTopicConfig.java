@@ -14,12 +14,12 @@ public class KafkaTopicConfig {
 	@Value(value = "${kafka.topics.chat-message}")
 	private String chatMessageTopic;
 
-  @Bean
-  public NewTopic chatMessage() {
-    return TopicBuilder
-            .name(chatMessageTopic)
-            .partitions(1)
-            .replicas(1)
-            .build();
-  }
+	@Bean
+	public NewTopic chatMessage() {
+		return TopicBuilder
+				.name(chatMessageTopic)
+				.partitions(1)
+				.replicas(1)
+				.build();
+	}
 }
