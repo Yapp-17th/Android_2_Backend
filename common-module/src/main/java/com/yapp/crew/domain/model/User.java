@@ -133,12 +133,10 @@ public class User extends BaseEntity {
   }
 
   public void addReport(Report report) {
-    report.setReporter(this);
     this.reportList.add(report);
   }
 
   public void addReported(Report reported) {
-    reported.setReported(this);
     this.reportedList.add(reported);
   }
 

@@ -17,6 +17,7 @@ import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -33,6 +34,7 @@ public class ReportService {
     this.boardRepository = boardRepository;
   }
 
+  @Transactional
   public SimpleResponse postBoardReport(BoardReport boardReport) {
     User user = findUserById(boardReport.getReporter())
         .orElseThrow(() -> new UserNotFoundException("user not found"));
@@ -46,6 +48,8 @@ public class ReportService {
         .withReported(board.getUser())
         .withType(boardReport.getReportType())
         .build();
+    user.addReport(report);
+    board.getUser().addReported(report);
     saveReport(report);
     return SimpleResponse.pass(ResponseType.REPORT_SUCCESS);
   }
