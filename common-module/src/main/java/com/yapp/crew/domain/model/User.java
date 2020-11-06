@@ -77,12 +77,13 @@ public class User extends BaseEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   private Address address;
 
-  @JsonBackReference
+	@JsonManagedReference
   @Setter(value = AccessLevel.PRIVATE)
   @OneToMany(mappedBy = "user")
   private Set<UserExercise> userExercise = new HashSet<>();
 
-  @OneToMany(mappedBy = "board")
+	@JsonManagedReference
+  @OneToMany(mappedBy = "user")
   private Set<AppliedUser> appliedUsers = new HashSet<>();
 
   @JsonManagedReference

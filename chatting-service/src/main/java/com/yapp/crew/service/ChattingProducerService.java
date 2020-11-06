@@ -5,6 +5,7 @@ import com.yapp.crew.domain.errors.AlreadyApprovedException;
 import com.yapp.crew.domain.errors.BoardNotFoundException;
 import com.yapp.crew.domain.errors.ChatRoomNotFoundException;
 import com.yapp.crew.domain.errors.GuestApplyNotFoundException;
+import com.yapp.crew.domain.errors.NoSpaceToApplyException;
 import com.yapp.crew.domain.errors.UserNotFoundException;
 import com.yapp.crew.domain.errors.WrongGuestException;
 import com.yapp.crew.domain.errors.WrongHostException;
@@ -170,11 +171,14 @@ public class ChattingProducerService {
 			throw new AlreadyApprovedException("This user is already approved");
 		}
 
+		if (board.getRemainRecruitNumber() < 1) {
+			throw new NoSpaceToApplyException("This board is already full");
+		}
+
 		isApplied.approveUser();
 		appliedUserRepository.save(isApplied);
 
-		board.increaseRecruitCount();
-		boardRepository.save(board);
+		// TODO: if full -> update board status to complete
 
 		chattingProducer.approveUser(approveRequestPayload);
 

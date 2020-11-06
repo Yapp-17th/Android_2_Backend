@@ -56,21 +56,6 @@ public class MessageResponsePayload {
 						.build();
 	}
 
-	public static MessageResponsePayload buildProfileMessageResponsePayload(Message message) {
-		return MessageResponsePayload.builder()
-						.id(message.getId())
-						.content(message.getContent())
-						.type(message.getType())
-						.isHostRead(message.isHostRead())
-						.isGuestRead(message.isGuestRead())
-						.senderId(message.getSender().getId())
-						.senderNickname(message.getSender().getNickname())
-						.likes(message.getProfileMessage().getLikes())
-						.dislikes(message.getProfileMessage().getDislikes())
-						.createdAt(message.getCreatedAt())
-						.build();
-	}
-
 	public static List<MessageResponsePayload> buildMessageResponsePayload(MessageRepository messageRepository, List<Message> messages, boolean isHost) {
 		return messages.stream()
 						.map(message -> {
@@ -78,10 +63,7 @@ public class MessageResponsePayload {
 
 							messageRepository.save(message);
 
-							if (message.getProfileMessage() == null) {
-								return MessageResponsePayload.buildChatMessageResponsePayload(message);
-							}
-							return MessageResponsePayload.buildProfileMessageResponsePayload(message);
+							return MessageResponsePayload.buildChatMessageResponsePayload(message);
 						})
 						.collect(Collectors.toList());
 	}

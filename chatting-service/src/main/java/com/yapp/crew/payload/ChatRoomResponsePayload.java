@@ -102,12 +102,7 @@ public class ChatRoomResponsePayload {
 
 							MessageResponsePayload messagePayload = null;
 							if (lastMessage != null) {
-								if (lastMessage.getProfileMessage() == null) {
 									messagePayload = MessageResponsePayload.buildChatMessageResponsePayload(lastMessage);
-								}
-								else {
-									messagePayload = MessageResponsePayload.buildProfileMessageResponsePayload(lastMessage);
-								}
 							}
 							return ChatRoomResponsePayload.buildChatRoomResponsePayload(chatRoom, messagePayload, unreadMessages, opponentNickname);
 						})
