@@ -92,13 +92,8 @@ public class Board extends BaseEntity {
   @OneToMany(mappedBy = "board")
   private Set<Evaluation> evaluations = new HashSet<>();
 
-  // TODO: add, increase, decrease function
   public void addBookMark(BookMark bookMark) {
     bookMarkUser.add(bookMark);
-  }
-
-  public void increaseRecruitCount() {
-    recruitCount += 1;
   }
 
   public void addAppliedUser(AppliedUser appliedUser) {
@@ -106,10 +101,6 @@ public class Board extends BaseEntity {
       return;
     }
     appliedUsers.add(appliedUser);
-  }
-
-  public static BoardBuilder getBuilder() {
-    return new BoardBuilder();
   }
 
   public void deleteBoard() {
@@ -154,6 +145,10 @@ public class Board extends BaseEntity {
     this.tag = tag;
     this.startsAt = startsAt;
   }
+
+	public static BoardBuilder getBuilder() {
+		return new BoardBuilder();
+	}
 
   public static class BoardBuilder {
 
