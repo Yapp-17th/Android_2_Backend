@@ -1,13 +1,12 @@
 package com.yapp.crew.service;
 
 import com.yapp.crew.config.JwtUtils;
-import com.yapp.crew.domain.errors.InternalServerErrorException;
 import com.yapp.crew.domain.errors.UserNotFoundException;
 import com.yapp.crew.domain.model.User;
 import com.yapp.crew.domain.repository.UserRepository;
+import com.yapp.crew.domain.type.ResponseType;
 import com.yapp.crew.model.UserAuthResponse;
-import com.yapp.crew.model.UserAuthResponseBody;
-import com.yapp.crew.utils.ResponseMessage;
+import com.yapp.crew.network.model.SimpleResponse;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,19 +28,15 @@ public class WithdrawService {
 
 
   public UserAuthResponse withdraw(String token) {
-    try {
-      Long userId = Long.valueOf(jwtUtils.getUserIdFromToken(token));
-      log.info("userId: " + userId);
+    Long userId = Long.valueOf(jwtUtils.getUserIdFromToken(token));
+    log.info("userId: " + userId);
 
-      User user = getUserByUserId(userId)
-          .orElseThrow(() -> new UserNotFoundException("user not found"));
+    User user = getUserByUserId(userId)
+        .orElseThrow(() -> new UserNotFoundException("user not found"));
 
-      updateUserInActive(user);
-    } catch (Exception e) {
-      throw new InternalServerErrorException("internal server error");
-    }
+    updateUserInActive(user);
 
-    return new UserAuthResponse(UserAuthResponseBody.pass(ResponseMessage.WITHDRAW_SUCCESS.getMessage()));
+    return new UserAuthResponse(SimpleResponse.pass(ResponseType.WITHDRAW_SUCCESS));
   }
 
   @Transactional
