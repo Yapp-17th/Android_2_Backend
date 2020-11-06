@@ -22,48 +22,48 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class HiddenBoardService {
 
-  private HiddenBoardRepository hiddenBoardRepository;
-  private BoardRepository boardRepository;
-  private UserRepository userRepository;
+	private HiddenBoardRepository hiddenBoardRepository;
+	private BoardRepository boardRepository;
+	private UserRepository userRepository;
 
-  @Autowired
-  public HiddenBoardService(HiddenBoardRepository hiddenBoardRepository, BoardRepository boardRepository, UserRepository userRepository) {
-    this.hiddenBoardRepository = hiddenBoardRepository;
-    this.boardRepository = boardRepository;
-    this.userRepository = userRepository;
-  }
+	@Autowired
+	public HiddenBoardService(HiddenBoardRepository hiddenBoardRepository, BoardRepository boardRepository, UserRepository userRepository) {
+		this.hiddenBoardRepository = hiddenBoardRepository;
+		this.boardRepository = boardRepository;
+		this.userRepository = userRepository;
+	}
 
-  @Transactional
-  public SimpleResponse createHiddenBoard(Long boardId, Long userId) {
-    Board board = findBoardById(boardId)
-        .orElseThrow(() -> new BoardNotFoundException("board not found"));
-    User user = findUserById(userId)
-        .orElseThrow(() -> new UserNotFoundException("user not found"));
+	@Transactional
+	public SimpleResponse createHiddenBoard(Long boardId, Long userId) {
+		Board board = findBoardById(boardId)
+				.orElseThrow(() -> new BoardNotFoundException("board not found"));
+		User user = findUserById(userId)
+				.orElseThrow(() -> new UserNotFoundException("user not found"));
 
-    HiddenBoardBuilder hiddenBoardBuilder = HiddenBoard.getBuilder();
-    HiddenBoard hiddenBoard = hiddenBoardBuilder
-        .withUser(user)
-        .withBoard(board)
-        .build();
-    board.addHiddenBoard(hiddenBoard);
-    user.addHiddenBoard(hiddenBoard);
-    saveHiddenBoard(hiddenBoard);
+		HiddenBoardBuilder hiddenBoardBuilder = HiddenBoard.getBuilder();
+		HiddenBoard hiddenBoard = hiddenBoardBuilder
+				.withUser(user)
+				.withBoard(board)
+				.build();
+		board.addHiddenBoard(hiddenBoard);
+		user.addHiddenBoard(hiddenBoard);
+		saveHiddenBoard(hiddenBoard);
 
-    return SimpleResponse.pass(ResponseType.HIDDEN_SUCCESS);
-  }
+		return SimpleResponse.pass(ResponseType.HIDDEN_SUCCESS);
+	}
 
-  private void saveHiddenBoard(HiddenBoard hiddenBoard) {
-    log.info("hidden board 저장 성공");
-    hiddenBoardRepository.save(hiddenBoard);
-  }
+	private void saveHiddenBoard(HiddenBoard hiddenBoard) {
+		log.info("hidden board 저장 성공");
+		hiddenBoardRepository.save(hiddenBoard);
+	}
 
-  private Optional<Board> findBoardById(Long boardId) {
-    log.info("board 가져오기 성공");
-    return boardRepository.findBoardById(boardId).filter(board -> board.getStatus().getCode() != BoardStatus.CANCELED.getCode());
-  }
+	private Optional<Board> findBoardById(Long boardId) {
+		log.info("board 가져오기 성공");
+		return boardRepository.findBoardById(boardId).filter(board -> board.getStatus().getCode() != BoardStatus.CANCELED.getCode());
+	}
 
-  private Optional<User> findUserById(Long userId) {
-    log.info("user 가져오기 성공");
-    return userRepository.findUserById(userId);
-  }
+	private Optional<User> findUserById(Long userId) {
+		log.info("user 가져오기 성공");
+		return userRepository.findUserById(userId);
+	}
 }

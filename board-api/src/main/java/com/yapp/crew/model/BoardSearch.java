@@ -8,14 +8,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class BoardSearch {
 
-  private Long userId;
-  private List<String> keywords;
+	private Long userId;
+	private List<String> keywords;
 
-  public static BoardSearch build(List<String> keyword, Long userId) {
-    BoardSearch boardSearch = new BoardSearch();
-    boardSearch.userId = userId;
-    boardSearch.keywords = keyword;
+	public static BoardSearch build(List<String> keyword, Long userId) {
+		BoardSearch boardSearch = new BoardSearch();
+		boardSearch.userId = userId;
+		boardSearch.keywords = keyword;
 
-    return boardSearch;
-  }
+		return boardSearch;
+	}
 }

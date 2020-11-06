@@ -13,28 +13,28 @@ import lombok.Setter;
 @Setter
 public class SignUpRequestDto {
 
-  @NotBlank
-  private String userId;
+	@NotBlank
+	private String userId;
 
-  @NotBlank
-  private String userName;
+	@NotBlank
+	private String userName;
 
-  @NotBlank
-  private String nickName;
+	@NotBlank
+	private String nickName;
 
-  @NotBlank(message = "{ACCOUNT.CREATE.EMAIL_NOT_BLANK}")
-  @Email(message = "{ACCOUNT.CREATE.EMAIL_IS_NOT_VALID}")
-  private String email;
+	@NotBlank(message = "{ACCOUNT.CREATE.EMAIL_NOT_BLANK}")
+	@Email(message = "{ACCOUNT.CREATE.EMAIL_IS_NOT_VALID}")
+	private String email;
 
-  @NotBlank
-  private String accessToken;
+	@NotBlank
+	private String accessToken;
 
-  @NotNull
-  private List<Long> category;
+	@NotNull
+	private List<Long> category;
 
-  @NotNull
-  private Long address;
+	@NotNull
+	private Long address;
 
-  @NotBlank
-  private String intro;
+	@NotBlank
+	private String intro;
 }

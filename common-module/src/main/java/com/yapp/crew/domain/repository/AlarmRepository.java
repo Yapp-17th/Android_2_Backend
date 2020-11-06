@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface AlarmRepository extends JpaRepository<Alarm, Long> {
 
-  List<Alarm> findAll();
+	List<Alarm> findAll();
 
-  Alarm save(Alarm alarm);
+	Alarm save(Alarm alarm);
 }

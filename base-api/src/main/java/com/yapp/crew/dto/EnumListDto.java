@@ -16,25 +16,25 @@ import org.springframework.http.HttpStatus;
 @Getter
 public class EnumListDto {
 
-  private String type;
-  private int status;
-  private ResponseType message;
-  private List<EnumData> data;
+	private String type;
+	private int status;
+	private ResponseType message;
+	private List<EnumData> data;
 
-  public static EnumListDto pass(String type, List<String> data) {
-    EnumListDto enumListDto = new EnumListDto();
-    enumListDto.type = type;
-    enumListDto.status = HttpStatus.OK.value();
-    enumListDto.message = ResponseType.SUCCESS;
-    enumListDto.setData(data);
-    return enumListDto;
-  }
+	public static EnumListDto pass(String type, List<String> data) {
+		EnumListDto enumListDto = new EnumListDto();
+		enumListDto.type = type;
+		enumListDto.status = HttpStatus.OK.value();
+		enumListDto.message = ResponseType.SUCCESS;
+		enumListDto.setData(data);
+		return enumListDto;
+	}
 
-  public void setData(List<String> data) {
-    List<EnumData> enumData = new ArrayList<>();
-    for (int i = 0; i < data.size(); i++) {
-      enumData.add(new EnumData(i + 1, data.get(i)));
-    }
-    this.data = enumData;
-  }
+	public void setData(List<String> data) {
+		List<EnumData> enumData = new ArrayList<>();
+		for (int i = 0; i < data.size(); i++) {
+			enumData.add(new EnumData(i + 1, data.get(i)));
+		}
+		this.data = enumData;
+	}
 }

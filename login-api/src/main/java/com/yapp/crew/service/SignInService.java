@@ -20,35 +20,35 @@ import org.springframework.stereotype.Service;
 @Service
 public class SignInService {
 
-  private UserRepository userRepository;
-  private TokenService tokenService;
+	private UserRepository userRepository;
+	private TokenService tokenService;
 
-  @Autowired
-  public SignInService(UserRepository userRepository, TokenService tokenService) {
-    this.userRepository = userRepository;
-    this.tokenService = tokenService;
-  }
+	@Autowired
+	public SignInService(UserRepository userRepository, TokenService tokenService) {
+		this.userRepository = userRepository;
+		this.tokenService = tokenService;
+	}
 
-  public UserAuthResponse signIn(LoginUserInfo loginUserInfo) {
-    User existingUser = getUserByOauthId(loginUserInfo.getOauthId())
-        .orElseThrow(() -> new UserNotFoundException("user not found"));
+	public UserAuthResponse signIn(LoginUserInfo loginUserInfo) {
+		User existingUser = getUserByOauthId(loginUserInfo.getOauthId())
+				.orElseThrow(() -> new UserNotFoundException("user not found"));
 
-    if (existingUser.getStatus() == UserStatus.SUSPENDED) {
-      log.info("suspended user가 로그인을 시도했습니다.");
-      throw new SuspendedUserException("suspend user exception");
-    } else if (existingUser.getStatus() == UserStatus.INACTIVE) {
-      log.info("inactive user가 로그인을 시도했습니다.");
-      throw new InactiveUserException("inactive user exception");
-    }
+		if (existingUser.getStatus() == UserStatus.SUSPENDED) {
+			log.info("suspended user가 로그인을 시도했습니다.");
+			throw new SuspendedUserException("suspend user exception");
+		} else if (existingUser.getStatus() == UserStatus.INACTIVE) {
+			log.info("inactive user가 로그인을 시도했습니다.");
+			throw new InactiveUserException("inactive user exception");
+		}
 
-    HttpHeaders httpHeaders = tokenService.setToken(existingUser);
-    SimpleResponse simpleResponse = SimpleResponse.pass(ResponseType.SUCCESS);
+		HttpHeaders httpHeaders = tokenService.setToken(existingUser);
+		SimpleResponse simpleResponse = SimpleResponse.pass(ResponseType.SUCCESS);
 
-    return new UserAuthResponse(httpHeaders, simpleResponse);
-  }
+		return new UserAuthResponse(httpHeaders, simpleResponse);
+	}
 
-  private Optional<User> getUserByOauthId(String oauthId) {
-    log.info("user 가져오기 성공");
-    return userRepository.findByOauthId(oauthId);
-  }
+	private Optional<User> getUserByOauthId(String oauthId) {
+		log.info("user 가져오기 성공");
+		return userRepository.findByOauthId(oauthId);
+	}
 }

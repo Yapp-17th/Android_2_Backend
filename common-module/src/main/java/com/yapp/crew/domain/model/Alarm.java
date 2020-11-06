@@ -18,42 +18,43 @@ import lombok.Setter;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Alarm extends BaseEntity {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-  @Setter(value = AccessLevel.PRIVATE)
-  @Column(nullable = false)
-  @Enumerated(value = EnumType.ORDINAL)
-  private AlarmType type;
+	@Setter(value = AccessLevel.PRIVATE)
+	@Column(nullable = false)
+	@Enumerated(value = EnumType.ORDINAL)
+	private AlarmType type;
 
-  @Setter(value = AccessLevel.PRIVATE)
-  @Column(nullable = false)
-  private String content;
+	@Setter(value = AccessLevel.PRIVATE)
+	@Column(nullable = false)
+	private String content;
 
-  public static AlarmBuilder getBuilder() {
-    return new AlarmBuilder();
-  }
+	public static AlarmBuilder getBuilder() {
+		return new AlarmBuilder();
+	}
 
-  public static class AlarmBuilder {
-    private AlarmType type;
-    private String content;
+	public static class AlarmBuilder {
 
-    public AlarmBuilder withType(AlarmType type) {
-      this.type = type;
-      return this;
-    }
+		private AlarmType type;
+		private String content;
 
-    public AlarmBuilder withContent(String content) {
-      this.content = content;
-      return this;
-    }
+		public AlarmBuilder withType(AlarmType type) {
+			this.type = type;
+			return this;
+		}
 
-    public Alarm build() {
-      Alarm alarm = new Alarm();
-      alarm.setType(type);
-      alarm.setContent(content);
-      return alarm;
-    }
-  }
+		public AlarmBuilder withContent(String content) {
+			this.content = content;
+			return this;
+		}
+
+		public Alarm build() {
+			Alarm alarm = new Alarm();
+			alarm.setType(type);
+			alarm.setContent(content);
+			return alarm;
+		}
+	}
 }

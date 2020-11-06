@@ -10,14 +10,14 @@ import org.springframework.http.HttpStatus;
 @NoArgsConstructor
 public class BoardContentSuccessResponseDto {
 
-  private final int status = HttpStatus.OK.value();
-  private final boolean success = true;
-  private final ResponseType message = ResponseType.BOARD_CONTENT_SUCCESS;
-  private BoardContentResponseInfo data;
+	private final int status = HttpStatus.OK.value();
+	private final boolean success = true;
+	private final ResponseType message = ResponseType.BOARD_CONTENT_SUCCESS;
+	private BoardContentResponseInfo data;
 
-  public static BoardContentSuccessResponseDto build(BoardContentResponseInfo boardContentResponseInfo) {
-    BoardContentSuccessResponseDto boardContentSuccessResponseDto = new BoardContentSuccessResponseDto();
-    boardContentSuccessResponseDto.data = boardContentResponseInfo;
-    return boardContentSuccessResponseDto;
-  }
+	public static BoardContentSuccessResponseDto build(BoardContentResponseInfo boardContentResponseInfo) {
+		BoardContentSuccessResponseDto boardContentSuccessResponseDto = new BoardContentSuccessResponseDto();
+		boardContentSuccessResponseDto.data = boardContentResponseInfo;
+		return boardContentSuccessResponseDto;
+	}
 }

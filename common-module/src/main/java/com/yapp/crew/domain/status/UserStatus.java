@@ -1,17 +1,17 @@
 package com.yapp.crew.domain.status;
 
 public enum UserStatus {
-  ACTIVE(1),
-  INACTIVE(0),
-  SUSPENDED(-1);
+	ACTIVE(1),
+	INACTIVE(0),
+	SUSPENDED(-1);
 
-  private final int code;
+	private final int code;
 
-  UserStatus(int code) {
-    this.code = code;
-  }
+	UserStatus(int code) {
+		this.code = code;
+	}
 
-  public int getCode() {
-    return this.code;
-  }
+	public int getCode() {
+		return this.code;
+	}
 }

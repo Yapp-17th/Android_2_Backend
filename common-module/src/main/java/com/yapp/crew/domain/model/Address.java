@@ -23,20 +23,20 @@ import lombok.Setter;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Address extends BaseEntity {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-  @Setter(value = AccessLevel.PRIVATE)
-  @Enumerated(value = EnumType.STRING)
-  @Column(nullable = false)
-  private CityType city;
+	@Setter(value = AccessLevel.PRIVATE)
+	@Enumerated(value = EnumType.STRING)
+	@Column(nullable = false)
+	private CityType city;
 
-  @JsonManagedReference
-  @OneToMany(mappedBy = "address", fetch = FetchType.LAZY)
-  private List<User> users = new ArrayList<>();
+	@JsonManagedReference
+	@OneToMany(mappedBy = "address", fetch = FetchType.LAZY)
+	private List<User> users = new ArrayList<>();
 
-  @JsonManagedReference
-  @OneToMany(mappedBy = "address", fetch = FetchType.LAZY)
-  private List<Board> boards = new ArrayList<>();
+	@JsonManagedReference
+	@OneToMany(mappedBy = "address", fetch = FetchType.LAZY)
+	private List<Board> boards = new ArrayList<>();
 }

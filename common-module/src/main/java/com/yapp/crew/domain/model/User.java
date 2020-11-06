@@ -28,220 +28,220 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(indexes = {
-    @Index(name = "nickname", columnList = "nickname", unique = true),
-    @Index(name = "email", columnList = "email", unique = true),
-    @Index(name = "access_token", columnList = "access_token", unique = true),
-    @Index(name = "oauth_id", columnList = "oauth_id", unique = true)
+		@Index(name = "nickname", columnList = "nickname", unique = true),
+		@Index(name = "email", columnList = "email", unique = true),
+		@Index(name = "access_token", columnList = "access_token", unique = true),
+		@Index(name = "oauth_id", columnList = "oauth_id", unique = true)
 })
 public class User extends BaseEntity {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-  @Setter(value = AccessLevel.PRIVATE)
-  @Column(nullable = false, length = 100)
-  private String username;
+	@Setter(value = AccessLevel.PRIVATE)
+	@Column(nullable = false, length = 100)
+	private String username;
 
-  @Setter(value = AccessLevel.PRIVATE)
-  @Column(nullable = false, length = 100)
-  private String nickname;
+	@Setter(value = AccessLevel.PRIVATE)
+	@Column(nullable = false, length = 100)
+	private String nickname;
 
-  @Setter(value = AccessLevel.PRIVATE)
-  @Column(nullable = false, length = 100)
-  private String email;
+	@Setter(value = AccessLevel.PRIVATE)
+	@Column(nullable = false, length = 100)
+	private String email;
 
-  @Setter(value = AccessLevel.PRIVATE)
-  @Column(nullable = false)
-  private String intro;
+	@Setter(value = AccessLevel.PRIVATE)
+	@Column(nullable = false)
+	private String intro;
 
-  @Setter(value = AccessLevel.PRIVATE)
-  @Column(name = "access_token", nullable = false, length = 100)
-  private String accessToken;
+	@Setter(value = AccessLevel.PRIVATE)
+	@Column(name = "access_token", nullable = false, length = 100)
+	private String accessToken;
 
-  @Setter(value = AccessLevel.PRIVATE)
-  @Column(name = "oauth_id", nullable = false, length = 100)
-  private String oauthId;
+	@Setter(value = AccessLevel.PRIVATE)
+	@Column(name = "oauth_id", nullable = false, length = 100)
+	private String oauthId;
 
-  @Setter(value = AccessLevel.PRIVATE)
-  @Column(name = "report_points", nullable = false)
-  private Integer reportPoints = 0;
+	@Setter(value = AccessLevel.PRIVATE)
+	@Column(name = "report_points", nullable = false)
+	private Integer reportPoints = 0;
 
-  @Setter(value = AccessLevel.PRIVATE)
-  @Enumerated(value = EnumType.STRING)
-  @Column(nullable = false)
-  private UserStatus status = UserStatus.ACTIVE;
+	@Setter(value = AccessLevel.PRIVATE)
+	@Enumerated(value = EnumType.STRING)
+	@Column(nullable = false)
+	private UserStatus status = UserStatus.ACTIVE;
 
-  @JsonBackReference
-  @Setter(value = AccessLevel.PRIVATE)
-  @ManyToOne(fetch = FetchType.LAZY)
-  private Address address;
-
-	@JsonManagedReference
-  @Setter(value = AccessLevel.PRIVATE)
-  @OneToMany(mappedBy = "user")
-  private Set<UserExercise> userExercise = new HashSet<>();
+	@JsonBackReference
+	@Setter(value = AccessLevel.PRIVATE)
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Address address;
 
 	@JsonManagedReference
-  @OneToMany(mappedBy = "user")
-  private Set<AppliedUser> appliedUsers = new HashSet<>();
+	@Setter(value = AccessLevel.PRIVATE)
+	@OneToMany(mappedBy = "user")
+	private Set<UserExercise> userExercise = new HashSet<>();
 
-  @JsonManagedReference
-  @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-  private List<Board> boards = new ArrayList<>();
+	@JsonManagedReference
+	@OneToMany(mappedBy = "user")
+	private Set<AppliedUser> appliedUsers = new HashSet<>();
 
-  @OneToMany(mappedBy = "user")
-  private Set<BookMark> userBookmark = new HashSet<>();
+	@JsonManagedReference
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+	private List<Board> boards = new ArrayList<>();
 
-  @OneToMany(mappedBy = "user")
-  private Set<HiddenBoard> userHiddenBoard = new HashSet<>();
+	@OneToMany(mappedBy = "user")
+	private Set<BookMark> userBookmark = new HashSet<>();
 
-  @JsonManagedReference
-  @OneToMany(mappedBy = "reporter", fetch = FetchType.LAZY)
-  private List<Report> reportList = new ArrayList<>();
+	@OneToMany(mappedBy = "user")
+	private Set<HiddenBoard> userHiddenBoard = new HashSet<>();
 
-  @JsonManagedReference
-  @OneToMany(mappedBy = "reported", fetch = FetchType.LAZY)
-  private List<Report> reportedList = new ArrayList<>();
+	@JsonManagedReference
+	@OneToMany(mappedBy = "reporter", fetch = FetchType.LAZY)
+	private List<Report> reportList = new ArrayList<>();
 
-  @JsonManagedReference
-  @OneToMany(mappedBy = "host", fetch = FetchType.LAZY)
-  private List<ChatRoom> hostList = new ArrayList<>();
+	@JsonManagedReference
+	@OneToMany(mappedBy = "reported", fetch = FetchType.LAZY)
+	private List<Report> reportedList = new ArrayList<>();
 
-  @JsonManagedReference
-  @OneToMany(mappedBy = "guest", fetch = FetchType.LAZY)
-  private List<ChatRoom> guestList = new ArrayList<>();
+	@JsonManagedReference
+	@OneToMany(mappedBy = "host", fetch = FetchType.LAZY)
+	private List<ChatRoom> hostList = new ArrayList<>();
+
+	@JsonManagedReference
+	@OneToMany(mappedBy = "guest", fetch = FetchType.LAZY)
+	private List<ChatRoom> guestList = new ArrayList<>();
 
 
-  public void addAppliedUser(AppliedUser appliedUser) {
-    if (appliedUsers.contains(appliedUser)) {
-      return;
-    }
-    appliedUsers.add(appliedUser);
-  }
+	public void addAppliedUser(AppliedUser appliedUser) {
+		if (appliedUsers.contains(appliedUser)) {
+			return;
+		}
+		appliedUsers.add(appliedUser);
+	}
 
-  public void addBookMark(BookMark bookMark) {
-    userBookmark.add(bookMark);
-  }
+	public void addBookMark(BookMark bookMark) {
+		userBookmark.add(bookMark);
+	}
 
-  public void addHiddenBoard(HiddenBoard hiddenBoard) {
-    this.userHiddenBoard.add(hiddenBoard);
-  }
+	public void addHiddenBoard(HiddenBoard hiddenBoard) {
+		this.userHiddenBoard.add(hiddenBoard);
+	}
 
-  public void addBoard(Board board) {
-    board.setUser(this);
-    this.boards.add(board);
-  }
+	public void addBoard(Board board) {
+		board.setUser(this);
+		this.boards.add(board);
+	}
 
-  public void addReport(Report report) {
-    this.reportList.add(report);
-  }
+	public void addReport(Report report) {
+		this.reportList.add(report);
+	}
 
-  public void addReported(Report reported) {
-    this.reportedList.add(reported);
-  }
+	public void addReported(Report reported) {
+		this.reportedList.add(reported);
+	}
 
-  public void addChatRoomHost(ChatRoom chatRoom) {
-    if (hostList.contains(chatRoom)) {
-      return;
-    }
-    hostList.add(chatRoom);
-  }
+	public void addChatRoomHost(ChatRoom chatRoom) {
+		if (hostList.contains(chatRoom)) {
+			return;
+		}
+		hostList.add(chatRoom);
+	}
 
-  public void addChatRoomGuest(ChatRoom chatRoom) {
-    if (guestList.contains(chatRoom)) {
-      return;
-    }
-    guestList.add(chatRoom);
-  }
+	public void addChatRoomGuest(ChatRoom chatRoom) {
+		if (guestList.contains(chatRoom)) {
+			return;
+		}
+		guestList.add(chatRoom);
+	}
 
-  public Long calculateLikes(List<Evaluation> evaluations) {
-    if (evaluations == null) {
-      return 0L;
-    }
+	public Long calculateLikes(List<Evaluation> evaluations) {
+		if (evaluations == null) {
+			return 0L;
+		}
 
-    return evaluations.stream()
-        .filter(Evaluation::getIsLike)
-        .count();
-  }
+		return evaluations.stream()
+				.filter(Evaluation::getIsLike)
+				.count();
+	}
 
-  public Long calculateDislikes(List<Evaluation> evaluations) {
-    if (evaluations == null) {
-      return 0L;
-    }
+	public Long calculateDislikes(List<Evaluation> evaluations) {
+		if (evaluations == null) {
+			return 0L;
+		}
 
-    return evaluations.stream()
-        .filter(Evaluation::getIsDislike)
-        .count();
-  }
+		return evaluations.stream()
+				.filter(Evaluation::getIsDislike)
+				.count();
+	}
 
-  public void setUserStatusInActive() {
-    this.setStatus(UserStatus.INACTIVE);
-  }
+	public void setUserStatusInActive() {
+		this.setStatus(UserStatus.INACTIVE);
+	}
 
-  public void setUserStatusActive() {
-    this.setStatus(UserStatus.ACTIVE);
-  }
+	public void setUserStatusActive() {
+		this.setStatus(UserStatus.ACTIVE);
+	}
 
-  public static UserBuilder getBuilder() {
-    return new UserBuilder();
-  }
+	public static UserBuilder getBuilder() {
+		return new UserBuilder();
+	}
 
-  public static class UserBuilder {
+	public static class UserBuilder {
 
-    private String username;
-    private String nickname;
-    private String email;
-    private String accessToken;
-    private String oauthId;
-    private Address address;
-    private String intro;
+		private String username;
+		private String nickname;
+		private String email;
+		private String accessToken;
+		private String oauthId;
+		private Address address;
+		private String intro;
 
-    public UserBuilder withUsername(String username) {
-      this.username = username;
-      return this;
-    }
+		public UserBuilder withUsername(String username) {
+			this.username = username;
+			return this;
+		}
 
-    public UserBuilder withNickname(String nickname) {
-      this.nickname = nickname;
-      return this;
-    }
+		public UserBuilder withNickname(String nickname) {
+			this.nickname = nickname;
+			return this;
+		}
 
-    public UserBuilder withEmail(String email) {
-      this.email = email;
-      return this;
-    }
+		public UserBuilder withEmail(String email) {
+			this.email = email;
+			return this;
+		}
 
-    public UserBuilder withAccessToken(String accessToken) {
-      this.accessToken = accessToken;
-      return this;
-    }
+		public UserBuilder withAccessToken(String accessToken) {
+			this.accessToken = accessToken;
+			return this;
+		}
 
-    public UserBuilder withOauthId(String oauthId) {
-      this.oauthId = oauthId;
-      return this;
-    }
+		public UserBuilder withOauthId(String oauthId) {
+			this.oauthId = oauthId;
+			return this;
+		}
 
-    public UserBuilder withIntro(String intro) {
-      this.intro = intro;
-      return this;
-    }
+		public UserBuilder withIntro(String intro) {
+			this.intro = intro;
+			return this;
+		}
 
-    public UserBuilder withAddress(Address address) {
-      this.address = address;
-      return this;
-    }
+		public UserBuilder withAddress(Address address) {
+			this.address = address;
+			return this;
+		}
 
-    public User build() {
-      User user = new User();
-      user.setUsername(username);
-      user.setNickname(nickname);
-      user.setEmail(email);
-      user.setAccessToken(accessToken);
-      user.setAddress(address);
-      user.setIntro(intro);
-      user.setOauthId(oauthId);
-      return user;
-    }
-  }
+		public User build() {
+			User user = new User();
+			user.setUsername(username);
+			user.setNickname(nickname);
+			user.setEmail(email);
+			user.setAccessToken(accessToken);
+			user.setAddress(address);
+			user.setIntro(intro);
+			user.setOauthId(oauthId);
+			return user;
+		}
+	}
 }

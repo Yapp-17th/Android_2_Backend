@@ -23,42 +23,42 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 @NoArgsConstructor
 public class AuthInterceptor extends HandlerInterceptorAdapter {
 
-  private UserRepository userRepository;
-  private Auth auth;
+	private UserRepository userRepository;
+	private Auth auth;
 
-  @Autowired
-  public AuthInterceptor(UserRepository userRepository, Auth auth) {
-    this.userRepository = userRepository;
-    this.auth = auth;
-  }
+	@Autowired
+	public AuthInterceptor(UserRepository userRepository, Auth auth) {
+		this.userRepository = userRepository;
+		this.auth = auth;
+	}
 
-  @Override
-  public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-    String token = request.getHeader(HttpHeaders.AUTHORIZATION);
-    verifyToken(token);
+	@Override
+	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+		String token = request.getHeader(HttpHeaders.AUTHORIZATION);
+		verifyToken(token);
 
-    Long userId = auth.parseUserIdFromToken(token);
-    log.info("[Request User ID] " + userId);
-    User user = findUserById(userId)
-        .orElseThrow(() -> new UserNotFoundException("[INTERCEPTOR Exception] user not found"));
+		Long userId = auth.parseUserIdFromToken(token);
+		log.info("[Request User ID] " + userId);
+		User user = findUserById(userId)
+				.orElseThrow(() -> new UserNotFoundException("[INTERCEPTOR Exception] user not found"));
 
-    checkUserStatus(user.getStatus());
-    return super.preHandle(request, response, handler);
-  }
+		checkUserStatus(user.getStatus());
+		return super.preHandle(request, response, handler);
+	}
 
-  private void checkUserStatus(UserStatus userStatus) {
-    if (userStatus == UserStatus.INACTIVE) {
-      throw new InactiveUserException("inactive user");
-    } else if (userStatus == UserStatus.SUSPENDED) {
-      throw new SuspendedUserException("suspended user");
-    }
-  }
+	private void checkUserStatus(UserStatus userStatus) {
+		if (userStatus == UserStatus.INACTIVE) {
+			throw new InactiveUserException("inactive user");
+		} else if (userStatus == UserStatus.SUSPENDED) {
+			throw new SuspendedUserException("suspended user");
+		}
+	}
 
-  private Optional<User> findUserById(Long userId) {
-    return userRepository.findUserById(userId);
-  }
+	private Optional<User> findUserById(Long userId) {
+		return userRepository.findUserById(userId);
+	}
 
-  private void verifyToken(String token) {
-    auth.verifyToken(token);
-  }
+	private void verifyToken(String token) {
+		auth.verifyToken(token);
+	}
 }

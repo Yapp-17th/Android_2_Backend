@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ExerciseListController {
 
-  @GetMapping(path = "/v1/exercise")
-  public ResponseEntity<?> getExerciseList() {
+	@GetMapping(path = "/v1/exercise")
+	public ResponseEntity<?> getExerciseList() {
 
-    List<String> exerciseList = EnumToList.exerciseEnumToList();
-    EnumListDto enumListDto = EnumListDto.pass(ResponseDomain.EXERCISE.getName(), exerciseList);
+		List<String> exerciseList = EnumToList.exerciseEnumToList();
+		EnumListDto enumListDto = EnumListDto.pass(ResponseDomain.EXERCISE.getName(), exerciseList);
 
-    return ResponseEntity.ok().body(enumListDto);
-  }
+		return ResponseEntity.ok().body(enumListDto);
+	}
 }

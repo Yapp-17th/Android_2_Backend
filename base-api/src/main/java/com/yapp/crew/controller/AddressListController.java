@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class AddressListController {
 
-  @GetMapping(path = "/v1/address/city")
-  public ResponseEntity<?> getAddressCityList() {
+	@GetMapping(path = "/v1/address/city")
+	public ResponseEntity<?> getAddressCityList() {
 
-    List<String> addressList = EnumToList.addressEnumToList();
-    EnumListDto enumListDto = EnumListDto.pass(ResponseDomain.ADDRESS_CITY.getName(), addressList);
+		List<String> addressList = EnumToList.addressEnumToList();
+		EnumListDto enumListDto = EnumListDto.pass(ResponseDomain.ADDRESS_CITY.getName(), addressList);
 
-    return ResponseEntity.ok().body(enumListDto);
-  }
+		return ResponseEntity.ok().body(enumListDto);
+	}
 }

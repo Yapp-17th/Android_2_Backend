@@ -8,9 +8,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class BoardReportRequestDto {
 
-  @NotNull
-  private Long boardId;
-  @NotNull
-  private Long reportType;
-  private String content;
+	@NotNull
+	private Long boardId;
+	@NotNull
+	private Long reportType;
+	private String content;
 }

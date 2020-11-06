@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class UserReportTypeListController {
 
-  @GetMapping(path = "/v1/user/report/type")
-  public ResponseEntity<?> getUserReportTypeList() {
+	@GetMapping(path = "/v1/user/report/type")
+	public ResponseEntity<?> getUserReportTypeList() {
 
-    List<String> userReportTypeList = EnumToList.userReportTypeEnumToList();
-    EnumListDto enumListDto = EnumListDto.pass(ResponseDomain.USER_REPORT_TYPE.getName(), userReportTypeList);
+		List<String> userReportTypeList = EnumToList.userReportTypeEnumToList();
+		EnumListDto enumListDto = EnumListDto.pass(ResponseDomain.USER_REPORT_TYPE.getName(), userReportTypeList);
 
-    return ResponseEntity.ok().body(enumListDto);
-  }
+		return ResponseEntity.ok().body(enumListDto);
+	}
 }

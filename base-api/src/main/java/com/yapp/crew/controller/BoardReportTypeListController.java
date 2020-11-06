@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class BoardReportTypeListController {
 
-  @GetMapping(path = "/v1/board/report/type")
-  public ResponseEntity<?> getBoardReportTypeList() {
+	@GetMapping(path = "/v1/board/report/type")
+	public ResponseEntity<?> getBoardReportTypeList() {
 
-    List<String> boardReportTypeList = EnumToList.boardReportTypeEnumToList();
-    EnumListDto enumListDto = EnumListDto.pass(ResponseDomain.BOARD_REPORT_TYPE.getName(), boardReportTypeList);
+		List<String> boardReportTypeList = EnumToList.boardReportTypeEnumToList();
+		EnumListDto enumListDto = EnumListDto.pass(ResponseDomain.BOARD_REPORT_TYPE.getName(), boardReportTypeList);
 
-    return ResponseEntity.ok().body(enumListDto);
-  }
+		return ResponseEntity.ok().body(enumListDto);
+	}
 }
