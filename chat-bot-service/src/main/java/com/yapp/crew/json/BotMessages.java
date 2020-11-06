@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 @Component
 @PropertySource(value = "classpath:bot-messages.json", encoding = "UTF-8")
-@ConfigurationProperties(prefix = "kafka.topics")
+@ConfigurationProperties
 public class BotMessages {
 
 	@JsonProperty(value = "guideline_message")
