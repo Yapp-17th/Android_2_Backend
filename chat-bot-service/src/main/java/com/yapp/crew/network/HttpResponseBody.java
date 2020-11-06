@@ -25,12 +25,13 @@ public class HttpResponseBody<T> {
 	@JsonInclude(NON_NULL)
 	private String message;
 
-	public static <T> HttpResponseBody<T> buildErrorResponse(Integer status, ResponseType responseType, String message) {
+	public static <T> HttpResponseBody<T> buildErrorResponse(Integer status,
+			ResponseType responseType, String message) {
 		return (HttpResponseBody<T>) HttpResponseBody.builder()
-						.transactionTime(LocalDateTime.now())
-						.status(status)
-						.responseType(responseType)
-						.message(message)
-						.build();
+				.transactionTime(LocalDateTime.now())
+				.status(status)
+				.responseType(responseType)
+				.message(message)
+				.build();
 	}
 }

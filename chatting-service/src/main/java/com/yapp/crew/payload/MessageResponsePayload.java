@@ -45,26 +45,27 @@ public class MessageResponsePayload {
 
 	public static MessageResponsePayload buildChatMessageResponsePayload(Message message) {
 		return MessageResponsePayload.builder()
-						.id(message.getId())
-						.content(message.getContent())
-						.type(message.getType())
-						.isHostRead(message.isHostRead())
-						.isGuestRead(message.isGuestRead())
-						.senderId(message.getSender().getId())
-						.senderNickname(message.getSender().getNickname())
-						.createdAt(message.getCreatedAt())
-						.build();
+				.id(message.getId())
+				.content(message.getContent())
+				.type(message.getType())
+				.isHostRead(message.isHostRead())
+				.isGuestRead(message.isGuestRead())
+				.senderId(message.getSender().getId())
+				.senderNickname(message.getSender().getNickname())
+				.createdAt(message.getCreatedAt())
+				.build();
 	}
 
-	public static List<MessageResponsePayload> buildMessageResponsePayload(MessageRepository messageRepository, List<Message> messages, boolean isHost) {
+	public static List<MessageResponsePayload> buildMessageResponsePayload(
+			MessageRepository messageRepository, List<Message> messages, boolean isHost) {
 		return messages.stream()
-						.map(message -> {
-							message.readMessage(isHost);
+				.map(message -> {
+					message.readMessage(isHost);
 
-							messageRepository.save(message);
+					messageRepository.save(message);
 
-							return MessageResponsePayload.buildChatMessageResponsePayload(message);
-						})
-						.collect(Collectors.toList());
+					return MessageResponsePayload.buildChatMessageResponsePayload(message);
+				})
+				.collect(Collectors.toList());
 	}
 }

@@ -29,19 +29,21 @@ public class ChatBotProducer {
 
 	@Autowired
 	public ChatBotProducer(
-					KafkaTemplate<Long, String> kafkaTemplate,
-					ObjectMapper objectMapper
+			KafkaTemplate<Long, String> kafkaTemplate,
+			ObjectMapper objectMapper
 	) {
 		this.kafkaTemplate = kafkaTemplate;
 		this.objectMapper = objectMapper;
 	}
 
-	public ListenableFuture<SendResult<Long, String>> sendBotMessage(MessageRequestPayload messageRequestPayload) throws JsonProcessingException {
+	public ListenableFuture<SendResult<Long, String>> sendBotMessage(
+			MessageRequestPayload messageRequestPayload) throws JsonProcessingException {
 		Long key = messageRequestPayload.getChatRoomId();
 		String value = objectMapper.writeValueAsString(messageRequestPayload);
 
 		ProducerRecord<Long, String> producerRecord = buildProducerRecord(key, value, chatMessageTopic);
-		ListenableFuture<SendResult<Long, String>> listenableFuture = kafkaTemplate.send(producerRecord);
+		ListenableFuture<SendResult<Long, String>> listenableFuture = kafkaTemplate
+				.send(producerRecord);
 		listenableFuture.addCallback(new ListenableFutureCallback<>() {
 			@Override
 			public void onFailure(Throwable ex) {
@@ -71,6 +73,7 @@ public class ChatBotProducer {
 	}
 
 	private void handleSuccess(Long key, String value, SendResult<Long, String> result) {
-		log.info("Message send successfully for the key: {} and the value is {}, partition is {}", key, value, result.getRecordMetadata().partition());
+		log.info("Message send successfully for the key: {} and the value is {}, partition is {}", key,
+				value, result.getRecordMetadata().partition());
 	}
 }

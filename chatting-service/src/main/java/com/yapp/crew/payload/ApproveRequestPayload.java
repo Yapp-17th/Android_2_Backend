@@ -18,7 +18,7 @@ public class ApproveRequestPayload {
 	private Long chatRoomId;
 
 	private Long boardId;
-	
+
 	private Long hostId;
 
 	@NotNull

@@ -1,7 +1,5 @@
 package com.yapp.crew.consumer;
 
-import java.util.List;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yapp.crew.domain.errors.AlreadyAppliedException;
@@ -26,9 +24,9 @@ import com.yapp.crew.payload.ApproveRequestPayload;
 import com.yapp.crew.payload.GuidelineRequestPayload;
 import com.yapp.crew.payload.MessageRequestPayload;
 import com.yapp.crew.producer.ChatBotProducer;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
@@ -56,14 +54,14 @@ public class ChatBotConsumer {
 
 	@Autowired
 	public ChatBotConsumer(
-					BotMessages botMessages,
-					ChatBotProducer chatBotProducer,
-					AppliedUserRepository appliedUserRepository,
-					EvaluationRepository evaluationRepository,
-					ChatRoomRepository chatRoomRepository,
-					BoardRepository boardRepository,
-					UserRepository userRepository,
-					ObjectMapper objectMapper
+			BotMessages botMessages,
+			ChatBotProducer chatBotProducer,
+			AppliedUserRepository appliedUserRepository,
+			EvaluationRepository evaluationRepository,
+			ChatRoomRepository chatRoomRepository,
+			BoardRepository boardRepository,
+			UserRepository userRepository,
+			ObjectMapper objectMapper
 	) {
 		this.botMessages = botMessages;
 		this.chatBotProducer = chatBotProducer;
@@ -76,47 +74,52 @@ public class ChatBotConsumer {
 	}
 
 	@KafkaListener(topics = "${kafka.topics.guideline-message}", groupId = "${kafka.groups.guideline-message-group}")
-	public void consumeBotGuidelineMessage(ConsumerRecord<Long, String> consumerRecord) throws JsonProcessingException {
+	public void consumeBotGuidelineMessage(ConsumerRecord<Long, String> consumerRecord)
+			throws JsonProcessingException {
 		log.info("[Chat Bot Event - Guideline Message] Consumer Record: {}", consumerRecord);
 
-		GuidelineRequestPayload guidelineRequestPayload = objectMapper.readValue(consumerRecord.value(), GuidelineRequestPayload.class);
+		GuidelineRequestPayload guidelineRequestPayload = objectMapper
+				.readValue(consumerRecord.value(), GuidelineRequestPayload.class);
 
 		MessageRequestPayload guidelineMessagePayload = MessageRequestPayload.builder()
-						.content(botMessages.getGuidelineMessage().replace("\"", ""))
-						.type(MessageType.BOT_MESSAGE)
-						.senderId(guidelineRequestPayload.getSenderId())
-						.chatRoomId(guidelineRequestPayload.getChatRoomId())
-						.build();
+				.content(botMessages.getGuidelineMessage().replace("\"", ""))
+				.type(MessageType.BOT_MESSAGE)
+				.senderId(guidelineRequestPayload.getSenderId())
+				.chatRoomId(guidelineRequestPayload.getChatRoomId())
+				.build();
 
 		chatBotProducer.sendBotMessage(guidelineMessagePayload);
 	}
 
 	@Transactional
 	@KafkaListener(topics = "${kafka.topics.apply-user}", groupId = "${kafka.groups.apply-user-group}")
-	public void consumeBotEventApplyUser(ConsumerRecord<Long, String> consumerRecord) throws JsonProcessingException {
+	public void consumeBotEventApplyUser(ConsumerRecord<Long, String> consumerRecord)
+			throws JsonProcessingException {
 		log.info("[Chat Bot Event - Apply User] Consumer Record: {}", consumerRecord);
 
-		ApplyRequestPayload applyRequestPayload = objectMapper.readValue(consumerRecord.value(), ApplyRequestPayload.class);
+		ApplyRequestPayload applyRequestPayload = objectMapper
+				.readValue(consumerRecord.value(), ApplyRequestPayload.class);
 
 		User applier = userRepository.findUserById(applyRequestPayload.getApplierId())
-						.orElseThrow(() -> new UserNotFoundException("[Not Found] User not found"));
+				.orElseThrow(() -> new UserNotFoundException("[Not Found] User not found"));
 
 		User bot = userRepository.findUserById(-1L)
-						.orElseThrow(() -> new UserNotFoundException("[Not Found] Bot not found"));
+				.orElseThrow(() -> new UserNotFoundException("[Not Found] Bot not found"));
 
 		Board board = boardRepository.findById(applyRequestPayload.getBoardId())
-						.orElseThrow(() -> new BoardNotFoundException("[Not Found] Board not found"));
+				.orElseThrow(() -> new BoardNotFoundException("[Not Found] Board not found"));
 
 		ChatRoom chatRoom = chatRoomRepository.findById(applyRequestPayload.getChatRoomId())
-						.orElseThrow(() -> new ChatRoomNotFoundException("[Not Found] Chat room not found"));
+				.orElseThrow(() -> new ChatRoomNotFoundException("[Not Found] Chat room not found"));
 
 		MessageRequestPayload applyMessagePayload = MessageRequestPayload.builder()
-						.content(String.format(botMessages.getApplyMessage(), applier.getNickname()).replace("\"", ""))
-						.type(MessageType.BOT_MESSAGE)
-						.senderId(bot.getId())
-						.chatRoomId(chatRoom.getId())
-						.boardId(board.getId())
-						.build();
+				.content(
+						String.format(botMessages.getApplyMessage(), applier.getNickname()).replace("\"", ""))
+				.type(MessageType.BOT_MESSAGE)
+				.senderId(bot.getId())
+				.chatRoomId(chatRoom.getId())
+				.boardId(board.getId())
+				.build();
 
 		List<Evaluation> evaluations = evaluationRepository.findAllByUserId(applier.getId());
 
@@ -131,42 +134,45 @@ public class ChatBotConsumer {
 		board.addAppliedUser(newApply);
 
 		MessageRequestPayload profileMessagePayload = MessageRequestPayload.builder()
-						.content(String.format(
-										botMessages.getProfileMessage(),
-										applier.getNickname(),
-										applier.calculateLikes(evaluations),
-										applier.calculateDislikes(evaluations),
-										applier.getIntro()
-						).replace("\"", ""))
-						.type(MessageType.PROFILE)
-						.senderId(applier.getId())
-						.chatRoomId(chatRoom.getId())
-						.boardId(board.getId())
-						.build();
+				.content(String.format(
+						botMessages.getProfileMessage(),
+						applier.getNickname(),
+						applier.calculateLikes(evaluations),
+						applier.calculateDislikes(evaluations),
+						applier.getIntro()
+				).replace("\"", ""))
+				.type(MessageType.PROFILE)
+				.senderId(applier.getId())
+				.chatRoomId(chatRoom.getId())
+				.boardId(board.getId())
+				.build();
 
 		chatBotProducer.sendBotMessage(applyMessagePayload);
 		chatBotProducer.sendBotMessage(profileMessagePayload);
 	}
 
 	@KafkaListener(topics = "${kafka.topics.approve-user}", groupId = "${kafka.groups.approve-user-group}")
-	public void consumeBotEventAcceptUser(ConsumerRecord<Long, String> consumerRecord) throws JsonProcessingException {
+	public void consumeBotEventAcceptUser(ConsumerRecord<Long, String> consumerRecord)
+			throws JsonProcessingException {
 		log.info("[Chat Bot Event - Approve User] Consumer Record: {}", consumerRecord);
 
-		ApproveRequestPayload approveRequestPayload = objectMapper.readValue(consumerRecord.value(), ApproveRequestPayload.class);
+		ApproveRequestPayload approveRequestPayload = objectMapper
+				.readValue(consumerRecord.value(), ApproveRequestPayload.class);
 
 		User host = userRepository.findUserById(approveRequestPayload.getHostId())
-						.orElseThrow(() -> new UserNotFoundException("[Not Found] User not found"));
+				.orElseThrow(() -> new UserNotFoundException("[Not Found] User not found"));
 
 		User bot = userRepository.findUserById(-1L)
-						.orElseThrow(() -> new UserNotFoundException("[Not Found] Bot not found"));
+				.orElseThrow(() -> new UserNotFoundException("[Not Found] Bot not found"));
 
 		MessageRequestPayload approveMessagePayload = MessageRequestPayload.builder()
-						.content(String.format(botMessages.getApproveMessage(), host.getNickname()).replace("\"", ""))
-						.type(MessageType.BOT_MESSAGE)
-						.senderId(bot.getId())
-						.chatRoomId(approveRequestPayload.getChatRoomId())
-						.boardId(approveRequestPayload.getBoardId())
-						.build();
+				.content(
+						String.format(botMessages.getApproveMessage(), host.getNickname()).replace("\"", ""))
+				.type(MessageType.BOT_MESSAGE)
+				.senderId(bot.getId())
+				.chatRoomId(approveRequestPayload.getChatRoomId())
+				.boardId(approveRequestPayload.getBoardId())
+				.build();
 
 		chatBotProducer.sendBotMessage(approveMessagePayload);
 	}
