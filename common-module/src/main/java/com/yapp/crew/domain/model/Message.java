@@ -1,10 +1,6 @@
 package com.yapp.crew.domain.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.yapp.crew.domain.type.MessageType;
-import java.util.List;
 import javax.persistence.Column;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -14,6 +10,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.yapp.crew.domain.type.MessageType;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -44,10 +43,6 @@ public class Message extends BaseEntity {
 	@Setter(value = AccessLevel.PRIVATE)
 	@Column(name = "is_guest_read", nullable = false)
 	private boolean isGuestRead = false;
-
-	@Embedded
-	@Setter(value = AccessLevel.PRIVATE)
-	private ProfileMessage profileMessage;
 
   @JsonBackReference
   @Setter(value = AccessLevel.PRIVATE)
@@ -80,19 +75,6 @@ public class Message extends BaseEntity {
 						.build();
 	}
 
-	public static Message buildProfileMessage(String content, User sender, ChatRoom chatRoom, List<Evaluation> evaluations) {
-		return Message.getBuilder()
-						.withContent(content)
-						.withType(MessageType.PROFILE)
-						.withIsHostRead(false)
-						.withIsGuestRead(false)
-						.withSender(sender)
-						.withChatRoom(chatRoom)
-						.withLikes(sender.calculateLikes(evaluations))
-						.withDislikes(sender.calculateDislikes(evaluations))
-						.build();
-	}
-
   public static MessageBuilder getBuilder() {
     return new MessageBuilder();
   }
@@ -102,8 +84,6 @@ public class Message extends BaseEntity {
     private MessageType type;
     private boolean isHostRead;
     private boolean isGuestRead;
-    private Long likes;
-    private Long dislikes;
     private User sender;
     private ChatRoom chatRoom;
 
@@ -127,16 +107,6 @@ public class Message extends BaseEntity {
 			return this;
 		}
 
-		public MessageBuilder withLikes(Long likes) {
-    	this.likes = likes;
-    	return this;
-		}
-
-		public MessageBuilder withDislikes(Long dislikes) {
-    	this.dislikes = dislikes;
-    	return this;
-		}
-
     public MessageBuilder withSender(User sender) {
       this.sender = sender;
       return this;
@@ -153,7 +123,6 @@ public class Message extends BaseEntity {
       message.setType(type);
       message.setHostRead(isHostRead);
       message.setGuestRead(isGuestRead);
-      message.setProfileMessage(new ProfileMessage(likes, dislikes));
       message.setSender(sender);
       message.setChatRoom(chatRoom);
       return message;
