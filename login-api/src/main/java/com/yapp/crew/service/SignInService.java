@@ -1,7 +1,6 @@
 package com.yapp.crew.service;
 
 import com.yapp.crew.domain.errors.InactiveUserException;
-import com.yapp.crew.domain.errors.InternalServerErrorException;
 import com.yapp.crew.domain.errors.SuspendedUserException;
 import com.yapp.crew.domain.errors.UserNotFoundException;
 import com.yapp.crew.domain.model.User;
@@ -42,15 +41,10 @@ public class SignInService {
       throw new InactiveUserException("inactive user exception");
     }
 
-    try {
-      HttpHeaders httpHeaders = tokenService.setToken(existingUser);
+    HttpHeaders httpHeaders = tokenService.setToken(existingUser);
+    SimpleResponse simpleResponse = SimpleResponse.pass(ResponseType.SUCCESS);
 
-      SimpleResponse simpleResponse = SimpleResponse.pass(ResponseType.SUCCESS);
-      return new UserAuthResponse(httpHeaders, simpleResponse);
-    } catch (Exception e) {
-      log.info("Internal server error: " + e.getMessage());
-      throw new InternalServerErrorException("internal server error");
-    }
+    return new UserAuthResponse(httpHeaders, simpleResponse);
   }
 
   private Optional<User> getUserByOauthId(String oauthId) {

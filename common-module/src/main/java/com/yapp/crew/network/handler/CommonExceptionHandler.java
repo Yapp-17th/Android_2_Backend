@@ -1,14 +1,14 @@
-package com.yapp.crew.handler;
+package com.yapp.crew.network.handler;
 
 import com.yapp.crew.domain.errors.AddressNotFoundException;
 import com.yapp.crew.domain.errors.BoardNotFoundException;
 import com.yapp.crew.domain.errors.CategoryNotFoundException;
 import com.yapp.crew.domain.errors.InactiveUserException;
-import com.yapp.crew.domain.errors.InternalServerErrorException;
 import com.yapp.crew.domain.errors.InvalidRequestBodyException;
 import com.yapp.crew.domain.errors.SuspendedUserException;
 import com.yapp.crew.domain.errors.TagNotFoundException;
 import com.yapp.crew.domain.errors.TokenRequiredException;
+import com.yapp.crew.domain.errors.UserDuplicateFieldException;
 import com.yapp.crew.domain.errors.UserNotFoundException;
 import com.yapp.crew.domain.errors.WrongTokenPrefixException;
 import com.yapp.crew.domain.type.ResponseType;
@@ -23,9 +23,10 @@ import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.client.HttpServerErrorException.InternalServerError;
 
 @ControllerAdvice
-public class BoardExceptionHandler {
+public class CommonExceptionHandler {
 
   @ExceptionHandler(value = InactiveUserException.class)
   public ResponseEntity<?> handleInactiveUserException() {
@@ -33,7 +34,7 @@ public class BoardExceptionHandler {
     return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
   }
 
-  @ExceptionHandler(value = InternalServerErrorException.class)
+  @ExceptionHandler(value = InternalServerError.class)
   public ResponseEntity<?> handleInternalServerErrorException() {
     SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.INTERNAL_SERVER_ERROR, ResponseType.INTERNAL_SERVER_FAIL);
     return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
@@ -124,8 +125,14 @@ public class BoardExceptionHandler {
   }
 
   @ExceptionHandler(value = MissingServletRequestParameterException.class)
-  public ResponseEntity<?> handleMissingServletRequestParameterException(){
+  public ResponseEntity<?> handleMissingServletRequestParameterException() {
     SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.BAD_REQUEST, ResponseType.INVALID_REQUEST_PARAM);
+    return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
+  }
+
+  @ExceptionHandler(value = UserDuplicateFieldException.class)
+  public ResponseEntity<?> handleUserDuplicateFieldException(Exception ex) {
+    SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.UNAUTHORIZED, ex.getMessage());
     return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
   }
 }

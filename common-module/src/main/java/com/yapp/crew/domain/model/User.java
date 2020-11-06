@@ -15,8 +15,10 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,6 +27,12 @@ import lombok.Setter;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(indexes = {
+    @Index(name = "nickname", columnList = "nickname", unique = true),
+    @Index(name = "email", columnList = "email", unique = true),
+    @Index(name = "access_token", columnList = "access_token", unique = true),
+    @Index(name = "oauth_id", columnList = "oauth_id", unique = true)
+})
 public class User extends BaseEntity {
 
   @Id
@@ -36,23 +44,23 @@ public class User extends BaseEntity {
   private String username;
 
   @Setter(value = AccessLevel.PRIVATE)
-  @Column(nullable = false, unique = true, length = 100)
+  @Column(nullable = false, length = 100)
   private String nickname;
 
   @Setter(value = AccessLevel.PRIVATE)
-  @Column(nullable = false, unique = true, length = 100)
+  @Column(nullable = false, length = 100)
   private String email;
 
   @Setter(value = AccessLevel.PRIVATE)
-  @Column(nullable = false, length = 255)
+  @Column(nullable = false)
   private String intro;
 
   @Setter(value = AccessLevel.PRIVATE)
-  @Column(name = "access_token", nullable = false, unique = true, length = 100)
+  @Column(name = "access_token", nullable = false, length = 100)
   private String accessToken;
 
   @Setter(value = AccessLevel.PRIVATE)
-  @Column(name = "oauth_id", nullable = false, unique = true, length = 100)
+  @Column(name = "oauth_id", nullable = false, length = 100)
   private String oauthId;
 
   @Setter(value = AccessLevel.PRIVATE)

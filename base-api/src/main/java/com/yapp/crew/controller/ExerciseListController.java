@@ -2,10 +2,9 @@ package com.yapp.crew.controller;
 
 import com.yapp.crew.utils.ResponseDomain;
 import com.yapp.crew.dto.EnumListDto;
-import com.yapp.crew.dto.EnumListFailDto;
-import com.yapp.crew.dto.EnumListSuccessDto;
 import com.yapp.crew.utils.EnumToList;
 import java.util.List;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,18 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class ExerciseListController {
 
   @GetMapping(path = "/v1/exercise")
-  public EnumListDto getExerciseList() {
-    try {
-      List<String> exerciseList = EnumToList.exerciseEnumToList();
-      EnumListSuccessDto enumListSuccessDto= EnumListSuccessDto.builder(ResponseDomain.EXERCISE.getName());
-      enumListSuccessDto.setData(exerciseList);
+  public ResponseEntity<?> getExerciseList() {
 
-      return EnumListDto.pass(enumListSuccessDto);
-    } catch (Exception e) {
-      EnumListFailDto enumListFailDto=EnumListFailDto.builder(ResponseDomain.EXERCISE.getName());
-      enumListFailDto.addMessage(e.getMessage());
+    List<String> exerciseList = EnumToList.exerciseEnumToList();
+    EnumListDto enumListDto = EnumListDto.pass(ResponseDomain.EXERCISE.getName(), exerciseList);
 
-      return EnumListDto.fail(enumListFailDto);
-    }
+    return ResponseEntity.ok().body(enumListDto);
   }
 }
