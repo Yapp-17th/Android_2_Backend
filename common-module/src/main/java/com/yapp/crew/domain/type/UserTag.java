@@ -2,8 +2,7 @@ package com.yapp.crew.domain.type;
 
 public enum UserTag {
   TIGHT_USER("빡겜러"),
-  FUN_USER("즐겜러"),
-  NOTALK_USER("no-talk");
+  FUN_USER("즐겜러");
 
   private final String name;
 

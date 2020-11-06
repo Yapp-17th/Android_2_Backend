@@ -28,4 +28,12 @@ public class SimpleResponse {
     simpleResponse.message = message.getMessage();
     return simpleResponse;
   }
+
+  public static SimpleResponse fail(HttpStatus httpStatus, String message) {
+    SimpleResponse simpleResponse = new SimpleResponse();
+    simpleResponse.status = httpStatus.value();
+    simpleResponse.isSuccess = false;
+    simpleResponse.message = message;
+    return simpleResponse;
+  }
 }

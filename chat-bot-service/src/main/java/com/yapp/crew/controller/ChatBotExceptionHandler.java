@@ -14,19 +14,19 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class ChatBotExceptionHandler {
 
 	@ExceptionHandler(value = ChatRoomNotFoundException.class)
-	public ResponseEntity<?> handleChatRoomNotFoundException(ChatRoomNotFoundException ex) {
+	public ResponseEntity<?> handleChatRoomNotFoundException() {
 		HttpResponseBody<?> responseBody = HttpResponseBody.buildErrorResponse(HttpStatus.NOT_FOUND.value(), ResponseType.CHATROOM_NOT_FOUND, ResponseType.CHATROOM_NOT_FOUND.getMessage());
 		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
 	}
 
 	@ExceptionHandler(value = UserNotFoundException.class)
-	public ResponseEntity<?> handleUserNotFoundException(UserNotFoundException ex) {
+	public ResponseEntity<?> handleUserNotFoundException() {
 		HttpResponseBody<?> responseBody = HttpResponseBody.buildErrorResponse(HttpStatus.NOT_FOUND.value(), ResponseType.USER_NOT_FOUND, ResponseType.USER_NOT_FOUND.getMessage());
 		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
 	}
 
 	@ExceptionHandler(value = BoardNotFoundException.class)
-	public ResponseEntity<?> handleBoardNotFoundException(BoardNotFoundException ex) {
+	public ResponseEntity<?> handleBoardNotFoundException() {
 		HttpResponseBody<?> responseBody = HttpResponseBody.buildErrorResponse(HttpStatus.NOT_FOUND.value(), ResponseType.BOARD_NOT_FOUND, ResponseType.BOARD_NOT_FOUND.getMessage());
 		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
 	}

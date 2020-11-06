@@ -1,7 +1,7 @@
 package com.yapp.crew.utils;
 
 public enum ResponseDomain {
-  ADDRESSCITY("city"),
+  ADDRESS_CITY("city"),
   EXERCISE("exercise"),
   USER_TAG("userTag"),
   BOARD_REPORT_TYPE("boardReportType"),

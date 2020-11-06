@@ -1,7 +1,6 @@
 package com.yapp.crew.controller;
 
 import com.yapp.crew.domain.auth.Auth;
-import com.yapp.crew.domain.errors.InternalServerErrorException;
 import com.yapp.crew.dto.request.BoardInfoRequestDto;
 import com.yapp.crew.dto.response.BoardContentSuccessResponseDto;
 import com.yapp.crew.dto.response.BoardListSuccessResponseDto;
@@ -76,9 +75,6 @@ public class BoardController {
 
     long userId = auth.parseUserIdFromToken(token);
     BoardContentResponseInfo boardContentResponseInfo = boardService.getBoardContent(boardId, userId);
-    if (boardContentResponseInfo == null) {
-      throw new InternalServerErrorException("internal server error");
-    }
 
     return ResponseEntity.ok().body(BoardContentSuccessResponseDto.build(boardContentResponseInfo));
   }
