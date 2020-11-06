@@ -6,9 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface EvaluationRepository extends JpaRepository<Evaluation, Long> {
 
-  Evaluation save(Evaluation evaluation);
+	Evaluation save(Evaluation evaluation);
 
-  List<Evaluation> findAllByUserId(Long userId);
+	List<Evaluation> findAllByUserId(Long userId);
 
-  List<Evaluation> findAllByBoardId(Long boardId);
+	List<Evaluation> findAllByBoardId(Long boardId);
 }

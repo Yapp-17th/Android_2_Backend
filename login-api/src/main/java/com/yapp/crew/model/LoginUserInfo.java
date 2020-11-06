@@ -7,5 +7,5 @@ import lombok.Getter;
 @Getter
 public class LoginUserInfo {
 
-  private String oauthId;
+	private String oauthId;
 }

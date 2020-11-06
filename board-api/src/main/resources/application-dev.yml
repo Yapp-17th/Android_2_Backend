@@ -3,9 +3,9 @@ spring:
     active: dev
 
   datasource:
-    url: jdbc:mysql://localhost:3306/explanet_dev?useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC&createDatabaseIfNotExist=true
+    url: jdbc:mysql://18.215.230.51:3306/explanet_dev?useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC&createDatabaseIfNotExist=true
     username: root
-    password:
+    password: password
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:

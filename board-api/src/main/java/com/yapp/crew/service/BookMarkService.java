@@ -22,64 +22,64 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class BookMarkService {
 
-  private BookMarkRepository bookMarkRepository;
-  private BoardRepository boardRepository;
-  private UserRepository userRepository;
+	private BookMarkRepository bookMarkRepository;
+	private BoardRepository boardRepository;
+	private UserRepository userRepository;
 
-  @Autowired
-  public BookMarkService(BookMarkRepository bookMarkRepository, BoardRepository boardRepository, UserRepository userRepository) {
-    this.bookMarkRepository = bookMarkRepository;
-    this.boardRepository = boardRepository;
-    this.userRepository = userRepository;
-  }
+	@Autowired
+	public BookMarkService(BookMarkRepository bookMarkRepository, BoardRepository boardRepository, UserRepository userRepository) {
+		this.bookMarkRepository = bookMarkRepository;
+		this.boardRepository = boardRepository;
+		this.userRepository = userRepository;
+	}
 
-  @Transactional
-  public SimpleResponse createBookMark(Long boardId, Long userId) {
-    Board board = findBoardById(boardId)
-        .orElseThrow(() -> new BoardNotFoundException("board not found"));
-    User user = findUserById(userId)
-        .orElseThrow(() -> new UserNotFoundException("user not found"));
+	@Transactional
+	public SimpleResponse createBookMark(Long boardId, Long userId) {
+		Board board = findBoardById(boardId)
+				.orElseThrow(() -> new BoardNotFoundException("board not found"));
+		User user = findUserById(userId)
+				.orElseThrow(() -> new UserNotFoundException("user not found"));
 
-    saveBookMark(board, user);
-    return SimpleResponse.pass(ResponseType.BOOKMARK_POST_SUCCESS);
-  }
+		saveBookMark(board, user);
+		return SimpleResponse.pass(ResponseType.BOOKMARK_POST_SUCCESS);
+	}
 
-  @Transactional
-  public SimpleResponse deleteBookMark(Long boardId, Long userId) {
-    Board board = findBoardById(boardId)
-        .orElseThrow(() -> new BoardNotFoundException("board not found"));
-    User user = findUserById(userId)
-        .orElseThrow(() -> new UserNotFoundException("user not found"));
+	@Transactional
+	public SimpleResponse deleteBookMark(Long boardId, Long userId) {
+		Board board = findBoardById(boardId)
+				.orElseThrow(() -> new BoardNotFoundException("board not found"));
+		User user = findUserById(userId)
+				.orElseThrow(() -> new UserNotFoundException("user not found"));
 
-    deleteBookMark(board, user);
-    return SimpleResponse.pass(ResponseType.BOOKMARK_DELETE_SUCCESS);
-  }
+		deleteBookMark(board, user);
+		return SimpleResponse.pass(ResponseType.BOOKMARK_DELETE_SUCCESS);
+	}
 
-  private void deleteBookMark(Board board, User user) {
-    bookMarkRepository.deleteByUserAndBoard(user, board);
-    log.info("북마크 삭제 완료");
-  }
+	private void deleteBookMark(Board board, User user) {
+		bookMarkRepository.deleteByUserAndBoard(user, board);
+		log.info("북마크 삭제 완료");
+	}
 
-  private void saveBookMark(Board board, User user) {
-    BookMarkBuilder bookMarkBuilder = BookMark.getBuilder();
-    BookMark bookMark = bookMarkBuilder
-        .withUser(user)
-        .withBoard(board)
-        .build();
+	private void saveBookMark(Board board, User user) {
+		BookMarkBuilder bookMarkBuilder = BookMark.getBuilder();
+		BookMark bookMark = bookMarkBuilder
+				.withUser(user)
+				.withBoard(board)
+				.build();
 
-    user.addBookMark(bookMark);
-    board.addBookMark(bookMark);
+		user.addBookMark(bookMark);
+		board.addBookMark(bookMark);
 
-    bookMarkRepository.save(bookMark);
-  }
+		bookMarkRepository.save(bookMark);
+	}
 
-  private Optional<Board> findBoardById(Long boardId) {
-    log.info("board 가져오기 성공");
-    return boardRepository.findBoardById(boardId).filter(board -> board.getStatus().getCode() != BoardStatus.CANCELED.getCode());
-  }
+	private Optional<Board> findBoardById(Long boardId) {
+		log.info("board 가져오기 성공");
+		return boardRepository.findBoardById(boardId).filter(board -> board.getStatus().getCode() != BoardStatus.CANCELED.getCode());
+	}
 
-  private Optional<User> findUserById(Long userId) {
-    log.info("user 가져오기 성공");
-    return userRepository.findUserById(userId);
-  }
+	private Optional<User> findUserById(Long userId) {
+		log.info("user 가져오기 성공");
+		return userRepository.findUserById(userId);
+	}
 }

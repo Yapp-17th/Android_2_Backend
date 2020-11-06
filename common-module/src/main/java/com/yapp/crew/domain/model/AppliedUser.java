@@ -42,10 +42,10 @@ public class AppliedUser {
 
 	public static AppliedUser buildAppliedUser(User user, Board board, AppliedStatus status) {
 		return AppliedUser.getBuilder()
-						.withUser(user)
-						.withBoard(board)
-						.withStatus(status)
-						.build();
+				.withUser(user)
+				.withBoard(board)
+				.withStatus(status)
+				.build();
 	}
 
 	public void approveUser() {
@@ -57,6 +57,7 @@ public class AppliedUser {
 	}
 
 	public static class AppliedUserBuilder {
+
 		private User user;
 		private Board board;
 		private AppliedStatus status;

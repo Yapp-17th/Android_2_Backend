@@ -9,10 +9,10 @@ import org.springframework.http.HttpHeaders;
 @Getter
 public class UserAuthResponse {
 
-  HttpHeaders httpHeaders;
-  SimpleResponse simpleResponse;
+	HttpHeaders httpHeaders;
+	SimpleResponse simpleResponse;
 
-  public UserAuthResponse(SimpleResponse simpleResponse) {
-    this.simpleResponse = simpleResponse;
-  }
+	public UserAuthResponse(SimpleResponse simpleResponse) {
+		this.simpleResponse = simpleResponse;
+	}
 }

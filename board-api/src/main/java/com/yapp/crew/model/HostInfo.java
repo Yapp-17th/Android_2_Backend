@@ -10,18 +10,18 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class HostInfo {
 
-  private Long hostId;
-  private String hostName;
-  private Long likes;
-  private Long dislikes;
+	private Long hostId;
+	private String hostName;
+	private Long likes;
+	private Long dislikes;
 
-  public static HostInfo build(User user, List<Evaluation> evaluationList) {
-    HostInfo hostInfo = new HostInfo();
-    hostInfo.hostId = user.getId();
-    hostInfo.hostName = user.getNickname();
-    hostInfo.likes = user.calculateLikes(evaluationList);
-    hostInfo.dislikes = user.calculateDislikes(evaluationList);
+	public static HostInfo build(User user, List<Evaluation> evaluationList) {
+		HostInfo hostInfo = new HostInfo();
+		hostInfo.hostId = user.getId();
+		hostInfo.hostName = user.getNickname();
+		hostInfo.likes = user.calculateLikes(evaluationList);
+		hostInfo.dislikes = user.calculateDislikes(evaluationList);
 
-    return hostInfo;
-  }
+		return hostInfo;
+	}
 }

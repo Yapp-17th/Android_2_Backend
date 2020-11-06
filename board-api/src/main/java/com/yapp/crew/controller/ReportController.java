@@ -22,21 +22,21 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ReportController {
 
-  private ReportService reportService;
-  private Auth auth;
+	private ReportService reportService;
+	private Auth auth;
 
-  @Autowired
-  public ReportController(ReportService reportService, Auth auth) {
-    this.reportService = reportService;
-    this.auth = auth;
-  }
+	@Autowired
+	public ReportController(ReportService reportService, Auth auth) {
+		this.reportService = reportService;
+		this.auth = auth;
+	}
 
-  @PostMapping(path = "/v1/board/report", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<?> postBoard(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token, @RequestBody @Valid BoardReportRequestDto boardReportRequestDto) {
+	@PostMapping(path = "/v1/board/report", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> postBoard(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token, @RequestBody @Valid BoardReportRequestDto boardReportRequestDto) {
 
-    long userId = auth.parseUserIdFromToken(token);
-    SimpleResponse simpleResponse = reportService.postBoardReport(BoardReport.build(boardReportRequestDto, userId));
+		long userId = auth.parseUserIdFromToken(token);
+		SimpleResponse simpleResponse = reportService.postBoardReport(BoardReport.build(boardReportRequestDto, userId));
 
-    return ResponseEntity.ok().body(simpleResponse);
-  }
+		return ResponseEntity.ok().body(simpleResponse);
+	}
 }

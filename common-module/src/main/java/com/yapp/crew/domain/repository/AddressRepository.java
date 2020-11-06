@@ -7,9 +7,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface AddressRepository extends JpaRepository<Address, Long> {
 
-  List<Address> findAll();
+	List<Address> findAll();
 
-  Address save(Address address);
+	Address save(Address address);
 
-  Optional<Address> findAddressById(Long id);
+	Optional<Address> findAddressById(Long id);
 }

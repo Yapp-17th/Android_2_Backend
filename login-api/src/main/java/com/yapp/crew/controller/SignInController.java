@@ -24,26 +24,26 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class SignInController {
 
-  private SignInService signInService;
+	private SignInService signInService;
 
-  @Autowired
-  public SignInController(SignInService signInService) {
-    this.signInService = signInService;
-  }
+	@Autowired
+	public SignInController(SignInService signInService) {
+		this.signInService = signInService;
+	}
 
-  @PostMapping(path = "/v1/user/sign-in", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<?> postSignIn(@RequestBody @Valid LoginRequestDto loginRequestDto) {
+	@PostMapping(path = "/v1/user/sign-in", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> postSignIn(@RequestBody @Valid LoginRequestDto loginRequestDto) {
 
-    LoginUserInfo loginUserInfo = new LoginUserInfo(loginRequestDto.getUserId());
-    UserAuthResponse userAuthResponse = signInService.signIn(loginUserInfo);
+		LoginUserInfo loginUserInfo = new LoginUserInfo(loginRequestDto.getUserId());
+		UserAuthResponse userAuthResponse = signInService.signIn(loginUserInfo);
 
-    HttpHeaders httpHeaders = userAuthResponse.getHttpHeaders();
-    SimpleResponseDto simpleResponseDto = SimpleResponseDto.build(userAuthResponse.getSimpleResponse());
-    if (httpHeaders != null) {
-      return ResponseEntity.ok().headers(httpHeaders).body(simpleResponseDto);
-    }
+		HttpHeaders httpHeaders = userAuthResponse.getHttpHeaders();
+		SimpleResponseDto simpleResponseDto = SimpleResponseDto.build(userAuthResponse.getSimpleResponse());
+		if (httpHeaders != null) {
+			return ResponseEntity.ok().headers(httpHeaders).body(simpleResponseDto);
+		}
 
-    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-        .body(SimpleResponseDto.build(SimpleResponse.fail(HttpStatus.INTERNAL_SERVER_ERROR, ResponseType.INTERNAL_SERVER_FAIL)));
-  }
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+				.body(SimpleResponseDto.build(SimpleResponse.fail(HttpStatus.INTERNAL_SERVER_ERROR, ResponseType.INTERNAL_SERVER_FAIL)));
+	}
 }

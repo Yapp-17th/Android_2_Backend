@@ -7,7 +7,7 @@ spring:
       enabled: true
 
   datasource:
-    url: jdbc:mysql://54.91.250.85:3306/explanet_dev?useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul&createDatabaseIfNotExist=true
+    url: jdbc:mysql://18.215.230.51:3306/explanet_dev?useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul&createDatabaseIfNotExist=true
     username: root
     password: password
     driver-class-name: com.mysql.cj.jdbc.Driver

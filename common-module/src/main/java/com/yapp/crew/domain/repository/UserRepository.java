@@ -7,12 +7,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
-  List<User> findAll();
+	List<User> findAll();
 
-  Optional<User> findUserById(Long userId);
+	Optional<User> findUserById(Long userId);
 
-  User save(User user);
+	User save(User user);
 
-  Optional<User> findByOauthId(String oauthId);
+	Optional<User> findByOauthId(String oauthId);
 
 }

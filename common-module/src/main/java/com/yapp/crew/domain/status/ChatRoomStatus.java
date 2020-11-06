@@ -1,16 +1,16 @@
 package com.yapp.crew.domain.status;
 
 public enum ChatRoomStatus {
-  ACTIVE(0),
-  INACTIVE(1);
+	ACTIVE(0),
+	INACTIVE(1);
 
-  private final int code;
+	private final int code;
 
-  ChatRoomStatus(int code) {
-    this.code = code;
-  }
+	ChatRoomStatus(int code) {
+		this.code = code;
+	}
 
-  public int getCode() {
-    return code;
-  }
+	public int getCode() {
+		return code;
+	}
 }

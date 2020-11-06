@@ -25,25 +25,25 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class SearchController {
 
-  private SearchService searchService;
-  private Auth auth;
+	private SearchService searchService;
+	private Auth auth;
 
-  @Autowired
-  public SearchController(SearchService searchService, Auth auth) {
-    this.searchService = searchService;
-    this.auth = auth;
-  }
+	@Autowired
+	public SearchController(SearchService searchService, Auth auth) {
+		this.searchService = searchService;
+		this.auth = auth;
+	}
 
-  @GetMapping(path = "/v1/board/search", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<?> getBoardList(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token, @PageableDefault(size = 20, page = 0) Pageable pageable, @RequestParam List<String> keyword) {
-    Long userId = auth.parseUserIdFromToken(token);
-    List<BoardListResponseInfo> boardListResponseInfoList = searchService.searchBoardList(BoardSearch.build(keyword, userId));
+	@GetMapping(path = "/v1/board/search", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> getBoardList(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token, @PageableDefault(size = 20, page = 0) Pageable pageable, @RequestParam List<String> keyword) {
+		Long userId = auth.parseUserIdFromToken(token);
+		List<BoardListResponseInfo> boardListResponseInfoList = searchService.searchBoardList(BoardSearch.build(keyword, userId));
 
-    PagedListHolder<BoardListResponseInfo> page = new PagedListHolder<>(boardListResponseInfoList);
-    page.setPageSize(pageable.getPageSize());
-    page.setPage(pageable.getPageNumber());
+		PagedListHolder<BoardListResponseInfo> page = new PagedListHolder<>(boardListResponseInfoList);
+		page.setPageSize(pageable.getPageSize());
+		page.setPage(pageable.getPageNumber());
 
-    BoardListSuccessResponseDto boardListSuccessResponseDto = BoardListSuccessResponseDto.build(page.getPageList());
-    return ResponseEntity.ok().body(boardListSuccessResponseDto);
-  }
+		BoardListSuccessResponseDto boardListSuccessResponseDto = BoardListSuccessResponseDto.build(page.getPageList());
+		return ResponseEntity.ok().body(boardListSuccessResponseDto);
+	}
 }

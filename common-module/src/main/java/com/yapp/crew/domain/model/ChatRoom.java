@@ -26,40 +26,40 @@ import lombok.Setter;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ChatRoom extends BaseEntity {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-  @Setter(value = AccessLevel.PRIVATE)
-  @Enumerated(value = EnumType.STRING)
-  private ChatRoomStatus status = ChatRoomStatus.ACTIVE;
+	@Setter(value = AccessLevel.PRIVATE)
+	@Enumerated(value = EnumType.STRING)
+	private ChatRoomStatus status = ChatRoomStatus.ACTIVE;
 
-  @JsonBackReference
-  @Setter(value = AccessLevel.PROTECTED)
-  @JoinColumn(nullable = false)
-  @ManyToOne(fetch = FetchType.LAZY)
-  private User host;
+	@JsonBackReference
+	@Setter(value = AccessLevel.PROTECTED)
+	@JoinColumn(nullable = false)
+	@ManyToOne(fetch = FetchType.LAZY)
+	private User host;
 
-  @JsonBackReference
-  @Setter(value = AccessLevel.PROTECTED)
-  @JoinColumn(nullable = false)
-  @ManyToOne(fetch = FetchType.LAZY)
-  private User guest;
+	@JsonBackReference
+	@Setter(value = AccessLevel.PROTECTED)
+	@JoinColumn(nullable = false)
+	@ManyToOne(fetch = FetchType.LAZY)
+	private User guest;
 
-  @JsonBackReference
-  @Setter(value = AccessLevel.PRIVATE)
-  @JoinColumn(nullable = false)
-  @ManyToOne(fetch = FetchType.LAZY)
-  private Board board;
+	@JsonBackReference
+	@Setter(value = AccessLevel.PRIVATE)
+	@JoinColumn(nullable = false)
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Board board;
 
-  @JsonManagedReference
-  @OneToMany(mappedBy = "chatRoom", fetch = FetchType.LAZY)
-  private List<Message> messages = new ArrayList<>();
+	@JsonManagedReference
+	@OneToMany(mappedBy = "chatRoom", fetch = FetchType.LAZY)
+	private List<Message> messages = new ArrayList<>();
 
-  public void addMessage(Message message) {
-    message.setChatRoom(this);
-    this.messages.add(message);
-  }
+	public void addMessage(Message message) {
+		message.setChatRoom(this);
+		this.messages.add(message);
+	}
 
 	public boolean isSenderChatRoomHost(Long userId) {
 		return userId.equals(getHost().getId());
@@ -68,12 +68,12 @@ public class ChatRoom extends BaseEntity {
 	public Long countUnreadMessages(boolean isHost) {
 		if (isHost) {
 			return getMessages().stream()
-							.filter(message -> !message.isHostRead())
-							.count();
+					.filter(message -> !message.isHostRead())
+					.count();
 		}
 		return getMessages().stream()
-						.filter(message -> !message.isGuestRead())
-						.count();
+				.filter(message -> !message.isGuestRead())
+				.count();
 	}
 
 	public Long findFirstUnreadChatMessage(boolean isHost) {
@@ -81,13 +81,12 @@ public class ChatRoom extends BaseEntity {
 
 		if (isHost) {
 			firstUnreadChatMessage = getMessages().stream()
-							.filter(message -> !message.isHostRead())
-							.findFirst();
-		}
-		else {
+					.filter(message -> !message.isHostRead())
+					.findFirst();
+		} else {
 			firstUnreadChatMessage = getMessages().stream()
-							.filter(message -> !message.isGuestRead())
-							.findFirst();
+					.filter(message -> !message.isGuestRead())
+					.findFirst();
 		}
 
 		if (firstUnreadChatMessage.isPresent()) {
@@ -96,44 +95,45 @@ public class ChatRoom extends BaseEntity {
 		return -1L;
 	}
 
-  public static ChatRoom buildChatRoom(User host, User guest, Board board) {
-  	return ChatRoom.getBuilder()
-						.withHost(host)
-						.withGuest(guest)
-						.withBoard(board)
-						.build();
+	public static ChatRoom buildChatRoom(User host, User guest, Board board) {
+		return ChatRoom.getBuilder()
+				.withHost(host)
+				.withGuest(guest)
+				.withBoard(board)
+				.build();
 	}
 
-  public static ChatRoomBuilder getBuilder() {
-    return new ChatRoomBuilder();
-  }
+	public static ChatRoomBuilder getBuilder() {
+		return new ChatRoomBuilder();
+	}
 
-  public static class ChatRoomBuilder {
-    private User host;
-    private User guest;
-    private Board board;
+	public static class ChatRoomBuilder {
 
-    public ChatRoomBuilder withHost(User host) {
-      this.host = host;
-      return this;
-    }
+		private User host;
+		private User guest;
+		private Board board;
 
-    public ChatRoomBuilder withGuest(User guest) {
-      this.guest = guest;
-      return this;
-    }
+		public ChatRoomBuilder withHost(User host) {
+			this.host = host;
+			return this;
+		}
 
-    public ChatRoomBuilder withBoard(Board board) {
-      this.board = board;
-      return this;
-    }
+		public ChatRoomBuilder withGuest(User guest) {
+			this.guest = guest;
+			return this;
+		}
 
-    public ChatRoom build() {
-      ChatRoom chatRoom = new ChatRoom();
-      chatRoom.setHost(host);
-      chatRoom.setGuest(guest);
-      chatRoom.setBoard(board);
-      return chatRoom;
-    }
-  }
+		public ChatRoomBuilder withBoard(Board board) {
+			this.board = board;
+			return this;
+		}
+
+		public ChatRoom build() {
+			ChatRoom chatRoom = new ChatRoom();
+			chatRoom.setHost(host);
+			chatRoom.setGuest(guest);
+			chatRoom.setBoard(board);
+			return chatRoom;
+		}
+	}
 }

@@ -8,16 +8,16 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebConfiguration implements WebMvcConfigurer {
 
-  private AuthInterceptor authInterceptor;
+	private AuthInterceptor authInterceptor;
 
-  @Autowired
-  public WebConfiguration(AuthInterceptor authInterceptor) {
-    this.authInterceptor = authInterceptor;
-  }
+	@Autowired
+	public WebConfiguration(AuthInterceptor authInterceptor) {
+		this.authInterceptor = authInterceptor;
+	}
 
-  @Override
-  public void addInterceptors(InterceptorRegistry registry) {
-    registry.addInterceptor(authInterceptor)
-        .addPathPatterns("/**");
-  }
+	@Override
+	public void addInterceptors(InterceptorRegistry registry) {
+		registry.addInterceptor(authInterceptor)
+				.addPathPatterns("/**");
+	}
 }

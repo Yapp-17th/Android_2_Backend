@@ -9,18 +9,18 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class BoardFilter {
 
-  private long userId;
-  private SortingType sorting;
-  List<Long> category;
-  List<Long> city;
+	private long userId;
+	private SortingType sorting;
+	List<Long> category;
+	List<Long> city;
 
-  public static BoardFilter build(String sorting, List<Long> category, List<Long> city, long userId) {
-    BoardFilter boardFilter = new BoardFilter();
-    boardFilter.userId = userId;
-    boardFilter.sorting = SortingType.getSortingType(sorting);
-    boardFilter.category = category;
-    boardFilter.city = city;
+	public static BoardFilter build(String sorting, List<Long> category, List<Long> city, long userId) {
+		BoardFilter boardFilter = new BoardFilter();
+		boardFilter.userId = userId;
+		boardFilter.sorting = SortingType.getSortingType(sorting);
+		boardFilter.category = category;
+		boardFilter.city = city;
 
-    return boardFilter;
-  }
+		return boardFilter;
+	}
 }

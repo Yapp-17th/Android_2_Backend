@@ -6,11 +6,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MessageRepository extends JpaRepository<Message, Long> {
 
-  List<Message> findAll();
+	List<Message> findAll();
 
-  List<Message> findAllByChatRoomId(Long chatRoomId);
+	List<Message> findAllByChatRoomId(Long chatRoomId);
 
-  List<Message> findAllByChatRoomIdOrderByCreatedAt(Long chatRoomId);
+	List<Message> findAllByChatRoomIdOrderByCreatedAt(Long chatRoomId);
 
-  Message save(Message message);
+	Message save(Message message);
 }

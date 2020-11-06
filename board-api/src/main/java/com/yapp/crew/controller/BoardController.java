@@ -36,65 +36,65 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class BoardController {
 
-  private BoardService boardService;
-  private Auth auth;
+	private BoardService boardService;
+	private Auth auth;
 
-  @Autowired
-  public BoardController(BoardService boardService, Auth auth) {
-    this.boardService = boardService;
-    this.auth = auth;
-  }
+	@Autowired
+	public BoardController(BoardService boardService, Auth auth) {
+		this.boardService = boardService;
+		this.auth = auth;
+	}
 
-  @GetMapping(path = "/v1/board", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<?> getBoardList(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token, @PageableDefault(size = 20) Pageable pageable, @RequestParam(required = false) String sorting, @RequestParam(required = false) List<Long> category,
-      @RequestParam(required = false) List<Long> address) {
-    long userId = auth.parseUserIdFromToken(token);
-    log.info("[GET BOARD LIST] user id:" + userId);
-    List<BoardListResponseInfo> boardListResponseInfoList = boardService.getBoardList(BoardFilter.build(sorting, category, address, userId));
+	@GetMapping(path = "/v1/board", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> getBoardList(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token, @PageableDefault(size = 20) Pageable pageable, @RequestParam(required = false) String sorting, @RequestParam(required = false) List<Long> category,
+			@RequestParam(required = false) List<Long> address) {
+		long userId = auth.parseUserIdFromToken(token);
+		log.info("[GET BOARD LIST] user id:" + userId);
+		List<BoardListResponseInfo> boardListResponseInfoList = boardService.getBoardList(BoardFilter.build(sorting, category, address, userId));
 
-    PagedListHolder<BoardListResponseInfo> page = new PagedListHolder<>(boardListResponseInfoList);
-    page.setPageSize(pageable.getPageSize());
-    page.setPage(pageable.getPageNumber());
+		PagedListHolder<BoardListResponseInfo> page = new PagedListHolder<>(boardListResponseInfoList);
+		page.setPageSize(pageable.getPageSize());
+		page.setPage(pageable.getPageNumber());
 
-    BoardListSuccessResponseDto boardListSuccessResponseDto = BoardListSuccessResponseDto.build(page.getPageList());
-    return ResponseEntity.ok().body(boardListSuccessResponseDto);
-  }
+		BoardListSuccessResponseDto boardListSuccessResponseDto = BoardListSuccessResponseDto.build(page.getPageList());
+		return ResponseEntity.ok().body(boardListSuccessResponseDto);
+	}
 
-  @PostMapping(path = "/v1/board", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<?> postBoard(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token, @RequestBody @Valid BoardInfoRequestDto boardInfoRequestDto) {
+	@PostMapping(path = "/v1/board", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> postBoard(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token, @RequestBody @Valid BoardInfoRequestDto boardInfoRequestDto) {
 
-    long userId = auth.parseUserIdFromToken(token);
-    BoardPostRequiredInfo boardPostRequiredInfo = BoardPostRequiredInfo.build(boardInfoRequestDto);
-    SimpleResponse simpleResponse = boardService.postBoard(boardPostRequiredInfo, userId);
+		long userId = auth.parseUserIdFromToken(token);
+		BoardPostRequiredInfo boardPostRequiredInfo = BoardPostRequiredInfo.build(boardInfoRequestDto);
+		SimpleResponse simpleResponse = boardService.postBoard(boardPostRequiredInfo, userId);
 
-    return ResponseEntity.ok().body(simpleResponse);
-  }
+		return ResponseEntity.ok().body(simpleResponse);
+	}
 
-  @GetMapping(path = "/v1/board/{boardId}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<?> getBoardContent(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token, @PathVariable Long boardId) {
+	@GetMapping(path = "/v1/board/{boardId}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> getBoardContent(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token, @PathVariable Long boardId) {
 
-    long userId = auth.parseUserIdFromToken(token);
-    BoardContentResponseInfo boardContentResponseInfo = boardService.getBoardContent(boardId, userId);
+		long userId = auth.parseUserIdFromToken(token);
+		BoardContentResponseInfo boardContentResponseInfo = boardService.getBoardContent(boardId, userId);
 
-    return ResponseEntity.ok().body(BoardContentSuccessResponseDto.build(boardContentResponseInfo));
-  }
+		return ResponseEntity.ok().body(BoardContentSuccessResponseDto.build(boardContentResponseInfo));
+	}
 
-  @DeleteMapping(path = "/v1/board/{boardId}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<?> deleteBoard(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token, @PathVariable Long boardId) {
+	@DeleteMapping(path = "/v1/board/{boardId}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> deleteBoard(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token, @PathVariable Long boardId) {
 
-    long userId = auth.parseUserIdFromToken(token);
-    SimpleResponse simpleResponse = boardService.deleteBoard(boardId, userId);
+		long userId = auth.parseUserIdFromToken(token);
+		SimpleResponse simpleResponse = boardService.deleteBoard(boardId, userId);
 
-    return ResponseEntity.ok().body(simpleResponse);
-  }
+		return ResponseEntity.ok().body(simpleResponse);
+	}
 
-  @PutMapping(path = "/v1/board/{boardId}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<?> editBoard(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token, @PathVariable Long boardId, @RequestBody @Valid BoardInfoRequestDto boardInfoRequestDto) {
+	@PutMapping(path = "/v1/board/{boardId}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> editBoard(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token, @PathVariable Long boardId, @RequestBody @Valid BoardInfoRequestDto boardInfoRequestDto) {
 
-    long userId = auth.parseUserIdFromToken(token);
-    BoardPostRequiredInfo boardPostRequiredInfo = BoardPostRequiredInfo.build(boardInfoRequestDto);
-    BoardContentResponseInfo boardContentResponseInfo = boardService.editBoardContent(boardId, userId, boardPostRequiredInfo);
+		long userId = auth.parseUserIdFromToken(token);
+		BoardPostRequiredInfo boardPostRequiredInfo = BoardPostRequiredInfo.build(boardInfoRequestDto);
+		BoardContentResponseInfo boardContentResponseInfo = boardService.editBoardContent(boardId, userId, boardPostRequiredInfo);
 
-    return ResponseEntity.ok().body(BoardContentSuccessResponseDto.build(boardContentResponseInfo));
-  }
+		return ResponseEntity.ok().body(BoardContentSuccessResponseDto.build(boardContentResponseInfo));
+	}
 }
