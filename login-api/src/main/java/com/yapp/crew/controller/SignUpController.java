@@ -1,15 +1,17 @@
 package com.yapp.crew.controller;
 
-import com.yapp.crew.domain.errors.InternalServerErrorException;
+import com.yapp.crew.domain.type.ResponseType;
 import com.yapp.crew.dto.request.SignUpRequestDto;
 import com.yapp.crew.model.SignupUserInfo;
 import com.yapp.crew.model.UserAuthResponse;
 import com.yapp.crew.network.dto.SimpleResponseDto;
+import com.yapp.crew.network.model.SimpleResponse;
 import com.yapp.crew.service.SignUpService;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -42,6 +44,7 @@ public class SignUpController {
       return ResponseEntity.ok().headers(httpHeaders).body(simpleResponseDto);
     }
 
-    throw new InternalServerErrorException("internal server error");
+    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .body(SimpleResponseDto.build(SimpleResponse.fail(HttpStatus.INTERNAL_SERVER_ERROR, ResponseType.INTERNAL_SERVER_FAIL)));
   }
 }

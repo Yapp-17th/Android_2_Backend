@@ -26,7 +26,7 @@ public class WithdrawService {
     this.jwtUtils = jwtUtils;
   }
 
-
+  @Transactional
   public UserAuthResponse withdraw(String token) {
     Long userId = Long.valueOf(jwtUtils.getUserIdFromToken(token));
     log.info("userId: " + userId);
@@ -39,8 +39,7 @@ public class WithdrawService {
     return new UserAuthResponse(SimpleResponse.pass(ResponseType.WITHDRAW_SUCCESS));
   }
 
-  @Transactional
-  public void updateUserInActive(User user) {
+  private void updateUserInActive(User user) {
     user.setUserStatusInActive();
     userRepository.save(user);
     log.info("user update 완료");

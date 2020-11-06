@@ -1,8 +1,9 @@
 package com.yapp.crew.service;
 
+import com.yapp.crew.domain.errors.AddressNotFoundException;
 import com.yapp.crew.domain.errors.CategoryNotFoundException;
-import com.yapp.crew.domain.errors.InternalServerErrorException;
-import com.yapp.crew.domain.errors.InvalidRequestBodyException;
+import com.yapp.crew.domain.errors.SuspendedUserException;
+import com.yapp.crew.domain.errors.UserDuplicateFieldException;
 import com.yapp.crew.domain.errors.UserNotFoundException;
 import com.yapp.crew.domain.model.Address;
 import com.yapp.crew.domain.model.Category;
@@ -19,10 +20,12 @@ import com.yapp.crew.domain.type.ResponseType;
 import com.yapp.crew.model.SignupUserInfo;
 import com.yapp.crew.model.UserAuthResponse;
 import com.yapp.crew.network.model.SimpleResponse;
+import com.yapp.crew.utils.UniqueIndexEnum;
 import java.util.List;
 import java.util.Optional;
 import javax.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -49,20 +52,28 @@ public class SignUpService {
     this.tokenService = tokenService;
   }
 
+  @Transactional
   public UserAuthResponse signUp(SignupUserInfo signupUserInfo) {
-    Optional<User> existingUser = findUserByOauthId(signupUserInfo.getOauthId());
-    if (existingUser.isPresent()) {
-      return signUpExistingUser(existingUser.get());
+    User user = findUserByOauthId(signupUserInfo.getOauthId())
+        .orElse(null);
+
+    if (user == null) {
+      return signUpNewUser(signupUserInfo);
     }
 
-    return signUpNewUser(signupUserInfo);
+    if (user.getStatus() == UserStatus.SUSPENDED) {
+      throw new SuspendedUserException("suspended user");
+    }
+
+    return signUpExistingUser(user);
   }
 
+  @Transactional
   public UserAuthResponse signUpNewUser(SignupUserInfo signupUserInfo) {
     UserBuilder userBuilder = User.getBuilder();
 
     Address address = findAddressById(signupUserInfo.getAddress())
-        .orElseThrow(InternalError::new);
+        .orElseThrow(() -> new AddressNotFoundException("address not found"));
 
     User user = userBuilder
         .withOauthId(signupUserInfo.getOauthId())
@@ -78,41 +89,30 @@ public class SignUpService {
       save(user, signupUserInfo.getCategory());
     } catch (Exception e) {
       if (e.getCause() instanceof ConstraintViolationException) {
-        // TODO: 어떤 필드가 duplicate인지 어떻게 뽑아내지?
         log.info("Request server error: " + e.getLocalizedMessage());
-        throw new InvalidRequestBodyException(ResponseType.INVALID_REQUEST_BODY.getMessage());
+        for (UniqueIndexEnum uniqueIndexEnum : UniqueIndexEnum.values()) {
+          if (StringUtils.containsIgnoreCase(e.getLocalizedMessage(), uniqueIndexEnum.toString())) {
+            throw new UserDuplicateFieldException(uniqueIndexEnum.getName());
+          }
+        }
       }
-
-      log.info("Internal server error: " + e.getMessage());
-      throw new InternalServerErrorException("internal server error");
+      return new UserAuthResponse(SimpleResponse.fail(HttpStatus.BAD_REQUEST, ResponseType.INTERNAL_SERVER_FAIL));
     }
 
-    try {
-      HttpHeaders httpHeaders = tokenService.setToken(user);
-      SimpleResponse simpleResponse = SimpleResponse.pass(ResponseType.SIGNUP_SUCCESS);
+    HttpHeaders httpHeaders = tokenService.setToken(user);
+    SimpleResponse simpleResponse = SimpleResponse.pass(ResponseType.SIGNUP_SUCCESS);
 
-      return new UserAuthResponse(httpHeaders, simpleResponse);
-    } catch (Exception e) {
-      log.info("Internal server error: " + e.getMessage());
-      throw new InternalServerErrorException(e.getMessage());
-    }
+    return new UserAuthResponse(httpHeaders, simpleResponse);
   }
 
+  @Transactional
   public UserAuthResponse signUpExistingUser(User user) {
-    if (user.getStatus() == UserStatus.INACTIVE) {
-      updateUserActive(user);
-      HttpHeaders httpHeaders = null;
 
-      try {
-        httpHeaders = tokenService.setToken(user);
-      } catch (Exception e) {
-        throw new InternalServerErrorException("internal server error");
-      }
-
-      if (httpHeaders != null) {
-        SimpleResponse simpleResponse = SimpleResponse.pass(ResponseType.SIGNUP_SUCCESS);
-        return new UserAuthResponse(httpHeaders, simpleResponse);
-      }
+    updateUserActive(user);
+    HttpHeaders httpHeaders = tokenService.setToken(user);
+    if (httpHeaders != null) {
+      SimpleResponse simpleResponse = SimpleResponse.pass(ResponseType.SIGNUP_SUCCESS);
+      return new UserAuthResponse(httpHeaders, simpleResponse);
     }
 
     return new UserAuthResponse(SimpleResponse.fail(HttpStatus.BAD_REQUEST, ResponseType.INTERNAL_SERVER_FAIL));
@@ -123,7 +123,7 @@ public class SignUpService {
     log.info("user login 성공");
   }
 
-  public void saveUserExercise(User user, Category category) {
+  private void saveUserExercise(User user, Category category) {
     UserExerciseBuilder userExerciseBuilder = UserExercise.getBuilder();
     UserExercise userExercise = userExerciseBuilder
         .withUser(user)
@@ -133,8 +133,7 @@ public class SignUpService {
     userExerciseRepository.save(userExercise);
   }
 
-  @Transactional
-  public void save(User user, List<Long> category) {
+  private void save(User user, List<Long> category) {
     saveUser(user);
     User savedUser = findUserByOauthId(user.getOauthId())
         .orElseThrow(() -> new UserNotFoundException("user not found"));
@@ -162,8 +161,7 @@ public class SignUpService {
     return addressRepository.findAddressById(id);
   }
 
-  @Transactional
-  public void updateUserActive(User user) {
+  private void updateUserActive(User user) {
     user.setUserStatusActive();
     userRepository.save(user);
     log.info("user update 완료");

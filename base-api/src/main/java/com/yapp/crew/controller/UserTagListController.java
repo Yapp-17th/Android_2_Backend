@@ -1,11 +1,10 @@
 package com.yapp.crew.controller;
 
 import com.yapp.crew.dto.EnumListDto;
-import com.yapp.crew.dto.EnumListFailDto;
-import com.yapp.crew.dto.EnumListSuccessDto;
 import com.yapp.crew.utils.EnumToList;
 import com.yapp.crew.utils.ResponseDomain;
 import java.util.List;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,18 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserTagListController {
 
   @GetMapping(path = "/v1/user/tag")
-  public EnumListDto getUserTagList() {
-    try {
-      List<String> exerciseList = EnumToList.userTypeEnumToList();
-      EnumListSuccessDto enumListSuccessDto = EnumListSuccessDto.builder(ResponseDomain.USER_TAG.getName());
-      enumListSuccessDto.setData(exerciseList);
+  public ResponseEntity<?> getUserTagList() {
 
-      return EnumListDto.pass(enumListSuccessDto);
-    } catch (Exception e) {
-      EnumListFailDto enumListFailDto = EnumListFailDto.builder(ResponseDomain.USER_TAG.getName());
-      enumListFailDto.addMessage(e.getMessage());
+    List<String> userTagList = EnumToList.userTypeEnumToList();
+    EnumListDto enumListDto = EnumListDto.pass(ResponseDomain.USER_TAG.getName(), userTagList);
 
-      return EnumListDto.fail(enumListFailDto);
-    }
+    return ResponseEntity.ok().body(enumListDto);
   }
 }

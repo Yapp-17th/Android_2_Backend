@@ -1,11 +1,10 @@
 package com.yapp.crew.controller;
 
 import com.yapp.crew.dto.EnumListDto;
-import com.yapp.crew.dto.EnumListFailDto;
-import com.yapp.crew.dto.EnumListSuccessDto;
 import com.yapp.crew.utils.EnumToList;
 import com.yapp.crew.utils.ResponseDomain;
 import java.util.List;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,18 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserReportTypeListController {
 
   @GetMapping(path = "/v1/user/report/type")
-  public EnumListDto getUserReportTypeList() {
-    try {
-      List<String> addressList = EnumToList.userReportTypeEnumToList();
-      EnumListSuccessDto enumListSuccessDto= EnumListSuccessDto.builder(ResponseDomain.USER_REPORT_TYPE.getName());
-      enumListSuccessDto.setData(addressList);
+  public ResponseEntity<?> getUserReportTypeList() {
 
-      return EnumListDto.pass(enumListSuccessDto);
-    } catch (Exception e) {
-      EnumListFailDto enumListFailDto=EnumListFailDto.builder(ResponseDomain.USER_REPORT_TYPE.getName());
-      enumListFailDto.addMessage(e.getMessage());
+    List<String> userReportTypeList = EnumToList.userReportTypeEnumToList();
+    EnumListDto enumListDto = EnumListDto.pass(ResponseDomain.USER_REPORT_TYPE.getName(), userReportTypeList);
 
-      return EnumListDto.fail(enumListFailDto);
-    }
+    return ResponseEntity.ok().body(enumListDto);
   }
 }

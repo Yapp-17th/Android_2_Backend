@@ -2,10 +2,9 @@ package com.yapp.crew.controller;
 
 import com.yapp.crew.utils.ResponseDomain;
 import com.yapp.crew.dto.EnumListDto;
-import com.yapp.crew.dto.EnumListFailDto;
-import com.yapp.crew.dto.EnumListSuccessDto;
 import com.yapp.crew.utils.EnumToList;
 import java.util.List;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,18 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class AddressListController {
 
   @GetMapping(path = "/v1/address/city")
-  public EnumListDto getAddressCityList() {
-    try {
-      List<String> addressList = EnumToList.addressEnumToList();
-      EnumListSuccessDto enumListSuccessDto= EnumListSuccessDto.builder(ResponseDomain.ADDRESSCITY.getName());
-      enumListSuccessDto.setData(addressList);
+  public ResponseEntity<?> getAddressCityList() {
 
-      return EnumListDto.pass(enumListSuccessDto);
-    } catch (Exception e) {
-      EnumListFailDto enumListFailDto=EnumListFailDto.builder(ResponseDomain.ADDRESSCITY.getName());
-      enumListFailDto.addMessage(e.getMessage());
+    List<String> addressList = EnumToList.addressEnumToList();
+    EnumListDto enumListDto = EnumListDto.pass(ResponseDomain.ADDRESS_CITY.getName(), addressList);
 
-      return EnumListDto.fail(enumListFailDto);
-    }
+    return ResponseEntity.ok().body(enumListDto);
   }
 }
