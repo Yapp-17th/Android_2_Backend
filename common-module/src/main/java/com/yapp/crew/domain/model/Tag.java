@@ -23,16 +23,16 @@ import lombok.Setter;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Tag extends BaseEntity {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-  @Setter(value = AccessLevel.PRIVATE)
-  @Enumerated(value = EnumType.STRING)
-  @Column(nullable = false)
-  private UserTag name;
+	@Setter(value = AccessLevel.PRIVATE)
+	@Enumerated(value = EnumType.STRING)
+	@Column(nullable = false)
+	private UserTag name;
 
-  @JsonManagedReference
-  @OneToMany(mappedBy = "tag", fetch = FetchType.LAZY)
-  private List<Board> boards = new ArrayList<>();
+	@JsonManagedReference
+	@OneToMany(mappedBy = "tag", fetch = FetchType.LAZY)
+	private List<Board> boards = new ArrayList<>();
 }

@@ -26,52 +26,52 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class SearchService {
 
-  private BoardRepository boardRepository;
-  private UserRepository userRepository;
+	private BoardRepository boardRepository;
+	private UserRepository userRepository;
 
-  @Autowired
-  public SearchService(BoardRepository boardRepository, UserRepository userRepository) {
-    this.boardRepository = boardRepository;
-    this.userRepository = userRepository;
-  }
+	@Autowired
+	public SearchService(BoardRepository boardRepository, UserRepository userRepository) {
+		this.boardRepository = boardRepository;
+		this.userRepository = userRepository;
+	}
 
-  @Transactional
-  public List<BoardListResponseInfo> searchBoardList(BoardSearch boardSearch) {
-    User user = findUserById(boardSearch.getUserId())
-        .orElseThrow(() -> new UserNotFoundException("user not found"));
+	@Transactional
+	public List<BoardListResponseInfo> searchBoardList(BoardSearch boardSearch) {
+		User user = findUserById(boardSearch.getUserId())
+				.orElseThrow(() -> new UserNotFoundException("user not found"));
 
-    return findByContentIsContaining(boardSearch.getKeywords(), user)
-        .stream()
-        .map(board -> BoardListResponseInfo.build(board, board.getUser()))
-        .collect(Collectors.toList());
-  }
+		return findByContentIsContaining(boardSearch.getKeywords(), user)
+				.stream()
+				.map(board -> BoardListResponseInfo.build(board, board.getUser()))
+				.collect(Collectors.toList());
+	}
 
-  private List<Board> findByContentIsContaining(List<String> keywords, User user) {
-    HashSet<Board> boards = new HashSet<>(boardRepository.findByContentIsContaining(keywords.get(0)));
+	private List<Board> findByContentIsContaining(List<String> keywords, User user) {
+		HashSet<Board> boards = new HashSet<>(boardRepository.findByContentIsContaining(keywords.get(0)));
 
-    for (String keyword : keywords) {
-      if (boards.size() == 0) {
-        return new ArrayList<>();
-      }
-      HashSet<Board> nextBoard = new HashSet<>(boardRepository.findByContentIsContaining(keyword));
-      boards.retainAll(nextBoard);
-    }
+		for (String keyword : keywords) {
+			if (boards.size() == 0) {
+				return new ArrayList<>();
+			}
+			HashSet<Board> nextBoard = new HashSet<>(boardRepository.findByContentIsContaining(keyword));
+			boards.retainAll(nextBoard);
+		}
 
-    return findAllBoards(user).stream()
-        .sorted(Comparator.comparing(BaseEntity::getCreatedAt, Comparator.reverseOrder()))
-        .collect(Collectors.toList());
-  }
+		return findAllBoards(user).stream()
+				.sorted(Comparator.comparing(BaseEntity::getCreatedAt, Comparator.reverseOrder()))
+				.collect(Collectors.toList());
+	}
 
-  private List<Board> findAllBoards(User user) {
-    Set<Board> hiddenBoards = user.getUserHiddenBoard().stream().map(HiddenBoard::getBoard).collect(Collectors.toSet());
+	private List<Board> findAllBoards(User user) {
+		Set<Board> hiddenBoards = user.getUserHiddenBoard().stream().map(HiddenBoard::getBoard).collect(Collectors.toSet());
 
-    return boardRepository.findAll().stream()
-        .filter(board -> board.getStatus().getCode() != BoardStatus.CANCELED.getCode())
-        .filter(board -> !hiddenBoards.contains(board))
-        .collect(Collectors.toList());
-  }
+		return boardRepository.findAll().stream()
+				.filter(board -> board.getStatus().getCode() != BoardStatus.CANCELED.getCode())
+				.filter(board -> !hiddenBoards.contains(board))
+				.collect(Collectors.toList());
+	}
 
-  private Optional<User> findUserById(Long userId) {
-    return userRepository.findUserById(userId);
-  }
+	private Optional<User> findUserById(Long userId) {
+		return userRepository.findUserById(userId);
+	}
 }

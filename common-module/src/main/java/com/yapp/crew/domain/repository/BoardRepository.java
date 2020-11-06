@@ -7,13 +7,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface BoardRepository extends JpaRepository<Board, Long> {
 
-  List<Board> findAll();
+	List<Board> findAll();
 
-  List<Board> findAllByUserId(Long userId);
+	List<Board> findAllByUserId(Long userId);
 
-  Optional<Board> findBoardById(Long boardId);
+	Optional<Board> findBoardById(Long boardId);
 
-  Board save(Board board);
+	Board save(Board board);
 
-  List<Board> findByContentIsContaining(String keyWord);
+	List<Board> findByContentIsContaining(String keyWord);
 }

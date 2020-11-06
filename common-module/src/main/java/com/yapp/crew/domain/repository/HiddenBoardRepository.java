@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface HiddenBoardRepository extends JpaRepository<HiddenBoard, Long> {
 
-  List<HiddenBoard> findAllByUserId(Long userId);
+	List<HiddenBoard> findAllByUserId(Long userId);
 
-  HiddenBoard save(HiddenBoard hiddenBoard);
+	HiddenBoard save(HiddenBoard hiddenBoard);
 }

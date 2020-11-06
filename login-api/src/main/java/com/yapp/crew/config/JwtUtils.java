@@ -16,68 +16,68 @@ import org.springframework.stereotype.Component;
 @Component
 public class JwtUtils {
 
-  @Value(value = "${jwt.secret}")
-  private String secret;
-  @Value(value = "${jwt.expiration}")
-  private String expiration;
-  @Value(value = "${jwt.header}")
-  private String header;
-  @Value(value = "${jwt.prefix}")
-  private String prefix;
+	@Value(value = "${jwt.secret}")
+	private String secret;
+	@Value(value = "${jwt.expiration}")
+	private String expiration;
+	@Value(value = "${jwt.header}")
+	private String header;
+	@Value(value = "${jwt.prefix}")
+	private String prefix;
 
-  public String getHeader() {
-    return this.header;
-  }
+	public String getHeader() {
+		return this.header;
+	}
 
-  public String createToken(User user) {
-    log.info("userId: " + user.getId());
-    Date now = new Date();
+	public String createToken(User user) {
+		log.info("userId: " + user.getId());
+		Date now = new Date();
 
-    String token = Jwts.builder()
-        .setExpiration(generateExpirationDate(now))
-        .setIssuedAt(now)
-        .setId(UUID.randomUUID().toString())
-        .claim("userId", String.valueOf(user.getId()))
-        .signWith(Keys.hmacShaKeyFor(secret.getBytes()))
-        .compact();
+		String token = Jwts.builder()
+				.setExpiration(generateExpirationDate(now))
+				.setIssuedAt(now)
+				.setId(UUID.randomUUID().toString())
+				.claim("userId", String.valueOf(user.getId()))
+				.signWith(Keys.hmacShaKeyFor(secret.getBytes()))
+				.compact();
 
-    log.info("create token: " + token);
-    return token;
-  }
+		log.info("create token: " + token);
+		return token;
+	}
 
-  private Date generateExpirationDate(Date now) {
-    Calendar calendar = new GregorianCalendar();
-    calendar.setTime(now);
-    calendar.add(Calendar.DAY_OF_WEEK, Integer.parseInt(expiration));
-    return calendar.getTime();
-  }
+	private Date generateExpirationDate(Date now) {
+		Calendar calendar = new GregorianCalendar();
+		calendar.setTime(now);
+		calendar.add(Calendar.DAY_OF_WEEK, Integer.parseInt(expiration));
+		return calendar.getTime();
+	}
 
-  public String getUserIdFromToken(String token) {
-    token = token.replace(prefix + " ", "");
-    log.info("remove prefix token: " + token);
+	public String getUserIdFromToken(String token) {
+		token = token.replace(prefix + " ", "");
+		log.info("remove prefix token: " + token);
 
-    String userId;
-    try {
-      final Claims claims = getClaimsFromToken(token);
-      userId = String.valueOf(claims.get("userId"));
-      log.info("userId from token: " + userId);
-    } catch (Exception e) {
-      userId = null;
-    }
-    return userId;
-  }
+		String userId;
+		try {
+			final Claims claims = getClaimsFromToken(token);
+			userId = String.valueOf(claims.get("userId"));
+			log.info("userId from token: " + userId);
+		} catch (Exception e) {
+			userId = null;
+		}
+		return userId;
+	}
 
-  private Claims getClaimsFromToken(String token) {
-    Claims claims;
-    try {
-      claims = Jwts.parserBuilder()
-          .setSigningKey(Keys.hmacShaKeyFor(secret.getBytes()))
-          .build()
-          .parseClaimsJws(token)
-          .getBody();
-    } catch (Exception e) {
-      claims = null;
-    }
-    return claims;
-  }
+	private Claims getClaimsFromToken(String token) {
+		Claims claims;
+		try {
+			claims = Jwts.parserBuilder()
+					.setSigningKey(Keys.hmacShaKeyFor(secret.getBytes()))
+					.build()
+					.parseClaimsJws(token)
+					.getBody();
+		} catch (Exception e) {
+			claims = null;
+		}
+		return claims;
+	}
 }

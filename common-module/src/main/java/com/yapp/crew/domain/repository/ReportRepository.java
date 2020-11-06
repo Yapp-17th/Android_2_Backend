@@ -6,9 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ReportRepository extends JpaRepository<Report, Long> {
 
-  List<Report> findAll();
+	List<Report> findAll();
 
-  List<Report> findAllByReportedId(Long userId);
+	List<Report> findAllByReportedId(Long userId);
 
-  Report save(Report report);
+	Report save(Report report);
 }

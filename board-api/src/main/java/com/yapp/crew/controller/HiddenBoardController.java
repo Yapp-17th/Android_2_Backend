@@ -21,21 +21,21 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class HiddenBoardController {
 
-  private HiddenBoardService hiddenBoardService;
-  private Auth auth;
+	private HiddenBoardService hiddenBoardService;
+	private Auth auth;
 
-  @Autowired
-  public HiddenBoardController(HiddenBoardService hiddenBoardService, Auth auth) {
-    this.hiddenBoardService = hiddenBoardService;
-    this.auth = auth;
-  }
+	@Autowired
+	public HiddenBoardController(HiddenBoardService hiddenBoardService, Auth auth) {
+		this.hiddenBoardService = hiddenBoardService;
+		this.auth = auth;
+	}
 
-  @PostMapping(path = "/v1/board/hidden", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<?> postBoard(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token, @RequestBody @Valid BoardIdRequestDto boardIdRequestDto) {
+	@PostMapping(path = "/v1/board/hidden", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> postBoard(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token, @RequestBody @Valid BoardIdRequestDto boardIdRequestDto) {
 
-    long userId = auth.parseUserIdFromToken(token);
-    SimpleResponse simpleResponse = hiddenBoardService.createHiddenBoard(boardIdRequestDto.getBoardId(), userId);
+		long userId = auth.parseUserIdFromToken(token);
+		SimpleResponse simpleResponse = hiddenBoardService.createHiddenBoard(boardIdRequestDto.getBoardId(), userId);
 
-    return ResponseEntity.ok().body(simpleResponse);
-  }
+		return ResponseEntity.ok().body(simpleResponse);
+	}
 }

@@ -8,14 +8,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class BoardStatusInfo {
 
-  int code;
-  String name;
+	int code;
+	String name;
 
-  public static BoardStatusInfo build(GroupStatus groupStatus) {
-    BoardStatusInfo boardStatusInfo = new BoardStatusInfo();
-    boardStatusInfo.code = groupStatus.getCode();
-    boardStatusInfo.name = groupStatus.getName();
+	public static BoardStatusInfo build(GroupStatus groupStatus) {
+		BoardStatusInfo boardStatusInfo = new BoardStatusInfo();
+		boardStatusInfo.code = groupStatus.getCode();
+		boardStatusInfo.name = groupStatus.getName();
 
-    return boardStatusInfo;
-  }
+		return boardStatusInfo;
+	}
 }

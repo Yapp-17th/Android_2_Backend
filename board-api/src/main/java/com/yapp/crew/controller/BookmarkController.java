@@ -23,30 +23,30 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class BookmarkController {
 
-  private BookMarkService bookMarkService;
-  private Auth auth;
+	private BookMarkService bookMarkService;
+	private Auth auth;
 
-  @Autowired
-  public BookmarkController(BookMarkService bookMarkService, Auth auth) {
-    this.bookMarkService = bookMarkService;
-    this.auth = auth;
-  }
+	@Autowired
+	public BookmarkController(BookMarkService bookMarkService, Auth auth) {
+		this.bookMarkService = bookMarkService;
+		this.auth = auth;
+	}
 
-  @PostMapping(path = "/v1/board/bookmark", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<?> postBoard(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token, @RequestBody @Valid BoardIdRequestDto boardIdRequestDto) {
+	@PostMapping(path = "/v1/board/bookmark", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> postBoard(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token, @RequestBody @Valid BoardIdRequestDto boardIdRequestDto) {
 
-    long userId = auth.parseUserIdFromToken(token);
-    SimpleResponse simpleResponse = bookMarkService.createBookMark(boardIdRequestDto.getBoardId(), userId);
+		long userId = auth.parseUserIdFromToken(token);
+		SimpleResponse simpleResponse = bookMarkService.createBookMark(boardIdRequestDto.getBoardId(), userId);
 
-    return ResponseEntity.ok().body(simpleResponse);
-  }
+		return ResponseEntity.ok().body(simpleResponse);
+	}
 
-  @DeleteMapping(path = "/v1/board/{boardId}/bookmark", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<?> deleteBoard(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token, @PathVariable Long boardId) {
+	@DeleteMapping(path = "/v1/board/{boardId}/bookmark", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> deleteBoard(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token, @PathVariable Long boardId) {
 
-    long userId = auth.parseUserIdFromToken(token);
-    SimpleResponse simpleResponse = bookMarkService.deleteBookMark(boardId, userId);
+		long userId = auth.parseUserIdFromToken(token);
+		SimpleResponse simpleResponse = bookMarkService.deleteBookMark(boardId, userId);
 
-    return ResponseEntity.ok().body(simpleResponse);
-  }
+		return ResponseEntity.ok().body(simpleResponse);
+	}
 }

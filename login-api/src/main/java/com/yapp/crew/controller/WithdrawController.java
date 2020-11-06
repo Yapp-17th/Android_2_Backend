@@ -16,21 +16,21 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class WithdrawController {
 
-  private WithdrawService withdrawService;
+	private WithdrawService withdrawService;
 
-  @Autowired
-  public WithdrawController(WithdrawService withdrawService) {
-    this.withdrawService = withdrawService;
-  }
+	@Autowired
+	public WithdrawController(WithdrawService withdrawService) {
+		this.withdrawService = withdrawService;
+	}
 
-  @DeleteMapping("/v1/user/withdraw")
-  public ResponseEntity<?> deleteUser(@RequestHeader(value = "Authorization") String token) {
+	@DeleteMapping("/v1/user/withdraw")
+	public ResponseEntity<?> deleteUser(@RequestHeader(value = "Authorization") String token) {
 
-    UserAuthResponse userAuthResponse = withdrawService.withdraw(token);
-    if (userAuthResponse.getSimpleResponse().isSuccess()) {
-      return ResponseEntity.ok(userAuthResponse.getSimpleResponse());
-    }
+		UserAuthResponse userAuthResponse = withdrawService.withdraw(token);
+		if (userAuthResponse.getSimpleResponse().isSuccess()) {
+			return ResponseEntity.ok(userAuthResponse.getSimpleResponse());
+		}
 
-    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(userAuthResponse.getSimpleResponse());
-  }
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(userAuthResponse.getSimpleResponse());
+	}
 }

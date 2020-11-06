@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class UserTagListController {
 
-  @GetMapping(path = "/v1/user/tag")
-  public ResponseEntity<?> getUserTagList() {
+	@GetMapping(path = "/v1/user/tag")
+	public ResponseEntity<?> getUserTagList() {
 
-    List<String> userTagList = EnumToList.userTypeEnumToList();
-    EnumListDto enumListDto = EnumListDto.pass(ResponseDomain.USER_TAG.getName(), userTagList);
+		List<String> userTagList = EnumToList.userTypeEnumToList();
+		EnumListDto enumListDto = EnumListDto.pass(ResponseDomain.USER_TAG.getName(), userTagList);
 
-    return ResponseEntity.ok().body(enumListDto);
-  }
+		return ResponseEntity.ok().body(enumListDto);
+	}
 }

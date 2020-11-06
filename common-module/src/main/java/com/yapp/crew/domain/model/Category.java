@@ -25,19 +25,19 @@ import lombok.Setter;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Category extends BaseEntity {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-  @Setter(value = AccessLevel.PRIVATE)
-  @Enumerated(value = EnumType.STRING)
-  @Column(nullable = false)
-  private ExerciseType exercise;
+	@Setter(value = AccessLevel.PRIVATE)
+	@Enumerated(value = EnumType.STRING)
+	@Column(nullable = false)
+	private ExerciseType exercise;
 
-  @OneToMany(mappedBy = "category")
-  private Set<UserExercise> exerciseUser = new HashSet<>();
+	@OneToMany(mappedBy = "category")
+	private Set<UserExercise> exerciseUser = new HashSet<>();
 
-  @JsonManagedReference
-  @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
-  private List<Board> boards = new ArrayList<>();
+	@JsonManagedReference
+	@OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
+	private List<Board> boards = new ArrayList<>();
 }

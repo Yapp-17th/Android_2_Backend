@@ -9,19 +9,19 @@ import org.springframework.stereotype.Service;
 @Service
 public class TokenService {
 
-  private JwtUtils jwtUtil;
+	private JwtUtils jwtUtil;
 
-  @Autowired
-  public TokenService(JwtUtils jwtUtil) {
-    this.jwtUtil = jwtUtil;
-  }
+	@Autowired
+	public TokenService(JwtUtils jwtUtil) {
+		this.jwtUtil = jwtUtil;
+	}
 
-  public HttpHeaders setToken(User user) {
-    String accessToken = jwtUtil.createToken(user);
+	public HttpHeaders setToken(User user) {
+		String accessToken = jwtUtil.createToken(user);
 
-    HttpHeaders responseHeaders = new HttpHeaders();
-    responseHeaders.set(jwtUtil.getHeader(), accessToken);
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.set(jwtUtil.getHeader(), accessToken);
 
-    return responseHeaders;
-  }
+		return responseHeaders;
+	}
 }

@@ -6,9 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserExerciseRepository extends JpaRepository<UserExercise, Long> {
 
-  List<UserExercise> findAll();
+	List<UserExercise> findAll();
 
-  List<UserExercise> findAllByUserId(Long userId);
+	List<UserExercise> findAllByUserId(Long userId);
 
-  UserExercise save(UserExercise userExcercise);
+	UserExercise save(UserExercise userExcercise);
 }

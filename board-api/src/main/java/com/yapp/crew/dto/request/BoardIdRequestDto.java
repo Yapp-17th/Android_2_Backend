@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class BoardIdRequestDto {
 
-  @NotNull
-  private Long boardId;
+	@NotNull
+	private Long boardId;
 }
