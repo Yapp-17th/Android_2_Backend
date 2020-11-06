@@ -8,6 +8,7 @@ import com.yapp.crew.domain.errors.GuestApplyNotFoundException;
 import com.yapp.crew.domain.errors.UserNotFoundException;
 import com.yapp.crew.domain.type.ResponseType;
 import com.yapp.crew.network.HttpResponseBody;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

@@ -26,53 +26,53 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 public class ChattingConsumer {
 
-  private final SimpMessagingTemplate simpMessagingTemplate;
+	private final SimpMessagingTemplate simpMessagingTemplate;
 
-  private final ChatRoomRepository chatRoomRepository;
+	private final ChatRoomRepository chatRoomRepository;
 
-  private final MessageRepository messageRepository;
+	private final MessageRepository messageRepository;
 
-  private final UserRepository userRepository;
+	private final UserRepository userRepository;
 
-  private final ObjectMapper objectMapper;
+	private final ObjectMapper objectMapper;
 
-  @Autowired
+	@Autowired
 	public ChattingConsumer(
-					SimpMessagingTemplate simpMessagingTemplate,
-					ChatRoomRepository chatRoomRepository,
-					MessageRepository messageRepository,
-					UserRepository userRepository,
-					ObjectMapper objectMapper
+			SimpMessagingTemplate simpMessagingTemplate,
+			ChatRoomRepository chatRoomRepository,
+			MessageRepository messageRepository,
+			UserRepository userRepository,
+			ObjectMapper objectMapper
 	) {
-  	this.simpMessagingTemplate = simpMessagingTemplate;
-  	this.chatRoomRepository = chatRoomRepository;
-  	this.messageRepository = messageRepository;
-  	this.userRepository = userRepository;
-  	this.objectMapper = objectMapper;
+		this.simpMessagingTemplate = simpMessagingTemplate;
+		this.chatRoomRepository = chatRoomRepository;
+		this.messageRepository = messageRepository;
+		this.userRepository = userRepository;
+		this.objectMapper = objectMapper;
 	}
 
-  @Transactional
-  @KafkaListener(topics = "${kafka.topics.chat-message}", groupId = "${kafka.groups.chat-message-group}")
-  public void consumeChatMessage(ConsumerRecord<Long, String> consumerRecord) throws JsonProcessingException {
-    log.info("Consumer Record: {}", consumerRecord);
+	@Transactional
+	@KafkaListener(topics = "${kafka.topics.chat-message}", groupId = "${kafka.groups.chat-message-group}")
+	public void consumeChatMessage(ConsumerRecord<Long, String> consumerRecord) throws JsonProcessingException {
+		log.info("Consumer Record: {}", consumerRecord);
 
-    MessageRequestPayload messageRequestPayload = objectMapper.readValue(consumerRecord.value(), MessageRequestPayload.class);
+		MessageRequestPayload messageRequestPayload = objectMapper.readValue(consumerRecord.value(), MessageRequestPayload.class);
 
-    ChatRoom chatRoom = chatRoomRepository.findById(messageRequestPayload.getChatRoomId())
-            .orElseThrow(() -> new ChatRoomNotFoundException(ResponseType.CHATROOM_NOT_FOUND.getMessage()));
+		ChatRoom chatRoom = chatRoomRepository.findById(messageRequestPayload.getChatRoomId())
+				.orElseThrow(() -> new ChatRoomNotFoundException(ResponseType.CHATROOM_NOT_FOUND.getMessage()));
 
-    User sender = userRepository.findById(messageRequestPayload.getSenderId())
-            .orElseThrow(() -> new UserNotFoundException(ResponseType.USER_NOT_FOUND.getMessage()));
+		User sender = userRepository.findById(messageRequestPayload.getSenderId())
+				.orElseThrow(() -> new UserNotFoundException(ResponseType.USER_NOT_FOUND.getMessage()));
 
 		Message message = Message.buildChatMessage(messageRequestPayload.getContent(), messageRequestPayload.getType(), sender, chatRoom);
 
-    chatRoom.addMessage(message);
-    messageRepository.save(message);
+		chatRoom.addMessage(message);
+		messageRepository.save(message);
 
-    MessageResponsePayload payload = MessageResponsePayload.buildChatMessageResponsePayload(message);
+		MessageResponsePayload payload = MessageResponsePayload.buildChatMessageResponsePayload(message);
 		simpMessagingTemplate.convertAndSend("/sub/chat/room/" + message.getChatRoom().getId().toString(), payload);
 
 		String messageJson = objectMapper.writeValueAsString(message);
-    log.info("Successfully consumed message: {}", messageJson);
-  }
+		log.info("Successfully consumed message: {}", messageJson);
+	}
 }

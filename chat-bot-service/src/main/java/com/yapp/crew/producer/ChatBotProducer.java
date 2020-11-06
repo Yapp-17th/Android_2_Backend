@@ -3,11 +3,14 @@ package com.yapp.crew.producer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yapp.crew.payload.MessageRequestPayload;
+
 import java.util.List;
+
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.header.Header;
 import org.apache.kafka.common.header.internals.RecordHeader;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -29,8 +32,8 @@ public class ChatBotProducer {
 
 	@Autowired
 	public ChatBotProducer(
-					KafkaTemplate<Long, String> kafkaTemplate,
-					ObjectMapper objectMapper
+			KafkaTemplate<Long, String> kafkaTemplate,
+			ObjectMapper objectMapper
 	) {
 		this.kafkaTemplate = kafkaTemplate;
 		this.objectMapper = objectMapper;
@@ -65,7 +68,8 @@ public class ChatBotProducer {
 		log.error("Error sending the message and exception is {}", ex.getMessage());
 		try {
 			throw ex;
-		} catch (Throwable throwable) {
+		}
+		catch (Throwable throwable) {
 			log.error("Error in onFailure(): {}", throwable.getMessage());
 		}
 	}

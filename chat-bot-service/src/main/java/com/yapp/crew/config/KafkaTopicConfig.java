@@ -1,6 +1,7 @@
 package com.yapp.crew.config;
 
 import org.apache.kafka.clients.admin.NewTopic;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,27 +24,27 @@ public class KafkaTopicConfig {
 	@Bean
 	public NewTopic guidelineMessage() {
 		return TopicBuilder
-						.name(guidelineMessageTopic)
-						.partitions(1)
-						.replicas(1)
-						.build();
+				.name(guidelineMessageTopic)
+				.partitions(1)
+				.replicas(1)
+				.build();
 	}
 
 	@Bean
 	public NewTopic applyUser() {
 		return TopicBuilder
-						.name(applyUserTopic)
-						.partitions(1)
-						.replicas(1)
-						.build();
+				.name(applyUserTopic)
+				.partitions(1)
+				.replicas(1)
+				.build();
 	}
 
 	@Bean
 	public NewTopic approveUser() {
 		return TopicBuilder
-						.name(approveUserTopic)
-						.partitions(1)
-						.replicas(1)
-						.build();
+				.name(approveUserTopic)
+				.partitions(1)
+				.replicas(1)
+				.build();
 	}
 }

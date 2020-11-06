@@ -56,14 +56,14 @@ public class ChatBotConsumer {
 
 	@Autowired
 	public ChatBotConsumer(
-					BotMessages botMessages,
-					ChatBotProducer chatBotProducer,
-					AppliedUserRepository appliedUserRepository,
-					EvaluationRepository evaluationRepository,
-					ChatRoomRepository chatRoomRepository,
-					BoardRepository boardRepository,
-					UserRepository userRepository,
-					ObjectMapper objectMapper
+			BotMessages botMessages,
+			ChatBotProducer chatBotProducer,
+			AppliedUserRepository appliedUserRepository,
+			EvaluationRepository evaluationRepository,
+			ChatRoomRepository chatRoomRepository,
+			BoardRepository boardRepository,
+			UserRepository userRepository,
+			ObjectMapper objectMapper
 	) {
 		this.botMessages = botMessages;
 		this.chatBotProducer = chatBotProducer;
@@ -82,11 +82,11 @@ public class ChatBotConsumer {
 		GuidelineRequestPayload guidelineRequestPayload = objectMapper.readValue(consumerRecord.value(), GuidelineRequestPayload.class);
 
 		MessageRequestPayload guidelineMessagePayload = MessageRequestPayload.builder()
-						.content(botMessages.getGuidelineMessage().replace("\"", ""))
-						.type(MessageType.BOT_MESSAGE)
-						.senderId(guidelineRequestPayload.getSenderId())
-						.chatRoomId(guidelineRequestPayload.getChatRoomId())
-						.build();
+				.content(botMessages.getGuidelineMessage().replace("\"", ""))
+				.type(MessageType.BOT_MESSAGE)
+				.senderId(guidelineRequestPayload.getSenderId())
+				.chatRoomId(guidelineRequestPayload.getChatRoomId())
+				.build();
 
 		chatBotProducer.sendBotMessage(guidelineMessagePayload);
 	}
@@ -99,24 +99,24 @@ public class ChatBotConsumer {
 		ApplyRequestPayload applyRequestPayload = objectMapper.readValue(consumerRecord.value(), ApplyRequestPayload.class);
 
 		User applier = userRepository.findUserById(applyRequestPayload.getApplierId())
-						.orElseThrow(() -> new UserNotFoundException("[Not Found] User not found"));
+				.orElseThrow(() -> new UserNotFoundException("[Not Found] User not found"));
 
 		User bot = userRepository.findUserById(-1L)
-						.orElseThrow(() -> new UserNotFoundException("[Not Found] Bot not found"));
+				.orElseThrow(() -> new UserNotFoundException("[Not Found] Bot not found"));
 
 		Board board = boardRepository.findById(applyRequestPayload.getBoardId())
-						.orElseThrow(() -> new BoardNotFoundException("[Not Found] Board not found"));
+				.orElseThrow(() -> new BoardNotFoundException("[Not Found] Board not found"));
 
 		ChatRoom chatRoom = chatRoomRepository.findById(applyRequestPayload.getChatRoomId())
-						.orElseThrow(() -> new ChatRoomNotFoundException("[Not Found] Chat room not found"));
+				.orElseThrow(() -> new ChatRoomNotFoundException("[Not Found] Chat room not found"));
 
 		MessageRequestPayload applyMessagePayload = MessageRequestPayload.builder()
-						.content(String.format(botMessages.getApplyMessage(), applier.getNickname()).replace("\"", ""))
-						.type(MessageType.BOT_MESSAGE)
-						.senderId(bot.getId())
-						.chatRoomId(chatRoom.getId())
-						.boardId(board.getId())
-						.build();
+				.content(String.format(botMessages.getApplyMessage(), applier.getNickname()).replace("\"", ""))
+				.type(MessageType.BOT_MESSAGE)
+				.senderId(bot.getId())
+				.chatRoomId(chatRoom.getId())
+				.boardId(board.getId())
+				.build();
 
 		List<Evaluation> evaluations = evaluationRepository.findAllByUserId(applier.getId());
 
@@ -131,18 +131,18 @@ public class ChatBotConsumer {
 		board.addAppliedUser(newApply);
 
 		MessageRequestPayload profileMessagePayload = MessageRequestPayload.builder()
-						.content(String.format(
-										botMessages.getProfileMessage(),
-										applier.getNickname(),
-										applier.calculateLikes(evaluations),
-										applier.calculateDislikes(evaluations),
-										applier.getIntro()
-						).replace("\"", ""))
-						.type(MessageType.PROFILE)
-						.senderId(applier.getId())
-						.chatRoomId(chatRoom.getId())
-						.boardId(board.getId())
-						.build();
+				.content(String.format(
+						botMessages.getProfileMessage(),
+						applier.getNickname(),
+						applier.calculateLikes(evaluations),
+						applier.calculateDislikes(evaluations),
+						applier.getIntro()
+				).replace("\"", ""))
+				.type(MessageType.PROFILE)
+				.senderId(applier.getId())
+				.chatRoomId(chatRoom.getId())
+				.boardId(board.getId())
+				.build();
 
 		chatBotProducer.sendBotMessage(applyMessagePayload);
 		chatBotProducer.sendBotMessage(profileMessagePayload);
@@ -155,18 +155,18 @@ public class ChatBotConsumer {
 		ApproveRequestPayload approveRequestPayload = objectMapper.readValue(consumerRecord.value(), ApproveRequestPayload.class);
 
 		User host = userRepository.findUserById(approveRequestPayload.getHostId())
-						.orElseThrow(() -> new UserNotFoundException("[Not Found] User not found"));
+				.orElseThrow(() -> new UserNotFoundException("[Not Found] User not found"));
 
 		User bot = userRepository.findUserById(-1L)
-						.orElseThrow(() -> new UserNotFoundException("[Not Found] Bot not found"));
+				.orElseThrow(() -> new UserNotFoundException("[Not Found] Bot not found"));
 
 		MessageRequestPayload approveMessagePayload = MessageRequestPayload.builder()
-						.content(String.format(botMessages.getApproveMessage(), host.getNickname()).replace("\"", ""))
-						.type(MessageType.BOT_MESSAGE)
-						.senderId(bot.getId())
-						.chatRoomId(approveRequestPayload.getChatRoomId())
-						.boardId(approveRequestPayload.getBoardId())
-						.build();
+				.content(String.format(botMessages.getApproveMessage(), host.getNickname()).replace("\"", ""))
+				.type(MessageType.BOT_MESSAGE)
+				.senderId(bot.getId())
+				.chatRoomId(approveRequestPayload.getChatRoomId())
+				.boardId(approveRequestPayload.getBoardId())
+				.build();
 
 		chatBotProducer.sendBotMessage(approveMessagePayload);
 	}

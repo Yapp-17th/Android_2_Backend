@@ -1,6 +1,7 @@
 package com.yapp.crew.payload;
 
 import javax.validation.constraints.NotNull;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,7 +19,7 @@ public class ApproveRequestPayload {
 	private Long chatRoomId;
 
 	private Long boardId;
-	
+
 	private Long hostId;
 
 	@NotNull
