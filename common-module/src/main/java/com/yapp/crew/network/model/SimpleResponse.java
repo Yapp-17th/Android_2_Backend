@@ -1,4 +1,4 @@
-package com.yapp.crew.model;
+package com.yapp.crew.network.model;
 
 import com.yapp.crew.domain.type.ResponseType;
 import lombok.Getter;

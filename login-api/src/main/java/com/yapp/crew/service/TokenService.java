@@ -16,7 +16,7 @@ public class TokenService {
     this.jwtUtil = jwtUtil;
   }
 
-  public HttpHeaders setToken(User user) throws Exception {
+  public HttpHeaders setToken(User user) {
     String accessToken = jwtUtil.createToken(user);
 
     HttpHeaders responseHeaders = new HttpHeaders();
