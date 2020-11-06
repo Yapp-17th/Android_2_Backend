@@ -4,9 +4,7 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.yapp.crew.domain.type.ResponseType;
-
 import java.time.LocalDateTime;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -39,7 +37,8 @@ public class HttpResponseBody<T> {
 	@JsonInclude(NON_NULL)
 	private T data;
 
-	public static <T> HttpResponseBody<T> buildChatMessagesResponse(T data, Integer status, ResponseType responseType, Long firstUnreadMessageId, String boardTitle, Boolean isApplied) {
+	public static <T> HttpResponseBody<T> buildChatMessagesResponse(T data, Integer status,
+			ResponseType responseType, Long firstUnreadMessageId, String boardTitle, Boolean isApplied) {
 		return (HttpResponseBody<T>) HttpResponseBody.builder()
 				.transactionTime(LocalDateTime.now())
 				.status(status)
@@ -51,7 +50,8 @@ public class HttpResponseBody<T> {
 				.build();
 	}
 
-	public static <T> HttpResponseBody<T> buildChatMessagesResponse(T data, Integer status, ResponseType responseType, Long firstUnreadMessageId) {
+	public static <T> HttpResponseBody<T> buildChatMessagesResponse(T data, Integer status,
+			ResponseType responseType, Long firstUnreadMessageId) {
 		return (HttpResponseBody<T>) HttpResponseBody.builder()
 				.transactionTime(LocalDateTime.now())
 				.status(status)
@@ -61,7 +61,8 @@ public class HttpResponseBody<T> {
 				.build();
 	}
 
-	public static <T> HttpResponseBody<T> buildChatRoomsResponse(T data, Integer status, ResponseType responseType) {
+	public static <T> HttpResponseBody<T> buildChatRoomsResponse(T data, Integer status,
+			ResponseType responseType) {
 		return (HttpResponseBody<T>) HttpResponseBody.builder()
 				.transactionTime(LocalDateTime.now())
 				.status(status)
@@ -70,7 +71,8 @@ public class HttpResponseBody<T> {
 				.build();
 	}
 
-	public static <T> HttpResponseBody<T> buildChatRoomResponse(T data, Integer status, ResponseType responseType) {
+	public static <T> HttpResponseBody<T> buildChatRoomResponse(T data, Integer status,
+			ResponseType responseType) {
 		return (HttpResponseBody<T>) HttpResponseBody.builder()
 				.transactionTime(LocalDateTime.now())
 				.status(status)
@@ -79,7 +81,8 @@ public class HttpResponseBody<T> {
 				.build();
 	}
 
-	public static <T> HttpResponseBody<T> buildErrorResponse(Integer status, ResponseType responseType, String message) {
+	public static <T> HttpResponseBody<T> buildErrorResponse(Integer status,
+			ResponseType responseType, String message) {
 		return (HttpResponseBody<T>) HttpResponseBody.builder()
 				.transactionTime(LocalDateTime.now())
 				.status(status)
@@ -88,7 +91,8 @@ public class HttpResponseBody<T> {
 				.build();
 	}
 
-	public static <T> HttpResponseBody<T> buildSuccessResponse(Integer status, ResponseType responseType, String message) {
+	public static <T> HttpResponseBody<T> buildSuccessResponse(Integer status,
+			ResponseType responseType, String message) {
 		return (HttpResponseBody<T>) HttpResponseBody.builder()
 				.transactionTime(LocalDateTime.now())
 				.status(status)

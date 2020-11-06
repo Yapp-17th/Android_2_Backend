@@ -3,14 +3,11 @@ package com.yapp.crew.producer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yapp.crew.payload.MessageRequestPayload;
-
 import java.util.List;
-
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.header.Header;
 import org.apache.kafka.common.header.internals.RecordHeader;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -39,12 +36,14 @@ public class ChatBotProducer {
 		this.objectMapper = objectMapper;
 	}
 
-	public ListenableFuture<SendResult<Long, String>> sendBotMessage(MessageRequestPayload messageRequestPayload) throws JsonProcessingException {
+	public ListenableFuture<SendResult<Long, String>> sendBotMessage(
+			MessageRequestPayload messageRequestPayload) throws JsonProcessingException {
 		Long key = messageRequestPayload.getChatRoomId();
 		String value = objectMapper.writeValueAsString(messageRequestPayload);
 
 		ProducerRecord<Long, String> producerRecord = buildProducerRecord(key, value, chatMessageTopic);
-		ListenableFuture<SendResult<Long, String>> listenableFuture = kafkaTemplate.send(producerRecord);
+		ListenableFuture<SendResult<Long, String>> listenableFuture = kafkaTemplate
+				.send(producerRecord);
 		listenableFuture.addCallback(new ListenableFutureCallback<>() {
 			@Override
 			public void onFailure(Throwable ex) {
@@ -68,13 +67,13 @@ public class ChatBotProducer {
 		log.error("Error sending the message and exception is {}", ex.getMessage());
 		try {
 			throw ex;
-		}
-		catch (Throwable throwable) {
+		} catch (Throwable throwable) {
 			log.error("Error in onFailure(): {}", throwable.getMessage());
 		}
 	}
 
 	private void handleSuccess(Long key, String value, SendResult<Long, String> result) {
-		log.info("Message send successfully for the key: {} and the value is {}, partition is {}", key, value, result.getRecordMetadata().partition());
+		log.info("Message send successfully for the key: {} and the value is {}, partition is {}", key,
+				value, result.getRecordMetadata().partition());
 	}
 }

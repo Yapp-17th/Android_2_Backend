@@ -5,11 +5,9 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.yapp.crew.domain.model.Message;
 import com.yapp.crew.domain.repository.MessageRepository;
 import com.yapp.crew.domain.type.MessageType;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -58,7 +56,8 @@ public class MessageResponsePayload {
 				.build();
 	}
 
-	public static List<MessageResponsePayload> buildMessageResponsePayload(MessageRepository messageRepository, List<Message> messages, boolean isHost) {
+	public static List<MessageResponsePayload> buildMessageResponsePayload(
+			MessageRepository messageRepository, List<Message> messages, boolean isHost) {
 		return messages.stream()
 				.map(message -> {
 					message.readMessage(isHost);

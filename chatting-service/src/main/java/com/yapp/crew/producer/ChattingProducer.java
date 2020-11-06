@@ -4,19 +4,16 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yapp.crew.payload.ApplyRequestPayload;
 import com.yapp.crew.payload.ApproveRequestPayload;
-import com.yapp.crew.payload.MessageRequestPayload;
 import com.yapp.crew.payload.GuidelineRequestPayload;
-
+import com.yapp.crew.payload.MessageRequestPayload;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.header.Header;
 import org.apache.kafka.common.header.internals.RecordHeader;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -51,12 +48,14 @@ public class ChattingProducer {
 		this.objectMapper = objectMapper;
 	}
 
-	public ListenableFuture<SendResult<Long, String>> sendMessage(MessageRequestPayload messageRequestPayload) throws JsonProcessingException {
+	public ListenableFuture<SendResult<Long, String>> sendMessage(
+			MessageRequestPayload messageRequestPayload) throws JsonProcessingException {
 		Long key = messageRequestPayload.getChatRoomId();
 		String value = objectMapper.writeValueAsString(messageRequestPayload);
 
 		ProducerRecord<Long, String> producerRecord = buildProducerRecord(key, value, chatMessageTopic);
-		ListenableFuture<SendResult<Long, String>> listenableFuture = kafkaTemplate.send(producerRecord);
+		ListenableFuture<SendResult<Long, String>> listenableFuture = kafkaTemplate
+				.send(producerRecord);
 		listenableFuture.addCallback(new ListenableFutureCallback<>() {
 			@Override
 			public void onFailure(Throwable ex) {
@@ -71,12 +70,15 @@ public class ChattingProducer {
 		return listenableFuture;
 	}
 
-	public ListenableFuture<SendResult<Long, String>> sendGuidelineBotMessage(GuidelineRequestPayload guidelineRequestPayload) throws JsonProcessingException {
+	public ListenableFuture<SendResult<Long, String>> sendGuidelineBotMessage(
+			GuidelineRequestPayload guidelineRequestPayload) throws JsonProcessingException {
 		Long key = guidelineRequestPayload.getChatRoomId();
 		String value = objectMapper.writeValueAsString(guidelineRequestPayload);
 
-		ProducerRecord<Long, String> producerRecord = buildProducerRecord(key, value, guidelineMessageTopic);
-		ListenableFuture<SendResult<Long, String>> listenableFuture = kafkaTemplate.send(producerRecord);
+		ProducerRecord<Long, String> producerRecord = buildProducerRecord(key, value,
+				guidelineMessageTopic);
+		ListenableFuture<SendResult<Long, String>> listenableFuture = kafkaTemplate
+				.send(producerRecord);
 		listenableFuture.addCallback(new ListenableFutureCallback<>() {
 			@Override
 			public void onFailure(Throwable ex) {
@@ -91,12 +93,14 @@ public class ChattingProducer {
 		return listenableFuture;
 	}
 
-	public ListenableFuture<SendResult<Long, String>> applyUser(ApplyRequestPayload applyRequestPayload) throws JsonProcessingException {
+	public ListenableFuture<SendResult<Long, String>> applyUser(
+			ApplyRequestPayload applyRequestPayload) throws JsonProcessingException {
 		Long key = applyRequestPayload.getBoardId();
 		String value = objectMapper.writeValueAsString(applyRequestPayload);
 
 		ProducerRecord<Long, String> producerRecord = buildProducerRecord(key, value, applyUserTopic);
-		ListenableFuture<SendResult<Long, String>> listenableFuture = kafkaTemplate.send(producerRecord);
+		ListenableFuture<SendResult<Long, String>> listenableFuture = kafkaTemplate
+				.send(producerRecord);
 		listenableFuture.addCallback(new ListenableFutureCallback<>() {
 			@Override
 			public void onFailure(Throwable ex) {
@@ -111,12 +115,14 @@ public class ChattingProducer {
 		return listenableFuture;
 	}
 
-	public ListenableFuture<SendResult<Long, String>> approveUser(ApproveRequestPayload approveRequestPayload) throws JsonProcessingException {
+	public ListenableFuture<SendResult<Long, String>> approveUser(
+			ApproveRequestPayload approveRequestPayload) throws JsonProcessingException {
 		Long key = approveRequestPayload.getBoardId();
 		String value = objectMapper.writeValueAsString(approveRequestPayload);
 
 		ProducerRecord<Long, String> producerRecord = buildProducerRecord(key, value, approveUserTopic);
-		ListenableFuture<SendResult<Long, String>> listenableFuture = kafkaTemplate.send(producerRecord);
+		ListenableFuture<SendResult<Long, String>> listenableFuture = kafkaTemplate
+				.send(producerRecord);
 		listenableFuture.addCallback(new ListenableFutureCallback<>() {
 			@Override
 			public void onFailure(Throwable ex) {
@@ -131,20 +137,22 @@ public class ChattingProducer {
 		return listenableFuture;
 	}
 
-	public SendResult<Long, String> sendMessageSynchronously(MessageRequestPayload messageRequestPayload) throws JsonProcessingException, InterruptedException, ExecutionException, TimeoutException {
+	public SendResult<Long, String> sendMessageSynchronously(
+			MessageRequestPayload messageRequestPayload)
+			throws JsonProcessingException, InterruptedException, ExecutionException, TimeoutException {
 		Long key = messageRequestPayload.getChatRoomId();
 		String value = objectMapper.writeValueAsString(messageRequestPayload);
 		SendResult<Long, String> sendResult = null;
 
 		try {
-			ProducerRecord<Long, String> producerRecord = buildProducerRecord(key, value, chatMessageTopic);
+			ProducerRecord<Long, String> producerRecord = buildProducerRecord(key, value,
+					chatMessageTopic);
 			sendResult = kafkaTemplate.send(producerRecord).get(1, TimeUnit.SECONDS);
-		}
-		catch (ExecutionException | InterruptedException ex) {
-			log.error("ExecutionException / InterruptedException sending the message and exception is {}", ex.getMessage());
+		} catch (ExecutionException | InterruptedException ex) {
+			log.error("ExecutionException / InterruptedException sending the message and exception is {}",
+					ex.getMessage());
 			throw ex;
-		}
-		catch (Exception ex) {
+		} catch (Exception ex) {
 			log.error("Exception sending the message and exception is {}", ex.getMessage());
 			throw ex;
 		}
@@ -160,13 +168,13 @@ public class ChattingProducer {
 		log.error("Error sending the message and exception is {}", ex.getMessage());
 		try {
 			throw ex;
-		}
-		catch (Throwable throwable) {
+		} catch (Throwable throwable) {
 			log.error("Error in onFailure(): {}", throwable.getMessage());
 		}
 	}
 
 	private void handleSuccess(Long key, String value, SendResult<Long, String> result) {
-		log.info("Message send successfully for the key: {} and the value is {}, partition is {}", key, value, result.getRecordMetadata().partition());
+		log.info("Message send successfully for the key: {} and the value is {}, partition is {}", key,
+				value, result.getRecordMetadata().partition());
 	}
 }

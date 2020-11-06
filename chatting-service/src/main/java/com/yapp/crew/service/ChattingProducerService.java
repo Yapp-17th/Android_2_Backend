@@ -29,12 +29,9 @@ import com.yapp.crew.payload.ChatRoomResponsePayload;
 import com.yapp.crew.payload.GuidelineRequestPayload;
 import com.yapp.crew.payload.MessageResponsePayload;
 import com.yapp.crew.producer.ChattingProducer;
-
 import java.util.List;
 import java.util.Optional;
-
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -73,7 +70,8 @@ public class ChattingProducerService {
 		this.userRepository = userRepository;
 	}
 
-	public HttpResponseBody<ChatRoomResponsePayload> createChatRoom(ChatRoomRequestPayload chatRoomRequestPayload) throws JsonProcessingException {
+	public HttpResponseBody<ChatRoomResponsePayload> createChatRoom(
+			ChatRoomRequestPayload chatRoomRequestPayload) throws JsonProcessingException {
 		User host = userRepository.findUserById(chatRoomRequestPayload.getHostId())
 				.orElseThrow(() -> new UserNotFoundException("Cannot find host user with id"));
 
@@ -86,9 +84,12 @@ public class ChattingProducerService {
 		Board board = boardRepository.findById(chatRoomRequestPayload.getBoardId())
 				.orElseThrow(() -> new BoardNotFoundException("Cannot find board"));
 
-		Optional<ChatRoom> chatRoom = chatRoomRepository.findByGuestIdAndBoardId(guest.getId(), board.getId());
+		Optional<ChatRoom> chatRoom = chatRoomRepository
+				.findByGuestIdAndBoardId(guest.getId(), board.getId());
 		if (chatRoom.isPresent()) {
-			return HttpResponseBody.buildChatRoomResponse(ChatRoomResponsePayload.buildChatRoomResponsePayload(chatRoom.get()), HttpStatus.OK.value(), ResponseType.CHATROOM_ALREADY_CREATED);
+			return HttpResponseBody.buildChatRoomResponse(
+					ChatRoomResponsePayload.buildChatRoomResponsePayload(chatRoom.get()),
+					HttpStatus.OK.value(), ResponseType.CHATROOM_ALREADY_CREATED);
 		}
 
 		ChatRoom newChatRoom = ChatRoom.buildChatRoom(host, guest, board);
@@ -102,15 +103,20 @@ public class ChattingProducerService {
 				.chatRoomId(newChatRoom.getId())
 				.build();
 		chattingProducer.sendGuidelineBotMessage(guidelineRequestPayload);
-		return HttpResponseBody.buildChatRoomResponse(ChatRoomResponsePayload.buildChatRoomResponsePayload(newChatRoom), HttpStatus.CREATED.value(), ResponseType.SUCCESS);
+		return HttpResponseBody
+				.buildChatRoomResponse(ChatRoomResponsePayload.buildChatRoomResponsePayload(newChatRoom),
+						HttpStatus.CREATED.value(), ResponseType.SUCCESS);
 	}
 
 	public HttpResponseBody<List<ChatRoomResponsePayload>> receiveChatRooms(Long userId) {
 		List<ChatRoom> chatRooms = chatRoomRepository.findAllByUserId(userId);
-		return HttpResponseBody.buildChatRoomsResponse(ChatRoomResponsePayload.buildChatRoomResponsePayload(chatRooms, userId), HttpStatus.OK.value(), ResponseType.SUCCESS);
+		return HttpResponseBody.buildChatRoomsResponse(
+				ChatRoomResponsePayload.buildChatRoomResponsePayload(chatRooms, userId),
+				HttpStatus.OK.value(), ResponseType.SUCCESS);
 	}
 
-	public HttpResponseBody<List<MessageResponsePayload>> receiveChatMessages(Long chatRoomId, Long userId) {
+	public HttpResponseBody<List<MessageResponsePayload>> receiveChatMessages(Long chatRoomId,
+			Long userId) {
 		List<Message> messages = messageRepository.findAllByChatRoomIdOrderByCreatedAt(chatRoomId);
 		ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
 				.orElseThrow(() -> new ChatRoomNotFoundException("Chat room not found"));
@@ -121,7 +127,8 @@ public class ChattingProducerService {
 		String boardTitle = chatRoom.getBoard().getTitle();
 
 		boolean isApplied = false;
-		Optional<AppliedUser> appliedUser = appliedUserRepository.findByBoardIdAndUserId(chatRoom.getBoard().getId(), userId);
+		Optional<AppliedUser> appliedUser = appliedUserRepository
+				.findByBoardIdAndUserId(chatRoom.getBoard().getId(), userId);
 		if (appliedUser.isPresent()) {
 			isApplied = appliedUser.get().getStatus().equals(AppliedStatus.APPROVED);
 		}
@@ -136,13 +143,16 @@ public class ChattingProducerService {
 		);
 	}
 
-	public HttpResponseBody<?> applyUser(ApplyRequestPayload applyRequestPayload) throws JsonProcessingException {
+	public HttpResponseBody<?> applyUser(ApplyRequestPayload applyRequestPayload)
+			throws JsonProcessingException {
 		chattingProducer.applyUser(applyRequestPayload);
-		return HttpResponseBody.buildSuccessResponse(HttpStatus.OK.value(), ResponseType.SUCCESS, ResponseType.SUCCESS.getMessage());
+		return HttpResponseBody.buildSuccessResponse(HttpStatus.OK.value(), ResponseType.SUCCESS,
+				ResponseType.SUCCESS.getMessage());
 	}
 
 	@Transactional
-	public HttpResponseBody<?> approveUser(ApproveRequestPayload approveRequestPayload) throws JsonProcessingException {
+	public HttpResponseBody<?> approveUser(ApproveRequestPayload approveRequestPayload)
+			throws JsonProcessingException {
 		Board board = boardRepository.findById(approveRequestPayload.getBoardId())
 				.orElseThrow(() -> new BoardNotFoundException("Board not found"));
 
@@ -167,7 +177,8 @@ public class ChattingProducerService {
 			throw new WrongGuestException("This user is not a guest for this chat room");
 		}
 
-		AppliedUser isApplied = appliedUserRepository.findByBoardIdAndUserId(board.getId(), guest.getId())
+		AppliedUser isApplied = appliedUserRepository
+				.findByBoardIdAndUserId(board.getId(), guest.getId())
 				.orElseThrow(() -> new GuestApplyNotFoundException("This user did not apply"));
 
 		if (isApplied.getStatus().equals(AppliedStatus.APPROVED)) {
@@ -185,6 +196,7 @@ public class ChattingProducerService {
 
 		chattingProducer.approveUser(approveRequestPayload);
 
-		return HttpResponseBody.buildSuccessResponse(HttpStatus.OK.value(), ResponseType.SUCCESS, ResponseType.SUCCESS.getMessage());
+		return HttpResponseBody.buildSuccessResponse(HttpStatus.OK.value(), ResponseType.SUCCESS,
+				ResponseType.SUCCESS.getMessage());
 	}
 }

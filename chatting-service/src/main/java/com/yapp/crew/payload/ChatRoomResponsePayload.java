@@ -5,11 +5,9 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.yapp.crew.domain.model.ChatRoom;
 import com.yapp.crew.domain.model.Message;
 import com.yapp.crew.domain.status.ChatRoomStatus;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -55,7 +53,8 @@ public class ChatRoomResponsePayload {
 				.build();
 	}
 
-	public static ChatRoomResponsePayload buildChatRoomResponsePayload(ChatRoom chatRoom, MessageResponsePayload lastMessage, Long unreadMessages) {
+	public static ChatRoomResponsePayload buildChatRoomResponsePayload(ChatRoom chatRoom,
+			MessageResponsePayload lastMessage, Long unreadMessages) {
 		return ChatRoomResponsePayload.builder()
 				.id(chatRoom.getId())
 				.hostId(chatRoom.getHost().getId())
@@ -68,7 +67,8 @@ public class ChatRoomResponsePayload {
 				.build();
 	}
 
-	public static ChatRoomResponsePayload buildChatRoomResponsePayload(ChatRoom chatRoom, MessageResponsePayload lastMessage, Long unreadMessages, String opponentNickname) {
+	public static ChatRoomResponsePayload buildChatRoomResponsePayload(ChatRoom chatRoom,
+			MessageResponsePayload lastMessage, Long unreadMessages, String opponentNickname) {
 		return ChatRoomResponsePayload.builder()
 				.id(chatRoom.getId())
 				.hostId(chatRoom.getHost().getId())
@@ -82,7 +82,8 @@ public class ChatRoomResponsePayload {
 				.build();
 	}
 
-	public static List<ChatRoomResponsePayload> buildChatRoomResponsePayload(List<ChatRoom> chatRooms, Long userId) {
+	public static List<ChatRoomResponsePayload> buildChatRoomResponsePayload(List<ChatRoom> chatRooms,
+			Long userId) {
 		return chatRooms.stream()
 				.map(chatRoom -> {
 					List<Message> messages = chatRoom.getMessages();
@@ -92,8 +93,7 @@ public class ChatRoomResponsePayload {
 					String opponentNickname;
 					if (isHost) {
 						opponentNickname = chatRoom.getGuest().getNickname();
-					}
-					else {
+					} else {
 						opponentNickname = chatRoom.getHost().getNickname();
 					}
 
@@ -106,7 +106,9 @@ public class ChatRoomResponsePayload {
 					if (lastMessage != null) {
 						messagePayload = MessageResponsePayload.buildChatMessageResponsePayload(lastMessage);
 					}
-					return ChatRoomResponsePayload.buildChatRoomResponsePayload(chatRoom, messagePayload, unreadMessages, opponentNickname);
+					return ChatRoomResponsePayload
+							.buildChatRoomResponsePayload(chatRoom, messagePayload, unreadMessages,
+									opponentNickname);
 				})
 				.collect(Collectors.toList());
 	}

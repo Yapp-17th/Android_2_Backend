@@ -11,15 +11,11 @@ import com.yapp.crew.payload.MessageRequestPayload;
 import com.yapp.crew.payload.MessageResponsePayload;
 import com.yapp.crew.producer.ChattingProducer;
 import com.yapp.crew.service.ChattingProducerService;
-
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
-
 import javax.validation.Valid;
-
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -56,7 +52,8 @@ public class ChattingController {
 	}
 
 	@MessageMapping(value = "/v1/chat/message")
-	public void sendMessageByWebsocket(MessageRequestPayload messageRequestPayload) throws JsonProcessingException {
+	public void sendMessageByWebsocket(MessageRequestPayload messageRequestPayload)
+			throws JsonProcessingException {
 		log.info("Before-sendMessageByWebsocket");
 
 		chattingProducer.sendMessage(messageRequestPayload);
@@ -65,7 +62,8 @@ public class ChattingController {
 	}
 
 	@PostMapping(path = "/v1/chat/message")
-	public ResponseEntity<?> sendMessageByHttpRequest(@RequestBody MessageRequestPayload messageRequestPayload) throws JsonProcessingException {
+	public ResponseEntity<?> sendMessageByHttpRequest(
+			@RequestBody MessageRequestPayload messageRequestPayload) throws JsonProcessingException {
 		log.info("Before-sendMessageByHttpRequest");
 
 		chattingProducer.sendMessage(messageRequestPayload);
@@ -76,7 +74,8 @@ public class ChattingController {
 	}
 
 	@PostMapping(path = "/v2/chat/message")
-	public ResponseEntity<?> sendMessageSynchronously(@RequestBody MessageRequestPayload messageRequestPayload)
+	public ResponseEntity<?> sendMessageSynchronously(
+			@RequestBody MessageRequestPayload messageRequestPayload)
 			throws JsonProcessingException, InterruptedException, ExecutionException, TimeoutException {
 
 		log.info("Before-sendMessageSynchronously");
@@ -96,16 +95,19 @@ public class ChattingController {
 		auth.verifyToken(token);
 		Long userId = auth.parseUserIdFromToken(token);
 
-		HttpResponseBody<List<MessageResponsePayload>> responseBody = chattingProducerService.receiveChatMessages(chatRoomId, userId);
+		HttpResponseBody<List<MessageResponsePayload>> responseBody = chattingProducerService
+				.receiveChatMessages(chatRoomId, userId);
 		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
 	}
 
 	@GetMapping(path = "/v1/chat/room")
-	public ResponseEntity<?> receiveChatRooms(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token) {
+	public ResponseEntity<?> receiveChatRooms(
+			@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token) {
 		auth.verifyToken(token);
 		Long userId = auth.parseUserIdFromToken(token);
 
-		HttpResponseBody<List<ChatRoomResponsePayload>> responseBody = chattingProducerService.receiveChatRooms(userId);
+		HttpResponseBody<List<ChatRoomResponsePayload>> responseBody = chattingProducerService
+				.receiveChatRooms(userId);
 		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
 	}
 
@@ -120,7 +122,8 @@ public class ChattingController {
 
 		chatRoomRequestPayload.setGuestId(guestId);
 
-		HttpResponseBody<ChatRoomResponsePayload> responseBody = chattingProducerService.createChatRoom(chatRoomRequestPayload);
+		HttpResponseBody<ChatRoomResponsePayload> responseBody = chattingProducerService
+				.createChatRoom(chatRoomRequestPayload);
 		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
 	}
 
