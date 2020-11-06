@@ -2,7 +2,7 @@ package com.yapp.crew.controller;
 
 import com.yapp.crew.domain.auth.Auth;
 import com.yapp.crew.dto.request.BoardIdRequestDto;
-import com.yapp.crew.model.SimpleResponse;
+import com.yapp.crew.network.model.SimpleResponse;
 import com.yapp.crew.service.HiddenBoardService;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;

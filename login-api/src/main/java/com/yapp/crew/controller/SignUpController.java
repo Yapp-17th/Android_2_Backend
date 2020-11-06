@@ -2,9 +2,9 @@ package com.yapp.crew.controller;
 
 import com.yapp.crew.domain.errors.InternalServerErrorException;
 import com.yapp.crew.dto.request.SignUpRequestDto;
-import com.yapp.crew.dto.response.UserAuthResponseDto;
 import com.yapp.crew.model.SignupUserInfo;
 import com.yapp.crew.model.UserAuthResponse;
+import com.yapp.crew.network.dto.SimpleResponseDto;
 import com.yapp.crew.service.SignUpService;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -35,11 +35,11 @@ public class SignUpController {
     SignupUserInfo signupUserInfo = SignupUserInfo.build(signUpRequestDto);
     UserAuthResponse userAuthResponse = signUpService.signUp(signupUserInfo);
 
-    UserAuthResponseDto userAuthResponseDto = UserAuthResponseDto.build(userAuthResponse.getUserAuthResponseBody());
+    SimpleResponseDto simpleResponseDto = SimpleResponseDto.build(userAuthResponse.getSimpleResponse());
     HttpHeaders httpHeaders = userAuthResponse.getHttpHeaders();
 
     if (httpHeaders != null) {
-      return ResponseEntity.ok().headers(httpHeaders).body(userAuthResponseDto);
+      return ResponseEntity.ok().headers(httpHeaders).body(simpleResponseDto);
     }
 
     throw new InternalServerErrorException("internal server error");

@@ -7,10 +7,10 @@ import com.yapp.crew.domain.errors.UserNotFoundException;
 import com.yapp.crew.domain.model.User;
 import com.yapp.crew.domain.repository.UserRepository;
 import com.yapp.crew.domain.status.UserStatus;
+import com.yapp.crew.domain.type.ResponseType;
 import com.yapp.crew.model.LoginUserInfo;
 import com.yapp.crew.model.UserAuthResponse;
-import com.yapp.crew.model.UserAuthResponseBody;
-import com.yapp.crew.utils.ResponseMessage;
+import com.yapp.crew.network.model.SimpleResponse;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,8 +45,8 @@ public class SignInService {
     try {
       HttpHeaders httpHeaders = tokenService.setToken(existingUser);
 
-      UserAuthResponseBody userAuthResponseBody = UserAuthResponseBody.pass(ResponseMessage.SIGNIN_SUCCESS.getMessage());
-      return new UserAuthResponse(httpHeaders, userAuthResponseBody);
+      SimpleResponse simpleResponse = SimpleResponse.pass(ResponseType.SUCCESS);
+      return new UserAuthResponse(httpHeaders, simpleResponse);
     } catch (Exception e) {
       log.info("Internal server error: " + e.getMessage());
       throw new InternalServerErrorException("internal server error");

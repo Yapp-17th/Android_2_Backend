@@ -27,7 +27,7 @@ import com.yapp.crew.model.BoardContentResponseInfo;
 import com.yapp.crew.model.BoardFilter;
 import com.yapp.crew.model.BoardListResponseInfo;
 import com.yapp.crew.model.BoardPostRequiredInfo;
-import com.yapp.crew.model.SimpleResponse;
+import com.yapp.crew.network.model.SimpleResponse;
 import com.yapp.crew.utils.SortingType;
 import java.util.Comparator;
 import java.util.List;

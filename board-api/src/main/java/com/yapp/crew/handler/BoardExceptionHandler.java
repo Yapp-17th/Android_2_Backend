@@ -12,7 +12,7 @@ import com.yapp.crew.domain.errors.TokenRequiredException;
 import com.yapp.crew.domain.errors.UserNotFoundException;
 import com.yapp.crew.domain.errors.WrongTokenPrefixException;
 import com.yapp.crew.domain.type.ResponseType;
-import com.yapp.crew.model.SimpleResponse;
+import com.yapp.crew.network.model.SimpleResponse;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.security.SignatureException;

@@ -11,7 +11,7 @@ import com.yapp.crew.domain.repository.BookMarkRepository;
 import com.yapp.crew.domain.repository.UserRepository;
 import com.yapp.crew.domain.status.BoardStatus;
 import com.yapp.crew.domain.type.ResponseType;
-import com.yapp.crew.model.SimpleResponse;
+import com.yapp.crew.network.model.SimpleResponse;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

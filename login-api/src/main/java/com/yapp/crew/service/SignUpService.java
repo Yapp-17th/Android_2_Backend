@@ -15,10 +15,10 @@ import com.yapp.crew.domain.repository.CategoryRepository;
 import com.yapp.crew.domain.repository.UserExerciseRepository;
 import com.yapp.crew.domain.repository.UserRepository;
 import com.yapp.crew.domain.status.UserStatus;
+import com.yapp.crew.domain.type.ResponseType;
 import com.yapp.crew.model.SignupUserInfo;
 import com.yapp.crew.model.UserAuthResponse;
-import com.yapp.crew.model.UserAuthResponseBody;
-import com.yapp.crew.utils.ResponseMessage;
+import com.yapp.crew.network.model.SimpleResponse;
 import java.util.List;
 import java.util.Optional;
 import javax.transaction.Transactional;
@@ -80,7 +80,7 @@ public class SignUpService {
       if (e.getCause() instanceof ConstraintViolationException) {
         // TODO: 어떤 필드가 duplicate인지 어떻게 뽑아내지?
         log.info("Request server error: " + e.getLocalizedMessage());
-        throw new InvalidRequestBodyException(ResponseMessage.INVALID_REQUEST_BODY.getMessage());
+        throw new InvalidRequestBodyException(ResponseType.INVALID_REQUEST_BODY.getMessage());
       }
 
       log.info("Internal server error: " + e.getMessage());
@@ -89,9 +89,9 @@ public class SignUpService {
 
     try {
       HttpHeaders httpHeaders = tokenService.setToken(user);
-      UserAuthResponseBody userAuthResponseBody = UserAuthResponseBody.pass(ResponseMessage.SIGNUP_SUCCESS.getMessage());
+      SimpleResponse simpleResponse = SimpleResponse.pass(ResponseType.SIGNUP_SUCCESS);
 
-      return new UserAuthResponse(httpHeaders, userAuthResponseBody);
+      return new UserAuthResponse(httpHeaders, simpleResponse);
     } catch (Exception e) {
       log.info("Internal server error: " + e.getMessage());
       throw new InternalServerErrorException(e.getMessage());
@@ -110,12 +110,12 @@ public class SignUpService {
       }
 
       if (httpHeaders != null) {
-        UserAuthResponseBody userAuthResponseBody = UserAuthResponseBody.pass(ResponseMessage.SIGNUP_SUCCESS.getMessage());
-        return new UserAuthResponse(httpHeaders, userAuthResponseBody);
+        SimpleResponse simpleResponse = SimpleResponse.pass(ResponseType.SIGNUP_SUCCESS);
+        return new UserAuthResponse(httpHeaders, simpleResponse);
       }
     }
 
-    return new UserAuthResponse(UserAuthResponseBody.fail(HttpStatus.BAD_REQUEST, ResponseMessage.INTERNAL_SERVER_FAIL.getMessage()));
+    return new UserAuthResponse(SimpleResponse.fail(HttpStatus.BAD_REQUEST, ResponseType.INTERNAL_SERVER_FAIL));
   }
 
   private void saveUser(User user) {

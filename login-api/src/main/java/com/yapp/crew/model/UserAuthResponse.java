@@ -1,5 +1,6 @@
 package com.yapp.crew.model;
 
+import com.yapp.crew.network.model.SimpleResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpHeaders;
@@ -9,9 +10,9 @@ import org.springframework.http.HttpHeaders;
 public class UserAuthResponse {
 
   HttpHeaders httpHeaders;
-  UserAuthResponseBody userAuthResponseBody;
+  SimpleResponse simpleResponse;
 
-  public UserAuthResponse(UserAuthResponseBody userAuthResponseBody) {
-    this.userAuthResponseBody = userAuthResponseBody;
+  public UserAuthResponse(SimpleResponse simpleResponse) {
+    this.simpleResponse = simpleResponse;
   }
 }
