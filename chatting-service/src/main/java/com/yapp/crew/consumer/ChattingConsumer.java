@@ -52,31 +52,29 @@ public class ChattingConsumer {
 
 	@Transactional
 	@KafkaListener(topics = "${kafka.topics.chat-message}", groupId = "${kafka.groups.chat-message-group}")
-	public void consumeChatMessage(ConsumerRecord<Long, String> consumerRecord)
-			throws JsonProcessingException {
+	public void consumeChatMessage(ConsumerRecord<Long, String> consumerRecord) throws JsonProcessingException {
 		log.info("Consumer Record: {}", consumerRecord);
 
-		MessageRequestPayload messageRequestPayload = objectMapper
-				.readValue(consumerRecord.value(), MessageRequestPayload.class);
+		MessageRequestPayload messageRequestPayload = objectMapper.readValue(consumerRecord.value(), MessageRequestPayload.class);
 
 		ChatRoom chatRoom = chatRoomRepository.findById(messageRequestPayload.getChatRoomId())
-				.orElseThrow(
-						() -> new ChatRoomNotFoundException(ResponseType.CHATROOM_NOT_FOUND.getMessage()));
+				.orElseThrow(() -> new ChatRoomNotFoundException(ResponseType.CHATROOM_NOT_FOUND.getMessage()));
 
 		User sender = userRepository.findById(messageRequestPayload.getSenderId())
 				.orElseThrow(() -> new UserNotFoundException(ResponseType.USER_NOT_FOUND.getMessage()));
 
-		Message message = Message
-				.buildChatMessage(messageRequestPayload.getContent(), messageRequestPayload.getType(),
-						sender, chatRoom);
+		Message message = Message.buildChatMessage(
+				messageRequestPayload.getContent(),
+				messageRequestPayload.getType(),
+				sender,
+				chatRoom
+		);
 
 		chatRoom.addMessage(message);
 		messageRepository.save(message);
 
-		MessageResponsePayload payload = MessageResponsePayload
-				.buildChatMessageResponsePayload(message);
-		simpMessagingTemplate
-				.convertAndSend("/sub/chat/room/" + message.getChatRoom().getId().toString(), payload);
+		MessageResponsePayload payload = MessageResponsePayload.buildChatMessageResponsePayload(message);
+		simpMessagingTemplate.convertAndSend("/sub/chat/room/" + message.getChatRoom().getId().toString(), payload);
 
 		String messageJson = objectMapper.writeValueAsString(message);
 		log.info("Successfully consumed message: {}", messageJson);
