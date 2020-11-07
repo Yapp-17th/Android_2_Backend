@@ -101,6 +101,12 @@ public class ChattingProducerService {
 		guest.addChatRoomGuest(newChatRoom);
 		chatRoomRepository.save(newChatRoom);
 
+		AppliedUser appliedUser = AppliedUser.buildAppliedUser(guest, board, AppliedStatus.PENDING);
+
+		guest.addAppliedUser(appliedUser);
+		board.addAppliedUser(appliedUser);
+		appliedUserRepository.save(appliedUser);
+
 		GuidelineRequestPayload guidelineRequestPayload = GuidelineRequestPayload.builder()
 				.senderId(bot.getId())
 				.chatRoomId(newChatRoom.getId())
@@ -136,11 +142,11 @@ public class ChattingProducerService {
 
 		String boardTitle = chatRoom.getBoard().getTitle();
 
-		boolean isApplied = false;
+		AppliedStatus appliedStatus = AppliedStatus.PENDING;
 		Optional<AppliedUser> appliedUser = appliedUserRepository.findByBoardIdAndUserId(chatRoom.getBoard().getId(), userId);
 
 		if (appliedUser.isPresent()) {
-			isApplied = appliedUser.get().getStatus().equals(AppliedStatus.APPROVED);
+			appliedStatus = appliedUser.get().getStatus();
 		}
 
 		return HttpResponseBody.buildChatMessagesResponse(
@@ -149,7 +155,7 @@ public class ChattingProducerService {
 				ResponseType.SUCCESS,
 				firstUnreadChatMessageId,
 				boardTitle,
-				isApplied
+				appliedStatus
 		);
 	}
 
