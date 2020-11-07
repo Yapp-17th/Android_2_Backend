@@ -142,12 +142,18 @@ public class ChattingProducerService {
 
 		String boardTitle = chatRoom.getBoard().getTitle();
 
-		AppliedStatus appliedStatus = AppliedStatus.PENDING;
-		Optional<AppliedUser> appliedUser = appliedUserRepository.findByBoardIdAndUserId(chatRoom.getBoard().getId(), userId);
+		AppliedStatus appliedStatus;
+		AppliedUser guestApplied;
 
-		if (appliedUser.isPresent()) {
-			appliedStatus = appliedUser.get().getStatus();
+		if (isHost) {
+			guestApplied = appliedUserRepository.findByBoardIdAndUserId(chatRoom.getBoard().getId(), chatRoom.getGuest().getId())
+					.orElseThrow(() -> new GuestApplyNotFoundException("Guest did not apply yet"));
 		}
+		else {
+			guestApplied = appliedUserRepository.findByBoardIdAndUserId(chatRoom.getBoard().getId(), userId)
+					.orElseThrow(() -> new GuestApplyNotFoundException("Guest did not apply yet"));
+		}
+		appliedStatus = guestApplied.getStatus();
 
 		return HttpResponseBody.buildChatMessagesResponse(
 				MessageResponsePayload.buildMessageResponsePayload(messageRepository, messages, isHost),
