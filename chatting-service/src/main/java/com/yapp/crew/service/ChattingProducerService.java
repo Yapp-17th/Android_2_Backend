@@ -5,6 +5,7 @@ import com.yapp.crew.domain.errors.AlreadyApprovedException;
 import com.yapp.crew.domain.errors.BoardNotFoundException;
 import com.yapp.crew.domain.errors.ChatRoomNotFoundException;
 import com.yapp.crew.domain.errors.GuestApplyNotFoundException;
+import com.yapp.crew.domain.errors.MessageNotFoundException;
 import com.yapp.crew.domain.errors.NoSpaceToApplyException;
 import com.yapp.crew.domain.errors.UserNotFoundException;
 import com.yapp.crew.domain.errors.WrongGuestException;
@@ -141,6 +142,27 @@ public class ChattingProducerService {
 				boardTitle,
 				isApplied
 		);
+	}
+
+	@Transactional
+	public HttpResponseBody<?> updateMessageIsRead(Long userId, Long chatRoomId, Long messageId) {
+		User user = userRepository.findUserById(userId)
+				.orElseThrow(() -> new UserNotFoundException("User not found"));
+
+		ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
+				.orElseThrow(() -> new ChatRoomNotFoundException("Chat room not found"));
+
+		Message message = messageRepository.findById(messageId)
+				.orElseThrow(() -> new MessageNotFoundException("Message not found"));
+
+		boolean isHost = chatRoom.isSenderChatRoomHost(user.getId());
+
+		message.readMessage(isHost);
+		messageRepository.save(message);
+
+		return HttpResponseBody
+				.buildSuccessResponse(HttpStatus.OK.value(), ResponseType.SUCCESS, ResponseType.SUCCESS
+						.getMessage(), MessageResponsePayload.buildChatMessageResponsePayload(message));
 	}
 
 	public HttpResponseBody<?> applyUser(ApplyRequestPayload applyRequestPayload)

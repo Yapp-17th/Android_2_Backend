@@ -19,6 +19,7 @@ public enum ResponseType {
 	CATEGORY_NOT_FOUND("카테고리를 찾을 수 없습니다"),
 	TAG_NOT_FOUND("사용자 유형을 찾을 수 없습니다"),
 	ADDRESS_NOT_FOUND("주소를 찾을 수 없습니다"),
+	MESSAGE_NOT_FOUND("메시지를 찾을 수 없습니다"),
 	WRONG_CHATROOM_HOST("이 사용자는 채팅방의 호스트가 아닙니다"),
 	WRONG_CHATROOM_GUEST("이 사용자는 채팅방의 게스트가 아닙니다"),
 	CHATROOM_ALREADY_CREATED("채팅방이 이미 개설되어 있습니다"),

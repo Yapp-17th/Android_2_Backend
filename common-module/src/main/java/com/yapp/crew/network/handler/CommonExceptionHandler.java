@@ -5,6 +5,7 @@ import com.yapp.crew.domain.errors.BoardNotFoundException;
 import com.yapp.crew.domain.errors.CategoryNotFoundException;
 import com.yapp.crew.domain.errors.InactiveUserException;
 import com.yapp.crew.domain.errors.InvalidRequestBodyException;
+import com.yapp.crew.domain.errors.MessageNotFoundException;
 import com.yapp.crew.domain.errors.SuspendedUserException;
 import com.yapp.crew.domain.errors.TagNotFoundException;
 import com.yapp.crew.domain.errors.TokenRequiredException;
@@ -121,6 +122,12 @@ public class CommonExceptionHandler {
 	@ExceptionHandler(value = AddressNotFoundException.class)
 	public ResponseEntity<?> handleAddressNotFoundException() {
 		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.NOT_FOUND, ResponseType.ADDRESS_NOT_FOUND);
+		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
+	}
+
+	@ExceptionHandler(value = MessageNotFoundException.class)
+	public ResponseEntity<?> handleMessageNotFoundException() {
+		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.NOT_FOUND, ResponseType.MESSAGE_NOT_FOUND);
 		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
 	}
 

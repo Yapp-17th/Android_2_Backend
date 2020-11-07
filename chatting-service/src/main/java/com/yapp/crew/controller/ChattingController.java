@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
@@ -97,6 +98,21 @@ public class ChattingController {
 
 		HttpResponseBody<List<MessageResponsePayload>> responseBody = chattingProducerService
 				.receiveChatMessages(chatRoomId, userId);
+		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
+	}
+
+	@PutMapping(path = "/v1/chat/room/{chatRoomId}/message/{messageId}")
+	public ResponseEntity<?> updateMessageIsRead(
+			@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token,
+			@PathVariable("chatRoomId") Long chatRoomId,
+			@PathVariable("messageId") Long messageId
+	) {
+		auth.verifyToken(token);
+		Long userId = auth.parseUserIdFromToken(token);
+
+		HttpResponseBody<?> responseBody = chattingProducerService
+				.updateMessageIsRead(userId, chatRoomId, messageId);
+
 		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
 	}
 

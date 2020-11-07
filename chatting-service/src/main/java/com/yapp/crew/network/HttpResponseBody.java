@@ -100,4 +100,15 @@ public class HttpResponseBody<T> {
 				.message(message)
 				.build();
 	}
+
+	public static <T> HttpResponseBody<T> buildSuccessResponse(Integer status,
+			ResponseType responseType, String message, T data) {
+		return (HttpResponseBody<T>) HttpResponseBody.builder()
+				.transactionTime(LocalDateTime.now())
+				.status(status)
+				.responseType(responseType)
+				.message(message)
+				.data(data)
+				.build();
+	}
 }
