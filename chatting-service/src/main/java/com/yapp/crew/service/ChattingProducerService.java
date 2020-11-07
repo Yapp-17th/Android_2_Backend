@@ -142,11 +142,11 @@ public class ChattingProducerService {
 
 		String boardTitle = chatRoom.getBoard().getTitle();
 
-		boolean isApplied = false;
+		AppliedStatus appliedStatus = AppliedStatus.PENDING;
 		Optional<AppliedUser> appliedUser = appliedUserRepository.findByBoardIdAndUserId(chatRoom.getBoard().getId(), userId);
 
 		if (appliedUser.isPresent()) {
-			isApplied = appliedUser.get().getStatus().equals(AppliedStatus.APPROVED);
+			appliedStatus = appliedUser.get().getStatus();
 		}
 
 		return HttpResponseBody.buildChatMessagesResponse(
@@ -155,7 +155,7 @@ public class ChattingProducerService {
 				ResponseType.SUCCESS,
 				firstUnreadChatMessageId,
 				boardTitle,
-				isApplied
+				appliedStatus
 		);
 	}
 
