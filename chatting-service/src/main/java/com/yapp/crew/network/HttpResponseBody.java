@@ -3,6 +3,7 @@ package com.yapp.crew.network;
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.yapp.crew.domain.status.AppliedStatus;
 import com.yapp.crew.domain.type.ResponseType;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
@@ -32,13 +33,13 @@ public class HttpResponseBody<T> {
 	private String boardTitle;
 
 	@JsonInclude(NON_NULL)
-	private Boolean isApplied;
+	private AppliedStatus appliedStatus;
 
 	@JsonInclude(NON_NULL)
 	private T data;
 
 	public static <T> HttpResponseBody<T> buildChatMessagesResponse(T data, Integer status,
-			ResponseType responseType, Long firstUnreadMessageId, String boardTitle, Boolean isApplied) {
+			ResponseType responseType, Long firstUnreadMessageId, String boardTitle, AppliedStatus appliedStatus) {
 
 		return (HttpResponseBody<T>) HttpResponseBody.builder()
 				.transactionTime(LocalDateTime.now())
@@ -46,7 +47,7 @@ public class HttpResponseBody<T> {
 				.responseType(responseType)
 				.firstUnreadMessageId(firstUnreadMessageId)
 				.boardTitle(boardTitle)
-				.isApplied(isApplied)
+				.appliedStatus(appliedStatus)
 				.data(data)
 				.build();
 	}

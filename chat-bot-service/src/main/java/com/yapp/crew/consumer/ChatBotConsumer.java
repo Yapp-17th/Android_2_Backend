@@ -25,6 +25,7 @@ import com.yapp.crew.payload.GuidelineRequestPayload;
 import com.yapp.crew.payload.MessageRequestPayload;
 import com.yapp.crew.producer.ChatBotProducer;
 import java.util.List;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -121,15 +122,12 @@ public class ChatBotConsumer {
 
 		List<Evaluation> evaluations = evaluationRepository.findAllByUserId(applier.getId());
 
-		if (appliedUserRepository.findByBoardIdAndUserId(board.getId(), applier.getId()).isPresent()) {
+		Optional<AppliedUser> appliedUser = appliedUserRepository.findByBoardIdAndUserId(board.getId(), applier.getId());
+		if (appliedUser.isPresent() && (appliedUser.get().getStatus().equals(AppliedStatus.APPLIED) || appliedUser.get().getStatus().equals(AppliedStatus.APPROVED))) {
 			throw new AlreadyAppliedException("Already applied");
 		}
-
-		AppliedUser newApply = AppliedUser.buildAppliedUser(applier, board, AppliedStatus.PENDING);
-		appliedUserRepository.save(newApply);
-
-		applier.addAppliedUser(newApply);
-		board.addAppliedUser(newApply);
+		appliedUser.get().applyUser();
+		appliedUserRepository.save(appliedUser.get());
 
 		MessageRequestPayload profileMessagePayload = MessageRequestPayload.builder()
 				.content(String.format(
