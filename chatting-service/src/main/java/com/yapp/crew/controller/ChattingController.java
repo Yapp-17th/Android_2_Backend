@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
@@ -52,38 +53,21 @@ public class ChattingController {
 	}
 
 	@MessageMapping(value = "/v1/chat/message")
-	public void sendMessageByWebsocket(MessageRequestPayload messageRequestPayload)
-			throws JsonProcessingException {
-		log.info("Before-sendMessageByWebsocket");
-
+	public void sendMessageByWebsocket(MessageRequestPayload messageRequestPayload) throws JsonProcessingException {
 		chattingProducer.sendMessage(messageRequestPayload);
-
-		log.info("After-sendMessageByWebsocket");
 	}
 
 	@PostMapping(path = "/v1/chat/message")
-	public ResponseEntity<?> sendMessageByHttpRequest(
-			@RequestBody MessageRequestPayload messageRequestPayload) throws JsonProcessingException {
-		log.info("Before-sendMessageByHttpRequest");
-
+	public ResponseEntity<?> sendMessageByHttpRequest(@RequestBody MessageRequestPayload messageRequestPayload) throws JsonProcessingException {
 		chattingProducer.sendMessage(messageRequestPayload);
-
-		log.info("After-sendMessageByHttpRequest");
-
 		return ResponseEntity.status(HttpStatus.CREATED).body(messageRequestPayload);
 	}
 
 	@PostMapping(path = "/v2/chat/message")
-	public ResponseEntity<?> sendMessageSynchronously(
-			@RequestBody MessageRequestPayload messageRequestPayload)
+	public ResponseEntity<?> sendMessageSynchronously(@RequestBody MessageRequestPayload messageRequestPayload)
 			throws JsonProcessingException, InterruptedException, ExecutionException, TimeoutException {
 
-		log.info("Before-sendMessageSynchronously");
-
 		chattingProducer.sendMessageSynchronously(messageRequestPayload);
-
-		log.info("After-sendMessageSynchronously");
-
 		return ResponseEntity.status(HttpStatus.CREATED).body(messageRequestPayload);
 	}
 
@@ -95,19 +79,29 @@ public class ChattingController {
 		auth.verifyToken(token);
 		Long userId = auth.parseUserIdFromToken(token);
 
-		HttpResponseBody<List<MessageResponsePayload>> responseBody = chattingProducerService
-				.receiveChatMessages(chatRoomId, userId);
+		HttpResponseBody<List<MessageResponsePayload>> responseBody = chattingProducerService.receiveChatMessages(chatRoomId, userId);
+		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
+	}
+
+	@PutMapping(path = "/v1/chat/room/{chatRoomId}/message/{messageId}")
+	public ResponseEntity<?> updateMessageIsRead(
+			@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token,
+			@PathVariable("chatRoomId") Long chatRoomId,
+			@PathVariable("messageId") Long messageId
+	) {
+		auth.verifyToken(token);
+		Long userId = auth.parseUserIdFromToken(token);
+
+		HttpResponseBody<?> responseBody = chattingProducerService.updateMessageIsRead(userId, chatRoomId, messageId);
 		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
 	}
 
 	@GetMapping(path = "/v1/chat/room")
-	public ResponseEntity<?> receiveChatRooms(
-			@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token) {
+	public ResponseEntity<?> receiveChatRooms(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token) {
 		auth.verifyToken(token);
 		Long userId = auth.parseUserIdFromToken(token);
 
-		HttpResponseBody<List<ChatRoomResponsePayload>> responseBody = chattingProducerService
-				.receiveChatRooms(userId);
+		HttpResponseBody<List<ChatRoomResponsePayload>> responseBody = chattingProducerService.receiveChatRooms(userId);
 		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
 	}
 
@@ -122,8 +116,7 @@ public class ChattingController {
 
 		chatRoomRequestPayload.setGuestId(guestId);
 
-		HttpResponseBody<ChatRoomResponsePayload> responseBody = chattingProducerService
-				.createChatRoom(chatRoomRequestPayload);
+		HttpResponseBody<ChatRoomResponsePayload> responseBody = chattingProducerService.createChatRoom(chatRoomRequestPayload);
 		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
 	}
 

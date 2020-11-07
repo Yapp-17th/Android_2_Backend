@@ -39,6 +39,7 @@ public class HttpResponseBody<T> {
 
 	public static <T> HttpResponseBody<T> buildChatMessagesResponse(T data, Integer status,
 			ResponseType responseType, Long firstUnreadMessageId, String boardTitle, Boolean isApplied) {
+
 		return (HttpResponseBody<T>) HttpResponseBody.builder()
 				.transactionTime(LocalDateTime.now())
 				.status(status)
@@ -52,6 +53,7 @@ public class HttpResponseBody<T> {
 
 	public static <T> HttpResponseBody<T> buildChatMessagesResponse(T data, Integer status,
 			ResponseType responseType, Long firstUnreadMessageId) {
+
 		return (HttpResponseBody<T>) HttpResponseBody.builder()
 				.transactionTime(LocalDateTime.now())
 				.status(status)
@@ -63,6 +65,7 @@ public class HttpResponseBody<T> {
 
 	public static <T> HttpResponseBody<T> buildChatRoomsResponse(T data, Integer status,
 			ResponseType responseType) {
+
 		return (HttpResponseBody<T>) HttpResponseBody.builder()
 				.transactionTime(LocalDateTime.now())
 				.status(status)
@@ -73,6 +76,7 @@ public class HttpResponseBody<T> {
 
 	public static <T> HttpResponseBody<T> buildChatRoomResponse(T data, Integer status,
 			ResponseType responseType) {
+
 		return (HttpResponseBody<T>) HttpResponseBody.builder()
 				.transactionTime(LocalDateTime.now())
 				.status(status)
@@ -83,6 +87,7 @@ public class HttpResponseBody<T> {
 
 	public static <T> HttpResponseBody<T> buildErrorResponse(Integer status,
 			ResponseType responseType, String message) {
+
 		return (HttpResponseBody<T>) HttpResponseBody.builder()
 				.transactionTime(LocalDateTime.now())
 				.status(status)
@@ -93,11 +98,24 @@ public class HttpResponseBody<T> {
 
 	public static <T> HttpResponseBody<T> buildSuccessResponse(Integer status,
 			ResponseType responseType, String message) {
+
 		return (HttpResponseBody<T>) HttpResponseBody.builder()
 				.transactionTime(LocalDateTime.now())
 				.status(status)
 				.responseType(responseType)
 				.message(message)
+				.build();
+	}
+
+	public static <T> HttpResponseBody<T> buildSuccessResponse(Integer status,
+			ResponseType responseType, String message, T data) {
+
+		return (HttpResponseBody<T>) HttpResponseBody.builder()
+				.transactionTime(LocalDateTime.now())
+				.status(status)
+				.responseType(responseType)
+				.message(message)
+				.data(data)
 				.build();
 	}
 }
