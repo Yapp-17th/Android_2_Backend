@@ -101,6 +101,12 @@ public class ChattingProducerService {
 		guest.addChatRoomGuest(newChatRoom);
 		chatRoomRepository.save(newChatRoom);
 
+		AppliedUser appliedUser = AppliedUser.buildAppliedUser(guest, board, AppliedStatus.PENDING);
+
+		guest.addAppliedUser(appliedUser);
+		board.addAppliedUser(appliedUser);
+		appliedUserRepository.save(appliedUser);
+
 		GuidelineRequestPayload guidelineRequestPayload = GuidelineRequestPayload.builder()
 				.senderId(bot.getId())
 				.chatRoomId(newChatRoom.getId())
