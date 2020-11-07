@@ -3,7 +3,8 @@ package com.yapp.crew.domain.status;
 public enum AppliedStatus {
 
 	PENDING(0),
-	APPROVED(1);
+	APPLIED(1),
+	APPROVED(2);
 
 	private final int code;
 

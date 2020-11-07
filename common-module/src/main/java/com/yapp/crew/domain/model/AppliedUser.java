@@ -52,6 +52,10 @@ public class AppliedUser {
 		setStatus(AppliedStatus.APPROVED);
 	}
 
+	public void applyUser() {
+		setStatus(AppliedStatus.APPLIED);
+	}
+
 	public static AppliedUserBuilder getBuilder() {
 		return new AppliedUserBuilder();
 	}
