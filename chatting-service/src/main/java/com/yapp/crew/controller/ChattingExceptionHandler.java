@@ -27,50 +27,61 @@ public class ChattingExceptionHandler {
 
 	@ExceptionHandler(value = TokenRequiredException.class)
 	public ResponseEntity<?> handleTokenRequiredException() {
-		HttpResponseBody<?> responseBody = HttpResponseBody
-				.buildErrorResponse(HttpStatus.FORBIDDEN.value(), ResponseType.TOKEN_REQUIRED,
-						ResponseType.TOKEN_REQUIRED.getMessage());
+		HttpResponseBody<?> responseBody = HttpResponseBody.buildErrorResponse(
+				HttpStatus.FORBIDDEN.value(),
+				ResponseType.TOKEN_REQUIRED,
+				ResponseType.TOKEN_REQUIRED.getMessage()
+		);
 		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
 	}
 
 	@ExceptionHandler(value = WrongTokenPrefixException.class)
 	public ResponseEntity<?> handleWrongTokenPrefixException() {
-		HttpResponseBody<?> responseBody = HttpResponseBody
-				.buildErrorResponse(HttpStatus.FORBIDDEN.value(), ResponseType.WRONG_TOKEN_PREFIX,
-						ResponseType.WRONG_TOKEN_PREFIX.getMessage());
+		HttpResponseBody<?> responseBody = HttpResponseBody.buildErrorResponse(
+				HttpStatus.FORBIDDEN.value(),
+				ResponseType.WRONG_TOKEN_PREFIX,
+				ResponseType.WRONG_TOKEN_PREFIX.getMessage()
+		);
 		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
 	}
 
 	@ExceptionHandler(value = ExpiredJwtException.class)
 	public ResponseEntity<?> handleExpiredJwtException() {
-		HttpResponseBody<?> responseBody = HttpResponseBody
-				.buildErrorResponse(HttpStatus.FORBIDDEN.value(), ResponseType.EXPIRED_TOKEN,
-						ResponseType.EXPIRED_TOKEN.getMessage());
+		HttpResponseBody<?> responseBody = HttpResponseBody.buildErrorResponse(
+				HttpStatus.FORBIDDEN.value(),
+				ResponseType.EXPIRED_TOKEN,
+				ResponseType.EXPIRED_TOKEN.getMessage()
+		);
 		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
 	}
 
 	@ExceptionHandler(value = MalformedJwtException.class)
 	public ResponseEntity<?> handleMalformedJwtException() {
-		HttpResponseBody<?> responseBody = HttpResponseBody
-				.buildErrorResponse(HttpStatus.FORBIDDEN.value(), ResponseType.INVALID_TOKEN,
-						ResponseType.INVALID_TOKEN.getMessage());
+		HttpResponseBody<?> responseBody = HttpResponseBody.buildErrorResponse(
+				HttpStatus.FORBIDDEN.value(),
+				ResponseType.INVALID_TOKEN,
+				ResponseType.INVALID_TOKEN.getMessage()
+		);
 		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
 	}
 
 	@ExceptionHandler(value = MissingRequestHeaderException.class)
 	public ResponseEntity<?> handleMissingRequestHeaderException() {
-		HttpResponseBody<?> responseBody = HttpResponseBody
-				.buildErrorResponse(HttpStatus.FORBIDDEN.value(),
-						ResponseType.AUTHORIZATION_HEADER_REQUIRED,
-						ResponseType.AUTHORIZATION_HEADER_REQUIRED.getMessage());
+		HttpResponseBody<?> responseBody = HttpResponseBody.buildErrorResponse(
+				HttpStatus.FORBIDDEN.value(),
+				ResponseType.AUTHORIZATION_HEADER_REQUIRED,
+				ResponseType.AUTHORIZATION_HEADER_REQUIRED.getMessage()
+		);
 		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
 	}
 
 	@ExceptionHandler(value = SignatureException.class)
 	public ResponseEntity<?> handleSignatureException() {
-		HttpResponseBody<?> responseBody = HttpResponseBody
-				.buildErrorResponse(HttpStatus.FORBIDDEN.value(), ResponseType.INVALID_JWT_SIGNATURE,
-						ResponseType.INVALID_JWT_SIGNATURE.getMessage());
+		HttpResponseBody<?> responseBody = HttpResponseBody.buildErrorResponse(
+				HttpStatus.FORBIDDEN.value(),
+				ResponseType.INVALID_JWT_SIGNATURE,
+				ResponseType.INVALID_JWT_SIGNATURE.getMessage()
+		);
 		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
 	}
 
