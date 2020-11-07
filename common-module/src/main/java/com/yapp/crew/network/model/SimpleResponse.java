@@ -11,21 +11,24 @@ public class SimpleResponse {
 
 	private int status;
 	private boolean isSuccess;
+	private ResponseType responseType;
 	private String message;
 
 	public static SimpleResponse pass(ResponseType responseType) {
 		SimpleResponse simpleResponse = new SimpleResponse();
 		simpleResponse.status = HttpStatus.OK.value();
 		simpleResponse.isSuccess = true;
+		simpleResponse.responseType = responseType;
 		simpleResponse.message = responseType.getMessage();
 		return simpleResponse;
 	}
 
-	public static SimpleResponse fail(HttpStatus httpStatus, ResponseType message) {
+	public static SimpleResponse fail(HttpStatus httpStatus, ResponseType responseType) {
 		SimpleResponse simpleResponse = new SimpleResponse();
 		simpleResponse.status = httpStatus.value();
 		simpleResponse.isSuccess = false;
-		simpleResponse.message = message.getMessage();
+		simpleResponse.responseType = responseType;
+		simpleResponse.message = responseType.getMessage();
 		return simpleResponse;
 	}
 

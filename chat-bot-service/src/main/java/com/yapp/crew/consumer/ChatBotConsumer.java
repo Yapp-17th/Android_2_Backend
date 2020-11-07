@@ -74,12 +74,10 @@ public class ChatBotConsumer {
 	}
 
 	@KafkaListener(topics = "${kafka.topics.guideline-message}", groupId = "${kafka.groups.guideline-message-group}")
-	public void consumeBotGuidelineMessage(ConsumerRecord<Long, String> consumerRecord)
-			throws JsonProcessingException {
+	public void consumeBotGuidelineMessage(ConsumerRecord<Long, String> consumerRecord) throws JsonProcessingException {
 		log.info("[Chat Bot Event - Guideline Message] Consumer Record: {}", consumerRecord);
 
-		GuidelineRequestPayload guidelineRequestPayload = objectMapper
-				.readValue(consumerRecord.value(), GuidelineRequestPayload.class);
+		GuidelineRequestPayload guidelineRequestPayload = objectMapper.readValue(consumerRecord.value(), GuidelineRequestPayload.class);
 
 		MessageRequestPayload guidelineMessagePayload = MessageRequestPayload.builder()
 				.content(botMessages.getGuidelineMessage().replace("\"", ""))
@@ -93,12 +91,10 @@ public class ChatBotConsumer {
 
 	@Transactional
 	@KafkaListener(topics = "${kafka.topics.apply-user}", groupId = "${kafka.groups.apply-user-group}")
-	public void consumeBotEventApplyUser(ConsumerRecord<Long, String> consumerRecord)
-			throws JsonProcessingException {
+	public void consumeBotEventApplyUser(ConsumerRecord<Long, String> consumerRecord) throws JsonProcessingException {
 		log.info("[Chat Bot Event - Apply User] Consumer Record: {}", consumerRecord);
 
-		ApplyRequestPayload applyRequestPayload = objectMapper
-				.readValue(consumerRecord.value(), ApplyRequestPayload.class);
+		ApplyRequestPayload applyRequestPayload = objectMapper.readValue(consumerRecord.value(), ApplyRequestPayload.class);
 
 		User applier = userRepository.findUserById(applyRequestPayload.getApplierId())
 				.orElseThrow(() -> new UserNotFoundException("[Not Found] User not found"));
@@ -113,8 +109,10 @@ public class ChatBotConsumer {
 				.orElseThrow(() -> new ChatRoomNotFoundException("[Not Found] Chat room not found"));
 
 		MessageRequestPayload applyMessagePayload = MessageRequestPayload.builder()
-				.content(
-						String.format(botMessages.getApplyMessage(), applier.getNickname()).replace("\"", ""))
+				.content(String.format(
+						botMessages.getApplyMessage(),
+						applier.getNickname()
+				).replace("\"", ""))
 				.type(MessageType.BOT_MESSAGE)
 				.senderId(bot.getId())
 				.chatRoomId(chatRoom.getId())
@@ -152,12 +150,10 @@ public class ChatBotConsumer {
 	}
 
 	@KafkaListener(topics = "${kafka.topics.approve-user}", groupId = "${kafka.groups.approve-user-group}")
-	public void consumeBotEventAcceptUser(ConsumerRecord<Long, String> consumerRecord)
-			throws JsonProcessingException {
+	public void consumeBotEventAcceptUser(ConsumerRecord<Long, String> consumerRecord) throws JsonProcessingException {
 		log.info("[Chat Bot Event - Approve User] Consumer Record: {}", consumerRecord);
 
-		ApproveRequestPayload approveRequestPayload = objectMapper
-				.readValue(consumerRecord.value(), ApproveRequestPayload.class);
+		ApproveRequestPayload approveRequestPayload = objectMapper.readValue(consumerRecord.value(), ApproveRequestPayload.class);
 
 		User host = userRepository.findUserById(approveRequestPayload.getHostId())
 				.orElseThrow(() -> new UserNotFoundException("[Not Found] User not found"));
@@ -166,8 +162,10 @@ public class ChatBotConsumer {
 				.orElseThrow(() -> new UserNotFoundException("[Not Found] Bot not found"));
 
 		MessageRequestPayload approveMessagePayload = MessageRequestPayload.builder()
-				.content(
-						String.format(botMessages.getApproveMessage(), host.getNickname()).replace("\"", ""))
+				.content(String.format(
+						botMessages.getApproveMessage(),
+						host.getNickname()
+				).replace("\"", ""))
 				.type(MessageType.BOT_MESSAGE)
 				.senderId(bot.getId())
 				.chatRoomId(approveRequestPayload.getChatRoomId())
