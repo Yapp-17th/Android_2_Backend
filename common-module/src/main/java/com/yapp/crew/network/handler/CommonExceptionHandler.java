@@ -1,8 +1,12 @@
 package com.yapp.crew.network.handler;
 
 import com.yapp.crew.domain.errors.AddressNotFoundException;
+import com.yapp.crew.domain.errors.AlreadyAppliedException;
+import com.yapp.crew.domain.errors.AlreadyApprovedException;
 import com.yapp.crew.domain.errors.BoardNotFoundException;
 import com.yapp.crew.domain.errors.CategoryNotFoundException;
+import com.yapp.crew.domain.errors.ChatRoomNotFoundException;
+import com.yapp.crew.domain.errors.GuestApplyNotFoundException;
 import com.yapp.crew.domain.errors.InactiveUserException;
 import com.yapp.crew.domain.errors.InvalidRequestBodyException;
 import com.yapp.crew.domain.errors.MessageNotFoundException;
@@ -11,6 +15,8 @@ import com.yapp.crew.domain.errors.TagNotFoundException;
 import com.yapp.crew.domain.errors.TokenRequiredException;
 import com.yapp.crew.domain.errors.UserDuplicateFieldException;
 import com.yapp.crew.domain.errors.UserNotFoundException;
+import com.yapp.crew.domain.errors.WrongGuestException;
+import com.yapp.crew.domain.errors.WrongHostException;
 import com.yapp.crew.domain.errors.WrongTokenPrefixException;
 import com.yapp.crew.domain.type.ResponseType;
 import com.yapp.crew.network.model.SimpleResponse;
@@ -107,6 +113,12 @@ public class CommonExceptionHandler {
 		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
 	}
 
+	@ExceptionHandler(value = ChatRoomNotFoundException.class)
+	public ResponseEntity<?> handleChatRoomNotFoundException() {
+		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.NOT_FOUND, ResponseType.CHATROOM_NOT_FOUND);
+		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
+	}
+
 	@ExceptionHandler(value = TagNotFoundException.class)
 	public ResponseEntity<?> handleTagNotFoundException() {
 		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.NOT_FOUND, ResponseType.TAG_NOT_FOUND);
@@ -128,6 +140,36 @@ public class CommonExceptionHandler {
 	@ExceptionHandler(value = MessageNotFoundException.class)
 	public ResponseEntity<?> handleMessageNotFoundException() {
 		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.NOT_FOUND, ResponseType.MESSAGE_NOT_FOUND);
+		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
+	}
+
+	@ExceptionHandler(value = WrongHostException.class)
+	public ResponseEntity<?> handleWrongHostException() {
+		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.BAD_REQUEST, ResponseType.WRONG_CHATROOM_HOST);
+		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
+	}
+
+	@ExceptionHandler(value = WrongGuestException.class)
+	public ResponseEntity<?> handleWrongGuestException() {
+		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.BAD_REQUEST, ResponseType.WRONG_CHATROOM_GUEST);
+		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
+	}
+
+	@ExceptionHandler(value = AlreadyApprovedException.class)
+	public ResponseEntity<?> handleAlreadyApprovedException() {
+		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.BAD_REQUEST, ResponseType.ALREADY_APPROVED);
+		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
+	}
+
+	@ExceptionHandler(value = AlreadyAppliedException.class)
+	public ResponseEntity<?> handleAlreadyAppliedException() {
+		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.BAD_REQUEST, ResponseType.ALREADY_APPLIED);
+		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
+	}
+
+	@ExceptionHandler(value = GuestApplyNotFoundException.class)
+	public ResponseEntity<?> handleGuestApplyNotFoundException() {
+		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.BAD_REQUEST, ResponseType.GUEST_APPLY_NOT_FOUND);
 		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
 	}
 

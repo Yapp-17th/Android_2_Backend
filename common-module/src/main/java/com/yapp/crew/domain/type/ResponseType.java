@@ -25,6 +25,7 @@ public enum ResponseType {
 	CHATROOM_ALREADY_CREATED("채팅방이 이미 개설되어 있습니다"),
 	ALREADY_APPROVED("이 사용자는 이미 승인받은 상태입니다"),
 	ALREADY_APPLIED("이 사용자는 이미 신청을 한 상태입니다"),
+	GUEST_APPLY_NOT_FOUND("게스트가 아직 신청하지 않았습니다"),
 	BOARD_POST_SUCCESS("글이 정상적으로 업로드 되었습니다"),
 	BOARD_DELETE_SUCCESS("글이 정상적으로 삭제 되었습니다"),
 	BOARD_CONTENT_SUCCESS("글 내용 조회 성공"),
