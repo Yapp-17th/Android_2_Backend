@@ -9,7 +9,6 @@ import com.yapp.crew.domain.repository.BoardRepository;
 import com.yapp.crew.domain.repository.UserRepository;
 import com.yapp.crew.domain.status.BoardStatus;
 import com.yapp.crew.model.BoardListResponseInfo;
-import com.yapp.crew.model.BoardSearch;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
