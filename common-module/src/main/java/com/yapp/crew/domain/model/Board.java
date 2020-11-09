@@ -131,7 +131,7 @@ public class Board extends BaseEntity {
 		return GroupStatus.COMPLETE;
 	}
 
-	private int getApprovedCount() {
+	public int getApprovedCount() {
 		return (int) appliedUsers.stream().filter(appliedUser -> appliedUser.getStatus() == AppliedStatus.APPROVED).count();
 	}
 
