@@ -4,8 +4,11 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.yapp.crew.domain.status.AppliedStatus;
 import com.yapp.crew.domain.status.BoardStatus;
 import java.time.LocalDateTime;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -21,6 +24,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.apache.commons.lang3.time.DateUtils;
 
 @Entity
 @Getter
@@ -116,6 +120,25 @@ public class Board extends BaseEntity {
 
 	public void finishBoard() {
 		this.status = BoardStatus.FINISHED;
+	}
+
+	public String showBoardTimeComparedToNow() {
+		Calendar calendar = Calendar.getInstance();
+		Date now = java.sql.Timestamp.valueOf(LocalDateTime.now());
+		Date startDate = java.sql.Timestamp.valueOf(startsAt);
+
+		// TODO: 나중에 GroupStatus == 취소 아니고, 활동 완료 아닐 때로 조건 변경
+		if (status == BoardStatus.NORMAL) {
+			return "[D-"+calculateLeftDays(now, startDate)+"]";
+		}
+
+		calendar.setTime(startDate);
+		return "["+calendar.get(Calendar.MONTH) + "/" + calendar.get(Calendar.DATE)+"]";
+	}
+
+	private int calculateLeftDays(Date now, Date end){
+		long diffInMillies = Math.abs(now.getTime() - end.getTime());
+		return (int)TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
 	}
 
 	private int getApprovedCount() {

@@ -18,6 +18,7 @@ public class BoardListResponseInfo {
 	private String exercise;
 	private String city;
 	private Boolean isBookMark;
+	private String boardTime;
 
 	public static BoardListResponseInfo build(Board board, User user) {
 		BoardListResponseInfo boardListResponseInfo = new BoardListResponseInfo();
@@ -31,6 +32,7 @@ public class BoardListResponseInfo {
 		boardListResponseInfo.isBookMark = user.getUserBookmark().stream()
 				.map(bookMark -> bookMark.getBoard().getId())
 				.anyMatch(Predicate.isEqual(board.getId()));
+		boardListResponseInfo.boardTime = board.showBoardTimeComparedToNow();
 
 		return boardListResponseInfo;
 	}
