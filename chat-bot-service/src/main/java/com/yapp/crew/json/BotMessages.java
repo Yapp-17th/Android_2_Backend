@@ -29,4 +29,7 @@ public class BotMessages {
 
 	@JsonProperty(value = "profile_message")
 	private String profileMessage;
+
+	@JsonProperty(value = "board_finished")
+	private String boardFinished;
 }

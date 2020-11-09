@@ -3,7 +3,6 @@ package com.yapp.crew.domain.model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.yapp.crew.domain.status.AppliedStatus;
 import com.yapp.crew.domain.status.BoardStatus;
-import com.yapp.crew.domain.status.GroupStatus;
 import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
@@ -25,7 +24,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.apache.commons.lang3.time.DateUtils;
 
 @Entity
 @Getter
@@ -74,7 +72,7 @@ public class Board extends BaseEntity {
 
 	@Column(nullable = false)
 	@Enumerated(value = EnumType.ORDINAL)
-	private BoardStatus status = BoardStatus.NORMAL;
+	private BoardStatus status = BoardStatus.RECRUITING;
 
 	@Column(name = "recruit_count", nullable = false)
 	@Setter(value = AccessLevel.PRIVATE)
@@ -119,20 +117,8 @@ public class Board extends BaseEntity {
 		return this.recruitCount - getApprovedCount();
 	}
 
-	public GroupStatus getGroupStatus() {
-		if (status == BoardStatus.CANCELED) {
-			return GroupStatus.CANCELED;
-		}
-
-		if (startsAt.isAfter(LocalDateTime.now())) {
-			return GroupStatus.FINISHED;
-		}
-
-		int approvedCount = getApprovedCount();
-		if (approvedCount < recruitCount) {
-			return GroupStatus.RECRUITING;
-		}
-		return GroupStatus.COMPLETE;
+	public void finishBoard() {
+		this.status = BoardStatus.FINISHED;
 	}
 
 	public String showBoardTimeComparedToNow() {
@@ -140,8 +126,7 @@ public class Board extends BaseEntity {
 		Date now = java.sql.Timestamp.valueOf(LocalDateTime.now());
 		Date startDate = java.sql.Timestamp.valueOf(startsAt);
 
-		// TODO: 나중에 GroupStatus == 취소 아니고, 활동 완료 아닐 때로 조건 변경
-		if (status == BoardStatus.NORMAL) {
+		if (status == BoardStatus.RECRUITING || status == BoardStatus.COMPLETE) {
 			return "[D-"+calculateLeftDays(now, startDate)+"]";
 		}
 

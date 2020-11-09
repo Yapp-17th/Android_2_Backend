@@ -20,6 +20,9 @@ public class KafkaTopicConfig {
 	@Value(value = "${kafka.topics.approve-user}")
 	private String approveUserTopic;
 
+	@Value(value = "${kafka.topics.board-finished}")
+	private String boardFinishedTopic;
+
 	@Bean
 	public NewTopic guidelineMessage() {
 		return TopicBuilder
@@ -42,6 +45,15 @@ public class KafkaTopicConfig {
 	public NewTopic approveUser() {
 		return TopicBuilder
 				.name(approveUserTopic)
+				.partitions(1)
+				.replicas(1)
+				.build();
+	}
+
+	@Bean
+	public NewTopic boardFinished() {
+		return TopicBuilder
+				.name(boardFinishedTopic)
 				.partitions(1)
 				.replicas(1)
 				.build();
