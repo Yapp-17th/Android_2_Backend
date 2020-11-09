@@ -16,7 +16,7 @@ public class BoardListInfo {
 	private String groupStatus;
 	private String exercise;
 	private String city;
-	private boolean isBookMar = true;
+	private boolean isBookMark = true;
 	private int recruitNumber;
 	private int recruitedNumber;
 	private String time;
@@ -27,12 +27,12 @@ public class BoardListInfo {
 		boardListInfo.hostId = board.getUser().getId();
 		boardListInfo.hostName = board.getUser().getNickname();
 		boardListInfo.title = board.getTitle();
-		boardListInfo.groupStatus = board.getGroupStatus().getName(); // TODO: 나중에 바꾸기
+		boardListInfo.groupStatus = board.getStatus().getName();
 		boardListInfo.exercise = board.getCategory().getExercise().getName();
 		boardListInfo.city = board.getAddress().getCity().getName();
 		boardListInfo.recruitNumber = board.getRecruitCount();
 		boardListInfo.recruitedNumber = board.getApprovedCount();
-		boardListInfo.time = ""; // TODO: rebase 후 업데이트
+		boardListInfo.time = board.showBoardTimeComparedToNow();
 
 		return boardListInfo;
 	}

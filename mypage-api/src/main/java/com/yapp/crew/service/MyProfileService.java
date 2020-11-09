@@ -3,24 +3,20 @@ package com.yapp.crew.service;
 import com.yapp.crew.domain.errors.UserNotFoundException;
 import com.yapp.crew.domain.model.Board;
 import com.yapp.crew.domain.model.Evaluation;
-import com.yapp.crew.domain.model.HiddenBoard;
 import com.yapp.crew.domain.model.User;
 import com.yapp.crew.domain.repository.BoardRepository;
 import com.yapp.crew.domain.repository.EvaluationRepository;
 import com.yapp.crew.domain.repository.UserRepository;
 import com.yapp.crew.domain.status.AppliedStatus;
 import com.yapp.crew.domain.status.BoardStatus;
-import com.yapp.crew.domain.status.GroupStatus;
 import com.yapp.crew.model.HistoryListInfo;
 import com.yapp.crew.model.UserProfileInfo;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.ParameterOutOfBoundsException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,10 +49,9 @@ public class MyProfileService {
 		User user = findUserById(userId)
 				.orElseThrow(() -> new UserNotFoundException("user not found"));
 
-		// TODO: board status 나중에 변경
 		if (StringUtils.equalsIgnoreCase(type, "continue")) {
 			List<Board> boards = findAllBoards(user).stream()
-					.filter(board -> board.getGroupStatus() == GroupStatus.RECRUITING || board.getGroupStatus() == GroupStatus.COMPLETE)
+					.filter(board -> board.getStatus() == BoardStatus.RECRUITING || board.getStatus() == BoardStatus.COMPLETE)
 					.collect(Collectors.toList());
 
 			return boards.stream()
@@ -65,7 +60,7 @@ public class MyProfileService {
 		}
 
 		List<Board> boards = findAllBoards(user).stream()
-				.filter(board -> board.getGroupStatus() == GroupStatus.CANCELED || board.getGroupStatus() == GroupStatus.FINISHED)
+				.filter(board -> board.getStatus() == BoardStatus.CANCELED || board.getStatus() == BoardStatus.FINISHED)
 				.collect(Collectors.toList());
 
 		return boards.stream()

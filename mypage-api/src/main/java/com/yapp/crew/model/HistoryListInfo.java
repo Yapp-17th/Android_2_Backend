@@ -2,7 +2,7 @@ package com.yapp.crew.model;
 
 import com.yapp.crew.domain.model.Board;
 import com.yapp.crew.domain.model.User;
-import com.yapp.crew.domain.status.GroupStatus;
+import com.yapp.crew.domain.status.BoardStatus;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -20,9 +20,9 @@ public class HistoryListInfo {
 		HistoryListInfo historyListInfo = new HistoryListInfo();
 		historyListInfo.isHost = board.getUser().getId().equals(user.getId());
 		historyListInfo.userName = user.getNickname();
-		historyListInfo.isContinue = board.getGroupStatus() != GroupStatus.RECRUITING;
-		historyListInfo.leftTime = ""; // TODO: rebase 한 뒤에 추가
-		historyListInfo.boardInfo = BoardListInfo.build(board);
+		historyListInfo.isContinue = board.getStatus() != BoardStatus.RECRUITING;
+		historyListInfo.leftTime = board.showBoardTimeComparedToNow();
+		historyListInfo.boardInfo = BoardListInfo.build(board, user);
 
 		return historyListInfo;
 	}
