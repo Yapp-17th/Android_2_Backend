@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserProfileInfo {
 
+	private long userId;
 	private boolean isMine;
 	private String userName;
 	private int like;
@@ -22,6 +23,7 @@ public class UserProfileInfo {
 
 	public static UserProfileInfo build(User user, boolean isMine, List<Evaluation> evaluations) {
 		UserProfileInfo userProfileInfo = new UserProfileInfo();
+		userProfileInfo.userId = user.getId();
 		userProfileInfo.isMine = isMine;
 		userProfileInfo.userName = user.getNickname();
 		userProfileInfo.like = Math.toIntExact(user.calculateLikes(evaluations));

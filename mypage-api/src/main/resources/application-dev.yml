@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: local
+    active: dev
 
   datasource:
     url: jdbc:mysql://localhost:3306/explanet_dev?useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC&createDatabaseIfNotExist=true
@@ -17,4 +17,3 @@ jwt:
   header: Authorization
   prefix: Bearer
   secret: secretkeytest1234secretkeytest1234secretkeytest1234secretkeytest1234
-  expiration: 1
