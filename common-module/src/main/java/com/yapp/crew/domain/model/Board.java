@@ -30,6 +30,7 @@ public class Board extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "board_id")
 	private Long id;
 
 	@Setter(value = AccessLevel.PRIVATE)

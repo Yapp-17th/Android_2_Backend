@@ -5,7 +5,6 @@ import com.yapp.crew.dto.request.BoardInfoRequestDto;
 import com.yapp.crew.dto.response.BoardContentSuccessResponseDto;
 import com.yapp.crew.dto.response.BoardListSuccessResponseDto;
 import com.yapp.crew.model.BoardContentResponseInfo;
-import com.yapp.crew.model.BoardFilter;
 import com.yapp.crew.model.BoardListResponseInfo;
 import com.yapp.crew.model.BoardPostRequiredInfo;
 import com.yapp.crew.network.model.SimpleResponse;

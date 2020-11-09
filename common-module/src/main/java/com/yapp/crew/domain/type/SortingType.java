@@ -1,4 +1,4 @@
-package com.yapp.crew.utils;
+package com.yapp.crew.domain.type;
 
 import org.apache.commons.lang3.StringUtils;
 

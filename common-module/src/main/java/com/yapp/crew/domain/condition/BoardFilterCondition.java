@@ -1,21 +1,21 @@
-package com.yapp.crew.model;
+package com.yapp.crew.domain.condition;
 
-import com.yapp.crew.utils.SortingType;
+import com.yapp.crew.domain.type.SortingType;
 import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class BoardFilter {
+public class BoardFilterCondition {
 
 	private long userId;
 	private SortingType sorting;
 	List<Long> category;
 	List<Long> city;
 
-	public static BoardFilter build(String sorting, List<Long> category, List<Long> city, long userId) {
-		BoardFilter boardFilter = new BoardFilter();
+	public static BoardFilterCondition build(String sorting, List<Long> category, List<Long> city, long userId) {
+		BoardFilterCondition boardFilter = new BoardFilterCondition();
 		boardFilter.userId = userId;
 		boardFilter.sorting = SortingType.getSortingType(sorting);
 		boardFilter.category = category;

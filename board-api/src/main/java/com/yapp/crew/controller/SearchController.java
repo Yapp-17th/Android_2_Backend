@@ -3,7 +3,6 @@ package com.yapp.crew.controller;
 import com.yapp.crew.domain.auth.Auth;
 import com.yapp.crew.dto.response.BoardListSuccessResponseDto;
 import com.yapp.crew.model.BoardListResponseInfo;
-import com.yapp.crew.model.BoardSearch;
 import com.yapp.crew.service.SearchService;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
