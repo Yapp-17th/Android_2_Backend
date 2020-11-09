@@ -1,4 +1,4 @@
-package com.yapp.crew.watcher;
+package com.yapp.crew.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.yapp.crew.domain.model.Board;
