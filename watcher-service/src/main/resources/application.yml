@@ -65,11 +65,13 @@ kafka:
     guideline-message: guideline-message
     apply-user: apply-user
     approve-user: approve-user
+    board-finished: board-finished
 
   groups:
     guideline-message-group: guideline-message-group
     apply-user-group: apply-user-group
     approve-user-group: approve-user-group
+    board-finished-group: board-finished-group
 
 jwt:
   header: Authorization

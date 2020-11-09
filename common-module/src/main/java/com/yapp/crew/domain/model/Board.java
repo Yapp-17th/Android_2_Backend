@@ -70,7 +70,7 @@ public class Board extends BaseEntity {
 
 	@Column(nullable = false)
 	@Enumerated(value = EnumType.ORDINAL)
-	private BoardStatus status = BoardStatus.NORMAL;
+	private BoardStatus status = BoardStatus.RECRUITING;
 
 	@Column(name = "recruit_count", nullable = false)
 	@Setter(value = AccessLevel.PRIVATE)
@@ -115,21 +115,21 @@ public class Board extends BaseEntity {
 		return this.recruitCount - getApprovedCount();
 	}
 
-	public GroupStatus getGroupStatus() {
-		if (status == BoardStatus.CANCELED) {
-			return GroupStatus.CANCELED;
-		}
-
-		if (startsAt.isAfter(LocalDateTime.now())) {
-			return GroupStatus.FINISHED;
-		}
-
-		int approvedCount = getApprovedCount();
-		if (approvedCount < recruitCount) {
-			return GroupStatus.RECRUITING;
-		}
-		return GroupStatus.COMPLETE;
-	}
+//	public GroupStatus getGroupStatus() {
+//		if (status == BoardStatus.CANCELED) {
+//			return GroupStatus.CANCELED;
+//		}
+//
+//		if (startsAt.isAfter(LocalDateTime.now())) {
+//			return GroupStatus.FINISHED;
+//		}
+//
+//		int approvedCount = getApprovedCount();
+//		if (approvedCount < recruitCount) {
+//			return GroupStatus.RECRUITING;
+//		}
+//		return GroupStatus.COMPLETE;
+//	}
 
 	private int getApprovedCount() {
 		return (int) appliedUsers.stream().filter(appliedUser -> appliedUser.getStatus() == AppliedStatus.APPROVED).count();
