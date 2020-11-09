@@ -25,7 +25,7 @@ public class BoardListResponseInfo {
 		boardListResponseInfo.hostId = board.getUser().getId();
 		boardListResponseInfo.hostName = board.getUser().getNickname();
 		boardListResponseInfo.title = board.getTitle();
-		boardListResponseInfo.groupStatus = BoardStatusInfo.build(board.getGroupStatus());
+		boardListResponseInfo.groupStatus = BoardStatusInfo.build(board.getStatus());
 		boardListResponseInfo.exercise = board.getCategory().getExercise().getName();
 		boardListResponseInfo.city = board.getAddress().getCity().getName();
 		boardListResponseInfo.isBookMark = user.getUserBookmark().stream()

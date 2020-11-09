@@ -11,10 +11,10 @@ public enum BoardStatus {
 	CANCELED(3, "모임 취소");
 
 	private final int code;
-	private final String message;
+	private final String name;
 
-	BoardStatus(int code, String message) {
+	BoardStatus(int code, String name) {
 		this.code = code;
-		this.message = message;
+		this.name = name;
 	}
 }

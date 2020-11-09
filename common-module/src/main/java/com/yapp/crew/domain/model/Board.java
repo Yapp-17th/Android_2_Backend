@@ -3,7 +3,6 @@ package com.yapp.crew.domain.model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.yapp.crew.domain.status.AppliedStatus;
 import com.yapp.crew.domain.status.BoardStatus;
-import com.yapp.crew.domain.status.GroupStatus;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -118,22 +117,6 @@ public class Board extends BaseEntity {
 	public void finishBoard() {
 		this.status = BoardStatus.FINISHED;
 	}
-
-//	public GroupStatus getGroupStatus() {
-//		if (status == BoardStatus.CANCELED) {
-//			return GroupStatus.CANCELED;
-//		}
-//
-//		if (startsAt.isAfter(LocalDateTime.now())) {
-//			return GroupStatus.FINISHED;
-//		}
-//
-//		int approvedCount = getApprovedCount();
-//		if (approvedCount < recruitCount) {
-//			return GroupStatus.RECRUITING;
-//		}
-//		return GroupStatus.COMPLETE;
-//	}
 
 	private int getApprovedCount() {
 		return (int) appliedUsers.stream().filter(appliedUser -> appliedUser.getStatus() == AppliedStatus.APPROVED).count();
