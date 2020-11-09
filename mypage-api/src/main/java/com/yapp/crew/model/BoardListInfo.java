@@ -21,7 +21,7 @@ public class BoardListInfo {
 	private int recruitedNumber;
 	private String time;
 
-	public static BoardListInfo build(Board board, User user) {
+	public static BoardListInfo build(Board board) {
 		BoardListInfo boardListInfo = new BoardListInfo();
 		boardListInfo.boardId = board.getId();
 		boardListInfo.hostId = board.getUser().getId();

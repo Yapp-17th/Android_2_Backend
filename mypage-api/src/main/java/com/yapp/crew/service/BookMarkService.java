@@ -20,12 +20,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class BookMarkService {
 
 	private UserRepository userRepository;
-	private BookMarkRepository bookMarkRepository;
 
 	@Autowired
-	public BookMarkService(UserRepository userRepository, BookMarkRepository bookMarkRepository) {
+	public BookMarkService(UserRepository userRepository) {
 		this.userRepository = userRepository;
-		this.bookMarkRepository = bookMarkRepository;
 	}
 
 	@Transactional
@@ -35,7 +33,7 @@ public class BookMarkService {
 
 		Set<BookMark> bookMarkSet = user.getUserBookmark();
 		return bookMarkSet.stream()
-				.map(bookMark -> BoardListInfo.build(bookMark.getBoard(), user))
+				.map(bookMark -> BoardListInfo.build(bookMark.getBoard()))
 				.collect(Collectors.toList());
 	}
 
