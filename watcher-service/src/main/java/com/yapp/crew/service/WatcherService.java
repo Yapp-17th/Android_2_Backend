@@ -33,22 +33,20 @@ public class WatcherService {
 		List<Board> boards = boardRepository.findAllByStartsAtBetween(LocalDateTime.now().minusDays(1), LocalDateTime.now());
 
 		if (!boards.isEmpty()) {
-			boards.forEach(board -> {
-				if (board.getStatus().equals(BoardStatus.CANCELED) || board.getStatus().equals(BoardStatus.FINISHED)) {
-					return;
-				}
+			boards.stream()
+				.filter(board -> !board.getStatus().equals(BoardStatus.CANCELED) && !board.getStatus().equals(BoardStatus.FINISHED))
+				.forEach(board -> {
+					try {
+							BoardFinishedPayload payload = BoardFinishedPayload.builder()
+									.boardId(board.getId())
+									.build();
 
-				try {
-					BoardFinishedPayload payload = BoardFinishedPayload.builder()
-							.boardId(board.getId())
-							.build();
-
-					watcherProducer.produceBoardSuccessfullyFinishedEvent(payload);
-				} catch (JsonProcessingException ex) {
-					// TODO: handle exception
-					ex.printStackTrace();
-				}
-			});
+							watcherProducer.produceBoardSuccessfullyFinishedEvent(payload);
+						} catch (JsonProcessingException ex) {
+							// TODO: handle exception
+							ex.printStackTrace();
+						}
+					});
 		}
 	}
 }
