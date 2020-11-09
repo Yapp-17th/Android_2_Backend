@@ -4,6 +4,7 @@ import com.yapp.crew.domain.model.Board;
 import com.yapp.crew.domain.model.BookMark;
 import com.yapp.crew.domain.model.Evaluation;
 import com.yapp.crew.domain.model.User;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.Getter;
@@ -24,6 +25,7 @@ public class BoardContentResponseInfo {
 	private Integer recruitedNumber;
 	private Boolean isBookMark;
 	private HostInfo host;
+	private LocalDateTime startsAt;
 
 	public static BoardContentResponseInfo build(Board board, List<Evaluation> evaluationList) {
 		BoardContentResponseInfo boardContentResponseInfo = new BoardContentResponseInfo();
@@ -38,6 +40,7 @@ public class BoardContentResponseInfo {
 		boardContentResponseInfo.recruitedNumber = board.getRemainRecruitNumber();
 		boardContentResponseInfo.isBookMark = board.getUser().getUserBookmark().stream().map(BookMark::getBoard).collect(Collectors.toSet()).contains(board);
 		boardContentResponseInfo.host = HostInfo.build(board.getUser(), evaluationList);
+		boardContentResponseInfo.startsAt = board.getStartsAt();
 
 		return boardContentResponseInfo;
 	}
