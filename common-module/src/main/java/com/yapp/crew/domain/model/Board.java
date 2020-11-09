@@ -115,6 +115,10 @@ public class Board extends BaseEntity {
 		return this.recruitCount - getApprovedCount();
 	}
 
+	public void finishBoard() {
+		this.status = BoardStatus.FINISHED;
+	}
+
 //	public GroupStatus getGroupStatus() {
 //		if (status == BoardStatus.CANCELED) {
 //			return GroupStatus.CANCELED;

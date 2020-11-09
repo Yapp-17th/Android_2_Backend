@@ -37,11 +37,12 @@ public class WatcherService {
 				if (board.getStatus().equals(BoardStatus.CANCELED) || board.getStatus().equals(BoardStatus.FINISHED)) {
 					return;
 				}
-				BoardFinishedPayload payload = BoardFinishedPayload.builder()
-						.boardId(board.getId())
-						.build();
 
 				try {
+					BoardFinishedPayload payload = BoardFinishedPayload.builder()
+							.boardId(board.getId())
+							.build();
+
 					watcherProducer.produceBoardSuccessfullyFinishedEvent(payload);
 				} catch (JsonProcessingException ex) {
 					// TODO: handle exception

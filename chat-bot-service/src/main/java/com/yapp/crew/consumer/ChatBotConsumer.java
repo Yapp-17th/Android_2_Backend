@@ -21,6 +21,7 @@ import com.yapp.crew.domain.type.MessageType;
 import com.yapp.crew.json.BotMessages;
 import com.yapp.crew.payload.ApplyRequestPayload;
 import com.yapp.crew.payload.ApproveRequestPayload;
+import com.yapp.crew.payload.BoardFinishedPayload;
 import com.yapp.crew.payload.GuidelineRequestPayload;
 import com.yapp.crew.payload.MessageRequestPayload;
 import com.yapp.crew.producer.ChatBotProducer;
@@ -123,7 +124,8 @@ public class ChatBotConsumer {
 		List<Evaluation> evaluations = evaluationRepository.findAllByUserId(applier.getId());
 
 		Optional<AppliedUser> appliedUser = appliedUserRepository.findByBoardIdAndUserId(board.getId(), applier.getId());
-		if (appliedUser.isPresent() && (appliedUser.get().getStatus().equals(AppliedStatus.APPLIED) || appliedUser.get().getStatus().equals(AppliedStatus.APPROVED))) {
+		if (appliedUser.isPresent() && (appliedUser.get().getStatus().equals(AppliedStatus.APPLIED) || appliedUser.get().getStatus()
+				.equals(AppliedStatus.APPROVED))) {
 			throw new AlreadyAppliedException("Already applied");
 		}
 		appliedUser.get().applyUser();
@@ -171,5 +173,39 @@ public class ChatBotConsumer {
 				.build();
 
 		chatBotProducer.sendBotMessage(approveMessagePayload);
+	}
+
+	@KafkaListener(topics = "${kafka.topics.board-finished}", groupId = "${kafka.topics.board-finished-group}")
+	public void consumeBoardFinishedEvent(ConsumerRecord<Long, String> consumerRecord) throws JsonProcessingException {
+		log.info("[Chat Bot Event - Board Finished] Consumer Record: {}", consumerRecord);
+
+		BoardFinishedPayload boardFinishedPayload = objectMapper.readValue(consumerRecord.value(), BoardFinishedPayload.class);
+
+		Board board = boardRepository.findById(boardFinishedPayload.getBoardId())
+				.orElseThrow(() -> new BoardNotFoundException("Board not found"));
+
+		User bot = userRepository.findUserById(-1L)
+				.orElseThrow(() -> new UserNotFoundException("Bot not found"));
+
+		chatRoomRepository.findAllByBoardId(board.getId())
+				.forEach(chatRoom -> {
+					MessageRequestPayload boardFinishedMessagePayload = MessageRequestPayload.builder()
+							.content(botMessages.getBoardFinished().replace("\"", ""))
+							.type(MessageType.BOT_MESSAGE)
+							.senderId(bot.getId())
+							.chatRoomId(chatRoom.getId())
+							.boardId(board.getId())
+							.build();
+
+					try {
+						chatBotProducer.sendBotMessage(boardFinishedMessagePayload);
+					} catch (JsonProcessingException e) {
+						// TODO: handle exception
+						e.printStackTrace();
+					}
+				});
+
+		board.finishBoard();
+		boardRepository.save(board);
 	}
 }
