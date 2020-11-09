@@ -39,7 +39,7 @@ public class MyProfileService {
 	public UserProfileInfo getProfile(long userId) {
 		User user = findUserById(userId)
 				.orElseThrow(() -> new UserNotFoundException("user not found"));
-		List<Evaluation> evaluations = findAllByUserId(userId);
+		List<Evaluation> evaluations = findAllByEvaluatedId(userId);
 
 		return UserProfileInfo.build(user, true, evaluations);
 	}
@@ -72,8 +72,8 @@ public class MyProfileService {
 		return userRepository.findUserById(userId);
 	}
 
-	private List<Evaluation> findAllByUserId(Long userId) {
-		return evaluationRepository.findAllByUserId(userId);
+	private List<Evaluation> findAllByEvaluatedId(Long userId) {
+		return evaluationRepository.findAllByEvaluatedId(userId);
 	}
 
 	private List<Board> findAllBoards(User user) {

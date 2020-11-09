@@ -29,7 +29,7 @@ public class UserProfileInfo {
 		userProfileInfo.like = Math.toIntExact(user.calculateLikes(evaluations));
 		userProfileInfo.dislike = Math.toIntExact(user.calculateDislikes(evaluations));
 		userProfileInfo.intro = user.getIntro();
-		userProfileInfo.category.addAll(user.getUserExercise().stream().map(exerciese -> exerciese.getCategory().getExercise().getName()).collect(Collectors.toSet()));
+		userProfileInfo.category.addAll(user.getUserExercise().stream().map(exercise -> exercise.getCategory().getExercise().getName()).collect(Collectors.toSet()));
 		userProfileInfo.city = user.getAddress().getCity().getName();
 
 		return userProfileInfo;

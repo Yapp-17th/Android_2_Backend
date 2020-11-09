@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 public class UserReportRequestDto {
 
 	@NotNull
-	private Long boardId;
+	private Long userId;
 	@NotNull
 	private Long reportType;
 	private String content;

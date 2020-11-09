@@ -22,7 +22,7 @@ public class HistoryListInfo {
 		historyListInfo.userName = user.getNickname();
 		historyListInfo.isContinue = board.getStatus() != BoardStatus.RECRUITING;
 		historyListInfo.leftTime = board.showBoardTimeComparedToNow();
-		historyListInfo.boardInfo = BoardListInfo.build(board, user);
+		historyListInfo.boardInfo = BoardListInfo.build(board);
 
 		return historyListInfo;
 	}

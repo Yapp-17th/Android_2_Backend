@@ -124,7 +124,7 @@ public class BoardService {
 		Board board = findBoardById(boardId)
 				.orElseThrow(() -> new BoardNotFoundException("board not found"));
 
-		List<Evaluation> evaluations = findAllByUserId(userId);
+		List<Evaluation> evaluations = findAllByEvaluatedId(userId);
 		return BoardContentResponseInfo.build(board, evaluations);
 	}
 
@@ -151,7 +151,7 @@ public class BoardService {
 				.orElseThrow(() -> new AddressNotFoundException("address not found"));
 		Tag tag = findTagById(boardPostRequiredInfo.getUserTag())
 				.orElseThrow(() -> new TagNotFoundException("tag not found"));
-		List<Evaluation> evaluations = findAllByUserId(board.getUser().getId());
+		List<Evaluation> evaluations = findAllByEvaluatedId(board.getUser().getId());
 
 		board.updateBoard(boardPostRequiredInfo.getTitle(), boardPostRequiredInfo.getContent(), boardPostRequiredInfo.getPlace(), boardPostRequiredInfo.getRecruitNumber(), category, address, tag, boardPostRequiredInfo.getDate());
 		saveBoard(board);
@@ -168,8 +168,8 @@ public class BoardService {
 		boardRepository.save(board);
 	}
 
-	private List<Evaluation> findAllByUserId(Long userId) {
-		return evaluationRepository.findAllByUserId(userId);
+	private List<Evaluation> findAllByEvaluatedId(Long userId) {
+		return evaluationRepository.findAllByEvaluatedId(userId);
 	}
 
 	private Optional<Board> findBoardById(Long boardId) {
