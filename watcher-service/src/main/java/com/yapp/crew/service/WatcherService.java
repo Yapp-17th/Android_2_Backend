@@ -28,7 +28,7 @@ public class WatcherService {
 		this.boardRepository = boardRepository;
 	}
 
-	@Scheduled(cron = "0 0 * * * *")
+	@Scheduled(cron = "0 0 0 * * *")
 	public void boardSuccessfullyFinishedWatcher() {
 		List<Board> boards = boardRepository.findAllByStartsAtBetween(LocalDateTime.now().minusDays(1), LocalDateTime.now());
 
