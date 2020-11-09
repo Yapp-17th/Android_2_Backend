@@ -175,7 +175,7 @@ public class ChatBotConsumer {
 		chatBotProducer.sendBotMessage(approveMessagePayload);
 	}
 
-	@KafkaListener(topics = "${kafka.topics.board-finished}", groupId = "${kafka.topics.board-finished-group}")
+	@KafkaListener(topics = "${kafka.topics.board-finished}", groupId = "${kafka.groups.board-finished-group}")
 	public void consumeBoardFinishedEvent(ConsumerRecord<Long, String> consumerRecord) throws JsonProcessingException {
 		log.info("[Chat Bot Event - Board Finished] Consumer Record: {}", consumerRecord);
 
