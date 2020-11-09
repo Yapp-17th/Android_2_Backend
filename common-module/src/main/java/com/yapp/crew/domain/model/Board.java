@@ -127,8 +127,7 @@ public class Board extends BaseEntity {
 		Date now = java.sql.Timestamp.valueOf(LocalDateTime.now());
 		Date startDate = java.sql.Timestamp.valueOf(startsAt);
 
-		// TODO: 나중에 GroupStatus == 취소 아니고, 활동 완료 아닐 때로 조건 변경
-		if (status == BoardStatus.NORMAL) {
+		if (status == BoardStatus.RECRUITING || status == BoardStatus.COMPLETE) {
 			return "[D-"+calculateLeftDays(now, startDate)+"]";
 		}
 
