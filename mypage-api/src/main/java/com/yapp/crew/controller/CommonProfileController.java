@@ -1,10 +1,13 @@
 package com.yapp.crew.controller;
 
 import com.yapp.crew.domain.auth.Auth;
+import com.yapp.crew.dto.response.HistoryListResponseDto;
 import com.yapp.crew.dto.response.UserProfileResponseDto;
+import com.yapp.crew.model.HistoryListInfo;
 import com.yapp.crew.model.UserProfileInfo;
 import com.yapp.crew.service.CommonProfileService;
 import com.yapp.crew.service.MyProfileService;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -29,7 +32,7 @@ public class CommonProfileController {
 	}
 
 	@GetMapping(path = "/v1/user/{userId}/profile", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> getMyProfile(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token, @PathVariable Long userId) {
+	public ResponseEntity<?> getCommonProfile(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token, @PathVariable Long userId) {
 		long tokenUserId = auth.parseUserIdFromToken(token);
 
 		if (tokenUserId == userId) {
@@ -43,5 +46,15 @@ public class CommonProfileController {
 		UserProfileResponseDto userProfileResponseDto = UserProfileResponseDto.build(userProfileInfo);
 
 		return ResponseEntity.ok().body(userProfileResponseDto);
+	}
+
+	@GetMapping(path = "/v1/user/{userId}/profile/history", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> getCommonHistory(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token, @PathVariable Long userId) {
+		long tokenUserId = auth.parseUserIdFromToken(token);
+
+		List<HistoryListInfo> historyListInfos = commonProfileService.getHistoryList(userId);
+		HistoryListResponseDto historyListResponseDto = HistoryListResponseDto.build("complete", historyListInfos);
+
+		return ResponseEntity.ok().body(historyListResponseDto);
 	}
 }
