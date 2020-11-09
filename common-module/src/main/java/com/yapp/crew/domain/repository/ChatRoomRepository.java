@@ -14,6 +14,8 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
 
 	List<ChatRoom> findAllByGuestId(Long guestId);
 
+	List<ChatRoom> findAllByBoardId(Long boardId);
+
 	@Query(value = "select * from chat_room where host_id = ?1 or guest_id = ?1", nativeQuery = true)
 	List<ChatRoom> findAllByUserId(Long userId);
 

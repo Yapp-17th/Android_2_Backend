@@ -3,7 +3,6 @@ package com.yapp.crew.model;
 import com.yapp.crew.domain.model.Board;
 import com.yapp.crew.domain.model.BookMark;
 import com.yapp.crew.domain.model.Evaluation;
-import com.yapp.crew.domain.model.User;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,7 +32,7 @@ public class BoardContentResponseInfo {
 		boardContentResponseInfo.title = board.getTitle();
 		boardContentResponseInfo.content = board.getContent();
 		boardContentResponseInfo.place = board.getPlace();
-		boardContentResponseInfo.groupStatus = BoardStatusInfo.build(board.getGroupStatus());
+		boardContentResponseInfo.groupStatus = BoardStatusInfo.build(board.getStatus());
 		boardContentResponseInfo.exercise = board.getCategory().getExercise().getName();
 		boardContentResponseInfo.city = board.getAddress().getCity().getName();
 		boardContentResponseInfo.recruitNumber = board.getRecruitCount();
