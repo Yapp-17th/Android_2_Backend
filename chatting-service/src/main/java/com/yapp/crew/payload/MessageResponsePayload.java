@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.yapp.crew.domain.model.Message;
 import com.yapp.crew.domain.repository.MessageRepository;
 import com.yapp.crew.domain.type.MessageType;
+import com.yapp.crew.domain.type.RealTimeUpdateType;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,6 +28,8 @@ public class MessageResponsePayload {
 
 	private MessageType type;
 
+	private RealTimeUpdateType realTimeUpdateType;
+
 	private Boolean isHostRead;
 
 	private Boolean isGuestRead;
@@ -48,6 +51,7 @@ public class MessageResponsePayload {
 				.id(message.getId())
 				.content(message.getContent())
 				.type(message.getType())
+				.realTimeUpdateType(RealTimeUpdateType.MESSAGE_READ)
 				.isHostRead(message.isHostRead())
 				.isGuestRead(message.isGuestRead())
 				.senderId(message.getSender().getId())
