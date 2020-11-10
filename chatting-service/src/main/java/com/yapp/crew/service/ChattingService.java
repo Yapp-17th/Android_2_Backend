@@ -44,11 +44,11 @@ public class ChattingService {
 
 	private final ChattingProducer chattingProducer;
 
+	private final AppliedUserRepository appliedUserRepository;
+
 	private final ChatRoomRepository chatRoomRepository;
 
 	private final MessageRepository messageRepository;
-
-	private final AppliedUserRepository appliedUserRepository;
 
 	private final BoardRepository boardRepository;
 
@@ -57,16 +57,16 @@ public class ChattingService {
 	@Autowired
 	public ChattingService(
 			ChattingProducer chattingProducer,
+			AppliedUserRepository appliedUserRepository,
 			ChatRoomRepository chatRoomRepository,
 			MessageRepository messageRepository,
-			AppliedUserRepository appliedUserRepository,
 			BoardRepository boardRepository,
 			UserRepository userRepository
 	) {
 		this.chattingProducer = chattingProducer;
+		this.appliedUserRepository = appliedUserRepository;
 		this.chatRoomRepository = chatRoomRepository;
 		this.messageRepository = messageRepository;
-		this.appliedUserRepository = appliedUserRepository;
 		this.boardRepository = boardRepository;
 		this.userRepository = userRepository;
 	}
@@ -239,7 +239,10 @@ public class ChattingService {
 		isApplied.approveUser();
 		appliedUserRepository.save(isApplied);
 
-		// TODO: if full -> update board status to complete
+		if (board.getRemainRecruitNumber() == 0) {
+			board.completeRecruiting();
+			boardRepository.save(board);
+		}
 
 		chattingProducer.approveUser(approveRequestPayload);
 
