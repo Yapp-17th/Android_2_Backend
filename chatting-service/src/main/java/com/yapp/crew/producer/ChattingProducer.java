@@ -2,6 +2,7 @@ package com.yapp.crew.producer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.yapp.crew.domain.type.RealTimeUpdateType;
 import com.yapp.crew.payload.ApplyRequestPayload;
 import com.yapp.crew.payload.ApproveRequestPayload;
 import com.yapp.crew.payload.GuidelineRequestPayload;
@@ -18,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.util.concurrent.ListenableFutureCallback;
@@ -38,12 +40,19 @@ public class ChattingProducer {
 	@Value(value = "${kafka.topics.approve-user}")
 	private String approveUserTopic;
 
+	private final SimpMessagingTemplate simpMessagingTemplate;
+
 	private final KafkaTemplate<Long, String> kafkaTemplate;
 
 	private final ObjectMapper objectMapper;
 
 	@Autowired
-	public ChattingProducer(KafkaTemplate<Long, String> kafkaTemplate, ObjectMapper objectMapper) {
+	public ChattingProducer(
+			SimpMessagingTemplate simpMessagingTemplate,
+			KafkaTemplate<Long, String> kafkaTemplate,
+			ObjectMapper objectMapper
+	) {
+		this.simpMessagingTemplate = simpMessagingTemplate;
 		this.kafkaTemplate = kafkaTemplate;
 		this.objectMapper = objectMapper;
 	}
@@ -107,6 +116,15 @@ public class ChattingProducer {
 			@Override
 			public void onSuccess(SendResult<Long, String> result) {
 				handleSuccess(key, value, result);
+
+				MessageRequestPayload applyRealtimeUpdatePayload = MessageRequestPayload.builder()
+						.realTimeUpdateType(RealTimeUpdateType.APPLIED)
+						.build();
+
+				simpMessagingTemplate.convertAndSend(
+						"/sub/chat/room/" + applyRequestPayload.getChatRoomId().toString(),
+						applyRealtimeUpdatePayload
+				);
 			}
 		});
 		return listenableFuture;
@@ -128,6 +146,15 @@ public class ChattingProducer {
 			@Override
 			public void onSuccess(SendResult<Long, String> result) {
 				handleSuccess(key, value, result);
+
+				MessageRequestPayload applyRealtimeUpdatePayload = MessageRequestPayload.builder()
+						.realTimeUpdateType(RealTimeUpdateType.APPLIED)
+						.build();
+
+				simpMessagingTemplate.convertAndSend(
+						"/sub/chat/room/" + approveRequestPayload.getChatRoomId().toString(),
+						applyRealtimeUpdatePayload
+				);
 			}
 		});
 		return listenableFuture;
