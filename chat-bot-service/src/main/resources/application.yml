@@ -65,12 +65,14 @@ kafka:
     guideline-message: guideline-message
     apply-user: apply-user
     approve-user: approve-user
+    disapprove-user: disapprove-user
     board-finished: board-finished
 
   groups:
     guideline-message-group: guideline-message-group
     apply-user-group: apply-user-group
     approve-user-group: approve-user-group
+    disapprove-user-group: disapprove-user-group
     board-finished-group: board-finished-group
 
 jwt:

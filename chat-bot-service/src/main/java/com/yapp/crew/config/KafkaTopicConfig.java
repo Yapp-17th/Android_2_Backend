@@ -20,6 +20,9 @@ public class KafkaTopicConfig {
 	@Value(value = "${kafka.topics.approve-user}")
 	private String approveUserTopic;
 
+	@Value(value = "${kafka.topics.disapprove-user}")
+	private String disapproveUserTopic;
+
 	@Value(value = "${kafka.topics.board-finished}")
 	private String boardFinishedTopic;
 
@@ -45,6 +48,15 @@ public class KafkaTopicConfig {
 	public NewTopic approveUser() {
 		return TopicBuilder
 				.name(approveUserTopic)
+				.partitions(1)
+				.replicas(1)
+				.build();
+	}
+
+	@Bean
+	public NewTopic disapproveUser() {
+		return TopicBuilder
+				.name(disapproveUserTopic)
 				.partitions(1)
 				.replicas(1)
 				.build();

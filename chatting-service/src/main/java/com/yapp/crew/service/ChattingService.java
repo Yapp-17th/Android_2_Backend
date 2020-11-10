@@ -5,6 +5,7 @@ import com.yapp.crew.domain.errors.AlreadyApprovedException;
 import com.yapp.crew.domain.errors.BoardNotFoundException;
 import com.yapp.crew.domain.errors.ChatRoomNotFoundException;
 import com.yapp.crew.domain.errors.GuestApplyNotFoundException;
+import com.yapp.crew.domain.errors.IsNotApprovedException;
 import com.yapp.crew.domain.errors.MessageNotFoundException;
 import com.yapp.crew.domain.errors.NoSpaceToApplyException;
 import com.yapp.crew.domain.errors.UserNotFoundException;
@@ -245,6 +246,50 @@ public class ChattingService {
 		}
 
 		chattingProducer.approveUser(approveRequestPayload);
+
+		return HttpResponseBody.buildSuccessResponse(
+				HttpStatus.OK.value(),
+				ResponseType.SUCCESS,
+				ResponseType.SUCCESS.getMessage()
+		);
+	}
+
+	public HttpResponseBody<?> disapproveUser(ApproveRequestPayload approveRequestPayload) throws JsonProcessingException {
+		Board board = boardRepository.findById(approveRequestPayload.getBoardId())
+				.orElseThrow(() -> new BoardNotFoundException("Board not found"));
+
+		User host = userRepository.findUserById(approveRequestPayload.getHostId())
+				.orElseThrow(() -> new UserNotFoundException("User not found"));
+
+		User guest = userRepository.findUserById(approveRequestPayload.getGuestId())
+				.orElseThrow(() -> new UserNotFoundException("User not found"));
+
+		ChatRoom chatRoom = chatRoomRepository.findById(approveRequestPayload.getChatRoomId())
+				.orElseThrow(() -> new ChatRoomNotFoundException("Chat room not found"));
+
+		if (!board.getUser().getId().equals(host.getId())) {
+			throw new WrongHostException("This user is not a host for this board");
+		}
+
+		if (!chatRoom.getHost().getId().equals(host.getId())) {
+			throw new WrongHostException("This user is not a host for this chat room");
+		}
+
+		if (!chatRoom.getGuest().getId().equals(guest.getId())) {
+			throw new WrongGuestException("This user is not a guest for this chat room");
+		}
+
+		AppliedUser isApproved = appliedUserRepository.findByBoardIdAndUserId(board.getId(), guest.getId())
+				.orElseThrow(() -> new GuestApplyNotFoundException("This user did not apply"));
+
+		if (!isApproved.getStatus().equals(AppliedStatus.APPROVED)) {
+			throw new IsNotApprovedException("This user is not approved");
+		}
+
+		isApproved.disapproveUser();
+		appliedUserRepository.save(isApproved);
+
+		chattingProducer.disapproveUser(approveRequestPayload);
 
 		return HttpResponseBody.buildSuccessResponse(
 				HttpStatus.OK.value(),

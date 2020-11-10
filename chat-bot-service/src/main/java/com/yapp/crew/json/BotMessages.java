@@ -27,6 +27,9 @@ public class BotMessages {
 	@JsonProperty(value = "approve_message")
 	private String approveMessage;
 
+	@JsonProperty(value = "disapprove_message")
+	private String disapproveMessage;
+
 	@JsonProperty(value = "profile_message")
 	private String profileMessage;
 
