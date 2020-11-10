@@ -17,4 +17,3 @@ jwt:
   header: Authorization
   prefix: Bearer
   secret: secretkeytest1234secretkeytest1234secretkeytest1234secretkeytest1234
-  expiration: 1

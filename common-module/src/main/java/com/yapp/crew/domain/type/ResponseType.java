@@ -39,7 +39,9 @@ public enum ResponseType {
 	INVALID_METHOD("메소드 유형이 잘못 되었습니다."),
 	INVALID_REQUEST_PARAM("정확한 값을 Request Parameter에 담아서 요청하시기 바랍니다"),
 	WITHDRAW_SUCCESS("정상적으로 회원 탈퇴 처리가 되었습니다."),
-	SIGNUP_SUCCESS("회원가입을 축하드립니다!\n운동플래닛과 건강한 운동생활을\n시작해보세요!");
+	SIGNUP_SUCCESS("회원가입을 축하드립니다!\n운동플래닛과 건강한 운동생활을\n시작해보세요!"),
+	EVALUATE_SUCCESS("평가가 정상적으로 저장 되었습니다."),
+	USERINFO_UPDATE_SUCCESS("회원 정보를 정상적으로 업데이트 했습니다.");
 
 	private final String message;
 

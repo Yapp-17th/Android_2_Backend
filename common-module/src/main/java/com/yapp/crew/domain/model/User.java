@@ -189,6 +189,7 @@ public class User extends BaseEntity {
 
 	public static class UserBuilder {
 
+		private Long id;
 		private String username;
 		private String nickname;
 		private String email;
@@ -196,6 +197,11 @@ public class User extends BaseEntity {
 		private String oauthId;
 		private Address address;
 		private String intro;
+
+		public UserBuilder withId(Long id) {
+			this.id = id;
+			return this;
+		}
 
 		public UserBuilder withUsername(String username) {
 			this.username = username;
