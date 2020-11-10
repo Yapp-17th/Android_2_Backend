@@ -121,6 +121,10 @@ public class Board extends BaseEntity {
 		this.status = BoardStatus.FINISHED;
 	}
 
+	public void completeRecruiting() {
+		this.status = BoardStatus.COMPLETE;
+	}
+
 	public String showBoardTimeComparedToNow() {
 		Calendar calendar = Calendar.getInstance();
 		Date now = java.sql.Timestamp.valueOf(LocalDateTime.now());
