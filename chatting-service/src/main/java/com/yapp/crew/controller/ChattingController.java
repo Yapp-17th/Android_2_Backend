@@ -10,7 +10,7 @@ import com.yapp.crew.payload.ChatRoomResponsePayload;
 import com.yapp.crew.payload.MessageRequestPayload;
 import com.yapp.crew.payload.MessageResponsePayload;
 import com.yapp.crew.producer.ChattingProducer;
-import com.yapp.crew.service.ChattingProducerService;
+import com.yapp.crew.service.ChattingService;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
@@ -39,17 +39,17 @@ public class ChattingController {
 
 	private final ChattingProducer chattingProducer;
 
-	private final ChattingProducerService chattingProducerService;
+	private final ChattingService chattingService;
 
 	@Autowired
 	public ChattingController(
 			Auth auth,
 			ChattingProducer chattingProducer,
-			ChattingProducerService chattingProducerService
+			ChattingService chattingService
 	) {
 		this.auth = auth;
 		this.chattingProducer = chattingProducer;
-		this.chattingProducerService = chattingProducerService;
+		this.chattingService = chattingService;
 	}
 
 	@MessageMapping(value = "/v1/chat/message")
@@ -79,7 +79,7 @@ public class ChattingController {
 		auth.verifyToken(token);
 		Long userId = auth.parseUserIdFromToken(token);
 
-		HttpResponseBody<List<MessageResponsePayload>> responseBody = chattingProducerService.receiveChatMessages(chatRoomId, userId);
+		HttpResponseBody<List<MessageResponsePayload>> responseBody = chattingService.receiveChatMessages(chatRoomId, userId);
 		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
 	}
 
@@ -92,7 +92,7 @@ public class ChattingController {
 		auth.verifyToken(token);
 		Long userId = auth.parseUserIdFromToken(token);
 
-		HttpResponseBody<?> responseBody = chattingProducerService.updateMessageIsRead(userId, chatRoomId, messageId);
+		HttpResponseBody<?> responseBody = chattingService.updateMessageIsRead(userId, chatRoomId, messageId);
 		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
 	}
 
@@ -101,7 +101,7 @@ public class ChattingController {
 		auth.verifyToken(token);
 		Long userId = auth.parseUserIdFromToken(token);
 
-		HttpResponseBody<List<ChatRoomResponsePayload>> responseBody = chattingProducerService.receiveChatRooms(userId);
+		HttpResponseBody<List<ChatRoomResponsePayload>> responseBody = chattingService.receiveChatRooms(userId);
 		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
 	}
 
@@ -116,7 +116,7 @@ public class ChattingController {
 
 		chatRoomRequestPayload.setGuestId(guestId);
 
-		HttpResponseBody<ChatRoomResponsePayload> responseBody = chattingProducerService.createChatRoom(chatRoomRequestPayload);
+		HttpResponseBody<ChatRoomResponsePayload> responseBody = chattingService.createChatRoom(chatRoomRequestPayload);
 		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
 	}
 
@@ -132,7 +132,7 @@ public class ChattingController {
 
 		applyRequestPayload.setBoardId(boardId);
 		applyRequestPayload.setApplierId(applierId);
-		HttpResponseBody<?> responseBody = chattingProducerService.applyUser(applyRequestPayload);
+		HttpResponseBody<?> responseBody = chattingService.applyUser(applyRequestPayload);
 
 		return ResponseEntity.status(HttpStatus.CREATED).body(responseBody);
 	}
@@ -150,7 +150,7 @@ public class ChattingController {
 		approveRequestPayload.setBoardId(boardId);
 		approveRequestPayload.setHostId(hostId);
 
-		HttpResponseBody<?> responseBody = chattingProducerService.approveUser(approveRequestPayload);
+		HttpResponseBody<?> responseBody = chattingService.approveUser(approveRequestPayload);
 		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
 	}
 }
