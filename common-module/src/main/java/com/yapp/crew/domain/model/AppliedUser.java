@@ -52,6 +52,10 @@ public class AppliedUser {
 		setStatus(AppliedStatus.APPROVED);
 	}
 
+	public void disapproveUser() {
+		setStatus(AppliedStatus.APPLIED);
+	}
+
 	public void applyUser() {
 		setStatus(AppliedStatus.APPLIED);
 	}

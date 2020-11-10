@@ -40,6 +40,9 @@ public class ChattingProducer {
 	@Value(value = "${kafka.topics.approve-user}")
 	private String approveUserTopic;
 
+	@Value(value = "${kafka.topics.disapprove-user}")
+	private String disapproveUserTopic;
+
 	private final SimpMessagingTemplate simpMessagingTemplate;
 
 	private final KafkaTemplate<Long, String> kafkaTemplate;
@@ -154,6 +157,36 @@ public class ChattingProducer {
 				simpMessagingTemplate.convertAndSend(
 						"/sub/chat/room/" + approveRequestPayload.getChatRoomId().toString(),
 						applyRealtimeUpdatePayload
+				);
+			}
+		});
+		return listenableFuture;
+	}
+
+	public ListenableFuture<SendResult<Long, String>> disapproveUser(ApproveRequestPayload approveRequestPayload) throws JsonProcessingException {
+		Long key = approveRequestPayload.getBoardId();
+		String value = objectMapper.writeValueAsString(approveRequestPayload);
+
+		ProducerRecord<Long, String> producerRecord = buildProducerRecord(key, value, disapproveUserTopic);
+		ListenableFuture<SendResult<Long, String>> listenableFuture = kafkaTemplate.send(producerRecord);
+
+		listenableFuture.addCallback(new ListenableFutureCallback<>() {
+			@Override
+			public void onFailure(Throwable ex) {
+				handleFailure(key, value, ex);
+			}
+
+			@Override
+			public void onSuccess(SendResult<Long, String> result) {
+				handleSuccess(key, value, result);
+
+				MessageRequestPayload disapproveRealtimeUpdatePayload = MessageRequestPayload.builder()
+						.realTimeUpdateType(RealTimeUpdateType.DISAPPROVED)
+						.build();
+
+				simpMessagingTemplate.convertAndSend(
+						"/sub/chat/room/" + approveRequestPayload.getChatRoomId().toString(),
+						disapproveRealtimeUpdatePayload
 				);
 			}
 		});
