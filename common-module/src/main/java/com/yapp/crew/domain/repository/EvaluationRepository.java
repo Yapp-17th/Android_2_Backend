@@ -8,7 +8,7 @@ public interface EvaluationRepository extends JpaRepository<Evaluation, Long> {
 
 	Evaluation save(Evaluation evaluation);
 
-	List<Evaluation> findAllByUserId(Long userId);
+	List<Evaluation> findAllByEvaluateId(Long evaluateId);
 
-	List<Evaluation> findAllByBoardId(Long boardId);
+	List<Evaluation> findAllByEvaluatedId(Long evaluatedId);
 }

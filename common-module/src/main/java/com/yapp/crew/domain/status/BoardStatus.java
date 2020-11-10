@@ -17,4 +17,8 @@ public enum BoardStatus {
 		this.code = code;
 		this.name = name;
 	}
+
+	public String getName() {
+		return this.name;
+	}
 }

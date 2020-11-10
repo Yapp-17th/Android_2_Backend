@@ -121,7 +121,7 @@ public class ChatBotConsumer {
 				.boardId(board.getId())
 				.build();
 
-		List<Evaluation> evaluations = evaluationRepository.findAllByUserId(applier.getId());
+		List<Evaluation> evaluations = evaluationRepository.findAllByEvaluatedId(applier.getId());
 
 		Optional<AppliedUser> appliedUser = appliedUserRepository.findByBoardIdAndUserId(board.getId(), applier.getId());
 		if (appliedUser.isPresent() && (appliedUser.get().getStatus().equals(AppliedStatus.APPLIED) || appliedUser.get().getStatus()

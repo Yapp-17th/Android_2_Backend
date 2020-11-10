@@ -139,7 +139,7 @@ public class Board extends BaseEntity {
 		return (int)TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
 	}
 
-	private int getApprovedCount() {
+	public int getApprovedCount() {
 		return (int) appliedUsers.stream().filter(appliedUser -> appliedUser.getStatus() == AppliedStatus.APPROVED).count();
 	}
 
