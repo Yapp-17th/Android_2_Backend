@@ -40,7 +40,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
-public class ChattingProducerService {
+public class ChattingService {
 
 	private final ChattingProducer chattingProducer;
 
@@ -55,7 +55,7 @@ public class ChattingProducerService {
 	private final UserRepository userRepository;
 
 	@Autowired
-	public ChattingProducerService(
+	public ChattingService(
 			ChattingProducer chattingProducer,
 			ChatRoomRepository chatRoomRepository,
 			MessageRepository messageRepository,
