@@ -22,6 +22,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -151,6 +152,23 @@ public class ChattingController {
 		approveRequestPayload.setHostId(hostId);
 
 		HttpResponseBody<?> responseBody = chattingService.approveUser(approveRequestPayload);
+		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
+	}
+
+	@DeleteMapping(path = "/v1/board/{boardId}/approve")
+	public ResponseEntity<?> disapproveUser(
+			@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token,
+			@Valid @RequestBody ApproveRequestPayload approveRequestPayload,
+			@PathVariable("boardId") Long boardId
+	) throws JsonProcessingException {
+
+		auth.verifyToken(token);
+		Long hostId = auth.parseUserIdFromToken(token);
+
+		approveRequestPayload.setBoardId(boardId);
+		approveRequestPayload.setHostId(hostId);
+
+		HttpResponseBody<?> responseBody = chattingService.disapproveUser(approveRequestPayload);
 		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
 	}
 }

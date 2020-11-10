@@ -150,7 +150,7 @@ public class ChatBotConsumer {
 	}
 
 	@KafkaListener(topics = "${kafka.topics.approve-user}", groupId = "${kafka.groups.approve-user-group}")
-	public void consumeBotEventAcceptUser(ConsumerRecord<Long, String> consumerRecord) throws JsonProcessingException {
+	public void consumeBotEventApproveUser(ConsumerRecord<Long, String> consumerRecord) throws JsonProcessingException {
 		log.info("[Chat Bot Event - Approve User] Consumer Record: {}", consumerRecord);
 
 		ApproveRequestPayload approveRequestPayload = objectMapper.readValue(consumerRecord.value(), ApproveRequestPayload.class);
@@ -173,6 +173,32 @@ public class ChatBotConsumer {
 				.build();
 
 		chatBotProducer.sendBotMessage(approveMessagePayload);
+	}
+
+	@KafkaListener(topics = "${kafka.topics.disapprove-user}", groupId = "${kafka.groups.disapprove-user-group}")
+	public void consumeBotEventDisapproveUser(ConsumerRecord<Long, String> consumerRecord) throws JsonProcessingException {
+		log.info("[Chat Bot Event - Disapprove User] Consumer Record: {}", consumerRecord);
+
+		ApproveRequestPayload approveRequestPayload = objectMapper.readValue(consumerRecord.value(), ApproveRequestPayload.class);
+
+		User host = userRepository.findUserById(approveRequestPayload.getHostId())
+				.orElseThrow(() -> new UserNotFoundException("[Not Found] User not found"));
+
+		User bot = userRepository.findUserById(-1L)
+				.orElseThrow(() -> new UserNotFoundException("[Not Found] Bot not found"));
+
+		MessageRequestPayload disapproveMessagePayload = MessageRequestPayload.builder()
+				.content(String.format(
+						botMessages.getDisapproveMessage(),
+						host.getNickname()
+				).replace("\"", ""))
+				.type(MessageType.BOT_MESSAGE)
+				.senderId(bot.getId())
+				.chatRoomId(approveRequestPayload.getChatRoomId())
+				.boardId(approveRequestPayload.getBoardId())
+				.build();
+
+		chatBotProducer.sendBotMessage(disapproveMessagePayload);
 	}
 
 	@KafkaListener(topics = "${kafka.topics.board-finished}", groupId = "${kafka.groups.board-finished-group}")
