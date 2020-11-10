@@ -4,6 +4,7 @@ import com.yapp.crew.domain.errors.BoardNotFoundException;
 import com.yapp.crew.domain.errors.UserNotFoundException;
 import com.yapp.crew.domain.model.Board;
 import com.yapp.crew.domain.model.Evaluation;
+import com.yapp.crew.domain.model.Evaluation.EvaluationBuilder;
 import com.yapp.crew.domain.model.Report;
 import com.yapp.crew.domain.model.Report.ReportBuilder;
 import com.yapp.crew.domain.model.User;
@@ -59,8 +60,12 @@ public class EvaluateService {
 		Board board = findBoardById(boardId)
 				.orElseThrow(() -> new BoardNotFoundException("board not found"));
 
-		Evaluation existingEvaluate = board.getEvaluations().stream().filter(evaluation -> evaluation.getEvaluateId() == evaluateId && evaluation.getEvaluatedId() == evaluatedId).findFirst().get();
-		updateEvaluation(existingEvaluate, isLike);
+		Optional<Evaluation> existingEvaluate = board.getEvaluations().stream().filter(evaluation -> evaluation.getEvaluateId() == evaluateId && evaluation.getEvaluatedId() == evaluatedId).findFirst();
+		if (existingEvaluate.isPresent()) {
+			updateEvaluation(existingEvaluate.get(), isLike);
+		} else {
+			insertEvaluation(board, evaluateId, evaluatedId, isLike);
+		}
 
 		return SimpleResponse.pass(ResponseType.EVALUATE_SUCCESS);
 	}
@@ -105,6 +110,19 @@ public class EvaluateService {
 		}
 
 		saveEvaluation(evaluation);
+	}
+
+	private void insertEvaluation(Board board, long evaluateId, long evaluatedId, boolean isLike) {
+		EvaluationBuilder evaluationBuilder = Evaluation.getBuilder();
+		Evaluation evaluation = evaluationBuilder
+				.withEvaluatedId(evaluateId)
+				.withEvaluateId(evaluatedId)
+				.withIsLike(isLike)
+				.withIsDislike(!isLike)
+				.withBoard(board)
+				.build();
+
+		evaluationRepository.save(evaluation);
 	}
 
 	private void saveEvaluation(Evaluation evaluation) {
