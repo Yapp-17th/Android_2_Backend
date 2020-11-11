@@ -150,13 +150,13 @@ public class ChattingProducer {
 			public void onSuccess(SendResult<Long, String> result) {
 				handleSuccess(key, value, result);
 
-				MessageRequestPayload applyRealtimeUpdatePayload = MessageRequestPayload.builder()
+				MessageRequestPayload approveRealtimeUpdatePayload = MessageRequestPayload.builder()
 						.realTimeUpdateType(RealTimeUpdateType.APPROVED)
 						.build();
 
 				simpMessagingTemplate.convertAndSend(
 						"/sub/chat/room/" + approveRequestPayload.getChatRoomId().toString(),
-						applyRealtimeUpdatePayload
+						approveRealtimeUpdatePayload
 				);
 			}
 		});
