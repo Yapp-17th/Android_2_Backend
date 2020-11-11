@@ -46,6 +46,12 @@ public class MessageResponsePayload {
 
 	private LocalDateTime createdAt;
 
+	public static MessageResponsePayload buildRealTimeUpdateResponsePayload(RealTimeUpdateType type) {
+		return MessageResponsePayload.builder()
+				.realTimeUpdateType(type)
+				.build();
+	}
+
 	public static MessageResponsePayload buildChatMessageResponsePayload(Message message) {
 		return MessageResponsePayload.builder()
 				.id(message.getId())

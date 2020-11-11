@@ -7,6 +7,7 @@ import com.yapp.crew.payload.ApplyRequestPayload;
 import com.yapp.crew.payload.ApproveRequestPayload;
 import com.yapp.crew.payload.GuidelineRequestPayload;
 import com.yapp.crew.payload.MessageRequestPayload;
+import com.yapp.crew.payload.MessageResponsePayload;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -120,9 +121,7 @@ public class ChattingProducer {
 			public void onSuccess(SendResult<Long, String> result) {
 				handleSuccess(key, value, result);
 
-				MessageRequestPayload applyRealtimeUpdatePayload = MessageRequestPayload.builder()
-						.realTimeUpdateType(RealTimeUpdateType.APPLIED)
-						.build();
+				MessageResponsePayload applyRealtimeUpdatePayload = MessageResponsePayload.buildRealTimeUpdateResponsePayload(RealTimeUpdateType.APPLIED);
 
 				simpMessagingTemplate.convertAndSend(
 						"/sub/chat/room/" + applyRequestPayload.getChatRoomId().toString(),
@@ -150,9 +149,7 @@ public class ChattingProducer {
 			public void onSuccess(SendResult<Long, String> result) {
 				handleSuccess(key, value, result);
 
-				MessageRequestPayload approveRealtimeUpdatePayload = MessageRequestPayload.builder()
-						.realTimeUpdateType(RealTimeUpdateType.APPROVED)
-						.build();
+				MessageResponsePayload approveRealtimeUpdatePayload = MessageResponsePayload.buildRealTimeUpdateResponsePayload(RealTimeUpdateType.APPROVED);
 
 				simpMessagingTemplate.convertAndSend(
 						"/sub/chat/room/" + approveRequestPayload.getChatRoomId().toString(),
@@ -180,9 +177,7 @@ public class ChattingProducer {
 			public void onSuccess(SendResult<Long, String> result) {
 				handleSuccess(key, value, result);
 
-				MessageRequestPayload disapproveRealtimeUpdatePayload = MessageRequestPayload.builder()
-						.realTimeUpdateType(RealTimeUpdateType.DISAPPROVED)
-						.build();
+				MessageResponsePayload disapproveRealtimeUpdatePayload = MessageResponsePayload.buildRealTimeUpdateResponsePayload(RealTimeUpdateType.DISAPPROVED);
 
 				simpMessagingTemplate.convertAndSend(
 						"/sub/chat/room/" + approveRequestPayload.getChatRoomId().toString(),
