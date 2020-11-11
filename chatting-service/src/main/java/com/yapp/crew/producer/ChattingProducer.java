@@ -151,7 +151,7 @@ public class ChattingProducer {
 				handleSuccess(key, value, result);
 
 				MessageRequestPayload applyRealtimeUpdatePayload = MessageRequestPayload.builder()
-						.realTimeUpdateType(RealTimeUpdateType.APPLIED)
+						.realTimeUpdateType(RealTimeUpdateType.APPROVED)
 						.build();
 
 				simpMessagingTemplate.convertAndSend(
