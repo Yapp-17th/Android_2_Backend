@@ -2,6 +2,16 @@ spring:
   profiles:
     active: dev
 
+  kafka:
+    producer:
+      bootstrap-servers:
+        - localhost:9092
+      key-serializer: org.apache.kafka.common.serialization.LongSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      properties:
+        acks: all
+        retries: 10
+
   datasource:
     url: jdbc:mysql://18.215.230.51:3306/explanet_dev?useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC&createDatabaseIfNotExist=true
     username: root
@@ -17,3 +27,7 @@ jwt:
   header: Authorization
   prefix: Bearer
   secret: secretkeytest1234secretkeytest1234secretkeytest1234secretkeytest1234
+
+kafka:
+  topics:
+    board-canceled: board-canceled
