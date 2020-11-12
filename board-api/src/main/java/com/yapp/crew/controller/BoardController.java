@@ -1,5 +1,6 @@
 package com.yapp.crew.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.yapp.crew.domain.auth.Auth;
 import com.yapp.crew.dto.request.BoardInfoRequestDto;
 import com.yapp.crew.dto.response.BoardContentSuccessResponseDto;
@@ -91,7 +92,8 @@ public class BoardController {
 	public ResponseEntity<?> deleteBoard(
 			@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token,
 			@PathVariable(name = "boardId") Long boardId
-	) {
+	) throws JsonProcessingException {
+
 		long userId = auth.parseUserIdFromToken(token);
 		SimpleResponse simpleResponse = boardService.deleteBoard(boardId, userId);
 
