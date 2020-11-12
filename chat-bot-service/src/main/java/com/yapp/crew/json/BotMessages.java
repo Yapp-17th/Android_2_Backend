@@ -39,4 +39,7 @@ public class BotMessages {
 
 	@JsonProperty(value = "board_finished")
 	private String boardFinished;
+
+	@JsonProperty(value = "board_canceled")
+	private String boardCanceled;
 }

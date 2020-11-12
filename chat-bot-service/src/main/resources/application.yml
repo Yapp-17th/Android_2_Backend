@@ -67,6 +67,7 @@ kafka:
     approve-user: approve-user
     disapprove-user: disapprove-user
     board-finished: board-finished
+    board-canceled: board-canceled
 
   groups:
     guideline-message-group: guideline-message-group
@@ -74,6 +75,7 @@ kafka:
     approve-user-group: approve-user-group
     disapprove-user-group: disapprove-user-group
     board-finished-group: board-finished-group
+    board-canceled-group: board-canceled-group
 
 jwt:
   header: Authorization
