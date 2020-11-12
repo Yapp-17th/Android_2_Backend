@@ -50,7 +50,6 @@ public class CommonProfileController {
 
 	@GetMapping(path = "/v1/user/{userId}/profile/history", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> getCommonHistory(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token, @PathVariable Long userId) {
-		long tokenUserId = auth.parseUserIdFromToken(token);
 
 		List<HistoryListInfo> historyListInfos = commonProfileService.getHistoryList(userId);
 		HistoryListResponseDto historyListResponseDto = HistoryListResponseDto.build("complete", historyListInfos);
