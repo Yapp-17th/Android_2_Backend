@@ -30,8 +30,6 @@ import com.yapp.crew.model.BoardListResponseInfo;
 import com.yapp.crew.model.BoardPostRequiredInfo;
 import com.yapp.crew.network.model.SimpleResponse;
 import com.yapp.crew.producer.BoardProducer;
-import com.yapp.crew.domain.type.SortingType;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -209,7 +207,6 @@ public class BoardService {
 		return tagRepository.findTagById(tagId);
 	}
 
-	private List<Board> filterBoard(BoardFilterCondition boardFilterCondition) {
-		return boardSearchAndFilterRepository.filter(boardFilterCondition);
-	}
+	private List<Board> filterBoard(BoardFilterCondition boardFilterCondition) { return boardSearchAndFilterRepository.filter(boardFilterCondition); }
+
 }
