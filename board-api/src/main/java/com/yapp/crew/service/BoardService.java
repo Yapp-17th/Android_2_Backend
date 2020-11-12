@@ -1,5 +1,6 @@
 package com.yapp.crew.service;
 
+import com.yapp.crew.domain.condition.BoardFilterCondition;
 import com.yapp.crew.domain.errors.AddressNotFoundException;
 import com.yapp.crew.domain.errors.BoardNotFoundException;
 import com.yapp.crew.domain.errors.CategoryNotFoundException;
@@ -7,16 +8,15 @@ import com.yapp.crew.domain.errors.InvalidRequestBodyException;
 import com.yapp.crew.domain.errors.TagNotFoundException;
 import com.yapp.crew.domain.errors.UserNotFoundException;
 import com.yapp.crew.domain.model.Address;
-import com.yapp.crew.domain.model.BaseEntity;
 import com.yapp.crew.domain.model.Board;
 import com.yapp.crew.domain.model.Board.BoardBuilder;
 import com.yapp.crew.domain.model.Category;
 import com.yapp.crew.domain.model.Evaluation;
-import com.yapp.crew.domain.model.HiddenBoard;
 import com.yapp.crew.domain.model.Tag;
 import com.yapp.crew.domain.model.User;
 import com.yapp.crew.domain.repository.AddressRepository;
 import com.yapp.crew.domain.repository.BoardRepository;
+import com.yapp.crew.domain.repository.BoardSearchAndFilterRepository;
 import com.yapp.crew.domain.repository.CategoryRepository;
 import com.yapp.crew.domain.repository.EvaluationRepository;
 import com.yapp.crew.domain.repository.TagRepository;
@@ -27,11 +27,8 @@ import com.yapp.crew.model.BoardContentResponseInfo;
 import com.yapp.crew.model.BoardListResponseInfo;
 import com.yapp.crew.model.BoardPostRequiredInfo;
 import com.yapp.crew.network.model.SimpleResponse;
-import com.yapp.crew.domain.type.SortingType;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,15 +45,17 @@ public class BoardService {
 	private CategoryRepository categoryRepository;
 	private TagRepository tagRepository;
 	private EvaluationRepository evaluationRepository;
+	private BoardSearchAndFilterRepository boardSearchAndFilterRepository;
 
 	@Autowired
-	public BoardService(BoardRepository boardRepository, UserRepository userRepository, AddressRepository addressRepository, CategoryRepository categoryRepository, TagRepository tagRepository, EvaluationRepository evaluationRepository) {
+	public BoardService(BoardRepository boardRepository, UserRepository userRepository, AddressRepository addressRepository, CategoryRepository categoryRepository, TagRepository tagRepository, EvaluationRepository evaluationRepository, BoardSearchAndFilterRepository boardSearchAndFilterRepository) {
 		this.boardRepository = boardRepository;
 		this.userRepository = userRepository;
 		this.addressRepository = addressRepository;
 		this.categoryRepository = categoryRepository;
 		this.tagRepository = tagRepository;
 		this.evaluationRepository = evaluationRepository;
+		this.boardSearchAndFilterRepository = boardSearchAndFilterRepository;
 	}
 
 	@Transactional
@@ -89,30 +88,13 @@ public class BoardService {
 	}
 
 	@Transactional
-	public List<BoardListResponseInfo> getBoardList(BoardFilter boardFilter) {
-		List<Category> categories;
-		List<Address> addresses;
-
-		User user = findUserById(boardFilter.getUserId())
+	public List<BoardListResponseInfo> getBoardList(BoardFilterCondition boardFilterCondition) {
+		// TODO: repository에서 DTO로 바로 리턴 하도록
+		// TODO: user check 꼭 여기서 해야하는지
+		User user = findUserById(boardFilterCondition.getUserId())
 				.orElseThrow(() -> new UserNotFoundException("user not found"));
 
-		if (boardFilter.getCategory() != null) {
-			categories = findAllCategory().stream()
-					.filter(category -> boardFilter.getCategory().contains(category.getId()))
-					.collect(Collectors.toList());
-		} else {
-			categories = findAllCategory();
-		}
-
-		if (boardFilter.getCity() != null) {
-			addresses = findAllAddress().stream()
-					.filter(address -> boardFilter.getCity().contains(address.getId()))
-					.collect(Collectors.toList());
-		} else {
-			addresses = findAllAddress();
-		}
-
-		return sortBoardList(boardFilter.getSorting(), addresses, categories, user)
+		return filterBoard(boardFilterCondition)
 				.stream()
 				.map(board -> BoardListResponseInfo.build(board, board.getUser()))
 				.collect(Collectors.toList());
@@ -191,44 +173,6 @@ public class BoardService {
 		return tagRepository.findTagById(tagId);
 	}
 
-	private List<Category> findAllCategory() {
-		return categoryRepository.findAll();
-	}
+	private List<Board> filterBoard(BoardFilterCondition boardFilterCondition) { return boardSearchAndFilterRepository.filter(boardFilterCondition); }
 
-	private List<Address> findAllAddress() {
-		return addressRepository.findAll();
-	}
-
-	private List<Board> sortBoardList(SortingType sorting, List<Address> addresses, List<Category> categories, User user) {
-		List<Board> boards = filterBoardList(addresses, categories, user);
-
-		if (sorting == SortingType.REMAIN) {
-			return boards.stream()
-					.sorted(Comparator.comparing(Board::getRemainRecruitNumber, Comparator.reverseOrder()))
-					.collect(Collectors.toList());
-		} else if (sorting == SortingType.DEADLINE) {
-			return boards.stream()
-					.sorted(Comparator.comparing(Board::getStartsAt, Comparator.naturalOrder()))
-					.collect(Collectors.toList());
-		}
-		return boards.stream()
-				.sorted(Comparator.comparing(BaseEntity::getCreatedAt, Comparator.reverseOrder()))
-				.collect(Collectors.toList());
-	}
-
-	private List<Board> filterBoardList(List<Address> addresses, List<Category> categories, User user) {
-		return findAllBoards(user).stream()
-				.filter(board -> addresses.contains(board.getAddress()))
-				.filter(board -> categories.contains(board.getCategory()))
-				.collect(Collectors.toList());
-	}
-
-	private List<Board> findAllBoards(User user) {
-		Set<Board> hiddenBoards = user.getUserHiddenBoard().stream().map(HiddenBoard::getBoard).collect(Collectors.toSet());
-
-		return boardRepository.findAll().stream()
-				.filter(board -> board.getStatus().getCode() != BoardStatus.CANCELED.getCode())
-				.filter(board -> !hiddenBoards.contains(board))
-				.collect(Collectors.toList());
-	}
 }
