@@ -5,16 +5,12 @@ import static com.yapp.crew.domain.model.QBoard.board;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.yapp.crew.domain.condition.BoardFilterCondition;
 import com.yapp.crew.domain.condition.BoardSearchCondition;
 import com.yapp.crew.domain.model.Board;
-import com.yapp.crew.domain.model.QHiddenBoard;
 import com.yapp.crew.domain.type.SortingType;
 import java.util.List;
-import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -34,10 +30,8 @@ public class BoardSearchAndFilterRepository {
 		QueryResults<Board> boardQueryResults = jpaQueryFactory
 				.selectFrom(board)
 				.where(
-						isSearchedKeywords(boardSearchCondition.getKeywords()),
-						isHidden(boardSearchCondition.getUserId())
-				)
-				.orderBy(board.createdAt.desc())
+						isSearchedKeywords(boardSearchCondition.getKeywords())
+				).orderBy(board.createdAt.desc())
 				.offset(pageable.getOffset())
 				.limit(pageable.getPageSize())
 				.fetchResults();
@@ -46,13 +40,17 @@ public class BoardSearchAndFilterRepository {
 	}
 
 	public Page<Board> filter(BoardFilterCondition boardFilterCondition, Pageable pageable) {
+		BooleanBuilder booleanBuilder = new BooleanBuilder();
+		if (boardFilterCondition.getCategory() != null) {
+			booleanBuilder.or(isFilteredCategories(boardFilterCondition.getCategory()));
+		}
+		if (boardFilterCondition.getCity() != null) {
+			booleanBuilder.or(isFilteredCities(boardFilterCondition.getCity()));
+		}
+
 		QueryResults<Board> boardQueryResults = jpaQueryFactory
 				.selectFrom(board)
-				.where(
-						isFilteredCategories(boardFilterCondition.getCategory()),
-						isFilteredCities(boardFilterCondition.getCity()),
-						isHidden(boardFilterCondition.getUserId())
-				)
+			  .where(booleanBuilder)
 				.orderBy(orderType(boardFilterCondition.getSorting()))
 				.offset(pageable.getOffset())
 				.limit(pageable.getPageSize())
@@ -71,31 +69,46 @@ public class BoardSearchAndFilterRepository {
 		return board.createdAt.desc();
 	}
 
-	private BooleanExpression isFilteredCategories(List<Long> categories) {
-		return Expressions.anyOf((BooleanExpression) categories.stream().map(this::isFilteredCategory).collect(Collectors.toList()));
+	private BooleanBuilder isFilteredCategories(List<Long> categories) {
+		BooleanBuilder builder = new BooleanBuilder();
+		for (Long categoryId : categories) {
+			builder.or(isFilteredCategory(categoryId));
+		}
+		return builder;
 	}
 
-	private BooleanExpression isFilteredCategory(Long categoryId) {
-		return board.category.id.eq(categoryId);
+	private BooleanBuilder isFilteredCategory(Long categoryId) {
+		BooleanBuilder builder = new BooleanBuilder();
+		builder.or(board.category.id.eq(categoryId));
+		return builder;
 	}
 
-	private BooleanExpression isFilteredCities(List<Long> cities) {
-		return Expressions.anyOf((BooleanExpression) cities.stream().map(this::isFilteredCity).collect(Collectors.toList()));
+	private BooleanBuilder isFilteredCities(List<Long> cities) {
+		BooleanBuilder builder = new BooleanBuilder();
+		for (Long cityId : cities) {
+			builder.or(isFilteredCity(cityId));
+		}
+		return builder;
 	}
 
-	private BooleanExpression isFilteredCity(Long cityId) {
-		return board.address.id.eq(cityId);
+	private BooleanBuilder isFilteredCity(Long cityId) {
+		BooleanBuilder builder = new BooleanBuilder();
+		builder.or(board.address.id.eq(cityId));
+		return builder;
 	}
 
-	private BooleanExpression isSearchedKeywords(List<String> keywords) {
-		return Expressions.allOf((BooleanExpression) keywords.stream().map(this::isSearchedKeyword).collect(Collectors.toList()));
+	private BooleanBuilder isSearchedKeywords(List<String> keywords) {
+		BooleanBuilder builder = new BooleanBuilder();
+		for (String keyword : keywords) {
+			builder.and(isSearchedKeyword(keyword));
+		}
+		return builder;
 	}
 
-	private BooleanExpression isSearchedKeyword(String keyword) {
-		return board.content.containsIgnoreCase(keyword);
+	private BooleanBuilder isSearchedKeyword(String keyword) {
+		BooleanBuilder builder = new BooleanBuilder();
+		builder.or(board.content.containsIgnoreCase(keyword));
+		return builder;
 	}
 
-	private BooleanExpression isHidden(Long userId) {
-		return QHiddenBoard.hiddenBoard.user.id.eq(userId);
-	}
 }
