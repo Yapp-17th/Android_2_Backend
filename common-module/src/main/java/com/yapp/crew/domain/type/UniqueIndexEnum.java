@@ -1,4 +1,4 @@
-package com.yapp.crew.utils;
+package com.yapp.crew.domain.type;
 
 public enum UniqueIndexEnum {
   EMAIL("동일한 이메일이 있습니다."),

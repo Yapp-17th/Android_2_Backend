@@ -20,7 +20,7 @@ import com.yapp.crew.domain.type.ResponseType;
 import com.yapp.crew.model.SignupUserInfo;
 import com.yapp.crew.model.UserAuthResponse;
 import com.yapp.crew.network.model.SimpleResponse;
-import com.yapp.crew.utils.UniqueIndexEnum;
+import com.yapp.crew.domain.type.UniqueIndexEnum;
 import java.util.List;
 import java.util.Optional;
 import javax.transaction.Transactional;

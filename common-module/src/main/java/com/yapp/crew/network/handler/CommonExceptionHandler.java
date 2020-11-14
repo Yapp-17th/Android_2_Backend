@@ -9,6 +9,7 @@ import com.yapp.crew.domain.errors.CategoryNotFoundException;
 import com.yapp.crew.domain.errors.ChatRoomNotFoundException;
 import com.yapp.crew.domain.errors.GuestApplyNotFoundException;
 import com.yapp.crew.domain.errors.InactiveUserException;
+import com.yapp.crew.domain.errors.InternalServerErrorException;
 import com.yapp.crew.domain.errors.InvalidRequestBodyException;
 import com.yapp.crew.domain.errors.MessageNotFoundException;
 import com.yapp.crew.domain.errors.SuspendedUserException;
@@ -45,6 +46,12 @@ public class CommonExceptionHandler {
 	}
 
 	@ExceptionHandler(value = InternalServerError.class)
+	public ResponseEntity<?> handleInternalServerException() {
+		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.INTERNAL_SERVER_ERROR, ResponseType.INTERNAL_SERVER_FAIL);
+		return ResponseEntity.ok().body(responseBody);
+	}
+
+	@ExceptionHandler(value = InternalServerErrorException.class)
 	public ResponseEntity<?> handleInternalServerErrorException() {
 		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.INTERNAL_SERVER_ERROR, ResponseType.INTERNAL_SERVER_FAIL);
 		return ResponseEntity.ok().body(responseBody);
