@@ -4,6 +4,7 @@ import com.yapp.crew.domain.errors.AddressNotFoundException;
 import com.yapp.crew.domain.errors.AlreadyAppliedException;
 import com.yapp.crew.domain.errors.AlreadyApprovedException;
 import com.yapp.crew.domain.errors.BoardNotFoundException;
+import com.yapp.crew.domain.errors.BoardTimeInvalidException;
 import com.yapp.crew.domain.errors.CategoryNotFoundException;
 import com.yapp.crew.domain.errors.ChatRoomNotFoundException;
 import com.yapp.crew.domain.errors.GuestApplyNotFoundException;
@@ -189,6 +190,12 @@ public class CommonExceptionHandler {
 	@ExceptionHandler(value = UserDuplicateFieldException.class)
 	public ResponseEntity<?> handleUserDuplicateFieldException(Exception ex) {
 		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.BAD_REQUEST, ResponseType.SIGN_UP_DUPLICATE, ex.getMessage());
+		return ResponseEntity.ok().body(responseBody);
+	}
+
+	@ExceptionHandler(value = BoardTimeInvalidException.class)
+	public ResponseEntity<?> handleBoardTimeInvalidException() {
+		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.BAD_REQUEST, ResponseType.BOARD_TIME_INVALID);
 		return ResponseEntity.ok().body(responseBody);
 	}
 }

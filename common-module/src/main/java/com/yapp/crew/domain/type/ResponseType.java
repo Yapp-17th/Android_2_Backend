@@ -42,7 +42,8 @@ public enum ResponseType {
 	SIGNUP_SUCCESS("회원가입을 축하드립니다!\n운동플래닛과 건강한 운동생활을\n시작해보세요!"),
 	EVALUATE_SUCCESS("평가가 정상적으로 저장 되었습니다."),
 	USERINFO_UPDATE_SUCCESS("회원 정보를 정상적으로 업데이트 했습니다."),
-	SIGN_UP_DUPLICATE("회원 정보가 중복 됩니다.");;
+	SIGN_UP_DUPLICATE("회원 정보가 중복 됩니다."),
+	BOARD_TIME_INVALID("모임 시간이 올바르지 않습니다.");
 
 	private final String message;
 

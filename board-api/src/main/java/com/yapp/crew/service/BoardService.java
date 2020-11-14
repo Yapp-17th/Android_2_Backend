@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.yapp.crew.domain.condition.BoardFilterCondition;
 import com.yapp.crew.domain.errors.AddressNotFoundException;
 import com.yapp.crew.domain.errors.BoardNotFoundException;
+import com.yapp.crew.domain.errors.BoardTimeInvalidException;
 import com.yapp.crew.domain.errors.CategoryNotFoundException;
 import com.yapp.crew.domain.errors.InvalidRequestBodyException;
 import com.yapp.crew.domain.errors.TagNotFoundException;
@@ -30,6 +31,7 @@ import com.yapp.crew.model.BoardListResponseInfo;
 import com.yapp.crew.model.BoardPostRequiredInfo;
 import com.yapp.crew.network.model.SimpleResponse;
 import com.yapp.crew.producer.BoardProducer;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -143,7 +145,7 @@ public class BoardService {
 	}
 
 	@Transactional
-	public BoardContentResponseInfo editBoardContent(Long boardId, Long userId, BoardPostRequiredInfo boardPostRequiredInfo) {
+	public BoardContentResponseInfo editBoardContent(Long boardId, BoardPostRequiredInfo boardPostRequiredInfo) {
 		Board board = findBoardById(boardId)
 				.orElseThrow(() -> new BoardNotFoundException("board not found"));
 
@@ -179,6 +181,10 @@ public class BoardService {
 	}
 
 	private void saveBoard(Board board) {
+		if (board.getStartsAt().isBefore(LocalDateTime.now())) {
+			throw new BoardTimeInvalidException("board time invalid");
+		}
+
 		boardRepository.save(board);
 	}
 
@@ -207,6 +213,8 @@ public class BoardService {
 		return tagRepository.findTagById(tagId);
 	}
 
-	private List<Board> filterBoard(BoardFilterCondition boardFilterCondition) { return boardSearchAndFilterRepository.filter(boardFilterCondition); }
+	private List<Board> filterBoard(BoardFilterCondition boardFilterCondition) {
+		return boardSearchAndFilterRepository.filter(boardFilterCondition);
+	}
 
 }
