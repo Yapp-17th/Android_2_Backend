@@ -23,6 +23,7 @@ import com.yapp.crew.network.model.SimpleResponse;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.security.SignatureException;
+import java.sql.SQLException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -43,6 +44,12 @@ public class CommonExceptionHandler {
 
 	@ExceptionHandler(value = InternalServerError.class)
 	public ResponseEntity<?> handleInternalServerErrorException() {
+		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.INTERNAL_SERVER_ERROR, ResponseType.INTERNAL_SERVER_FAIL);
+		return ResponseEntity.ok().body(responseBody);
+	}
+
+	@ExceptionHandler(value = SQLException.class)
+	public ResponseEntity<?> handleSQLException() {
 		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.INTERNAL_SERVER_ERROR, ResponseType.INTERNAL_SERVER_FAIL);
 		return ResponseEntity.ok().body(responseBody);
 	}

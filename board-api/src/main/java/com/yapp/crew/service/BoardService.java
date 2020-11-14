@@ -78,7 +78,7 @@ public class BoardService {
 		BoardBuilder boardBuilder = Board.getBuilder();
 
 		User user = findUserById(userId)
-				.orElseThrow(() -> new UserNotFoundException(ResponseType.USER_NOT_FOUND.getMessage()));
+				.orElseThrow(() -> new UserNotFoundException("user not found"));
 
 		Category category = findCategoryById(boardPostRequiredInfo.getCategory())
 				.orElseThrow(() -> new CategoryNotFoundException("category not found"));
