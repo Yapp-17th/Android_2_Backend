@@ -1,6 +1,5 @@
 package com.yapp.crew.controller;
 
-import com.yapp.crew.domain.auth.Auth;
 import com.yapp.crew.dto.response.BoardListSuccessResponseDto;
 import com.yapp.crew.model.BoardListResponseInfo;
 import com.yapp.crew.model.BoardSearch;
@@ -11,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.support.PagedListHolder;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -26,17 +24,18 @@ import org.springframework.web.bind.annotation.RestController;
 public class SearchController {
 
 	private SearchService searchService;
-	private Auth auth;
 
 	@Autowired
-	public SearchController(SearchService searchService, Auth auth) {
+	public SearchController(SearchService searchService) {
 		this.searchService = searchService;
-		this.auth = auth;
 	}
 
 	@GetMapping(path = "/v1/board/search", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> getBoardList(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token, @PageableDefault(size = 20, page = 0) Pageable pageable, @RequestParam List<String> keyword) {
-		Long userId = auth.parseUserIdFromToken(token);
+	public ResponseEntity<?> getBoardList(
+			@RequestHeader(value = "userId") Long userId,
+			@PageableDefault(size = 20, page = 0) Pageable pageable,
+			@RequestParam List<String> keyword
+	) {
 		List<BoardListResponseInfo> boardListResponseInfoList = searchService.searchBoardList(BoardSearch.build(keyword, userId));
 
 		PagedListHolder<BoardListResponseInfo> page = new PagedListHolder<>(boardListResponseInfoList);
