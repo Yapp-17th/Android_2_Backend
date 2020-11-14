@@ -6,6 +6,7 @@ import com.netflix.zuul.exception.ZuulException;
 import com.yapp.crew.domain.auth.Auth;
 import com.yapp.crew.domain.errors.InactiveUserException;
 import com.yapp.crew.domain.errors.SuspendedUserException;
+import com.yapp.crew.domain.errors.TokenRequiredException;
 import com.yapp.crew.domain.errors.UserNotFoundException;
 import com.yapp.crew.domain.model.User;
 import com.yapp.crew.domain.repository.UserRepository;
@@ -48,6 +49,11 @@ public class AuthenticationFilter extends ZuulFilter {
 		HttpServletRequest request = ctx.getRequest();
 
 		String token = request.getHeader(HttpHeaders.AUTHORIZATION);
+
+		if (token == null) {
+			throw new TokenRequiredException("[Zuul Proxy Exception] token is required");
+		}
+
 		auth.verifyToken(token);
 
 		Long userId = auth.parseUserIdFromToken(token);
@@ -56,6 +62,7 @@ public class AuthenticationFilter extends ZuulFilter {
 
 		checkUserStatus(user.getStatus());
 
+		ctx.addZuulRequestHeader("userId", userId.toString());
 		return null;
 	}
 
