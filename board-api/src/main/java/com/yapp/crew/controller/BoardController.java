@@ -55,13 +55,9 @@ public class BoardController {
 			@RequestParam(required = false) List<Long> address
 	) {
 		long userId = auth.parseUserIdFromToken(token);
-		List<BoardListResponseInfo> boardListResponseInfoList = boardService.getBoardList(BoardFilterCondition.build(sorting, category, address, userId));
+		PagedListHolder<BoardListResponseInfo> boardListResponseInfoPagedListHolder = boardService.getBoardList(BoardFilterCondition.build(sorting, category, address, userId), pageable);
 
-		PagedListHolder<BoardListResponseInfo> page = new PagedListHolder<>(boardListResponseInfoList);
-		page.setPageSize(pageable.getPageSize());
-		page.setPage(pageable.getPageNumber());
-
-		BoardListSuccessResponseDto boardListSuccessResponseDto = BoardListSuccessResponseDto.build(page.getPageList());
+		BoardListSuccessResponseDto boardListSuccessResponseDto = BoardListSuccessResponseDto.build(boardListResponseInfoPagedListHolder.getPageList());
 		return ResponseEntity.ok().body(boardListSuccessResponseDto);
 	}
 

@@ -37,13 +37,9 @@ public class SearchController {
 	@GetMapping(path = "/v1/board/search", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> getBoardList(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token, @PageableDefault(size = 20, page = 0) Pageable pageable, @RequestParam List<String> keyword) {
 		Long userId = auth.parseUserIdFromToken(token);
-		List<BoardListResponseInfo> boardListResponseInfoList = searchService.searchBoardList(BoardSearchCondition.build(keyword, userId));
+		PagedListHolder<BoardListResponseInfo> boardListResponseInfoPagedListHolder = searchService.searchBoardList(BoardSearchCondition.build(keyword, userId), pageable);
 
-		PagedListHolder<BoardListResponseInfo> page = new PagedListHolder<>(boardListResponseInfoList);
-		page.setPageSize(pageable.getPageSize());
-		page.setPage(pageable.getPageNumber());
-
-		BoardListSuccessResponseDto boardListSuccessResponseDto = BoardListSuccessResponseDto.build(page.getPageList());
+		BoardListSuccessResponseDto boardListSuccessResponseDto = BoardListSuccessResponseDto.build(boardListResponseInfoPagedListHolder.getPageList());
 		return ResponseEntity.ok().body(boardListSuccessResponseDto);
 	}
 }

@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.support.PagedListHolder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class SearchService {
 
-	private BoardSearchAndFilterRepository boardSearchAndFilterRepository;
+	private final BoardSearchAndFilterRepository boardSearchAndFilterRepository;
 
 	@Autowired
 	public SearchService(BoardSearchAndFilterRepository boardSearchAndFilterRepository) {
@@ -23,16 +26,16 @@ public class SearchService {
 	}
 
 	@Transactional
-	public List<BoardListResponseInfo> searchBoardList(BoardSearchCondition boardSearchCondition) {
-		// TODO: repository에서 DTO로 바로 리턴 하도록
-		return searchBoard(boardSearchCondition)
-				.stream()
-				.map(board -> BoardListResponseInfo.build(board, board.getUser()))
-				.collect(Collectors.toList());
+	public PagedListHolder<BoardListResponseInfo> searchBoardList(BoardSearchCondition boardSearchCondition, Pageable pageable) {
+		return new PagedListHolder<>(
+				searchBoard(boardSearchCondition, pageable)
+						.stream()
+						.map(board -> BoardListResponseInfo.build(board, board.getUser()))
+						.collect(Collectors.toList()));
 	}
 
-	private List<Board> searchBoard(BoardSearchCondition boardSearchCondition) {
-		return boardSearchAndFilterRepository.search(boardSearchCondition);
+	private Page<Board> searchBoard(BoardSearchCondition boardSearchCondition, Pageable pageable) {
+		return boardSearchAndFilterRepository.search(boardSearchCondition, pageable);
 	}
 
 }
