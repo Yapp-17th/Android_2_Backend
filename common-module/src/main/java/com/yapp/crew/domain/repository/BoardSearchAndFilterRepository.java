@@ -3,7 +3,6 @@ package com.yapp.crew.domain.repository;
 import static com.yapp.crew.domain.model.QBoard.board;
 
 import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.yapp.crew.domain.condition.BoardFilterCondition;
@@ -12,8 +11,6 @@ import com.yapp.crew.domain.model.Board;
 import com.yapp.crew.domain.type.SortingType;
 import java.util.List;
 import javax.persistence.EntityManager;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
@@ -26,20 +23,16 @@ public class BoardSearchAndFilterRepository {
 		this.jpaQueryFactory = new JPAQueryFactory(entityManager);
 	}
 
-	public Page<Board> search(BoardSearchCondition boardSearchCondition, Pageable pageable) {
-		QueryResults<Board> boardQueryResults = jpaQueryFactory
+	public List<Board> search(BoardSearchCondition boardSearchCondition, Pageable pageable) {
+		return jpaQueryFactory
 				.selectFrom(board)
 				.where(
 						isSearchedKeywords(boardSearchCondition.getKeywords())
 				).orderBy(board.createdAt.desc())
-				.offset(pageable.getOffset())
-				.limit(pageable.getPageSize())
-				.fetchResults();
-
-		return new PageImpl<>(boardQueryResults.getResults(), pageable, boardQueryResults.getTotal());
+				.fetch();
 	}
 
-	public Page<Board> filter(BoardFilterCondition boardFilterCondition, Pageable pageable) {
+	public List<Board> filter(BoardFilterCondition boardFilterCondition, Pageable pageable) {
 		BooleanBuilder booleanBuilder = new BooleanBuilder();
 		if (boardFilterCondition.getCategory() != null) {
 			booleanBuilder.or(isFilteredCategories(boardFilterCondition.getCategory()));
@@ -48,15 +41,11 @@ public class BoardSearchAndFilterRepository {
 			booleanBuilder.or(isFilteredCities(boardFilterCondition.getCity()));
 		}
 
-		QueryResults<Board> boardQueryResults = jpaQueryFactory
+		return jpaQueryFactory
 				.selectFrom(board)
-			  .where(booleanBuilder)
+				.where(booleanBuilder)
 				.orderBy(orderType(boardFilterCondition.getSorting()))
-				.offset(pageable.getOffset())
-				.limit(pageable.getPageSize())
-				.fetchResults();
-
-		return new PageImpl<>(boardQueryResults.getResults(), pageable, boardQueryResults.getTotal());
+				.fetch();
 	}
 
 	private OrderSpecifier<?> orderType(SortingType sortingType) {

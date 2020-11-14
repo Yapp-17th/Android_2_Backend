@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.support.PagedListHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -26,15 +25,17 @@ public class SearchService {
 	}
 
 	@Transactional
-	public PagedListHolder<BoardListResponseInfo> searchBoardList(BoardSearchCondition boardSearchCondition, Pageable pageable) {
-		return new PagedListHolder<>(
-				searchBoard(boardSearchCondition, pageable)
-						.stream()
-						.map(board -> BoardListResponseInfo.build(board, board.getUser()))
-						.collect(Collectors.toList()));
+	public List<BoardListResponseInfo> searchBoardList(BoardSearchCondition boardSearchCondition, Pageable pageable) {
+		return searchBoard(boardSearchCondition, pageable)
+				.stream()
+				.filter(board -> board.getHiddenBoardUser().stream()
+						.map(hiddenBoard -> !hiddenBoard.getUser().getId().equals(boardSearchCondition.getUserId()))
+						.count() == 0)
+				.map(board -> BoardListResponseInfo.build(board, board.getUser()))
+				.collect(Collectors.toList());
 	}
 
-	private Page<Board> searchBoard(BoardSearchCondition boardSearchCondition, Pageable pageable) {
+	private List<Board> searchBoard(BoardSearchCondition boardSearchCondition, Pageable pageable) {
 		return boardSearchAndFilterRepository.search(boardSearchCondition, pageable);
 	}
 

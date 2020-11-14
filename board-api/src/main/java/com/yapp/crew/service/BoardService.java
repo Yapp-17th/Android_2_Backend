@@ -36,7 +36,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.support.PagedListHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -111,12 +110,14 @@ public class BoardService {
 	}
 
 	@Transactional
-	public PagedListHolder<BoardListResponseInfo> getBoardList(BoardFilterCondition boardFilterCondition, Pageable pageable) {
-		return new PagedListHolder<>(
-				filterBoard(boardFilterCondition, pageable)
-						.stream()
-						.map(board -> BoardListResponseInfo.build(board, board.getUser()))
-						.collect(Collectors.toList()));
+	public List<BoardListResponseInfo> getBoardList(BoardFilterCondition boardFilterCondition, Pageable pageable) {
+		return filterBoard(boardFilterCondition, pageable)
+				.stream()
+				.filter(board -> board.getHiddenBoardUser().stream()
+						.map(hiddenBoard -> !hiddenBoard.getUser().getId().equals(boardFilterCondition.getUserId()))
+						.count() == 0)
+				.map(board -> BoardListResponseInfo.build(board, board.getUser()))
+				.collect(Collectors.toList());
 	}
 
 	@Transactional
@@ -214,7 +215,7 @@ public class BoardService {
 		return tagRepository.findTagById(tagId);
 	}
 
-	private Page<Board> filterBoard(BoardFilterCondition boardFilterCondition, Pageable pageable) {
+	private List<Board> filterBoard(BoardFilterCondition boardFilterCondition, Pageable pageable) {
 		return boardSearchAndFilterRepository.filter(boardFilterCondition, pageable);
 	}
 }
