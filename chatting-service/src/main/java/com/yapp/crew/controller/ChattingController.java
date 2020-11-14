@@ -108,14 +108,14 @@ public class ChattingController {
 
 	@PostMapping(path = "/v1/chat/room")
 	public ResponseEntity<?> createChatRoom(
-			@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token,
+			@RequestHeader(value = "userId") Long userId,
 			@Valid @RequestBody ChatRoomRequestPayload chatRoomRequestPayload
 	) throws JsonProcessingException {
 
-		auth.verifyToken(token);
-		Long guestId = auth.parseUserIdFromToken(token);
+//		auth.verifyToken(token);
+//		Long guestId = auth.parseUserIdFromToken(token);
 
-		chatRoomRequestPayload.setGuestId(guestId);
+		chatRoomRequestPayload.setGuestId(userId);
 
 		HttpResponseBody<ChatRoomResponsePayload> responseBody = chattingService.createChatRoom(chatRoomRequestPayload);
 		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
