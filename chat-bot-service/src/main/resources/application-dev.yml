@@ -5,6 +5,9 @@ spring:
   profiles:
     active: dev
 
+  application:
+    name: chat-bot-service
+
   kafka:
     producer:
       bootstrap-servers:

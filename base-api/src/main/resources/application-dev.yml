@@ -1,6 +1,9 @@
 spring:
   profiles:
-    active: local
+    active: dev
+
+  application:
+    name: base-api
 
   devtools:
     restart:

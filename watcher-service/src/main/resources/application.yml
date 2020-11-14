@@ -5,6 +5,9 @@ spring:
   profiles:
     active: local
 
+  application:
+    name: watcher-service
+
   devtools:
     restart:
       enabled: true

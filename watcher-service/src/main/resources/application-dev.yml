@@ -5,6 +5,9 @@ spring:
   profiles:
     active: dev
 
+  application:
+    name: watcher-service
+
   kafka:
     producer:
       bootstrap-servers:

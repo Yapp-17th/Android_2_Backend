@@ -2,6 +2,9 @@ spring:
   profiles:
     active: dev
 
+  application:
+    name: mypage-api
+
   datasource:
     url: jdbc:mysql://localhost:3306/explanet_dev?useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC&createDatabaseIfNotExist=true
     username: root
