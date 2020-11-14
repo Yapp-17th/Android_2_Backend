@@ -9,35 +9,29 @@ zuul:
   host:
     connect-timeout-millis: 600000
     socket-timeout-millis: 600000
+  sensitiveHeaders: Cookie,Set-Cookie,Authorization
   routes:
     chatting-service:
       path: /api/chatting-service/**
       url: http://localhost:8080
-      stripPrefix: false
     chat-bot-service:
       path: /api/chat-bot-service/**
       url: http://localhost:8081
-      stripPrefix: false
     base-api:
       path: /api/base-api/**
       url: http://localhost:8082
-      stripPrefix: false
     board-api:
       path: /api/board-api/**
       url: http://localhost:8083
-      stripPrefix: false
     login-api:
       path: /api/login-api/**
       url: http://localhost:8084
-      stripPrefix: false
     mypage-api:
       path: /api/mypage-api/**
       url: http://localhost:8085
-      stripPrefix: false
     watcher-service:
       path: /api/watcher-service/**
       url: http://localhost:8086
-      stripPrefix: false
 
 spring:
   profiles:
