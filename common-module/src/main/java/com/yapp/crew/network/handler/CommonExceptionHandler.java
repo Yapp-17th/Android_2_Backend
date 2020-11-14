@@ -29,6 +29,7 @@ import io.jsonwebtoken.security.SignatureException;
 import java.sql.SQLException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -113,6 +114,12 @@ public class CommonExceptionHandler {
 
 	@ExceptionHandler(value = MethodArgumentNotValidException.class)
 	public ResponseEntity<?> handleMethodArgumentNotValidException() {
+		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.BAD_REQUEST, ResponseType.INVALID_METHOD);
+		return ResponseEntity.ok().body(responseBody);
+	}
+
+	@ExceptionHandler(value = HttpRequestMethodNotSupportedException.class)
+	public ResponseEntity<?> handleHttpRequestMethodNotSupportedException() {
 		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.BAD_REQUEST, ResponseType.INVALID_METHOD);
 		return ResponseEntity.ok().body(responseBody);
 	}

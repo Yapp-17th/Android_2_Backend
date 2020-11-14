@@ -83,20 +83,14 @@ public class MyProfileService {
 				.orElseThrow(() -> new UserNotFoundException("user not found"));
 
 		if (StringUtils.equalsIgnoreCase(type, "continue")) {
-			List<Board> boards = findAllBoards(user).stream()
+			return findAllBoards(user).stream()
 					.filter(board -> board.getStatus() == BoardStatus.RECRUITING || board.getStatus() == BoardStatus.COMPLETE)
-					.collect(Collectors.toList());
-
-			return boards.stream()
 					.map(board -> HistoryListInfo.build(board, user))
 					.collect(Collectors.toList());
 		}
 
-		List<Board> boards = findAllBoards(user).stream()
+		return findAllBoards(user).stream()
 				.filter(board -> board.getStatus() == BoardStatus.CANCELED || board.getStatus() == BoardStatus.FINISHED)
-				.collect(Collectors.toList());
-
-		return boards.stream()
 				.map(board -> HistoryListInfo.build(board, user))
 				.collect(Collectors.toList());
 	}
