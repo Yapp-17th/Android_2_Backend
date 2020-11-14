@@ -9,6 +9,7 @@ import com.yapp.crew.domain.model.User;
 import com.yapp.crew.domain.repository.BoardRepository;
 import com.yapp.crew.domain.repository.ChatRoomRepository;
 import com.yapp.crew.domain.repository.UserRepository;
+import com.yapp.crew.domain.status.UserStatus;
 import com.yapp.crew.model.ApplyListInfo;
 import java.util.List;
 import java.util.Optional;
@@ -37,6 +38,7 @@ public class ApplyListService {
 				.orElseThrow(() -> new BoardNotFoundException("board not found"));
 
 		return board.getAppliedUsers().stream()
+				.filter(appliedUser -> appliedUser.getUser().getStatus() == UserStatus.ACTIVE)
 				.map(appliedUser -> ApplyListInfo.build(hostId, appliedUser.getUser(), board, findChatRoomByBoardIdAndGuestId(appliedUser.getUser().getId(), boardId).orElseThrow(() -> new ChatRoomNotFoundException("chatroom not found")).getId()))
 				.collect(Collectors.toList());
 	}
