@@ -110,11 +110,7 @@ public class BoardService {
 	@Transactional
 	public List<BoardListResponseInfo> getBoardList(BoardFilterCondition boardFilterCondition) {
 		// TODO: repository에서 DTO로 바로 리턴 하도록
-		// TODO: user check 꼭 여기서 해야하는지
-		User user = findUserById(boardFilterCondition.getUserId())
-				.orElseThrow(() -> new UserNotFoundException("user not found"));
-
-		return filterBoard(boardFilterCondition)
+		return filterBoard(boardFilterCondition, boardFilterCondition.getUserId())
 				.stream()
 				.map(board -> BoardListResponseInfo.build(board, board.getUser()))
 				.collect(Collectors.toList());
@@ -215,8 +211,7 @@ public class BoardService {
 		return tagRepository.findTagById(tagId);
 	}
 
-	private List<Board> filterBoard(BoardFilterCondition boardFilterCondition) {
+	private List<Board> filterBoard(BoardFilterCondition boardFilterCondition, Long userId) {
 		return boardSearchAndFilterRepository.filter(boardFilterCondition);
 	}
-
 }

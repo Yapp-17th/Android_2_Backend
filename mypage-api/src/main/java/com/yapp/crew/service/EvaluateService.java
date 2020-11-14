@@ -57,8 +57,9 @@ public class EvaluateService {
 		}
 
 		return board.getEvaluations().stream()
-				.filter(evaluation -> Objects.requireNonNull(findUserById(evaluation.getEvaluatedId()).orElse(null)).getStatus() == UserStatus.ACTIVE)
 				.filter(evaluation -> evaluation.getEvaluateId() == evaluateId)
+				.filter(evaluation -> findUserById(evaluation.getEvaluatedId()).isPresent())
+				.filter(evaluation -> findUserById(evaluation.getEvaluatedId()).get().getStatus() == UserStatus.ACTIVE)
 				.map(evaluation -> EvaluateListInfo.build(evaluation, findUserById(evaluation.getEvaluatedId()).get(), board))
 				.collect(Collectors.toList());
 	}
@@ -68,7 +69,10 @@ public class EvaluateService {
 		Board board = findBoardById(boardId)
 				.orElseThrow(() -> new BoardNotFoundException("board not found"));
 
-		Optional<Evaluation> existingEvaluate = board.getEvaluations().stream().filter(evaluation -> evaluation.getEvaluateId() == evaluateId && evaluation.getEvaluatedId() == evaluatedId).findFirst();
+		Optional<Evaluation> existingEvaluate = board.getEvaluations().stream()
+				.filter(evaluation -> evaluation.getEvaluateId().equals(evaluateId) && evaluation.getEvaluatedId().equals(evaluatedId))
+				.findFirst();
+
 		if (existingEvaluate.isPresent()) {
 			updateEvaluation(existingEvaluate.get(), isLike);
 		} else {
