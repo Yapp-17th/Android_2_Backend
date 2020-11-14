@@ -1,6 +1,7 @@
 package com.yapp.crew.service;
 
 import com.yapp.crew.domain.errors.BoardNotFoundException;
+import com.yapp.crew.domain.errors.EvaluateImpossibleException;
 import com.yapp.crew.domain.errors.UserNotFoundException;
 import com.yapp.crew.domain.model.Board;
 import com.yapp.crew.domain.model.Evaluation;
@@ -12,12 +13,15 @@ import com.yapp.crew.domain.repository.BoardRepository;
 import com.yapp.crew.domain.repository.EvaluationRepository;
 import com.yapp.crew.domain.repository.ReportRepository;
 import com.yapp.crew.domain.repository.UserRepository;
+import com.yapp.crew.domain.status.BoardStatus;
+import com.yapp.crew.domain.status.UserStatus;
 import com.yapp.crew.domain.type.ReportType;
 import com.yapp.crew.domain.type.ResponseType;
 import com.yapp.crew.model.EvaluateListInfo;
 import com.yapp.crew.model.UserReportRequest;
 import com.yapp.crew.network.model.SimpleResponse;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -48,10 +52,14 @@ public class EvaluateService {
 		Board board = findBoardById(boardId)
 				.orElseThrow(() -> new BoardNotFoundException("board not found"));
 
-		Set<Evaluation> evaluations = board.getEvaluations().stream().filter(evaluation -> evaluation.getEvaluateId() == evaluateId).collect(Collectors.toSet());
+		if (board.getStatus() == BoardStatus.RECRUITING || board.getStatus() == BoardStatus.COMPLETE) {
+			throw new EvaluateImpossibleException("cannot evaluate yet");
+		}
 
-		return evaluations.stream()
-				.map(evaluation -> EvaluateListInfo.build(evaluation, findUserById(evaluation.getEvaluatedId()).orElseThrow(() -> new UserNotFoundException("user not found")), board))
+		return board.getEvaluations().stream()
+				.filter(evaluation -> Objects.requireNonNull(findUserById(evaluation.getEvaluatedId()).orElse(null)).getStatus() == UserStatus.ACTIVE)
+				.filter(evaluation -> evaluation.getEvaluateId() == evaluateId)
+				.map(evaluation -> EvaluateListInfo.build(evaluation, findUserById(evaluation.getEvaluatedId()).get(), board))
 				.collect(Collectors.toList());
 	}
 

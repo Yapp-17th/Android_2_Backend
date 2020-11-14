@@ -7,6 +7,7 @@ import com.yapp.crew.domain.errors.BoardNotFoundException;
 import com.yapp.crew.domain.errors.BoardTimeInvalidException;
 import com.yapp.crew.domain.errors.CategoryNotFoundException;
 import com.yapp.crew.domain.errors.ChatRoomNotFoundException;
+import com.yapp.crew.domain.errors.EvaluateImpossibleException;
 import com.yapp.crew.domain.errors.GuestApplyNotFoundException;
 import com.yapp.crew.domain.errors.InactiveUserException;
 import com.yapp.crew.domain.errors.InternalServerErrorException;
@@ -217,6 +218,12 @@ public class CommonExceptionHandler {
 	@ExceptionHandler(value = UnAuthorizedEventException.class)
 	public ResponseEntity<?> handleUnAuthorizedEventException() {
 		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.UNAUTHORIZED, ResponseType.UNAUTORIZED_FAIL);
+		return ResponseEntity.ok().body(responseBody);
+	}
+
+	@ExceptionHandler(value = EvaluateImpossibleException.class)
+	public ResponseEntity<?> handleEvaluateImpossibleException() {
+		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.UNAUTHORIZED, ResponseType.EVALUATE_IMPOSSIBLE);
 		return ResponseEntity.ok().body(responseBody);
 	}
 }
