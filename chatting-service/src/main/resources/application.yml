@@ -47,7 +47,7 @@ spring:
         format_sql: true
     database-platform: org.hibernate.dialect.MySQL5Dialect
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
 
   logging:
     level:

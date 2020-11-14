@@ -181,7 +181,7 @@ public class CommonExceptionHandler {
 
 	@ExceptionHandler(value = UserDuplicateFieldException.class)
 	public ResponseEntity<?> handleUserDuplicateFieldException(Exception ex) {
-		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.UNAUTHORIZED, ex.getMessage());
+		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.BAD_REQUEST, ResponseType.SIGN_UP_DUPLICATE, ex.getMessage());
 		return ResponseEntity.ok().body(responseBody);
 	}
 }
