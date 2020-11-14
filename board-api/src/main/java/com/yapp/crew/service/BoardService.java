@@ -6,7 +6,6 @@ import com.yapp.crew.domain.errors.AddressNotFoundException;
 import com.yapp.crew.domain.errors.BoardNotFoundException;
 import com.yapp.crew.domain.errors.BoardTimeInvalidException;
 import com.yapp.crew.domain.errors.CategoryNotFoundException;
-import com.yapp.crew.domain.errors.InvalidRequestBodyException;
 import com.yapp.crew.domain.errors.TagNotFoundException;
 import com.yapp.crew.domain.errors.UserNotFoundException;
 import com.yapp.crew.domain.model.Address;
@@ -132,12 +131,9 @@ public class BoardService {
 
 	@Transactional
 	public SimpleResponse deleteBoard(Long boardId, Long userId) throws JsonProcessingException {
-		Board board = findBoardById(boardId)
+		Board board = findMyBoardById(boardId, userId)
 				.orElseThrow(() -> new BoardNotFoundException("board not found"));
 
-		if (!board.getUser().getId().equals(userId)) {
-			throw new InvalidRequestBodyException("invalid user_id");
-		}
 		deleteBoard(board);
 		boardProducer.produceBoardCanceledEvent(BoardCancel.build(boardId, userId));
 
@@ -145,8 +141,8 @@ public class BoardService {
 	}
 
 	@Transactional
-	public BoardContentResponseInfo editBoardContent(Long boardId, BoardPostRequiredInfo boardPostRequiredInfo) {
-		Board board = findBoardById(boardId)
+	public BoardContentResponseInfo editBoardContent(Long boardId, long userId, BoardPostRequiredInfo boardPostRequiredInfo) {
+		Board board = findMyBoardById(boardId, userId)
 				.orElseThrow(() -> new BoardNotFoundException("board not found"));
 
 		Category category = findCategoryById(boardPostRequiredInfo.getCategory())
@@ -195,6 +191,12 @@ public class BoardService {
 	private Optional<Board> findBoardById(Long boardId) {
 		return boardRepository.findBoardById(boardId)
 				.filter(board -> board.getStatus().getCode() != BoardStatus.CANCELED.getCode());
+	}
+
+	private Optional<Board> findMyBoardById(Long boardId, Long userId) {
+		return boardRepository.findBoardById(boardId)
+				.filter(board -> board.getStatus().getCode() != BoardStatus.CANCELED.getCode())
+				.filter(board -> board.getUser().getId().equals(userId));
 	}
 
 	private Optional<User> findUserById(Long userId) {

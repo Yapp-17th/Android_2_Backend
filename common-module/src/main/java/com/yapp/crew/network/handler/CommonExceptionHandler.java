@@ -14,6 +14,7 @@ import com.yapp.crew.domain.errors.MessageNotFoundException;
 import com.yapp.crew.domain.errors.SuspendedUserException;
 import com.yapp.crew.domain.errors.TagNotFoundException;
 import com.yapp.crew.domain.errors.TokenRequiredException;
+import com.yapp.crew.domain.errors.UnAuthorizedEventException;
 import com.yapp.crew.domain.errors.UserDuplicateFieldException;
 import com.yapp.crew.domain.errors.UserNotFoundException;
 import com.yapp.crew.domain.errors.WrongGuestException;
@@ -196,6 +197,12 @@ public class CommonExceptionHandler {
 	@ExceptionHandler(value = BoardTimeInvalidException.class)
 	public ResponseEntity<?> handleBoardTimeInvalidException() {
 		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.BAD_REQUEST, ResponseType.BOARD_TIME_INVALID);
+		return ResponseEntity.ok().body(responseBody);
+	}
+
+	@ExceptionHandler(value = UnAuthorizedEventException.class)
+	public ResponseEntity<?> handleUnAuthorizedEventException() {
+		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.UNAUTHORIZED, ResponseType.UNAUTORIZED_FAIL);
 		return ResponseEntity.ok().body(responseBody);
 	}
 }

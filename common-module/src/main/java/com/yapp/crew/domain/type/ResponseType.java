@@ -43,7 +43,8 @@ public enum ResponseType {
 	EVALUATE_SUCCESS("평가가 정상적으로 저장 되었습니다."),
 	USERINFO_UPDATE_SUCCESS("회원 정보를 정상적으로 업데이트 했습니다."),
 	SIGN_UP_DUPLICATE("회원 정보가 중복 됩니다."),
-	BOARD_TIME_INVALID("모임 시간이 올바르지 않습니다.");
+	BOARD_TIME_INVALID("모임 시간이 올바르지 않습니다."),
+	UNAUTORIZED_FAIL("요청이 올바르지 않습니다.");
 
 	private final String message;
 
