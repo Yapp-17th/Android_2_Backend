@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 public class BoardFilterCondition {
 
 	private long userId;
-	private SortingType sorting;
+	private SortingType sorting = SortingType.LATEST;
 	List<Long> category;
 	List<Long> city;
 

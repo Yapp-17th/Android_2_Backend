@@ -36,7 +36,7 @@ public class ReportService {
 
 	@Transactional
 	public SimpleResponse postBoardReport(BoardReport boardReport) {
-		User user = findUserById(boardReport.getReporter())
+		User reporter = findUserById(boardReport.getReporter())
 				.orElseThrow(() -> new UserNotFoundException("user not found"));
 		Board board = findBoardById(boardReport.getBoardId())
 				.orElseThrow(() -> new BoardNotFoundException("board not found"));
@@ -44,11 +44,11 @@ public class ReportService {
 		ReportBuilder reportBuilder = Report.getBuilder();
 		Report report = reportBuilder
 				.withContent(boardReport.getContent())
-				.withReporter(user)
+				.withReporter(reporter)
 				.withReported(board.getUser())
 				.withType(boardReport.getReportType())
 				.build();
-		user.addReport(report);
+		reporter.addReport(report);
 		board.getUser().addReported(report);
 		saveReport(report);
 		return SimpleResponse.pass(ResponseType.REPORT_SUCCESS);
