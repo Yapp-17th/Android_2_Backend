@@ -2,6 +2,8 @@ package com.yapp.crew.service;
 
 import com.yapp.crew.domain.errors.AddressNotFoundException;
 import com.yapp.crew.domain.errors.CategoryNotFoundException;
+import com.yapp.crew.domain.errors.InternalServerErrorException;
+import com.yapp.crew.domain.errors.UserDuplicateFieldException;
 import com.yapp.crew.domain.errors.UserNotFoundException;
 import com.yapp.crew.domain.model.Address;
 import com.yapp.crew.domain.model.Board;
@@ -20,6 +22,7 @@ import com.yapp.crew.domain.repository.UserRepository;
 import com.yapp.crew.domain.status.AppliedStatus;
 import com.yapp.crew.domain.status.BoardStatus;
 import com.yapp.crew.domain.type.ResponseType;
+import com.yapp.crew.domain.type.UniqueIndexEnum;
 import com.yapp.crew.model.HistoryListInfo;
 import com.yapp.crew.model.UserProfileInfo;
 import com.yapp.crew.model.UserUpdateRequest;
@@ -29,6 +32,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -78,20 +82,14 @@ public class MyProfileService {
 				.orElseThrow(() -> new UserNotFoundException("user not found"));
 
 		if (StringUtils.equalsIgnoreCase(type, "continue")) {
-			List<Board> boards = findAllBoards(user).stream()
+			return findAllBoards(user).stream()
 					.filter(board -> board.getStatus() == BoardStatus.RECRUITING || board.getStatus() == BoardStatus.COMPLETE)
-					.collect(Collectors.toList());
-
-			return boards.stream()
 					.map(board -> HistoryListInfo.build(board, user))
 					.collect(Collectors.toList());
 		}
 
-		List<Board> boards = findAllBoards(user).stream()
+		return findAllBoards(user).stream()
 				.filter(board -> board.getStatus() == BoardStatus.CANCELED || board.getStatus() == BoardStatus.FINISHED)
-				.collect(Collectors.toList());
-
-		return boards.stream()
 				.map(board -> HistoryListInfo.build(board, user))
 				.collect(Collectors.toList());
 	}
@@ -132,7 +130,20 @@ public class MyProfileService {
 				.withAddress(address)
 				.build();
 
-		userRepository.save(updatedUser);
+		try {
+			userRepository.save(updatedUser);
+		} catch (Exception e) {
+			if (e.getCause() instanceof ConstraintViolationException) {
+				log.info("Request server error: " + e.getLocalizedMessage());
+				for (UniqueIndexEnum uniqueIndexEnum : UniqueIndexEnum.values()) {
+					if (StringUtils.containsIgnoreCase(e.getLocalizedMessage(), uniqueIndexEnum.toString())) {
+						throw new UserDuplicateFieldException(uniqueIndexEnum.getName());
+					}
+				}
+			}
+			throw new InternalServerErrorException("internal server error");
+		}
+
 		removeAllUserExercise(updatedUser);
 		for (long categoryId : userUpdateRequest.getCategory()) {
 			Category userCategory = findCategoryById(categoryId)
