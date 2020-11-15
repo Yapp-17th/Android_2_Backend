@@ -86,7 +86,7 @@ public class EvaluateService {
 				.build();
 
 		saveReport(report);
-
+		updateUserStatus(reported);
 		return SimpleResponse.pass(ResponseType.REPORT_SUCCESS);
 	}
 
@@ -127,5 +127,12 @@ public class EvaluateService {
 
 	private void saveEvaluation(Evaluation evaluation) {
 		evaluationRepository.save(evaluation);
+	}
+
+	private void updateUserStatus(User userReported) {
+		if (userReported.calculateReportedPoint() >= 10) {
+			userReported.setUserStatusInActive();
+		}
+		userRepository.save(userReported);
 	}
 }

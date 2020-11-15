@@ -36,7 +36,7 @@ public class ReportService {
 
 	@Transactional
 	public SimpleResponse postBoardReport(BoardReport boardReport) {
-		User user = findUserById(boardReport.getReporter())
+		User reporter = findUserById(boardReport.getReporter())
 				.orElseThrow(() -> new UserNotFoundException("user not found"));
 		Board board = findBoardById(boardReport.getBoardId())
 				.orElseThrow(() -> new BoardNotFoundException("board not found"));
@@ -44,28 +44,34 @@ public class ReportService {
 		ReportBuilder reportBuilder = Report.getBuilder();
 		Report report = reportBuilder
 				.withContent(boardReport.getContent())
-				.withReporter(user)
+				.withReporter(reporter)
 				.withReported(board.getUser())
 				.withType(boardReport.getReportType())
 				.build();
-		user.addReport(report);
+		reporter.addReport(report);
 		board.getUser().addReported(report);
 		saveReport(report);
+		updateUserStatus(board.getUser());
+
 		return SimpleResponse.pass(ResponseType.REPORT_SUCCESS);
+	}
+
+	private void updateUserStatus(User userReported) {
+		if (userReported.calculateReportedPoint() >= 10) {
+			userReported.setUserStatusInActive();
+		}
+		userRepository.save(userReported);
 	}
 
 	private void saveReport(Report report) {
 		reportRepository.save(report);
-		log.info("report 저장 완료");
 	}
 
 	private Optional<User> findUserById(Long userId) {
-		log.info("user 가져오기 성공");
 		return userRepository.findUserById(userId);
 	}
 
 	private Optional<Board> findBoardById(Long boardId) {
-		log.info("board 가져오기 성공");
 		return boardRepository.findBoardById(boardId).filter(board -> board.getStatus().getCode() != BoardStatus.CANCELED.getCode());
 	}
 }
