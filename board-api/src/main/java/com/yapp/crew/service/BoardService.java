@@ -3,6 +3,7 @@ package com.yapp.crew.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.yapp.crew.domain.errors.AddressNotFoundException;
 import com.yapp.crew.domain.errors.BoardNotFoundException;
+import com.yapp.crew.domain.errors.BoardTimeInvalidException;
 import com.yapp.crew.domain.errors.CategoryNotFoundException;
 import com.yapp.crew.domain.errors.InvalidRequestBodyException;
 import com.yapp.crew.domain.errors.TagNotFoundException;
@@ -32,6 +33,7 @@ import com.yapp.crew.model.BoardPostRequiredInfo;
 import com.yapp.crew.network.model.SimpleResponse;
 import com.yapp.crew.producer.BoardProducer;
 import com.yapp.crew.utils.SortingType;
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -199,6 +201,10 @@ public class BoardService {
 	}
 
 	private void saveBoard(Board board) {
+		if (board.getStartsAt().isBefore(LocalDateTime.now())) {
+			throw new BoardTimeInvalidException("board time invalid");
+		}
+
 		boardRepository.save(board);
 	}
 
