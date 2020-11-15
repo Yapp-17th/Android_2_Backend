@@ -37,6 +37,7 @@ public class HiddenBoardService {
 	public SimpleResponse createHiddenBoard(Long boardId, Long userId) {
 		Board board = findBoardById(boardId)
 				.orElseThrow(() -> new BoardNotFoundException("board not found"));
+
 		User user = findUserById(userId)
 				.orElseThrow(() -> new UserNotFoundException("user not found"));
 
@@ -45,6 +46,7 @@ public class HiddenBoardService {
 				.withUser(user)
 				.withBoard(board)
 				.build();
+		
 		board.addHiddenBoard(hiddenBoard);
 		user.addHiddenBoard(hiddenBoard);
 		saveHiddenBoard(hiddenBoard);

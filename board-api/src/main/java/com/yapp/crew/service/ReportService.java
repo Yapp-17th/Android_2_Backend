@@ -38,6 +38,7 @@ public class ReportService {
 	public SimpleResponse postBoardReport(BoardReport boardReport) {
 		User user = findUserById(boardReport.getReporter())
 				.orElseThrow(() -> new UserNotFoundException("user not found"));
+
 		Board board = findBoardById(boardReport.getBoardId())
 				.orElseThrow(() -> new BoardNotFoundException("board not found"));
 
@@ -48,9 +49,11 @@ public class ReportService {
 				.withReported(board.getUser())
 				.withType(boardReport.getReportType())
 				.build();
+
 		user.addReport(report);
 		board.getUser().addReported(report);
 		saveReport(report);
+
 		return SimpleResponse.pass(ResponseType.REPORT_SUCCESS);
 	}
 

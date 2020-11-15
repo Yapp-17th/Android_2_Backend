@@ -66,10 +66,13 @@ public class BoardService {
 
 		User user = findUserById(userId)
 				.orElseThrow(() -> new UserNotFoundException(ResponseType.USER_NOT_FOUND.getMessage()));
+
 		Category category = findCategoryById(boardPostRequiredInfo.getCategory())
 				.orElseThrow(() -> new CategoryNotFoundException("category not found"));
+
 		Address address = findAddressById(boardPostRequiredInfo.getCity())
 				.orElseThrow(() -> new AddressNotFoundException("address not found"));
+
 		Tag tag = findTagById(boardPostRequiredInfo.getUserTag())
 				.orElseThrow(() -> new TagNotFoundException("tag not found"));
 
@@ -145,12 +148,16 @@ public class BoardService {
 	public BoardContentResponseInfo editBoardContent(Long boardId, Long userId, BoardPostRequiredInfo boardPostRequiredInfo) {
 		Board board = findBoardById(boardId)
 				.orElseThrow(() -> new BoardNotFoundException("board not found"));
+
 		Category category = findCategoryById(boardPostRequiredInfo.getCategory())
 				.orElseThrow(() -> new CategoryNotFoundException("category not found"));
+
 		Address address = findAddressById(boardPostRequiredInfo.getCity())
 				.orElseThrow(() -> new AddressNotFoundException("address not found"));
+
 		Tag tag = findTagById(boardPostRequiredInfo.getUserTag())
 				.orElseThrow(() -> new TagNotFoundException("tag not found"));
+
 		List<Evaluation> evaluations = findAllByEvaluatedId(board.getUser().getId());
 
 		board.updateBoard(boardPostRequiredInfo.getTitle(), boardPostRequiredInfo.getContent(), boardPostRequiredInfo.getPlace(), boardPostRequiredInfo.getRecruitNumber(), category, address, tag, boardPostRequiredInfo.getDate());
