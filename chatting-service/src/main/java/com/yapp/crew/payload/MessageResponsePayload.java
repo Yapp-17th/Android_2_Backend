@@ -34,6 +34,8 @@ public class MessageResponsePayload {
 
 	private Boolean isGuestRead;
 
+	private Long chatRoomId;
+
 	private Long senderId;
 
 	private String senderNickname;
@@ -60,6 +62,7 @@ public class MessageResponsePayload {
 				.realTimeUpdateType(RealTimeUpdateType.MESSAGE_READ)
 				.isHostRead(message.isHostRead())
 				.isGuestRead(message.isGuestRead())
+				.chatRoomId(message.getChatRoom().getId())
 				.senderId(message.getSender().getId())
 				.senderNickname(message.getSender().getNickname())
 				.createdAt(message.getCreatedAt())
