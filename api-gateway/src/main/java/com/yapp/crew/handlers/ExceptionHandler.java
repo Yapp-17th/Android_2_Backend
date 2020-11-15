@@ -24,57 +24,41 @@ public class ExceptionHandler {
 		ctx.setResponseStatusCode(HttpStatus.OK.value());
 		ctx.getResponse().setContentType("application/json;charset=UTF-8");
 
+		SimpleResponse response = null;
+
 		if (ex instanceof InactiveUserException) {
-			SimpleResponse response = SimpleResponse.fail(HttpStatus.FORBIDDEN, ResponseType.INACTIVE_USER_FAIL);
-			Gson gson = new Gson();
-			String responseBody = gson.toJson(response);
-			ctx.setResponseBody(responseBody);
+			response = SimpleResponse.fail(HttpStatus.FORBIDDEN, ResponseType.INACTIVE_USER_FAIL);
 		}
 
-		if (ex instanceof SuspendedUserException) {
-			SimpleResponse response = SimpleResponse.fail(HttpStatus.FORBIDDEN, ResponseType.SUSPENDED_USER_FAIL);
-			Gson gson = new Gson();
-			String responseBody = gson.toJson(response);
-			ctx.setResponseBody(responseBody);
+		else if (ex instanceof SuspendedUserException) {
+			response = SimpleResponse.fail(HttpStatus.FORBIDDEN, ResponseType.SUSPENDED_USER_FAIL);
 		}
 
-		if (ex instanceof UserNotFoundException) {
-			SimpleResponse response = SimpleResponse.fail(HttpStatus.FORBIDDEN, ResponseType.USER_NOT_FOUND);
-			Gson gson = new Gson();
-			String responseBody = gson.toJson(response);
-			ctx.setResponseBody(responseBody);
+		else if (ex instanceof UserNotFoundException) {
+			response = SimpleResponse.fail(HttpStatus.FORBIDDEN, ResponseType.USER_NOT_FOUND);
 		}
 
-		if (ex instanceof TokenRequiredException) {
-			SimpleResponse response = SimpleResponse.fail(HttpStatus.FORBIDDEN, ResponseType.TOKEN_REQUIRED);
-			Gson gson = new Gson();
-			String responseBody = gson.toJson(response);
-			ctx.setResponseBody(responseBody);
+		else if (ex instanceof TokenRequiredException) {
+			response = SimpleResponse.fail(HttpStatus.FORBIDDEN, ResponseType.TOKEN_REQUIRED);
 		}
 
-		if (ex instanceof WrongTokenPrefixException) {
-			SimpleResponse response = SimpleResponse.fail(HttpStatus.FORBIDDEN, ResponseType.WRONG_TOKEN_PREFIX);
-			Gson gson = new Gson();
-			String responseBody = gson.toJson(response);
-			ctx.setResponseBody(responseBody);
+		else if (ex instanceof WrongTokenPrefixException) {
+			response = SimpleResponse.fail(HttpStatus.FORBIDDEN, ResponseType.WRONG_TOKEN_PREFIX);
 		}
 
-		if (ex instanceof ExpiredJwtException) {
-			SimpleResponse response = SimpleResponse.fail(HttpStatus.FORBIDDEN, ResponseType.EXPIRED_TOKEN);
-			Gson gson = new Gson();
-			String responseBody = gson.toJson(response);
-			ctx.setResponseBody(responseBody);
+		else if (ex instanceof ExpiredJwtException) {
+			response = SimpleResponse.fail(HttpStatus.FORBIDDEN, ResponseType.EXPIRED_TOKEN);
 		}
 
-		if (ex instanceof MalformedJwtException) {
-			SimpleResponse response = SimpleResponse.fail(HttpStatus.FORBIDDEN, ResponseType.INVALID_TOKEN);
-			Gson gson = new Gson();
-			String responseBody = gson.toJson(response);
-			ctx.setResponseBody(responseBody);
+		else if (ex instanceof MalformedJwtException) {
+			response = SimpleResponse.fail(HttpStatus.FORBIDDEN, ResponseType.INVALID_TOKEN);
 		}
 
-		if (ex instanceof SignatureException) {
-			SimpleResponse response = SimpleResponse.fail(HttpStatus.FORBIDDEN, ResponseType.INVALID_JWT_SIGNATURE);
+		else if (ex instanceof SignatureException) {
+			response = SimpleResponse.fail(HttpStatus.FORBIDDEN, ResponseType.INVALID_JWT_SIGNATURE);
+		}
+
+		if (response != null) {
 			Gson gson = new Gson();
 			String responseBody = gson.toJson(response);
 			ctx.setResponseBody(responseBody);
