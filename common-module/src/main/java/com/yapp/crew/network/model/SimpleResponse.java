@@ -32,10 +32,11 @@ public class SimpleResponse {
 		return simpleResponse;
 	}
 
-	public static SimpleResponse fail(HttpStatus httpStatus, String message) {
+	public static SimpleResponse fail(HttpStatus httpStatus, ResponseType responseType, String message) {
 		SimpleResponse simpleResponse = new SimpleResponse();
 		simpleResponse.status = httpStatus.value();
 		simpleResponse.isSuccess = false;
+		simpleResponse.responseType = responseType;
 		simpleResponse.message = message;
 		return simpleResponse;
 	}

@@ -18,6 +18,7 @@ import com.yapp.crew.model.EvaluateListInfo;
 import com.yapp.crew.model.UserReportRequest;
 import com.yapp.crew.network.model.SimpleResponse;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -30,10 +31,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class EvaluateService {
 
-	private UserRepository userRepository;
-	private BoardRepository boardRepository;
-	private ReportRepository reportRepository;
-	private EvaluationRepository evaluationRepository;
+	private final UserRepository userRepository;
+	private final BoardRepository boardRepository;
+	private final ReportRepository reportRepository;
+	private final EvaluationRepository evaluationRepository;
 
 	@Autowired
 	public EvaluateService(UserRepository userRepository, BoardRepository boardRepository, ReportRepository reportRepository, EvaluationRepository evaluationRepository) {
@@ -51,7 +52,8 @@ public class EvaluateService {
 		Set<Evaluation> evaluations = board.getEvaluations().stream().filter(evaluation -> evaluation.getEvaluateId() == evaluateId).collect(Collectors.toSet());
 
 		return evaluations.stream()
-				.map(evaluation -> EvaluateListInfo.build(evaluation, findUserById(evaluation.getEvaluatedId()).orElseThrow(() -> new UserNotFoundException("user not found")), board))
+				.filter(evaluation -> findUserById(evaluation.getEvaluatedId()).orElse(null) != null)
+				.map(evaluation -> EvaluateListInfo.build(evaluation, findUserById(evaluation.getEvaluatedId()).get(), board))
 				.collect(Collectors.toList());
 	}
 

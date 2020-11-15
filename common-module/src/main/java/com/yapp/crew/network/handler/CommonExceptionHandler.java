@@ -4,15 +4,19 @@ import com.yapp.crew.domain.errors.AddressNotFoundException;
 import com.yapp.crew.domain.errors.AlreadyAppliedException;
 import com.yapp.crew.domain.errors.AlreadyApprovedException;
 import com.yapp.crew.domain.errors.BoardNotFoundException;
+import com.yapp.crew.domain.errors.BoardTimeInvalidException;
 import com.yapp.crew.domain.errors.CategoryNotFoundException;
 import com.yapp.crew.domain.errors.ChatRoomNotFoundException;
+import com.yapp.crew.domain.errors.EvaluateImpossibleException;
 import com.yapp.crew.domain.errors.GuestApplyNotFoundException;
 import com.yapp.crew.domain.errors.InactiveUserException;
+import com.yapp.crew.domain.errors.InternalServerErrorException;
 import com.yapp.crew.domain.errors.InvalidRequestBodyException;
 import com.yapp.crew.domain.errors.MessageNotFoundException;
 import com.yapp.crew.domain.errors.SuspendedUserException;
 import com.yapp.crew.domain.errors.TagNotFoundException;
 import com.yapp.crew.domain.errors.TokenRequiredException;
+import com.yapp.crew.domain.errors.UnAuthorizedEventException;
 import com.yapp.crew.domain.errors.UserDuplicateFieldException;
 import com.yapp.crew.domain.errors.UserNotFoundException;
 import com.yapp.crew.domain.errors.WrongGuestException;
@@ -23,8 +27,10 @@ import com.yapp.crew.network.model.SimpleResponse;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.security.SignatureException;
+import java.sql.SQLException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -42,6 +48,12 @@ public class CommonExceptionHandler {
 	}
 
 	@ExceptionHandler(value = InternalServerError.class)
+	public ResponseEntity<?> handleInternalServerException() {
+		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.INTERNAL_SERVER_ERROR, ResponseType.INTERNAL_SERVER_FAIL);
+		return ResponseEntity.ok().body(responseBody);
+	}
+
+	@ExceptionHandler(value = InternalServerErrorException.class)
 	public ResponseEntity<?> handleInternalServerErrorException() {
 		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.INTERNAL_SERVER_ERROR, ResponseType.INTERNAL_SERVER_FAIL);
 		return ResponseEntity.ok().body(responseBody);
@@ -181,7 +193,37 @@ public class CommonExceptionHandler {
 
 	@ExceptionHandler(value = UserDuplicateFieldException.class)
 	public ResponseEntity<?> handleUserDuplicateFieldException(Exception ex) {
-		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.UNAUTHORIZED, ex.getMessage());
+		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.BAD_REQUEST, ResponseType.SIGN_UP_DUPLICATE, ex.getMessage());
+		return ResponseEntity.ok().body(responseBody);
+	}
+
+	@ExceptionHandler(value = SQLException.class)
+	public ResponseEntity<?> handleSQLException() {
+		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.INTERNAL_SERVER_ERROR, ResponseType.INTERNAL_SERVER_FAIL);
+		return ResponseEntity.ok().body(responseBody);
+	}
+
+	@ExceptionHandler(value = HttpRequestMethodNotSupportedException.class)
+	public ResponseEntity<?> handleHttpRequestMethodNotSupportedException() {
+		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.BAD_REQUEST, ResponseType.INVALID_METHOD);
+		return ResponseEntity.ok().body(responseBody);
+	}
+
+	@ExceptionHandler(value = BoardTimeInvalidException.class)
+	public ResponseEntity<?> handleBoardTimeInvalidException() {
+		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.BAD_REQUEST, ResponseType.BOARD_TIME_INVALID);
+		return ResponseEntity.ok().body(responseBody);
+	}
+
+	@ExceptionHandler(value = UnAuthorizedEventException.class)
+	public ResponseEntity<?> handleUnAuthorizedEventException() {
+		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.UNAUTHORIZED, ResponseType.UNAUTORIZED_FAIL);
+		return ResponseEntity.ok().body(responseBody);
+	}
+
+	@ExceptionHandler(value = EvaluateImpossibleException.class)
+	public ResponseEntity<?> handleEvaluateImpossibleException() {
+		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.UNAUTHORIZED, ResponseType.EVALUATE_IMPOSSIBLE);
 		return ResponseEntity.ok().body(responseBody);
 	}
 }
