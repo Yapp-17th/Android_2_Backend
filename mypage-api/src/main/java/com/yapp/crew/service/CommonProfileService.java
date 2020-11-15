@@ -9,6 +9,7 @@ import com.yapp.crew.domain.repository.EvaluationRepository;
 import com.yapp.crew.domain.repository.UserRepository;
 import com.yapp.crew.domain.status.AppliedStatus;
 import com.yapp.crew.domain.status.BoardStatus;
+import com.yapp.crew.domain.status.UserStatus;
 import com.yapp.crew.model.HistoryListInfo;
 import com.yapp.crew.model.UserProfileInfo;
 import java.util.List;
@@ -48,17 +49,16 @@ public class CommonProfileService {
 		User user = findUserById(userId)
 				.orElseThrow(() -> new UserNotFoundException("user not found"));
 
-		List<Board> boards = findAllBoards(user).stream()
+		return findAllBoards(user).stream()
 				.filter(board -> board.getStatus() == BoardStatus.CANCELED || board.getStatus() == BoardStatus.FINISHED)
-				.collect(Collectors.toList());
-
-		return boards.stream()
 				.map(board -> HistoryListInfo.build(board, user))
 				.collect(Collectors.toList());
 	}
 
 	private Optional<User> findUserById(Long userId) {
-		return userRepository.findUserById(userId);
+		return userRepository.findUserById(userId).stream()
+				.filter(user -> user.getStatus() == UserStatus.ACTIVE)
+				.findFirst();
 	}
 
 	private List<Evaluation> findAllByEvaluatedId(Long userId) {
