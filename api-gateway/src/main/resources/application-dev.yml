@@ -1,9 +1,41 @@
 server:
   port: 80
 
+ribbon:
+  eureka:
+    enabled: false
+
+zuul:
+  host:
+    connect-timeout-millis: 600000
+    socket-timeout-millis: 600000
+  sensitiveHeaders: Cookie,Set-Cookie,Authorization
+  routes:
+    chatting-service:
+      path: /api/chatting-service/**
+      url: http://54.180.29.231:8080
+    chat-bot-service:
+      path: /api/chat-bot-service/**
+      url: http://54.180.29.231:8081
+    base-api:
+      path: /api/base-api/**
+      url: http://54.180.29.231:8082
+    board-api:
+      path: /api/board-api/**
+      url: http://54.180.29.231:8083
+    login-api:
+      path: /api/login-api/**
+      url: http://54.180.29.231:8084
+    mypage-api:
+      path: /api/mypage-api/**
+      url: http://54.180.29.231:8085
+    watcher-service:
+      path: /api/watcher-service/**
+      url: http://54.180.29.231:8086
+
 spring:
   profiles:
-    active: local
+    active: dev
 
   datasource:
     url: jdbc:mysql://172.31.18.97:3306/explanet_dev?allowPublicKeyRetrieval=true&useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul&createDatabaseIfNotExist=true
@@ -17,22 +49,10 @@ spring:
           bootstrap-mode: default
 
   jpa:
-    show-sql: true
     generate-ddl: true
-    properties:
-      hibernate:
-        generate_statistics: true
-        format_sql: true
     database-platform: org.hibernate.dialect.MySQL5Dialect
     hibernate:
       ddl-auto: create
-
-  logging:
-    level:
-      org:
-        hibernate:
-          stat: debug
-          type: trace
 
 jwt:
   header: Authorization
