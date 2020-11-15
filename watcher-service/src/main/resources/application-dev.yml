@@ -30,7 +30,7 @@ spring:
         bootstrap.servers: 172.31.18.97:9092
 
   datasource:
-    url: jdbc:mysql://172.31.18.97:3306/explanet_dev?allowPublicKeyRetrieval=true&useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul&createDatabaseIfNotExist=true
+    url: jdbc:mysql://172.31.18.97:3306/explanet_dev?rewriteBatchedStatements=true&allowPublicKeyRetrieval=true&useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul&createDatabaseIfNotExist=true
     username: alex
     password: dnjscksdn98@
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -45,6 +45,8 @@ spring:
     database-platform: org.hibernate.dialect.MySQL5Dialect
     hibernate:
       ddl-auto: create
+      jdbc:
+        batch_size: 100
 
 kafka:
   topics:
