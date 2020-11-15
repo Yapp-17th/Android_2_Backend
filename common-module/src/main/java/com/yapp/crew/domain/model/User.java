@@ -186,6 +186,10 @@ public class User extends BaseEntity {
 		this.setStatus(UserStatus.ACTIVE);
 	}
 
+	public void setUserStatusSuspended() {
+		this.setStatus(UserStatus.SUSPENDED);
+	}
+
 	public static UserBuilder getBuilder() {
 		return new UserBuilder();
 	}

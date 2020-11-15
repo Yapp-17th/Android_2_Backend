@@ -58,7 +58,7 @@ public class ReportService {
 
 	private void updateUserStatus(User userReported) {
 		if (userReported.calculateReportedPoint() >= 10) {
-			userReported.setUserStatusInActive();
+			userReported.setUserStatusSuspended();
 		}
 		userRepository.save(userReported);
 	}
