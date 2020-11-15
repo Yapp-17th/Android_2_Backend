@@ -1,0 +1,22 @@
+spring:
+  profiles:
+    active: local
+
+  application:
+    name: mypage-service
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/explanet_dev?useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC&createDatabaseIfNotExist=true
+    username: root
+    password:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5Dialect
+    hibernate:
+      ddl-auto: update
+
+jwt:
+  header: Authorization
+  prefix: Bearer
+  secret: secretkeytest1234secretkeytest1234secretkeytest1234secretkeytest1234
