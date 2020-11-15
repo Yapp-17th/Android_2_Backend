@@ -13,8 +13,8 @@ import com.yapp.crew.domain.errors.InactiveUserException;
 import com.yapp.crew.domain.errors.InternalServerErrorException;
 import com.yapp.crew.domain.errors.InvalidRequestBodyException;
 import com.yapp.crew.domain.errors.MessageNotFoundException;
+import com.yapp.crew.domain.errors.SuspendedUserException;
 import com.yapp.crew.domain.errors.TagNotFoundException;
-import com.yapp.crew.domain.errors.TokenRequiredException;
 import com.yapp.crew.domain.errors.UnAuthorizedEventException;
 import com.yapp.crew.domain.errors.UserDuplicateFieldException;
 import com.yapp.crew.domain.errors.UserNotFoundException;
@@ -22,9 +22,6 @@ import com.yapp.crew.domain.errors.WrongGuestException;
 import com.yapp.crew.domain.errors.WrongHostException;
 import com.yapp.crew.domain.type.ResponseType;
 import com.yapp.crew.network.model.SimpleResponse;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.security.SignatureException;
 import java.sql.SQLException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -66,6 +63,18 @@ public class CommonExceptionHandler {
 	@ExceptionHandler(value = MethodArgumentNotValidException.class)
 	public ResponseEntity<?> handleMethodArgumentNotValidException() {
 		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.BAD_REQUEST, ResponseType.INVALID_METHOD);
+		return ResponseEntity.ok().body(responseBody);
+	}
+
+	@ExceptionHandler(value = SuspendedUserException.class)
+	public ResponseEntity<?> handleSuspendedUserException() {
+		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.FORBIDDEN, ResponseType.SUSPENDED_USER_FAIL);
+		return ResponseEntity.ok().body(responseBody);
+	}
+
+	@ExceptionHandler(value = InactiveUserException.class)
+	public ResponseEntity<?> handleInactiveUserException() {
+		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.FORBIDDEN, ResponseType.INACTIVE_USER_FAIL);
 		return ResponseEntity.ok().body(responseBody);
 	}
 
