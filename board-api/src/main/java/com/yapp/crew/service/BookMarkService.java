@@ -37,6 +37,7 @@ public class BookMarkService {
 	public SimpleResponse createBookMark(Long boardId, Long userId) {
 		Board board = findBoardById(boardId)
 				.orElseThrow(() -> new BoardNotFoundException("board not found"));
+
 		User user = findUserById(userId)
 				.orElseThrow(() -> new UserNotFoundException("user not found"));
 
@@ -48,6 +49,7 @@ public class BookMarkService {
 	public SimpleResponse deleteBookMark(Long boardId, Long userId) {
 		Board board = findBoardById(boardId)
 				.orElseThrow(() -> new BoardNotFoundException("board not found"));
+
 		User user = findUserById(userId)
 				.orElseThrow(() -> new UserNotFoundException("user not found"));
 

@@ -13,7 +13,6 @@ import com.yapp.crew.domain.errors.InactiveUserException;
 import com.yapp.crew.domain.errors.InternalServerErrorException;
 import com.yapp.crew.domain.errors.InvalidRequestBodyException;
 import com.yapp.crew.domain.errors.MessageNotFoundException;
-import com.yapp.crew.domain.errors.SuspendedUserException;
 import com.yapp.crew.domain.errors.TagNotFoundException;
 import com.yapp.crew.domain.errors.TokenRequiredException;
 import com.yapp.crew.domain.errors.UnAuthorizedEventException;
@@ -21,7 +20,6 @@ import com.yapp.crew.domain.errors.UserDuplicateFieldException;
 import com.yapp.crew.domain.errors.UserNotFoundException;
 import com.yapp.crew.domain.errors.WrongGuestException;
 import com.yapp.crew.domain.errors.WrongHostException;
-import com.yapp.crew.domain.errors.WrongTokenPrefixException;
 import com.yapp.crew.domain.type.ResponseType;
 import com.yapp.crew.network.model.SimpleResponse;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -41,12 +39,6 @@ import org.springframework.web.client.HttpServerErrorException.InternalServerErr
 @ControllerAdvice
 public class CommonExceptionHandler {
 
-	@ExceptionHandler(value = InactiveUserException.class)
-	public ResponseEntity<?> handleInactiveUserException() {
-		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.UNAUTHORIZED, ResponseType.INACTIVE_USER_FAIL);
-		return ResponseEntity.ok().body(responseBody);
-	}
-
 	@ExceptionHandler(value = InternalServerError.class)
 	public ResponseEntity<?> handleInternalServerException() {
 		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.INTERNAL_SERVER_ERROR, ResponseType.INTERNAL_SERVER_FAIL);
@@ -65,45 +57,9 @@ public class CommonExceptionHandler {
 		return ResponseEntity.ok().body(responseBody);
 	}
 
-	@ExceptionHandler(value = SuspendedUserException.class)
-	public ResponseEntity<?> handleSuspendedUserException() {
-		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.FORBIDDEN, ResponseType.SUSPENDED_USER_FAIL);
-		return ResponseEntity.ok().body(responseBody);
-	}
-
-	@ExceptionHandler(value = TokenRequiredException.class)
-	public ResponseEntity<?> handleTokenRequiredException() {
-		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.FORBIDDEN, ResponseType.TOKEN_REQUIRED);
-		return ResponseEntity.ok().body(responseBody);
-	}
-
-	@ExceptionHandler(value = WrongTokenPrefixException.class)
-	public ResponseEntity<?> handleWrongTokenPrefixException(WrongTokenPrefixException ex) {
-		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.FORBIDDEN, ResponseType.WRONG_TOKEN_PREFIX);
-		return ResponseEntity.ok().body(responseBody);
-	}
-
-	@ExceptionHandler(value = ExpiredJwtException.class)
-	public ResponseEntity<?> handleExpiredJwtException() {
-		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.FORBIDDEN, ResponseType.EXPIRED_TOKEN);
-		return ResponseEntity.ok().body(responseBody);
-	}
-
-	@ExceptionHandler(value = MalformedJwtException.class)
-	public ResponseEntity<?> handleMalformedJwtException(MalformedJwtException ex) {
-		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.FORBIDDEN, ResponseType.INVALID_JWT_SIGNATURE);
-		return ResponseEntity.ok().body(responseBody);
-	}
-
 	@ExceptionHandler(value = MissingRequestHeaderException.class)
 	public ResponseEntity<?> handleMissingRequestHeaderException() {
 		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.FORBIDDEN, ResponseType.AUTHORIZATION_HEADER_REQUIRED);
-		return ResponseEntity.ok().body(responseBody);
-	}
-
-	@ExceptionHandler(value = SignatureException.class)
-	public ResponseEntity<?> handleSignatureException() {
-		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.FORBIDDEN, ResponseType.INVALID_JWT_SIGNATURE);
 		return ResponseEntity.ok().body(responseBody);
 	}
 

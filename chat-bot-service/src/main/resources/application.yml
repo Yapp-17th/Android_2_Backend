@@ -5,6 +5,9 @@ spring:
   profiles:
     active: local
 
+  application:
+    name: chat-bot-service
+
   devtools:
     restart:
       enabled: true

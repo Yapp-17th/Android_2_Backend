@@ -2,13 +2,10 @@ package com.yapp.crew.service;
 
 import com.yapp.crew.domain.errors.BoardNotFoundException;
 import com.yapp.crew.domain.errors.ChatRoomNotFoundException;
-import com.yapp.crew.domain.errors.UserNotFoundException;
 import com.yapp.crew.domain.model.Board;
 import com.yapp.crew.domain.model.ChatRoom;
-import com.yapp.crew.domain.model.User;
 import com.yapp.crew.domain.repository.BoardRepository;
 import com.yapp.crew.domain.repository.ChatRoomRepository;
-import com.yapp.crew.domain.repository.UserRepository;
 import com.yapp.crew.model.ApplyListInfo;
 import java.util.List;
 import java.util.Optional;

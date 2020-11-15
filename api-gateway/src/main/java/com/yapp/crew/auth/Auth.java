@@ -1,7 +1,7 @@
-package com.yapp.crew.domain.auth;
+package com.yapp.crew.auth;
 
-import com.yapp.crew.domain.errors.TokenRequiredException;
-import com.yapp.crew.domain.errors.WrongTokenPrefixException;
+import com.yapp.crew.errors.TokenRequiredException;
+import com.yapp.crew.errors.WrongTokenPrefixException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -20,7 +20,7 @@ public class Auth {
 	@Value(value = "${jwt.prefix}")
 	private String jwtPrefix;
 
-	public void verifyToken(String token) {
+	public void verifyToken(String token) throws TokenRequiredException, WrongTokenPrefixException {
 		if (token == null || token.isBlank()) {
 			throw new TokenRequiredException("[Auth] Token is required but wasn't sent");
 		}

@@ -1,7 +1,5 @@
 package com.yapp.crew.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.yapp.crew.domain.auth.Auth;
 import com.yapp.crew.dto.request.BoardInfoRequestDto;
 import com.yapp.crew.dto.response.BoardContentSuccessResponseDto;
 import com.yapp.crew.dto.response.BoardListSuccessResponseDto;
@@ -18,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.support.PagedListHolder;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -37,24 +34,21 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class BoardController {
 
-	private final Auth auth;
-	private final BoardService boardService;
+	private BoardService boardService;
 
 	@Autowired
-	public BoardController(Auth auth, BoardService boardService) {
-		this.auth = auth;
+	public BoardController(BoardService boardService) {
 		this.boardService = boardService;
 	}
 
 	@GetMapping(path = "/v1/board", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> getBoardList(
-			@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token,
+			@RequestHeader(value = "userId") Long userId,
 			@PageableDefault(size = 20) Pageable pageable,
 			@RequestParam(required = false) String sorting,
 			@RequestParam(required = false) List<Long> category,
 			@RequestParam(required = false) List<Long> address
 	) {
-		long userId = auth.parseUserIdFromToken(token);
 		List<BoardListResponseInfo> boardListResponseInfoList = boardService.getBoardList(BoardFilter.build(sorting, category, address, userId));
 
 		PagedListHolder<BoardListResponseInfo> page = new PagedListHolder<>(boardListResponseInfoList);
@@ -67,10 +61,9 @@ public class BoardController {
 
 	@PostMapping(path = "/v1/board", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> postBoard(
-			@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token,
+			@RequestHeader(value = "userId") Long userId,
 			@RequestBody @Valid BoardInfoRequestDto boardInfoRequestDto
 	) {
-		long userId = auth.parseUserIdFromToken(token);
 		BoardPostRequiredInfo boardPostRequiredInfo = BoardPostRequiredInfo.build(boardInfoRequestDto);
 		SimpleResponse simpleResponse = boardService.postBoard(boardPostRequiredInfo, userId);
 
@@ -79,10 +72,9 @@ public class BoardController {
 
 	@GetMapping(path = "/v1/board/{boardId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> getBoardContent(
-			@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token,
+			@RequestHeader(value = "userId") Long userId,
 			@PathVariable(name = "boardId") Long boardId
 	) {
-		long userId = auth.parseUserIdFromToken(token);
 		BoardContentResponseInfo boardContentResponseInfo = boardService.getBoardContent(boardId, userId);
 
 		return ResponseEntity.ok().body(BoardContentSuccessResponseDto.build(boardContentResponseInfo));
@@ -90,11 +82,9 @@ public class BoardController {
 
 	@DeleteMapping(path = "/v1/board/{boardId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> deleteBoard(
-			@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token,
+			@RequestHeader(value = "userId") Long userId,
 			@PathVariable(name = "boardId") Long boardId
-	) throws JsonProcessingException {
-
-		long userId = auth.parseUserIdFromToken(token);
+	) {
 		SimpleResponse simpleResponse = boardService.deleteBoard(boardId, userId);
 
 		return ResponseEntity.ok().body(simpleResponse);
@@ -102,11 +92,10 @@ public class BoardController {
 
 	@PutMapping(path = "/v1/board/{boardId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> editBoard(
-			@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token,
-			@RequestBody @Valid BoardInfoRequestDto boardInfoRequestDto,
-			@PathVariable(name = "boardId") Long boardId
+			@RequestHeader(value = "userId") Long userId,
+			@PathVariable(name = "boardId") Long boardId,
+			@RequestBody @Valid BoardInfoRequestDto boardInfoRequestDto
 	) {
-		long userId = auth.parseUserIdFromToken(token);
 		BoardPostRequiredInfo boardPostRequiredInfo = BoardPostRequiredInfo.build(boardInfoRequestDto);
 		BoardContentResponseInfo boardContentResponseInfo = boardService.editBoardContent(boardId, userId, boardPostRequiredInfo);
 
