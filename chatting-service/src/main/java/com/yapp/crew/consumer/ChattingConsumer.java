@@ -10,7 +10,6 @@ import com.yapp.crew.domain.model.User;
 import com.yapp.crew.domain.repository.ChatRoomRepository;
 import com.yapp.crew.domain.repository.MessageRepository;
 import com.yapp.crew.domain.repository.UserRepository;
-import com.yapp.crew.domain.type.RealTimeUpdateType;
 import com.yapp.crew.domain.type.ResponseType;
 import com.yapp.crew.payload.MessageRequestPayload;
 import com.yapp.crew.payload.MessageResponsePayload;
@@ -76,6 +75,13 @@ public class ChattingConsumer {
 
 		MessageResponsePayload payload = MessageResponsePayload.buildChatMessageResponsePayload(message);
 		simpMessagingTemplate.convertAndSend("/sub/chat/room/" + message.getChatRoom().getId().toString(), payload);
+
+		if (sender.getId().equals(chatRoom.getGuest().getId())) {
+			simpMessagingTemplate.convertAndSend("/sub/user/" + chatRoom.getHost().getId().toString() + "/chat/room/", payload);
+		}
+		else {
+			simpMessagingTemplate.convertAndSend("/sub/user/" + chatRoom.getGuest().getId().toString() + "/chat/room/", payload);
+		}
 
 		String messageJson = objectMapper.writeValueAsString(message);
 		log.info("Successfully consumed message: {}", messageJson);
