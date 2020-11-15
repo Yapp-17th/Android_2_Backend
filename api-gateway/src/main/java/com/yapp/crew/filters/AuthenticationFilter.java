@@ -37,11 +37,19 @@ public class AuthenticationFilter extends ZuulFilter {
 
 	@Override
 	public int filterOrder() {
-		return 1;
+		return 10;
 	}
 
 	@Override
 	public boolean shouldFilter() {
+		RequestContext ctx = RequestContext.getCurrentContext();
+
+		if ((ctx.get("proxy") != null) && ctx.get("proxy").equals("base-api")) {
+			return false;
+		}
+		if ((ctx.get("proxy") != null) && ctx.get("proxy").equals("login-api")) {
+			return false;
+		}
 		return true;
 	}
 
