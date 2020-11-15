@@ -1,5 +1,6 @@
 package com.yapp.crew.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.yapp.crew.dto.request.BoardInfoRequestDto;
 import com.yapp.crew.dto.response.BoardContentSuccessResponseDto;
 import com.yapp.crew.dto.response.BoardListSuccessResponseDto;
@@ -84,7 +85,8 @@ public class BoardController {
 	public ResponseEntity<?> deleteBoard(
 			@RequestHeader(value = "userId") Long userId,
 			@PathVariable(name = "boardId") Long boardId
-	) {
+	) throws JsonProcessingException {
+
 		SimpleResponse simpleResponse = boardService.deleteBoard(boardId, userId);
 
 		return ResponseEntity.ok().body(simpleResponse);
