@@ -67,7 +67,7 @@ public class ExceptionHandler {
 		}
 
 		if (ex instanceof MalformedJwtException) {
-			SimpleResponse response = SimpleResponse.fail(HttpStatus.FORBIDDEN, ResponseType.INVALID_JWT_SIGNATURE);
+			SimpleResponse response = SimpleResponse.fail(HttpStatus.FORBIDDEN, ResponseType.INVALID_TOKEN);
 			Gson gson = new Gson();
 			String responseBody = gson.toJson(response);
 			ctx.setResponseBody(responseBody);
