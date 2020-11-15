@@ -1,6 +1,5 @@
 package com.yapp.crew.controller;
 
-import com.yapp.crew.domain.auth.Auth;
 import com.yapp.crew.dto.response.HistoryListResponseDto;
 import com.yapp.crew.dto.response.UserProfileResponseDto;
 import com.yapp.crew.model.HistoryListInfo;
@@ -9,7 +8,6 @@ import com.yapp.crew.service.CommonProfileService;
 import com.yapp.crew.service.MyProfileService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,20 +20,19 @@ public class CommonProfileController {
 
 	private CommonProfileService commonProfileService;
 	private MyProfileService myProfileService;
-	private Auth auth;
 
 	@Autowired
-	public CommonProfileController(CommonProfileService commonProfileService, MyProfileService myProfileService, Auth auth) {
+	public CommonProfileController(CommonProfileService commonProfileService, MyProfileService myProfileService) {
 		this.commonProfileService = commonProfileService;
 		this.myProfileService = myProfileService;
-		this.auth = auth;
 	}
 
 	@GetMapping(path = "/v1/user/{userId}/profile", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> getCommonProfile(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token, @PathVariable Long userId) {
-		long tokenUserId = auth.parseUserIdFromToken(token);
-
-		if (tokenUserId == userId) {
+	public ResponseEntity<?> getCommonProfile(
+			@RequestHeader(value = "userId") Long tokenUserId,
+			@PathVariable("userId") Long userId
+	) {
+		if (tokenUserId.equals(userId)) {
 			UserProfileInfo userProfileInfo = myProfileService.getProfile(userId);
 			UserProfileResponseDto userProfileResponseDto = UserProfileResponseDto.build(userProfileInfo);
 
@@ -49,9 +46,10 @@ public class CommonProfileController {
 	}
 
 	@GetMapping(path = "/v1/user/{userId}/profile/history", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> getCommonHistory(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token, @PathVariable Long userId) {
-		long tokenUserId = auth.parseUserIdFromToken(token);
-
+	public ResponseEntity<?> getCommonHistory(
+			@RequestHeader(value = "userId") Long tokenUserId,
+			@PathVariable("userId") Long userId
+	) {
 		List<HistoryListInfo> historyListInfos = commonProfileService.getHistoryList(userId);
 		HistoryListResponseDto historyListResponseDto = HistoryListResponseDto.build("complete", historyListInfos);
 

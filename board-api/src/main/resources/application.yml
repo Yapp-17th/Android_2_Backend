@@ -2,6 +2,9 @@ spring:
   profiles:
     active: local
 
+  application:
+    name: board-api
+    
   kafka:
     producer:
       bootstrap-servers:

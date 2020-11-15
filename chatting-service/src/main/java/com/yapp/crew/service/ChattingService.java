@@ -168,16 +168,13 @@ public class ChattingService {
 
 	@Transactional
 	public HttpResponseBody<?> updateMessageIsRead(Long userId, Long chatRoomId, Long messageId) {
-		User user = userRepository.findUserById(userId)
-				.orElseThrow(() -> new UserNotFoundException("User not found"));
-
 		ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
 				.orElseThrow(() -> new ChatRoomNotFoundException("Chat room not found"));
 
 		Message message = messageRepository.findById(messageId)
 				.orElseThrow(() -> new MessageNotFoundException("Message not found"));
 
-		boolean isHost = chatRoom.isSenderChatRoomHost(user.getId());
+		boolean isHost = chatRoom.isSenderChatRoomHost(userId);
 
 		message.readMessage(isHost);
 		messageRepository.save(message);
