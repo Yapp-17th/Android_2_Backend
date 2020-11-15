@@ -21,6 +21,7 @@ import com.yapp.crew.domain.type.MessageType;
 import com.yapp.crew.json.BotMessages;
 import com.yapp.crew.payload.ApplyRequestPayload;
 import com.yapp.crew.payload.ApproveRequestPayload;
+import com.yapp.crew.payload.BoardCanceledPayload;
 import com.yapp.crew.payload.BoardFinishedPayload;
 import com.yapp.crew.payload.GuidelineRequestPayload;
 import com.yapp.crew.payload.MessageRequestPayload;
@@ -233,5 +234,42 @@ public class ChatBotConsumer {
 
 		board.finishBoard();
 		boardRepository.save(board);
+	}
+
+	@KafkaListener(topics = "${kafka.topics.board-canceled}", groupId = "${kafka.groups.board-canceled-group}")
+	public void consumeBoardCanceledEvent(ConsumerRecord<Long, String> consumerRecord) throws JsonProcessingException {
+		log.info("[Chat Bot Event - Board Canceled] Consumer Record: {}", consumerRecord);
+
+		BoardCanceledPayload boardCanceledPayload = objectMapper.readValue(consumerRecord.value(), BoardCanceledPayload.class);
+
+		Board board = boardRepository.findById(boardCanceledPayload.getBoardId())
+				.orElseThrow(() -> new BoardNotFoundException("Board not found"));
+
+		User host = userRepository.findUserById(boardCanceledPayload.getUserId())
+				.orElseThrow(() -> new UserNotFoundException("Host not found"));
+
+		User bot = userRepository.findUserById(-1L)
+				.orElseThrow(() -> new UserNotFoundException("Bot not found"));
+
+		chatRoomRepository.findAllByBoardId(board.getId())
+				.forEach(chatRoom -> {
+					MessageRequestPayload boardCanceledMessagePayload = MessageRequestPayload.builder()
+							.content(String.format(
+									botMessages.getBoardCanceled(),
+									host.getNickname()
+							).replace("\"", ""))
+							.type(MessageType.BOT_MESSAGE)
+							.senderId(bot.getId())
+							.chatRoomId(chatRoom.getId())
+							.boardId(board.getId())
+							.build();
+
+					try {
+						chatBotProducer.sendBotMessage(boardCanceledMessagePayload);
+					} catch (JsonProcessingException e) {
+						// TODO: handle exception
+						e.printStackTrace();
+					}
+				});
 	}
 }

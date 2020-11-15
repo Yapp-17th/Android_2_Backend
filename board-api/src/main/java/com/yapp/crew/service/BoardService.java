@@ -1,7 +1,9 @@
 package com.yapp.crew.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.yapp.crew.domain.errors.AddressNotFoundException;
 import com.yapp.crew.domain.errors.BoardNotFoundException;
+import com.yapp.crew.domain.errors.BoardTimeInvalidException;
 import com.yapp.crew.domain.errors.CategoryNotFoundException;
 import com.yapp.crew.domain.errors.InvalidRequestBodyException;
 import com.yapp.crew.domain.errors.TagNotFoundException;
@@ -23,12 +25,15 @@ import com.yapp.crew.domain.repository.TagRepository;
 import com.yapp.crew.domain.repository.UserRepository;
 import com.yapp.crew.domain.status.BoardStatus;
 import com.yapp.crew.domain.type.ResponseType;
+import com.yapp.crew.model.BoardCancel;
 import com.yapp.crew.model.BoardContentResponseInfo;
 import com.yapp.crew.model.BoardFilter;
 import com.yapp.crew.model.BoardListResponseInfo;
 import com.yapp.crew.model.BoardPostRequiredInfo;
 import com.yapp.crew.network.model.SimpleResponse;
+import com.yapp.crew.producer.BoardProducer;
 import com.yapp.crew.utils.SortingType;
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -43,20 +48,31 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class BoardService {
 
-	private BoardRepository boardRepository;
-	private UserRepository userRepository;
-	private AddressRepository addressRepository;
-	private CategoryRepository categoryRepository;
-	private TagRepository tagRepository;
-	private EvaluationRepository evaluationRepository;
+	private final BoardProducer boardProducer;
+
+	private final TagRepository tagRepository;
+	private final UserRepository userRepository;
+	private final BoardRepository boardRepository;
+	private final AddressRepository addressRepository;
+	private final CategoryRepository categoryRepository;
+	private final EvaluationRepository evaluationRepository;
 
 	@Autowired
-	public BoardService(BoardRepository boardRepository, UserRepository userRepository, AddressRepository addressRepository, CategoryRepository categoryRepository, TagRepository tagRepository, EvaluationRepository evaluationRepository) {
-		this.boardRepository = boardRepository;
+	public BoardService(
+			BoardProducer boardProducer,
+			TagRepository tagRepository,
+			UserRepository userRepository,
+			BoardRepository boardRepository,
+			AddressRepository addressRepository,
+			CategoryRepository categoryRepository,
+			EvaluationRepository evaluationRepository
+	) {
+		this.boardProducer = boardProducer;
+		this.tagRepository = tagRepository;
 		this.userRepository = userRepository;
+		this.boardRepository = boardRepository;
 		this.addressRepository = addressRepository;
 		this.categoryRepository = categoryRepository;
-		this.tagRepository = tagRepository;
 		this.evaluationRepository = evaluationRepository;
 	}
 
@@ -87,6 +103,7 @@ public class BoardService {
 				.withPlace(boardPostRequiredInfo.getPlace())
 				.withRecruitCount(boardPostRequiredInfo.getRecruitNumber())
 				.build();
+
 		saveBoard(board);
 
 		return SimpleResponse.pass(ResponseType.BOARD_POST_SUCCESS);
@@ -104,7 +121,8 @@ public class BoardService {
 			categories = findAllCategory().stream()
 					.filter(category -> boardFilter.getCategory().contains(category.getId()))
 					.collect(Collectors.toList());
-		} else {
+		}
+		else {
 			categories = findAllCategory();
 		}
 
@@ -112,7 +130,8 @@ public class BoardService {
 			addresses = findAllAddress().stream()
 					.filter(address -> boardFilter.getCity().contains(address.getId()))
 					.collect(Collectors.toList());
-		} else {
+		}
+		else {
 			addresses = findAllAddress();
 		}
 
@@ -132,15 +151,16 @@ public class BoardService {
 	}
 
 	@Transactional
-	public SimpleResponse deleteBoard(Long boardId, Long userId) {
+	public SimpleResponse deleteBoard(Long boardId, Long userId) throws JsonProcessingException {
 		Board board = findBoardById(boardId)
 				.orElseThrow(() -> new BoardNotFoundException("board not found"));
 
 		if (!board.getUser().getId().equals(userId)) {
 			throw new InvalidRequestBodyException("invalid user_id");
 		}
-
 		deleteBoard(board);
+		boardProducer.produceBoardCanceledEvent(BoardCancel.build(boardId, userId));
+
 		return SimpleResponse.pass(ResponseType.BOARD_DELETE_SUCCESS);
 	}
 
@@ -160,7 +180,16 @@ public class BoardService {
 
 		List<Evaluation> evaluations = findAllByEvaluatedId(board.getUser().getId());
 
-		board.updateBoard(boardPostRequiredInfo.getTitle(), boardPostRequiredInfo.getContent(), boardPostRequiredInfo.getPlace(), boardPostRequiredInfo.getRecruitNumber(), category, address, tag, boardPostRequiredInfo.getDate());
+		board.updateBoard(
+				boardPostRequiredInfo.getTitle(),
+				boardPostRequiredInfo.getContent(),
+				boardPostRequiredInfo.getPlace(),
+				boardPostRequiredInfo.getRecruitNumber(),
+				category,
+				address,
+				tag,
+				boardPostRequiredInfo.getDate()
+		);
 		saveBoard(board);
 
 		return BoardContentResponseInfo.build(board, evaluations);
@@ -172,6 +201,10 @@ public class BoardService {
 	}
 
 	private void saveBoard(Board board) {
+		if (board.getStartsAt().isBefore(LocalDateTime.now())) {
+			throw new BoardTimeInvalidException("board time invalid");
+		}
+
 		boardRepository.save(board);
 	}
 
@@ -180,7 +213,8 @@ public class BoardService {
 	}
 
 	private Optional<Board> findBoardById(Long boardId) {
-		return boardRepository.findBoardById(boardId).filter(board -> board.getStatus().getCode() != BoardStatus.CANCELED.getCode());
+		return boardRepository.findBoardById(boardId)
+				.filter(board -> board.getStatus().getCode() != BoardStatus.CANCELED.getCode());
 	}
 
 	private Optional<User> findUserById(Long userId) {
@@ -214,7 +248,8 @@ public class BoardService {
 			return boards.stream()
 					.sorted(Comparator.comparing(Board::getRemainRecruitNumber, Comparator.reverseOrder()))
 					.collect(Collectors.toList());
-		} else if (sorting == SortingType.DEADLINE) {
+		}
+		else if (sorting == SortingType.DEADLINE) {
 			return boards.stream()
 					.sorted(Comparator.comparing(Board::getStartsAt, Comparator.naturalOrder()))
 					.collect(Collectors.toList());
@@ -232,7 +267,8 @@ public class BoardService {
 	}
 
 	private List<Board> findAllBoards(User user) {
-		Set<Board> hiddenBoards = user.getUserHiddenBoard().stream().map(HiddenBoard::getBoard).collect(Collectors.toSet());
+		Set<Board> hiddenBoards = user.getUserHiddenBoard().stream()
+				.map(HiddenBoard::getBoard).collect(Collectors.toSet());
 
 		return boardRepository.findAll().stream()
 				.filter(board -> board.getStatus().getCode() != BoardStatus.CANCELED.getCode())
