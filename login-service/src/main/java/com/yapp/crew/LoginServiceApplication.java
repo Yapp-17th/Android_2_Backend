@@ -6,7 +6,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class LoginApiApplication {
+public class LoginServiceApplication {
 
 	@PostConstruct
 	public void init() {
@@ -14,6 +14,6 @@ public class LoginApiApplication {
 	}
 
 	public static void main(String[] args) {
-		SpringApplication.run(LoginApiApplication.class, args);
+		SpringApplication.run(LoginServiceApplication.class, args);
 	}
 }

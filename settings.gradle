@@ -1,7 +1,7 @@
 rootProject.name = 'crew'
 include 'common-module'
 include 'mypage-service'
-include 'login-api'
+include 'login-service'
 include 'chatting-service'
 include 'board-api'
 include 'base-api'
