@@ -19,13 +19,17 @@ public class WatcherService {
 
 	private final BoardRepository boardRepository;
 
+	private final BoardBatchService boardBatchService;
+
 	@Autowired
 	public WatcherService(
 			WatcherProducer watcherProducer,
-			BoardRepository boardRepository
+			BoardRepository boardRepository,
+			BoardBatchService boardBatchService
 	) {
 		this.watcherProducer = watcherProducer;
 		this.boardRepository = boardRepository;
+		this.boardBatchService = boardBatchService;
 	}
 
 	@Scheduled(cron = "0 0 0 * * *")
@@ -34,9 +38,9 @@ public class WatcherService {
 
 		if (!boards.isEmpty()) {
 			boards.stream()
-				.filter(board -> !board.getStatus().equals(BoardStatus.CANCELED) && !board.getStatus().equals(BoardStatus.FINISHED))
-				.forEach(board -> {
-					try {
+					.filter(board -> !board.getStatus().equals(BoardStatus.CANCELED) && !board.getStatus().equals(BoardStatus.FINISHED))
+					.forEach(board -> {
+						try {
 							BoardFinishedPayload payload = BoardFinishedPayload.builder()
 									.boardId(board.getId())
 									.build();
@@ -47,6 +51,8 @@ public class WatcherService {
 							ex.printStackTrace();
 						}
 					});
+
+			boardBatchService.updateBoardFinishedAll(boards);
 		}
 	}
 }

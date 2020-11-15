@@ -231,9 +231,6 @@ public class ChatBotConsumer {
 						e.printStackTrace();
 					}
 				});
-
-		board.finishBoard();
-		boardRepository.save(board);
 	}
 
 	@KafkaListener(topics = "${kafka.topics.board-canceled}", groupId = "${kafka.groups.board-canceled-group}")
