@@ -112,6 +112,9 @@ public class User extends BaseEntity {
 	@OneToMany(mappedBy = "guest", fetch = FetchType.LAZY)
 	private List<ChatRoom> guestList = new ArrayList<>();
 
+	public int calculateReportedPoint() {
+		return reportedList.size();
+	}
 
 	public void addAppliedUser(AppliedUser appliedUser) {
 		if (appliedUsers.contains(appliedUser)) {
