@@ -17,17 +17,17 @@ zuul:
     chat-bot-service:
       path: /api/chat-bot-service/**
       url: http://54.180.29.231:8081
-    base-api:
-      path: /api/base-api/**
+    base-service:
+      path: /api/base-service/**
       url: http://54.180.29.231:8082
-    board-api:
-      path: /api/board-api/**
+    board-service:
+      path: /api/board-service/**
       url: http://54.180.29.231:8083
-    login-api:
-      path: /api/login-api/**
+    login-service:
+      path: /api/login-service/**
       url: http://54.180.29.231:8084
-    mypage-api:
-      path: /api/mypage-api/**
+    mypage-service:
+      path: /api/mypage-service/**
       url: http://54.180.29.231:8085
     watcher-service:
       path: /api/watcher-service/**
