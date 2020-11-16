@@ -1,3 +1,6 @@
+server:
+  port: 8084
+
 spring:
   profiles:
     active: dev
@@ -6,9 +9,9 @@ spring:
     name: login-service
 
   datasource:
-    url: jdbc:mysql://localhost:3306/explanet_dev?useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC&createDatabaseIfNotExist=true
-    username: root
-    password:
+    url: jdbc:mysql://13.124.197.125:3306/explanet_dev?allowPublicKeyRetrieval=true&useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC&createDatabaseIfNotExist=true
+    username: alex
+    password: dnjscksdn98@
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:

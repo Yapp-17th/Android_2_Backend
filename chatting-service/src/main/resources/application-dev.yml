@@ -8,7 +8,7 @@ spring:
   kafka:
     producer:
       bootstrap-servers:
-        - 172.31.18.97:9092
+        - 13.124.197.125:9092
       key-serializer: org.apache.kafka.common.serialization.LongSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
       properties:
@@ -17,17 +17,17 @@ spring:
 
     consumer:
       bootstrap-servers:
-        - 172.31.18.97:9092
+        - 13.124.197.125:9092
       key-deserializer: org.apache.kafka.common.serialization.LongDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       group-id: chat-message-group
 
     admin:
       properties:
-        bootstrap.servers: 172.31.18.97:9092
+        bootstrap.servers: 13.124.197.125:9092
 
   datasource:
-    url: jdbc:mysql://172.31.18.97:3306/explanet_dev?allowPublicKeyRetrieval=true&useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul&createDatabaseIfNotExist=true
+    url: jdbc:mysql://13.124.197.125:3306/explanet_dev?allowPublicKeyRetrieval=true&useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul&createDatabaseIfNotExist=true
     username: alex
     password: dnjscksdn98@
     driver-class-name: com.mysql.cj.jdbc.Driver

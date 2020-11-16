@@ -13,32 +13,32 @@ zuul:
   routes:
     chatting-service:
       path: /api/chatting-service/**
-      url: http://54.180.29.231:8080
+      url: http://13.124.197.125:8080
     chat-bot-service:
       path: /api/chat-bot-service/**
-      url: http://54.180.29.231:8081
+      url: http://13.124.197.125:8081
     base-service:
       path: /api/base-service/**
-      url: http://54.180.29.231:8082
+      url: http://13.124.197.125:8082
     board-service:
       path: /api/board-service/**
-      url: http://54.180.29.231:8083
+      url: http://13.124.197.125:8083
     login-service:
       path: /api/login-service/**
-      url: http://54.180.29.231:8084
+      url: http://13.124.197.125:8084
     mypage-service:
       path: /api/mypage-service/**
-      url: http://54.180.29.231:8085
+      url: http://13.124.197.125:8085
     watcher-service:
       path: /api/watcher-service/**
-      url: http://54.180.29.231:8086
+      url: http://13.124.197.125:8086
 
 spring:
   profiles:
     active: dev
 
   datasource:
-    url: jdbc:mysql://172.31.18.97:3306/explanet_dev?allowPublicKeyRetrieval=true&useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul&createDatabaseIfNotExist=true
+    url: jdbc:mysql://13.124.197.125:3306/explanet_dev?allowPublicKeyRetrieval=true&useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul&createDatabaseIfNotExist=true
     username: alex
     password: dnjscksdn98@
     driver-class-name: com.mysql.cj.jdbc.Driver
