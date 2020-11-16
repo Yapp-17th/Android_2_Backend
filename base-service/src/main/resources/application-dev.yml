@@ -8,12 +8,8 @@ spring:
   application:
     name: base-service
 
-  devtools:
-    restart:
-      enabled: true
-
   datasource:
-    url: jdbc:mysql://13.124.197.125:3306/explanet_dev?allowPublicKeyRetrieval=true&useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul&createDatabaseIfNotExist=true
+    url: jdbc:mysql://mysql:3306/explanet_dev?allowPublicKeyRetrieval=true&useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul&createDatabaseIfNotExist=true
     username: alex
     password: dnjscksdn98@
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -24,22 +20,11 @@ spring:
         bootstrap-mode: default
 
   jpa:
-    show-sql: true
+    database: mysql
     generate-ddl: true
-    properties:
-      hibernate:
-        generate_statistics: true
-        format_sql: true
-    database-platform: org.hibernate.dialect.MySQL5Dialect
+    database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
-      ddl-auto: update
-
-  logging:
-    level:
-      org:
-        hibernate:
-          stat: debug
-          type: trace
+      ddl-auto: create
 
 jwt:
   header: Authorization
