@@ -1,0 +1,113 @@
+version: '3'
+services:
+  zookeeper:
+    image: wurstmeister/zookeeper
+    container_name: zookeeper
+    ports:
+      - 2181:2181
+
+  kafka:
+    image: wurstmeister/kafka
+    container_name: kafka
+    ports:
+      - 9092:9092
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: 13.124.197.125
+      KAFKA_ZOOKEEPER_CONNECT: 13.124.197.125:2181
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  mysql:
+    image: mysql
+    container_name: mysql
+    ports:
+      - 3306:3306
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=dnjscksdn98@
+      - MYSQL_DATABASE=explanet_dev
+      - MYSQL_USER=alex
+      - MYSQL_PASSWORD=dnjscksdn98@
+
+  api-gateway:
+    container_name: api-gateway
+    ports:
+      - 80:80
+    build:
+      context: ./api-gateway
+      dockerfile: Dockerfile
+    depends_on:
+      - mysql
+
+  chatting-service:
+    container_name: chatting-service
+    ports:
+      - 8080:8080
+    build:
+      context: ./chatting-service
+      dockerfile: Dockerfile
+    depends_on:
+      - mysql
+      - zookeeper
+      - kafka
+      - api-gateway
+
+  chat-bot-service:
+    container_name: chat-bot-service
+    ports:
+      - 8081:8081
+    build:
+      context: ./chat-bot-service
+      dockerfile: Dockerfile
+    depends_on:
+      - mysql
+      - zookeeper
+      - kafka
+      - api-gateway
+
+  base-service:
+    container_name: base-service
+    ports:
+      - 8082:8082
+    build:
+      context: ./base-service
+      dockerfile: Dockerfile
+    depends_on:
+      - mysql
+      - api-gateway
+
+  board-service:
+    container_name: board-service
+    ports:
+      - 8083:8083
+    build:
+      context: ./board-service
+      dockerfile: Dockerfile
+    depends_on:
+      - mysql
+      - zookeeper
+      - kafka
+      - api-gateway
+
+  login-service:
+    container_name: login-service
+    ports:
+      - 8084:8084
+    build:
+      context: ./login-service
+      dockerfile: Dockerfile
+    depends_on:
+      - mysql
+      - api-gateway
+
+  mypage-service:
+    container_name: mypage-service
+    ports:
+      - 8085:8085
+    build:
+      context: ./mypage-service
+      dockerfile: Dockerfile
+    depends_on:
+      - mysql
+      - api-gateway

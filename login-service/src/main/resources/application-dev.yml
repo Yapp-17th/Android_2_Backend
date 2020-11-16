@@ -9,18 +9,20 @@ spring:
     name: login-service
 
   datasource:
-    url: jdbc:mysql://13.124.197.125:3306/explanet_dev?allowPublicKeyRetrieval=true&useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC&createDatabaseIfNotExist=true
+    url: jdbc:mysql://mysql:3306/explanet_dev?allowPublicKeyRetrieval=true&useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC&createDatabaseIfNotExist=true
     username: alex
     password: dnjscksdn98@
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
-    database-platform: org.hibernate.dialect.MySQL5Dialect
+    database: mysql
+    generate-ddl: true
+    database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
 
 jwt:
   header: Authorization
   prefix: Bearer
   secret: secretkeytest1234secretkeytest1234secretkeytest1234secretkeytest1234
-  expiration: 1
+  expiration: 4

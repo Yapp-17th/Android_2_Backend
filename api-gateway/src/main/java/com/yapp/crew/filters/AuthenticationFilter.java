@@ -44,10 +44,10 @@ public class AuthenticationFilter extends ZuulFilter {
 	public boolean shouldFilter() {
 		RequestContext ctx = RequestContext.getCurrentContext();
 
-		if ((ctx.get("proxy") != null) && ctx.get("proxy").equals("base-api")) {
+		if ((ctx.get("proxy") != null) && ctx.get("proxy").equals("base-service")) {
 			return false;
 		}
-		if ((ctx.get("proxy") != null) && ctx.get("proxy").equals("login-api")) {
+		if ((ctx.get("proxy") != null) && ctx.get("proxy").equals("login-service")) {
 			return false;
 		}
 		return true;
