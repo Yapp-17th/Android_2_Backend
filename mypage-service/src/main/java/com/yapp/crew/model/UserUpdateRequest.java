@@ -23,7 +23,7 @@ public class UserUpdateRequest {
 		UserUpdateRequest userUpdateRequest = new UserUpdateRequest();
 		userUpdateRequest.userName = userUpdateRequestDto.getUserName();
 		userUpdateRequest.nickName = userUpdateRequestDto.getNickName();
-		userUpdateRequest.email = userUpdateRequest.getEmail();
+		userUpdateRequest.email = userUpdateRequestDto.getEmail();
 		userUpdateRequest.category = userUpdateRequestDto.getCategory();
 		userUpdateRequest.address = userUpdateRequestDto.getAddress();
 		userUpdateRequest.intro = userUpdateRequestDto.getIntro();
