@@ -11,7 +11,7 @@ spring:
   kafka:
     producer:
       bootstrap-servers:
-        - 13.209.141.117:9092
+        - 13.124.197.125:9092
       key-serializer: org.apache.kafka.common.serialization.LongSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
       properties:
@@ -19,7 +19,7 @@ spring:
         retries: 10
 
   datasource:
-    url: jdbc:mysql://13.209.141.117:3306/explanet_dev?useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC&createDatabaseIfNotExist=true
+    url: jdbc:mysql://13.124.197.125:3306/explanet_dev?allowPublicKeyRetrieval=true&useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC&createDatabaseIfNotExist=true
     username: alex
     password: dnjscksdn98@
     driver-class-name: com.mysql.cj.jdbc.Driver
