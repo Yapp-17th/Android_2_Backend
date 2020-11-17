@@ -120,15 +120,12 @@ public class MyProfileService {
 
 		UserBuilder userBuilder = User.getBuilder();
 		User updatedUser = userBuilder
-				.withId(user.getId())
-				.withOauthId(user.getOauthId())
-				.withAccessToken(user.getAccessToken())
 				.withEmail(userUpdateRequest.getEmail())
 				.withNickname(userUpdateRequest.getNickName())
 				.withUsername(userUpdateRequest.getUserName())
 				.withIntro(userUpdateRequest.getIntro())
 				.withAddress(address)
-				.build();
+				.build(user);
 
 		try {
 			userRepository.save(updatedUser);
