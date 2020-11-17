@@ -77,10 +77,10 @@ public class ChattingConsumer {
 		simpMessagingTemplate.convertAndSend("/sub/chat/room/" + message.getChatRoom().getId().toString(), payload);
 
 		if (sender.getId().equals(chatRoom.getGuest().getId())) {
-			simpMessagingTemplate.convertAndSend("/sub/user/" + chatRoom.getHost().getId().toString() + "/chat/room/", payload);
+			simpMessagingTemplate.convertAndSend("/sub/user/" + chatRoom.getHost().getId().toString() + "/chat/room", payload);
 		}
 		else {
-			simpMessagingTemplate.convertAndSend("/sub/user/" + chatRoom.getGuest().getId().toString() + "/chat/room/", payload);
+			simpMessagingTemplate.convertAndSend("/sub/user/" + chatRoom.getGuest().getId().toString() + "/chat/room", payload);
 		}
 
 		String messageJson = objectMapper.writeValueAsString(message);
