@@ -131,31 +131,20 @@ public class Board extends BaseEntity {
 		Date startDate = java.sql.Timestamp.valueOf(startsAt);
 
 		if (status == BoardStatus.RECRUITING || status == BoardStatus.COMPLETE) {
-			return "[D-"+calculateLeftDays(now, startDate)+"]";
+			return "[D-" + calculateLeftDays(now, startDate) + "]";
 		}
 
 		calendar.setTime(startDate);
-		return "["+calendar.get(Calendar.MONTH) + "/" + calendar.get(Calendar.DATE)+"]";
+		return "[" + calendar.get(Calendar.MONTH) + "/" + calendar.get(Calendar.DATE) + "]";
 	}
 
-	private int calculateLeftDays(Date now, Date end){
+	private int calculateLeftDays(Date now, Date end) {
 		long diffInMillies = Math.abs(now.getTime() - end.getTime());
-		return (int)TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+		return (int) TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
 	}
 
 	public int getApprovedCount() {
 		return (int) appliedUsers.stream().filter(appliedUser -> appliedUser.getStatus() == AppliedStatus.APPROVED).count();
-	}
-
-	public void updateBoard(String title, String content, String place, int recruitCount, Category category, Address address, Tag tag, LocalDateTime startsAt) {
-		this.title = title;
-		this.content = content;
-		this.place = place;
-		this.recruitCount = recruitCount;
-		this.category = category;
-		this.address = address;
-		this.tag = tag;
-		this.startsAt = startsAt;
 	}
 
 	public static BoardBuilder getBuilder() {
@@ -221,6 +210,11 @@ public class Board extends BaseEntity {
 
 		public Board build() {
 			Board board = new Board();
+			build(board);
+			return board;
+		}
+
+		public Board build(Board board) {
 			board.setTitle(title);
 			board.setUser(user);
 			board.setCategory(category);
