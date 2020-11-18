@@ -1,6 +1,7 @@
 package com.yapp.crew.dto.request;
 
 import java.time.LocalDateTime;
+import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import lombok.Getter;
@@ -12,18 +13,26 @@ public class BoardInfoRequestDto {
 
 	@NotBlank
 	private String title;
+
 	@NotBlank
 	private String content;
+
 	@NotNull
 	private Long category;
+
 	@NotNull
 	private Long city;
+
 	@NotNull
 	private Long userTag;
+
 	@NotNull
 	private Integer recruitNumber;
+
 	@NotNull
+	@FutureOrPresent
 	private LocalDateTime date;
+
 	@NotBlank
 	private String place;
 }

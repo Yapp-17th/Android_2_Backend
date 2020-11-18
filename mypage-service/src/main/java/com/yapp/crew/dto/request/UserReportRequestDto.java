@@ -10,7 +10,9 @@ public class UserReportRequestDto {
 
 	@NotNull
 	private Long userId;
+
 	@NotNull
 	private Long reportType;
+
 	private String content;
 }

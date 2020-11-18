@@ -1,6 +1,6 @@
 package com.yapp.crew.controller;
 
-import com.yapp.crew.dto.EnumListDto;
+import com.yapp.crew.dto.EnumListResponseDto;
 import com.yapp.crew.utils.EnumToList;
 import com.yapp.crew.utils.ResponseDomain;
 import java.util.List;
@@ -15,8 +15,8 @@ public class BoardReportTypeListController {
 	public ResponseEntity<?> getBoardReportTypeList() {
 
 		List<String> boardReportTypeList = EnumToList.boardReportTypeEnumToList();
-		EnumListDto enumListDto = EnumListDto.pass(ResponseDomain.BOARD_REPORT_TYPE.getName(), boardReportTypeList);
+		EnumListResponseDto enumListResponseDto = EnumListResponseDto.pass(ResponseDomain.BOARD_REPORT_TYPE.getName(), boardReportTypeList);
 
-		return ResponseEntity.ok().body(enumListDto);
+		return ResponseEntity.ok().body(enumListResponseDto);
 	}
 }

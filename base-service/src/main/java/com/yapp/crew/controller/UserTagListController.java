@@ -1,6 +1,6 @@
 package com.yapp.crew.controller;
 
-import com.yapp.crew.dto.EnumListDto;
+import com.yapp.crew.dto.EnumListResponseDto;
 import com.yapp.crew.utils.EnumToList;
 import com.yapp.crew.utils.ResponseDomain;
 import java.util.List;
@@ -15,8 +15,8 @@ public class UserTagListController {
 	public ResponseEntity<?> getUserTagList() {
 
 		List<String> userTagList = EnumToList.userTypeEnumToList();
-		EnumListDto enumListDto = EnumListDto.pass(ResponseDomain.USER_TAG.getName(), userTagList);
+		EnumListResponseDto enumListResponseDto = EnumListResponseDto.pass(ResponseDomain.USER_TAG.getName(), userTagList);
 
-		return ResponseEntity.ok().body(enumListDto);
+		return ResponseEntity.ok().body(enumListResponseDto);
 	}
 }

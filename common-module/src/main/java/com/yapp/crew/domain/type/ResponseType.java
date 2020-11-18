@@ -45,7 +45,7 @@ public enum ResponseType {
 	SIGN_UP_DUPLICATE("회원 정보가 중복 됩니다."),
 	BOARD_TIME_INVALID("모임 시간이 올바르지 않습니다."),
 	UNAUTORIZED_FAIL("요청이 올바르지 않습니다."),
-	EVALUATE_IMPOSSIBLE("아직 평가를 진행할 수 없습니다.");
+	EVALUATE_IMPOSSIBLE("아직 평가를 진행할 수 없습니다."),;
 
 	private final String message;
 

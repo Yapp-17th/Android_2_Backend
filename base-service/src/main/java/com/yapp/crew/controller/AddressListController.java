@@ -1,7 +1,7 @@
 package com.yapp.crew.controller;
 
 import com.yapp.crew.utils.ResponseDomain;
-import com.yapp.crew.dto.EnumListDto;
+import com.yapp.crew.dto.EnumListResponseDto;
 import com.yapp.crew.utils.EnumToList;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
@@ -15,8 +15,8 @@ public class AddressListController {
 	public ResponseEntity<?> getAddressCityList() {
 
 		List<String> addressList = EnumToList.addressEnumToList();
-		EnumListDto enumListDto = EnumListDto.pass(ResponseDomain.ADDRESS_CITY.getName(), addressList);
+		EnumListResponseDto enumListResponseDto = EnumListResponseDto.pass(ResponseDomain.ADDRESS_CITY.getName(), addressList);
 
-		return ResponseEntity.ok().body(enumListDto);
+		return ResponseEntity.ok().body(enumListResponseDto);
 	}
 }

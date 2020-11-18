@@ -64,10 +64,6 @@ public class User extends BaseEntity {
 	private String oauthId;
 
 	@Setter(value = AccessLevel.PRIVATE)
-	@Column(name = "report_points", nullable = false)
-	private Integer reportPoints = 0;
-
-	@Setter(value = AccessLevel.PRIVATE)
 	@Enumerated(value = EnumType.STRING)
 	@Column(nullable = false)
 	private UserStatus status = UserStatus.ACTIVE;
@@ -129,11 +125,6 @@ public class User extends BaseEntity {
 
 	public void addHiddenBoard(HiddenBoard hiddenBoard) {
 		this.userHiddenBoard.add(hiddenBoard);
-	}
-
-	public void addBoard(Board board) {
-		board.setUser(this);
-		this.boards.add(board);
 	}
 
 	public void addReport(Report report) {

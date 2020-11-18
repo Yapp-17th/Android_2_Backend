@@ -79,8 +79,6 @@ public class BoardService {
 
 	@Transactional
 	public SimpleResponse postBoard(BoardPostRequiredInfo boardPostRequiredInfo, Long userId) {
-		BoardBuilder boardBuilder = Board.getBuilder();
-
 		User user = findUserById(userId)
 				.orElseThrow(() -> new UserNotFoundException(ResponseType.USER_NOT_FOUND.getMessage()));
 
@@ -93,6 +91,7 @@ public class BoardService {
 		Tag tag = findTagById(boardPostRequiredInfo.getUserTag())
 				.orElseThrow(() -> new TagNotFoundException("tag not found"));
 
+		BoardBuilder boardBuilder = Board.getBuilder();
 		Board board = boardBuilder
 				.withUser(user)
 				.withCategory(category)
