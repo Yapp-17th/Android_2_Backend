@@ -90,7 +90,7 @@ public class ChatRoom extends BaseEntity {
 		}
 
 		if (firstUnreadChatMessage.isPresent()) {
-			return firstUnreadChatMessage.get().getId();
+			return firstUnreadChatMessage.get().getMessageId();
 		}
 		return -1L;
 	}
