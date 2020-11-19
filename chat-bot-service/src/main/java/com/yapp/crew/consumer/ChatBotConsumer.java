@@ -84,7 +84,7 @@ public class ChatBotConsumer {
 
 		MessageRequestPayload guidelineMessagePayload = MessageRequestPayload.builder()
 				.content(botMessages.getGuidelineMessage().replace("\"", ""))
-				.type(MessageType.BOT_MESSAGE)
+				.type(MessageType.BOT_NOTICE)
 				.senderId(guidelineRequestPayload.getSenderId())
 				.chatRoomId(guidelineRequestPayload.getChatRoomId())
 				.build();
