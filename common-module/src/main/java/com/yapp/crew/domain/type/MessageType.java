@@ -5,7 +5,8 @@ public enum MessageType {
 	EXIT(1, "채팅방 퇴장"),
 	TALK(2, "메시지 전송"),
 	PROFILE(3, "상대방 프로필 요청"),
-	BOT_MESSAGE(4, "봇 메시지");
+	BOT_MESSAGE(4, "봇 메시지"),
+	BOT_NOTICE(5, "봇 공지사항");
 
 	private final int code;
 	private final String name;
