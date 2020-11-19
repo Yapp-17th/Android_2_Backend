@@ -1,6 +1,7 @@
 package com.yapp.crew.domain.model;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -20,13 +21,13 @@ public class BookMark extends BaseEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@ManyToOne
-	@JoinColumn(name = "user_id")
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_id", nullable = false)
 	@Setter(value = AccessLevel.PRIVATE)
 	private User user;
 
-	@ManyToOne
-	@JoinColumn(name = "board_id")
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "board_id", nullable = false)
 	@Setter(value = AccessLevel.PRIVATE)
 	private Board board;
 
