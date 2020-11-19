@@ -44,20 +44,9 @@ spring:
   jpa:
     show-sql: true
     generate-ddl: true
-    properties:
-      hibernate:
-        generate_statistics: true
-        format_sql: true
-    database-platform: org.hibernate.dialect.MySQL5Dialect
+    database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
       ddl-auto: create
-
-  logging:
-    level:
-      org:
-        hibernate:
-          stat: debug
-          type: trace
 
 kafka:
   topics:
