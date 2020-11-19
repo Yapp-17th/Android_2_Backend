@@ -1,12 +1,8 @@
 package com.yapp.crew.dto;
 
-import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
-
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.yapp.crew.domain.type.ResponseType;
 import com.yapp.crew.model.EnumData;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,20 +10,20 @@ import org.springframework.http.HttpStatus;
 
 @NoArgsConstructor
 @Getter
-public class EnumListDto {
+public class EnumListResponseDto {
 
 	private String type;
 	private int status;
 	private ResponseType message;
 	private List<EnumData> data;
 
-	public static EnumListDto pass(String type, List<String> data) {
-		EnumListDto enumListDto = new EnumListDto();
-		enumListDto.type = type;
-		enumListDto.status = HttpStatus.OK.value();
-		enumListDto.message = ResponseType.SUCCESS;
-		enumListDto.setData(data);
-		return enumListDto;
+	public static EnumListResponseDto pass(String type, List<String> data) {
+		EnumListResponseDto enumListResponseDto = new EnumListResponseDto();
+		enumListResponseDto.type = type;
+		enumListResponseDto.status = HttpStatus.OK.value();
+		enumListResponseDto.message = ResponseType.SUCCESS;
+		enumListResponseDto.setData(data);
+		return enumListResponseDto;
 	}
 
 	public void setData(List<String> data) {

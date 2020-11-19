@@ -1,7 +1,7 @@
 package com.yapp.crew.controller;
 
 import com.yapp.crew.utils.ResponseDomain;
-import com.yapp.crew.dto.EnumListDto;
+import com.yapp.crew.dto.EnumListResponseDto;
 import com.yapp.crew.utils.EnumToList;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
@@ -15,8 +15,8 @@ public class ExerciseListController {
 	public ResponseEntity<?> getExerciseList() {
 
 		List<String> exerciseList = EnumToList.exerciseEnumToList();
-		EnumListDto enumListDto = EnumListDto.pass(ResponseDomain.EXERCISE.getName(), exerciseList);
+		EnumListResponseDto enumListResponseDto = EnumListResponseDto.pass(ResponseDomain.EXERCISE.getName(), exerciseList);
 
-		return ResponseEntity.ok().body(enumListDto);
+		return ResponseEntity.ok().body(enumListResponseDto);
 	}
 }
