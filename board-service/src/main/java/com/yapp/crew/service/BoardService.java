@@ -7,6 +7,7 @@ import com.yapp.crew.domain.errors.BoardTimeInvalidException;
 import com.yapp.crew.domain.errors.CategoryNotFoundException;
 import com.yapp.crew.domain.errors.InvalidRequestBodyException;
 import com.yapp.crew.domain.errors.TagNotFoundException;
+import com.yapp.crew.domain.errors.UnAuthorizedEventException;
 import com.yapp.crew.domain.errors.UserNotFoundException;
 import com.yapp.crew.domain.model.Address;
 import com.yapp.crew.domain.model.BaseEntity;
@@ -78,8 +79,6 @@ public class BoardService {
 
 	@Transactional
 	public SimpleResponse postBoard(BoardPostRequiredInfo boardPostRequiredInfo, Long userId) {
-		BoardBuilder boardBuilder = Board.getBuilder();
-
 		User user = findUserById(userId)
 				.orElseThrow(() -> new UserNotFoundException(ResponseType.USER_NOT_FOUND.getMessage()));
 
@@ -92,6 +91,7 @@ public class BoardService {
 		Tag tag = findTagById(boardPostRequiredInfo.getUserTag())
 				.orElseThrow(() -> new TagNotFoundException("tag not found"));
 
+		BoardBuilder boardBuilder = Board.getBuilder();
 		Board board = boardBuilder
 				.withUser(user)
 				.withCategory(category)
@@ -121,8 +121,7 @@ public class BoardService {
 			categories = findAllCategory().stream()
 					.filter(category -> boardFilter.getCategory().contains(category.getId()))
 					.collect(Collectors.toList());
-		}
-		else {
+		} else {
 			categories = findAllCategory();
 		}
 
@@ -130,8 +129,7 @@ public class BoardService {
 			addresses = findAllAddress().stream()
 					.filter(address -> boardFilter.getCity().contains(address.getId()))
 					.collect(Collectors.toList());
-		}
-		else {
+		} else {
 			addresses = findAllAddress();
 		}
 
@@ -169,6 +167,10 @@ public class BoardService {
 		Board board = findBoardById(boardId)
 				.orElseThrow(() -> new BoardNotFoundException("board not found"));
 
+		if (!board.getUser().getId().equals(userId)) {
+			throw new UnAuthorizedEventException("not authorized edit");
+		}
+
 		Category category = findCategoryById(boardPostRequiredInfo.getCategory())
 				.orElseThrow(() -> new CategoryNotFoundException("category not found"));
 
@@ -180,19 +182,21 @@ public class BoardService {
 
 		List<Evaluation> evaluations = findAllByEvaluatedId(board.getUser().getId());
 
-		board.updateBoard(
-				boardPostRequiredInfo.getTitle(),
-				boardPostRequiredInfo.getContent(),
-				boardPostRequiredInfo.getPlace(),
-				boardPostRequiredInfo.getRecruitNumber(),
-				category,
-				address,
-				tag,
-				boardPostRequiredInfo.getDate()
-		);
-		saveBoard(board);
+		BoardBuilder boardBuilder = Board.getBuilder();
+		Board updateBoard = boardBuilder
+				.withUser(board.getUser())
+				.withTitle(boardPostRequiredInfo.getTitle())
+				.withContent(boardPostRequiredInfo.getContent())
+				.withPlace(boardPostRequiredInfo.getPlace())
+				.withRecruitCount(boardPostRequiredInfo.getRecruitNumber())
+				.withCategory(category)
+				.withAddress(address)
+				.withTag(tag)
+				.withStartsAt(boardPostRequiredInfo.getDate())
+				.build(board);
+		saveBoard(updateBoard);
 
-		return BoardContentResponseInfo.build(board, evaluations);
+		return BoardContentResponseInfo.build(updateBoard, evaluations);
 	}
 
 	private void deleteBoard(Board board) {
@@ -248,8 +252,7 @@ public class BoardService {
 			return boards.stream()
 					.sorted(Comparator.comparing(Board::getRemainRecruitNumber, Comparator.reverseOrder()))
 					.collect(Collectors.toList());
-		}
-		else if (sorting == SortingType.DEADLINE) {
+		} else if (sorting == SortingType.DEADLINE) {
 			return boards.stream()
 					.sorted(Comparator.comparing(Board::getStartsAt, Comparator.naturalOrder()))
 					.collect(Collectors.toList());

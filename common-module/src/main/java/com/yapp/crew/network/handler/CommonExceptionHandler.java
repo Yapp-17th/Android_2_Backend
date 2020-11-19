@@ -62,7 +62,7 @@ public class CommonExceptionHandler {
 
 	@ExceptionHandler(value = MethodArgumentNotValidException.class)
 	public ResponseEntity<?> handleMethodArgumentNotValidException() {
-		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.BAD_REQUEST, ResponseType.INVALID_METHOD);
+		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.BAD_REQUEST, ResponseType.INVALID_REQUEST_BODY);
 		return ResponseEntity.ok().body(responseBody);
 	}
 
