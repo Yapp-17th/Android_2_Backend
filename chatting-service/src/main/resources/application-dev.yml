@@ -38,6 +38,8 @@ spring:
         bootstrap-mode: default
 
   jpa:
+    database: mysql
+    show-sql: true
     generate-ddl: true
     database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
