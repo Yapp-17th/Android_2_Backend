@@ -171,6 +171,9 @@ public class BoardService {
 			throw new UnAuthorizedEventException("not authorized edit");
 		}
 
+		User user = findUserById(userId)
+				.orElseThrow(() -> new UserNotFoundException("user not found"));
+
 		Category category = findCategoryById(boardPostRequiredInfo.getCategory())
 				.orElseThrow(() -> new CategoryNotFoundException("category not found"));
 
@@ -183,7 +186,9 @@ public class BoardService {
 		List<Evaluation> evaluations = findAllByEvaluatedId(board.getUser().getId());
 
 		BoardBuilder boardBuilder = Board.getBuilder();
-		Board updateBoard = boardBuilder.withTitle(boardPostRequiredInfo.getTitle())
+		Board updateBoard = boardBuilder
+				.withUser(user)
+				.withTitle(boardPostRequiredInfo.getTitle())
 				.withContent(boardPostRequiredInfo.getContent())
 				.withPlace(boardPostRequiredInfo.getPlace())
 				.withRecruitCount(boardPostRequiredInfo.getRecruitNumber())
@@ -191,8 +196,7 @@ public class BoardService {
 				.withAddress(address)
 				.withTag(tag)
 				.withStartsAt(boardPostRequiredInfo.getDate())
-				.build();
-
+				.build(board);
 		saveBoard(updateBoard);
 
 		return BoardContentResponseInfo.build(updateBoard, evaluations);
