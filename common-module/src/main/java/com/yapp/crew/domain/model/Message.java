@@ -37,7 +37,7 @@ public class Message extends BaseEntity {
 	private MessageType type;
 
 	@Setter(value = AccessLevel.PRIVATE)
-	@Column(name = "message_id", nullable = false, columnDefinition = "int default 1")
+	@Column(name = "message_id", nullable = false)
 	private long messageId;
 
 	@Setter(value = AccessLevel.PRIVATE)
