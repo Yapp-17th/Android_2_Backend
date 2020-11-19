@@ -16,6 +16,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -70,6 +71,7 @@ public class User extends BaseEntity {
 
 	@JsonBackReference
 	@Setter(value = AccessLevel.PRIVATE)
+	@JoinColumn(nullable = false)
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Address address;
 
