@@ -7,9 +7,9 @@ spring:
       enabled: true
 
   datasource:
-    url: jdbc:mysql://localhost:3306/explanet_dev?useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul&createDatabaseIfNotExist=true
+    url: jdbc:mysql://localhost:3306/explanet_dev?allowPublicKeyRetrieval=true&useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul&createDatabaseIfNotExist=true
     username: root
-    password:
+    password: dnjscksdn98@
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   data:
@@ -20,20 +20,9 @@ spring:
   jpa:
     show-sql: true
     generate-ddl: true
-    properties:
-      hibernate:
-        generate_statistics: true
-        format_sql: true
-    database-platform: org.hibernate.dialect.MySQL5Dialect
+    database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
-      ddl-auto: update
-
-  logging:
-    level:
-      org:
-        hibernate:
-          stat: debug
-          type: trace
+      ddl-auto: create
 
 jwt:
   header: Authorization
