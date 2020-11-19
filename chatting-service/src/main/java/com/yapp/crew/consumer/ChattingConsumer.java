@@ -13,6 +13,7 @@ import com.yapp.crew.domain.repository.UserRepository;
 import com.yapp.crew.domain.type.ResponseType;
 import com.yapp.crew.payload.MessageRequestPayload;
 import com.yapp.crew.payload.MessageResponsePayload;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,9 +64,16 @@ public class ChattingConsumer {
 		User sender = userRepository.findById(messageRequestPayload.getSenderId())
 				.orElseThrow(() -> new UserNotFoundException(ResponseType.USER_NOT_FOUND.getMessage()));
 
+		long lastMessageId = 0;
+		Optional<Message> lastMessage = messageRepository.findFirstByChatRoomIdOrderByIdDesc(chatRoom.getId());
+		if (lastMessage.isPresent()) {
+			lastMessageId = lastMessage.get().getMessageId() + 1;
+		}
+
 		Message message = Message.buildChatMessage(
 				messageRequestPayload.getContent(),
 				messageRequestPayload.getType(),
+				lastMessageId,
 				sender,
 				chatRoom
 		);
