@@ -10,12 +10,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ApplyListInfo {
 
-	private long hostId;
-	private long guestId;
+	private Long hostId;
+	private Long guestId;
 	private String guestName;
-	private boolean isHost = false;
+	private Boolean isHost = false;
 	private ApplyStatusInfo applyStatus;
-	private long chattingRoomId;
+	private Long chattingRoomId;
 
 	public static ApplyListInfo build(long hostId, User guest, Board board, long chattingRoomId) {
 		ApplyListInfo applyListInfo = new ApplyListInfo();

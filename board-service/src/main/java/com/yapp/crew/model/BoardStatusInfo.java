@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class BoardStatusInfo {
 
-	int code;
+	Integer code;
 	String name;
 
 	public static BoardStatusInfo build(BoardStatus boardStatus) {

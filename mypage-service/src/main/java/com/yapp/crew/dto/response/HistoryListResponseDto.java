@@ -10,8 +10,8 @@ import org.springframework.http.HttpStatus;
 @NoArgsConstructor
 public class HistoryListResponseDto {
 
-	private int status = HttpStatus.OK.value();
-	private boolean success = true;
+	private Integer status = HttpStatus.OK.value();
+	private Boolean success = true;
 	private String message = "히스토리 조회 성공";
 	private String type;
 	private List<HistoryListInfo> data;
