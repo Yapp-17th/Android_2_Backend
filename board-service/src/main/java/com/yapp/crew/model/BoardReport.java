@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class BoardReport {
 
-	private long boardId;
-	private long reporter;
+	private Long boardId;
+	private Long reporter;
 	private ReportType reportType;
 	private String content;
 

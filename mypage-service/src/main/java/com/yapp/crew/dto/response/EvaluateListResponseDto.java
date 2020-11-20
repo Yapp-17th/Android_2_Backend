@@ -10,8 +10,8 @@ import org.springframework.http.HttpStatus;
 @NoArgsConstructor
 public class EvaluateListResponseDto {
 
-	private int status = HttpStatus.OK.value();
-	private boolean success = true;
+	private Integer status = HttpStatus.OK.value();
+	private Boolean success = true;
 	private String message = "평가 리스트 조회 성공";
 	private List<EvaluateListInfo> data;
 

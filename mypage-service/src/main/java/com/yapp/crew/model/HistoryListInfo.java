@@ -10,9 +10,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class HistoryListInfo {
 
-	private boolean isHost;
+	private Boolean isHost;
 	private String userName;
-	private boolean isContinue;
+	private Boolean isContinue;
 	private String leftTime;
 	private BoardListInfo boardInfo;
 
