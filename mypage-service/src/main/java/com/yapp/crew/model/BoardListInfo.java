@@ -16,7 +16,7 @@ public class BoardListInfo {
 	private String groupStatus;
 	private String exercise;
 	private String city;
-	private boolean isBookMark = true;
+	private Boolean isBookMark = true;
 	private int recruitNumber;
 	private int recruitedNumber;
 	private String time;

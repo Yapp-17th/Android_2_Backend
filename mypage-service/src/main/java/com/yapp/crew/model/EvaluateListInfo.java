@@ -10,11 +10,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class EvaluateListInfo {
 
-	private long userId;
+	private Long userId;
 	private String userName;
-	private boolean isHost;
-	private boolean isLike;
-	private boolean isDislike;
+	private Boolean isHost;
+	private Boolean isLike;
+	private Boolean isDislike;
 
 	public static EvaluateListInfo build(Evaluation evaluation, User user, Board board) {
 		EvaluateListInfo evaluateListInfo = new EvaluateListInfo();

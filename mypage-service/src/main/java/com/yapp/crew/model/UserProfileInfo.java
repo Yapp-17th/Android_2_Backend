@@ -12,11 +12,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserProfileInfo {
 
-	private long userId;
-	private boolean isMine;
+	private Long userId;
+	private Boolean isMine;
 	private String userName;
-	private int like;
-	private int dislike;
+	private Integer like;
+	private Integer dislike;
 	private String intro;
 	private List<String> category = new ArrayList<>();
 	private String city;

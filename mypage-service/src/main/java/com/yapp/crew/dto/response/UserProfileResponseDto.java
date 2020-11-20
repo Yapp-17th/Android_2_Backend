@@ -9,8 +9,8 @@ import org.springframework.http.HttpStatus;
 @NoArgsConstructor
 public class UserProfileResponseDto {
 
-	private int status = HttpStatus.OK.value();
-	private boolean success = true;
+	private Integer status = HttpStatus.OK.value();
+	private Boolean success = true;
 	private String message = "회원 프로필 조회 완료";
 	private UserProfileInfo data;
 
