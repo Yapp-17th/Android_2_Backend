@@ -104,7 +104,7 @@ public class ChattingController {
 	}
 
 	@DeleteMapping(path = "/v1/chat/room/{chatRoomId}")
-	public ResponseEntity<?> deleteChatRoom(
+	public ResponseEntity<?> exitChatRoom(
 			@RequestHeader(value = "userId") Long userId,
 			@PathVariable(name = "chatRoomId") Long chatRoomId
 	) {
