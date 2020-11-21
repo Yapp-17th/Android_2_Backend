@@ -124,7 +124,7 @@ public class ChattingService {
 		);
 	}
 
-	public HttpResponseBody<?> deleteChatRoom(Long userId, Long chatRoomId) throws JsonProcessingException {
+	public HttpResponseBody<?> exitChatRoom(Long userId, Long chatRoomId) throws JsonProcessingException {
 		User user = userRepository.findUserById(userId)
 				.orElseThrow(() -> new UserNotFoundException("User not found"));
 

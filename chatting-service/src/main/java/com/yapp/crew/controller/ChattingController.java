@@ -109,7 +109,7 @@ public class ChattingController {
 			@PathVariable(name = "chatRoomId") Long chatRoomId
 	) throws JsonProcessingException {
 
-		HttpResponseBody<?> responseBody = chattingService.deleteChatRoom(userId, chatRoomId);
+		HttpResponseBody<?> responseBody = chattingService.exitChatRoom(userId, chatRoomId);
 		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
 	}
 
