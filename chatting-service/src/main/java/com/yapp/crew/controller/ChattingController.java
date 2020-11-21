@@ -107,7 +107,8 @@ public class ChattingController {
 	public ResponseEntity<?> exitChatRoom(
 			@RequestHeader(value = "userId") Long userId,
 			@PathVariable(name = "chatRoomId") Long chatRoomId
-	) {
+	) throws JsonProcessingException {
+
 		HttpResponseBody<?> responseBody = chattingService.deleteChatRoom(userId, chatRoomId);
 		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
 	}

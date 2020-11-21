@@ -273,7 +273,7 @@ public class ChatBotConsumer {
 
 	@KafkaListener(topics = "${kafka.topics.user-exited}", groupId = "${kafka.groups.user-exited-group}")
 	public void consumeUserExitedEvent(ConsumerRecord<Long, String> consumerRecord) throws JsonProcessingException {
-		log.info("[Chat Bot Event - Board Canceled] Consumer Record: {}", consumerRecord);
+		log.info("[Chat Bot Event - User Exited] Consumer Record: {}", consumerRecord);
 
 		UserExitedPayload userExitedPayload = objectMapper.readValue(consumerRecord.value(), UserExitedPayload.class);
 

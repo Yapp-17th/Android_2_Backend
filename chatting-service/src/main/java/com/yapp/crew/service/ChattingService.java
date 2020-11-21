@@ -30,6 +30,7 @@ import com.yapp.crew.payload.ChatRoomRequestPayload;
 import com.yapp.crew.payload.ChatRoomResponsePayload;
 import com.yapp.crew.payload.GuidelineRequestPayload;
 import com.yapp.crew.payload.MessageResponsePayload;
+import com.yapp.crew.payload.UserExitedPayload;
 import com.yapp.crew.producer.ChattingProducer;
 import java.util.List;
 import java.util.Optional;
@@ -123,7 +124,7 @@ public class ChattingService {
 		);
 	}
 
-	public HttpResponseBody<?> deleteChatRoom(Long userId, Long chatRoomId) {
+	public HttpResponseBody<?> deleteChatRoom(Long userId, Long chatRoomId) throws JsonProcessingException {
 		User user = userRepository.findUserById(userId)
 				.orElseThrow(() -> new UserNotFoundException("User not found"));
 
@@ -138,6 +139,12 @@ public class ChattingService {
 		}
 
 		chatRoomRepository.save(chatRoom);
+
+		UserExitedPayload userExitedPayload = UserExitedPayload.builder()
+				.chatRoomId(chatRoom.getId())
+				.userId(user.getId())
+				.build();
+		chattingProducer.sendUserExitMessage(userExitedPayload);
 
 		return HttpResponseBody.buildSuccessResponse(
 				HttpStatus.OK.value(),
