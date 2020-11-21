@@ -122,6 +122,10 @@ public class ChattingService {
 		);
 	}
 
+//	public HttpResponseBody<?> deleteChatRoom(Long userId, Long chatRoomId) {
+//
+//	}
+
 	public HttpResponseBody<List<ChatRoomResponsePayload>> receiveChatRooms(Long userId) {
 		List<ChatRoom> chatRooms = chatRoomRepository.findAllByUserId(userId);
 

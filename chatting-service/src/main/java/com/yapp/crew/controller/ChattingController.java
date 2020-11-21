@@ -69,7 +69,7 @@ public class ChattingController {
 	@GetMapping(path = "/v1/chat/room/{chatRoomId}/message")
 	public ResponseEntity<?> receiveChatMessages(
 			@RequestHeader(value = "userId") Long userId,
-			@PathVariable("chatRoomId") Long chatRoomId
+			@PathVariable(name = "chatRoomId") Long chatRoomId
 	) {
 		HttpResponseBody<List<MessageResponsePayload>> responseBody = chattingService.receiveChatMessages(chatRoomId, userId);
 		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
@@ -78,8 +78,8 @@ public class ChattingController {
 	@PutMapping(path = "/v1/chat/room/{chatRoomId}/message/{messageId}")
 	public ResponseEntity<?> updateMessageIsRead(
 			@RequestHeader(value = "userId") Long userId,
-			@PathVariable("chatRoomId") Long chatRoomId,
-			@PathVariable("messageId") Long messageId
+			@PathVariable(name = "chatRoomId") Long chatRoomId,
+			@PathVariable(name = "messageId") Long messageId
 	) {
 		HttpResponseBody<?> responseBody = chattingService.updateMessageIsRead(userId, chatRoomId, messageId);
 		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
@@ -103,11 +103,20 @@ public class ChattingController {
 		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
 	}
 
+//	@DeleteMapping(path = "/v1/chat/room/{chatRoomId}")
+//	public ResponseEntity<?> deleteChatRoom(
+//			@RequestHeader(value = "userId") Long userId,
+//			@PathVariable(name = "chatRoomId") Long chatRoomId
+//	) {
+//		HttpResponseBody<?> responseBody = chattingService.deleteChatRoom(userId, chatRoomId);
+//		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
+//	}
+
 	@PostMapping(path = "/v1/board/{boardId}/apply")
 	public ResponseEntity<?> applyUser(
 			@RequestHeader(value = "userId") Long userId,
 			@Valid @RequestBody ApplyRequestPayload applyRequestPayload,
-			@PathVariable("boardId") Long boardId
+			@PathVariable(name = "boardId") Long boardId
 	) throws JsonProcessingException {
 
 		applyRequestPayload.setBoardId(boardId);
@@ -121,7 +130,7 @@ public class ChattingController {
 	public ResponseEntity<?> approveUser(
 			@RequestHeader(value = "userId") Long userId,
 			@Valid @RequestBody ApproveRequestPayload approveRequestPayload,
-			@PathVariable("boardId") Long boardId
+			@PathVariable(name = "boardId") Long boardId
 	) throws JsonProcessingException {
 
 		approveRequestPayload.setBoardId(boardId);
@@ -135,7 +144,7 @@ public class ChattingController {
 	public ResponseEntity<?> disapproveUser(
 			@RequestHeader(value = "userId") Long userId,
 			@Valid @RequestBody ApproveRequestPayload approveRequestPayload,
-			@PathVariable("boardId") Long boardId
+			@PathVariable(name = "boardId") Long boardId
 	) throws JsonProcessingException {
 
 		approveRequestPayload.setBoardId(boardId);
