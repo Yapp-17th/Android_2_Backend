@@ -25,6 +25,7 @@ import com.yapp.crew.payload.BoardCanceledPayload;
 import com.yapp.crew.payload.BoardFinishedPayload;
 import com.yapp.crew.payload.GuidelineRequestPayload;
 import com.yapp.crew.payload.MessageRequestPayload;
+import com.yapp.crew.payload.UserExitedPayload;
 import com.yapp.crew.producer.ChatBotProducer;
 import java.util.List;
 import java.util.Optional;
@@ -268,5 +269,33 @@ public class ChatBotConsumer {
 						e.printStackTrace();
 					}
 				});
+	}
+
+	@KafkaListener(topics = "${kafka.topics.user-exited}", groupId = "${kafka.groups.user-exited-group}")
+	public void consumeUserExitedEvent(ConsumerRecord<Long, String> consumerRecord) throws JsonProcessingException {
+		log.info("[Chat Bot Event - Board Canceled] Consumer Record: {}", consumerRecord);
+
+		UserExitedPayload userExitedPayload = objectMapper.readValue(consumerRecord.value(), UserExitedPayload.class);
+
+		ChatRoom chatRoom = chatRoomRepository.findById(userExitedPayload.getChatRoomId())
+				.orElseThrow(() -> new ChatRoomNotFoundException("Chat room not found"));
+
+		User user = userRepository.findUserById(userExitedPayload.getUserId())
+				.orElseThrow(() -> new UserNotFoundException("User not found"));
+
+		User bot = userRepository.findUserById(-1L)
+				.orElseThrow(() -> new UserNotFoundException("Bot not found"));
+
+		MessageRequestPayload userExitedMessagePayload = MessageRequestPayload.builder()
+				.content(String.format(
+						botMessages.getUserExited(),
+						user.getNickname()
+				).replace("\"", ""))
+				.type(MessageType.BOT_MESSAGE)
+				.senderId(bot.getId())
+				.chatRoomId(chatRoom.getId())
+				.build();
+
+		chatBotProducer.sendBotMessage(userExitedMessagePayload);
 	}
 }

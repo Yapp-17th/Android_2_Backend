@@ -26,6 +26,9 @@ public class KafkaTopicConfig {
 	@Value(value = "${kafka.topics.board-finished}")
 	private String boardFinishedTopic;
 
+	@Value(value = "${kafka.topics.user-exited}")
+	private String userExitedTopic;
+
 	@Bean
 	public NewTopic guidelineMessage() {
 		return TopicBuilder
@@ -66,6 +69,15 @@ public class KafkaTopicConfig {
 	public NewTopic boardFinished() {
 		return TopicBuilder
 				.name(boardFinishedTopic)
+				.partitions(1)
+				.replicas(1)
+				.build();
+	}
+
+	@Bean
+	public NewTopic userExited() {
+		return TopicBuilder
+				.name(userExitedTopic)
 				.partitions(1)
 				.replicas(1)
 				.build();
