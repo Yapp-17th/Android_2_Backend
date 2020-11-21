@@ -131,6 +131,11 @@ public class ChattingService {
 
 		boolean isHost = chatRoom.isUserChatRoomHost(userId);
 		chatRoom.exitUser(isHost);
+
+		if (chatRoom.getGuestExited() && chatRoom.getHostExited()) {
+			chatRoom.inactivateChatRoom();
+		}
+
 		chatRoomRepository.save(chatRoom);
 
 		return HttpResponseBody.buildSuccessResponse(
