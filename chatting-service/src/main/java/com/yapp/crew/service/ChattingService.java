@@ -33,6 +33,8 @@ import com.yapp.crew.payload.MessageResponsePayload;
 import com.yapp.crew.producer.ChattingProducer;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -146,7 +148,18 @@ public class ChattingService {
 	}
 
 	public HttpResponseBody<List<ChatRoomResponsePayload>> receiveChatRooms(Long userId) {
-		List<ChatRoom> chatRooms = chatRoomRepository.findAllByUserId(userId);
+		List<ChatRoom> chatRooms = chatRoomRepository.findAllByUserId(userId).stream()
+				.filter(chatRoom -> {
+					boolean isHost = chatRoom.isUserChatRoomHost(userId);
+					if (isHost && chatRoom.getHostExited()) {
+						return false;
+					}
+					if (!isHost && chatRoom.getGuestExited()) {
+						return false;
+					}
+					return true;
+				})
+				.collect(Collectors.toList());
 
 		return HttpResponseBody.buildChatRoomsResponse(
 				ChatRoomResponsePayload.buildChatRoomResponsePayload(chatRooms, userId),

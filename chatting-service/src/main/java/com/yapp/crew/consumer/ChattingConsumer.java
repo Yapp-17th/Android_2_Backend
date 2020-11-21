@@ -79,6 +79,7 @@ public class ChattingConsumer {
 		);
 
 		chatRoom.addMessage(message);
+		chatRoomRepository.save(chatRoom);
 		messageRepository.save(message);
 
 		MessageResponsePayload payload = MessageResponsePayload.buildChatMessageResponsePayload(message);
