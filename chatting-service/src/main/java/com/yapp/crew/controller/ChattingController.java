@@ -103,14 +103,14 @@ public class ChattingController {
 		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
 	}
 
-//	@DeleteMapping(path = "/v1/chat/room/{chatRoomId}")
-//	public ResponseEntity<?> deleteChatRoom(
-//			@RequestHeader(value = "userId") Long userId,
-//			@PathVariable(name = "chatRoomId") Long chatRoomId
-//	) {
-//		HttpResponseBody<?> responseBody = chattingService.deleteChatRoom(userId, chatRoomId);
-//		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
-//	}
+	@DeleteMapping(path = "/v1/chat/room/{chatRoomId}")
+	public ResponseEntity<?> deleteChatRoom(
+			@RequestHeader(value = "userId") Long userId,
+			@PathVariable(name = "chatRoomId") Long chatRoomId
+	) {
+		HttpResponseBody<?> responseBody = chattingService.deleteChatRoom(userId, chatRoomId);
+		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
+	}
 
 	@PostMapping(path = "/v1/board/{boardId}/apply")
 	public ResponseEntity<?> applyUser(

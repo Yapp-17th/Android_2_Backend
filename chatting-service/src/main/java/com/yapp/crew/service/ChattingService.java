@@ -122,9 +122,23 @@ public class ChattingService {
 		);
 	}
 
-//	public HttpResponseBody<?> deleteChatRoom(Long userId, Long chatRoomId) {
-//
-//	}
+	public HttpResponseBody<?> deleteChatRoom(Long userId, Long chatRoomId) {
+		User user = userRepository.findUserById(userId)
+				.orElseThrow(() -> new UserNotFoundException("User not found"));
+
+		ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
+				.orElseThrow(() -> new ChatRoomNotFoundException("Chat room not found"));
+
+		boolean isHost = chatRoom.isUserChatRoomHost(userId);
+		chatRoom.exitUser(isHost);
+		chatRoomRepository.save(chatRoom);
+
+		return HttpResponseBody.buildSuccessResponse(
+				HttpStatus.OK.value(),
+				ResponseType.SUCCESS,
+				ResponseType.SUCCESS.getMessage()
+		);
+	}
 
 	public HttpResponseBody<List<ChatRoomResponsePayload>> receiveChatRooms(Long userId) {
 		List<ChatRoom> chatRooms = chatRoomRepository.findAllByUserId(userId);
@@ -142,7 +156,7 @@ public class ChattingService {
 		ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
 				.orElseThrow(() -> new ChatRoomNotFoundException("Chat room not found"));
 
-		boolean isHost = chatRoom.isSenderChatRoomHost(userId);
+		boolean isHost = chatRoom.isUserChatRoomHost(userId);
 		Long firstUnreadChatMessageId = chatRoom.findFirstUnreadChatMessage(isHost);
 
 		String boardTitle = chatRoom.getBoard().getTitle();
@@ -178,7 +192,7 @@ public class ChattingService {
 		Message message = messageRepository.findById(messageId)
 				.orElseThrow(() -> new MessageNotFoundException("Message not found"));
 
-		boolean isHost = chatRoom.isSenderChatRoomHost(userId);
+		boolean isHost = chatRoom.isUserChatRoomHost(userId);
 
 		message.readMessage(isHost);
 		messageRepository.save(message);
