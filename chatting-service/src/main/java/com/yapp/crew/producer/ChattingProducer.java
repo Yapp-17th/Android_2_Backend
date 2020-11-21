@@ -212,7 +212,7 @@ public class ChattingProducer {
 				MessageResponsePayload userExitedRealtimeUpdatePayload = MessageResponsePayload.buildRealTimeUpdateResponsePayload(RealTimeUpdateType.USER_EXITED);
 
 				simpMessagingTemplate.convertAndSend(
-						"/sub/chat/room/" + userExitedPayload.getChatRoomId().toString(),
+						"/sub/user/" + userExitedPayload.getUserId().toString() + "/chat/room",
 						userExitedRealtimeUpdatePayload
 				);
 			}
