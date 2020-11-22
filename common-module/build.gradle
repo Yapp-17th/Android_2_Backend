@@ -26,7 +26,10 @@ dependencies {
     implementation 'javax.validation:validation-api:2.0.1.Final'
     implementation 'org.apache.commons:commons-lang3:3.0'
     implementation 'org.springframework.boot:spring-boot-starter-batch'
+
     implementation 'com.querydsl:querydsl-jpa:4.2.1'
+    implementation 'com.querydsl:querydsl-sql-spring:4.2.1'
+    implementation 'joda-time:joda-time:2.9.4'
 
     compile 'mysql:mysql-connector-java'
 
