@@ -1,11 +1,9 @@
 package com.yapp.crew.model;
 
 import com.yapp.crew.domain.model.Board;
-import com.yapp.crew.domain.model.BookMark;
 import com.yapp.crew.domain.model.Evaluation;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

@@ -144,7 +144,8 @@ public class Board extends BaseEntity {
 	}
 
 	public int getApprovedCount() {
-		return (int) appliedUsers.stream().filter(appliedUser -> appliedUser.getStatus() == AppliedStatus.APPROVED).count();
+		return (int) appliedUsers.stream()
+				.filter(appliedUser -> appliedUser.getStatus() == AppliedStatus.APPROVED).count();
 	}
 
 	public static BoardBuilder getBuilder() {

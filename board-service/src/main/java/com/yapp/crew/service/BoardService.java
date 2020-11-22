@@ -11,12 +11,10 @@ import com.yapp.crew.domain.errors.TagNotFoundException;
 import com.yapp.crew.domain.errors.UnAuthorizedEventException;
 import com.yapp.crew.domain.errors.UserNotFoundException;
 import com.yapp.crew.domain.model.Address;
-import com.yapp.crew.domain.model.BaseEntity;
 import com.yapp.crew.domain.model.Board;
 import com.yapp.crew.domain.model.Board.BoardBuilder;
 import com.yapp.crew.domain.model.Category;
 import com.yapp.crew.domain.model.Evaluation;
-import com.yapp.crew.domain.model.HiddenBoard;
 import com.yapp.crew.domain.model.Tag;
 import com.yapp.crew.domain.model.User;
 import com.yapp.crew.domain.repository.AddressRepository;
@@ -30,17 +28,13 @@ import com.yapp.crew.domain.status.BoardStatus;
 import com.yapp.crew.domain.type.ResponseType;
 import com.yapp.crew.model.BoardCancel;
 import com.yapp.crew.model.BoardContentResponseInfo;
-import com.yapp.crew.model.BoardFilter;
 import com.yapp.crew.model.BoardListResponseInfo;
 import com.yapp.crew.model.BoardPostRequiredInfo;
 import com.yapp.crew.network.model.SimpleResponse;
 import com.yapp.crew.producer.BoardProducer;
-import com.yapp.crew.utils.SortingType;
 import java.time.LocalDateTime;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -117,9 +111,10 @@ public class BoardService {
 
 	@Transactional
 	public List<BoardListResponseInfo> getBoardList(BoardFilterCondition boardFilterCondition, Pageable pageable) {
-		return filterBoard(boardFilterCondition, pageable)
-				.stream()
-				.map(board -> BoardListResponseInfo.build(board, boardFilterCondition.getUserId()))
+		User user = findUserById(boardFilterCondition.getUserId())
+				.orElseThrow(() -> new UserNotFoundException("user not found"));
+		return filterBoard(boardFilterCondition, pageable).stream()
+				.map(board -> BoardListResponseInfo.build(board, user))
 				.collect(Collectors.toList());
 	}
 

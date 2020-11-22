@@ -1,9 +1,9 @@
 package com.yapp.crew.controller;
 
 import com.yapp.crew.domain.condition.BoardSearchCondition;
+import com.yapp.crew.domain.model.Board;
 import com.yapp.crew.dto.response.BoardListSuccessResponseDto;
 import com.yapp.crew.model.BoardListResponseInfo;
-import com.yapp.crew.model.BoardSearch;
 import com.yapp.crew.service.SearchService;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -39,11 +39,7 @@ public class SearchController {
 	) {
 		List<BoardListResponseInfo> boardList = searchService.searchBoardList(BoardSearchCondition.build(keyword, userId), pageable);
 
-		PagedListHolder<BoardListResponseInfo> page = new PagedListHolder<>(boardList);
-		page.setPageSize(pageable.getPageSize());
-		page.setPage(pageable.getPageNumber());
-
-		BoardListSuccessResponseDto boardListSuccessResponseDto = BoardListSuccessResponseDto.build(page.getPageList());
+		BoardListSuccessResponseDto boardListSuccessResponseDto = BoardListSuccessResponseDto.build(boardList);
 		return ResponseEntity.ok().body(boardListSuccessResponseDto);
 	}
 }

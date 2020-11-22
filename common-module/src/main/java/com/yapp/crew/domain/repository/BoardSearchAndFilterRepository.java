@@ -1,5 +1,6 @@
 package com.yapp.crew.domain.repository;
 
+import static com.yapp.crew.domain.model.QAppliedUser.appliedUser;
 import static com.yapp.crew.domain.model.QBoard.board;
 import static com.yapp.crew.domain.model.QHiddenBoard.hiddenBoard;
 
@@ -10,6 +11,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.yapp.crew.domain.condition.BoardFilterCondition;
 import com.yapp.crew.domain.condition.BoardSearchCondition;
 import com.yapp.crew.domain.model.Board;
+import com.yapp.crew.domain.status.AppliedStatus;
 import com.yapp.crew.domain.status.BoardStatus;
 import com.yapp.crew.domain.type.SortingType;
 import java.util.List;
@@ -26,43 +28,61 @@ public class BoardSearchAndFilterRepository {
 		this.jpaQueryFactory = new JPAQueryFactory(entityManager);
 	}
 
-	/*
-	 * SELECT *
-	 *	FROM board as b left join hidden_board as hb
-	 *	on (b.id = hb.board_id and hb.user_id=1)
-	 *	where hb.user_id is null; */
-
 	public List<Board> search(BoardSearchCondition boardSearchCondition, Pageable pageable) {
 		return jpaQueryFactory.select(board)
-				.from(board).leftJoin(hiddenBoard).on(
-						board.id.eq(hiddenBoard.board.id).and(hiddenBoard.user.id.eq(boardSearchCondition.getUserId())))
+				.from(board).leftJoin(hiddenBoard)
+				.on(board.id.eq(hiddenBoard.board.id).and(hiddenBoard.user.id.eq(boardSearchCondition.getUserId())))
 				.where(
 						hiddenBoard.user.id.isNull(),
 						isSearchedKeywords(boardSearchCondition.getKeywords()),
 						isDeletedBoard()
-				).orderBy(board.createdAt.desc())
+				)
+				.orderBy(board.createdAt.desc()) // 최신순 정렬
+				.offset(pageable.getOffset())
+				.limit(pageable.getPageSize())
 				.fetch();
 	}
 
+	/*
+	 * SELECT HIDDEN_FILTERED.*, COALESCE(APPROVED_USER.approved_number, 0) as approved_number, (HIDDEN_FILTERED.recruit_count - COALESCE(APPROVED_USER.approved_number, 0)) as remain_number
+	 * FROM (SELECT b.* FROM board as b left join hidden_board as hb on (b.id = hb.board_id and hb.user_id=1) where hb.user_id is null) as HIDDEN_FILTERED
+	 * left join (select board_id, count(user_id) as approved_number from applied_user where status='APPROVED' group by board_id) as APPROVED_USER
+	 * on HIDDEN_FILTERED.id = APPROVED_USER.board_id
+	 * order by approved_number DESC;
+	 * */
+
+	/*
+	 * SELECT b.*, (b.recruit_count - COALESCE(count(au.user_id), 0)) as remain_count
+	 * FROM (board as b left join hidden_board as hb on b.id = hb.board_id and hb.user_id=1) left join applied_user as au on b.id = au.board_id and au.status = 'APPROVED'
+	 * where hb.user_id is null
+	 * group by b.id
+	 * order by remain_count DESC;
+	 * */
+
 	public List<Board> filter(BoardFilterCondition boardFilterCondition, Pageable pageable) {
-		return jpaQueryFactory.select(board)
-				.from(board).leftJoin(hiddenBoard).on(
-						board.id.eq(hiddenBoard.board.id).and(hiddenBoard.user.id.eq(boardFilterCondition.getUserId())))
+		return jpaQueryFactory
+				.select(board)
+				.from(board)
+				.leftJoin(hiddenBoard).on(board.id.eq(hiddenBoard.board.id).and(hiddenBoard.user.id.eq(boardFilterCondition.getUserId())))
+				.leftJoin(appliedUser).on(board.id.eq(appliedUser.board.id).and(appliedUser.status.eq(AppliedStatus.APPROVED)))
 				.where(
 						hiddenBoard.user.id.isNull(),
 						isFilteredCategories(boardFilterCondition.getCategory()),
 						isFilteredCities(boardFilterCondition.getCity()),
 						isDeletedBoard()
 				)
+				.groupBy(board.id)
 				.orderBy(orderType(boardFilterCondition.getSorting()))
+				.offset(pageable.getOffset())
+				.limit(pageable.getPageSize())
 				.fetch();
 	}
 
 	private OrderSpecifier<?> orderType(SortingType sortingType) {
-		if (sortingType == SortingType.REMAIN) {
-			// TODO: 남은 인원수 정렬... 이거 어떻게 하지? --> 걍 마지막에 하면 pagenation을 어떡하지...
-			return board.appliedUsers.size().asc();
-		} else if (sortingType == SortingType.DEADLINE) {
+		if(sortingType == SortingType.REMAIN){
+			return board.recruitCount.subtract(appliedUser.user.id.count().coalesce(0L)).desc();
+		}
+		if (sortingType == SortingType.DEADLINE) {
 			return board.startsAt.asc();
 		}
 		return board.createdAt.desc();
