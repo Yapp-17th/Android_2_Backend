@@ -26,7 +26,7 @@ public class BoardContentResponseInfo {
 	private HostInfo host;
 	private LocalDateTime startsAt;
 
-	public static BoardContentResponseInfo build(Board board, List<Evaluation> evaluationList) {
+	public static BoardContentResponseInfo build(Board board, Long userId, List<Evaluation> evaluationList) {
 		BoardContentResponseInfo boardContentResponseInfo = new BoardContentResponseInfo();
 		boardContentResponseInfo.boardId = board.getId();
 		boardContentResponseInfo.title = board.getTitle();
@@ -37,7 +37,10 @@ public class BoardContentResponseInfo {
 		boardContentResponseInfo.city = board.getAddress().getCity().getName();
 		boardContentResponseInfo.recruitNumber = board.getRecruitCount();
 		boardContentResponseInfo.recruitedNumber = board.getRemainRecruitNumber();
-		boardContentResponseInfo.isBookMark = board.getUser().getUserBookmark().stream().map(BookMark::getBoard).collect(Collectors.toSet()).contains(board);
+		boardContentResponseInfo.isBookMark = board.getBookMarkUser().stream()
+				.map(bookmark -> bookmark.getUser().getId())
+				.anyMatch(id -> id.equals(userId));
+
 		boardContentResponseInfo.host = HostInfo.build(board.getUser(), evaluationList);
 		boardContentResponseInfo.startsAt = board.getStartsAt();
 
