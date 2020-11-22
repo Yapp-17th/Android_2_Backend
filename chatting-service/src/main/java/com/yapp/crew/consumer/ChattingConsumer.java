@@ -77,8 +77,11 @@ public class ChattingConsumer {
 				sender,
 				chatRoom
 		);
-
 		chatRoom.addMessage(message);
+
+		if (chatRoom.getGuestExited() && chatRoom.getHostExited()) {
+			chatRoom.inactivateChatRoom();
+		}
 		chatRoomRepository.save(chatRoom);
 		messageRepository.save(message);
 
