@@ -55,6 +55,7 @@ kafka:
     apply-user: apply-user
     approve-user: approve-user
     disapprove-user: disapprove-user
+    user-exited: user-exited
 
   groups:
     chat-message-group: chat-message-group

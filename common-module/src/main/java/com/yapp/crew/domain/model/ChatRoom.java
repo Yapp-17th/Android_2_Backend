@@ -6,6 +6,7 @@ import com.yapp.crew.domain.status.ChatRoomStatus;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -32,7 +33,16 @@ public class ChatRoom extends BaseEntity {
 
 	@Setter(value = AccessLevel.PRIVATE)
 	@Enumerated(value = EnumType.STRING)
+	@Column(nullable = false)
 	private ChatRoomStatus status = ChatRoomStatus.ACTIVE;
+
+	@Setter(value = AccessLevel.PRIVATE)
+	@Column(name = "host_exited", nullable = false)
+	private Boolean hostExited = false;
+
+	@Setter(value = AccessLevel.PRIVATE)
+	@Column(name = "guest_exited", nullable = false)
+	private Boolean guestExited = false;
 
 	@JsonBackReference
 	@Setter(value = AccessLevel.PROTECTED)
@@ -61,7 +71,19 @@ public class ChatRoom extends BaseEntity {
 		this.messages.add(message);
 	}
 
-	public boolean isSenderChatRoomHost(Long userId) {
+	public void exitUser(boolean isHost) {
+		if (isHost) {
+			setHostExited(true);
+			return;
+		}
+		setGuestExited(true);
+	}
+
+	public void inactivateChatRoom() {
+		setStatus(ChatRoomStatus.INACTIVE);
+	}
+
+	public boolean isUserChatRoomHost(Long userId) {
 		return userId.equals(getHost().getId());
 	}
 
