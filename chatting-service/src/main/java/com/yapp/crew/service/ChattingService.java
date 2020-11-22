@@ -74,8 +74,7 @@ public class ChattingService {
 		this.userRepository = userRepository;
 	}
 
-	public HttpResponseBody<ChatRoomResponsePayload> createChatRoom(
-			ChatRoomRequestPayload chatRoomRequestPayload) throws JsonProcessingException {
+	public HttpResponseBody<ChatRoomResponsePayload> createChatRoom(ChatRoomRequestPayload chatRoomRequestPayload) throws JsonProcessingException {
 		User host = userRepository.findUserById(chatRoomRequestPayload.getHostId())
 				.orElseThrow(() -> new UserNotFoundException("Cannot find host user with id"));
 
@@ -90,7 +89,7 @@ public class ChattingService {
 
 		Optional<ChatRoom> chatRoom = chatRoomRepository.findByGuestIdAndBoardId(guest.getId(), board.getId());
 
-		if (chatRoom.isPresent()) {
+		if (chatRoom.isPresent() && !chatRoom.get().getGuestExited() && !chatRoom.get().getHostExited()) {
 			return HttpResponseBody.buildChatRoomResponse(
 					ChatRoomResponsePayload.buildChatRoomResponsePayload(chatRoom.get()),
 					HttpStatus.OK.value(),
@@ -104,11 +103,14 @@ public class ChattingService {
 		guest.addChatRoomGuest(newChatRoom);
 		chatRoomRepository.save(newChatRoom);
 
-		AppliedUser appliedUser = AppliedUser.buildAppliedUser(guest, board, AppliedStatus.PENDING);
+		Optional<AppliedUser> appliedUser = appliedUserRepository.findByBoardIdAndUserId(board.getId(), guest.getId());
+		if (appliedUser.isEmpty()) {
+			AppliedUser newAppliedUser = AppliedUser.buildAppliedUser(guest, board, AppliedStatus.PENDING);
 
-		guest.addAppliedUser(appliedUser);
-		board.addAppliedUser(appliedUser);
-		appliedUserRepository.save(appliedUser);
+			guest.addAppliedUser(newAppliedUser);
+			board.addAppliedUser(newAppliedUser);
+			appliedUserRepository.save(newAppliedUser);
+		}
 
 		GuidelineRequestPayload guidelineRequestPayload = GuidelineRequestPayload.builder()
 				.senderId(bot.getId())
@@ -137,13 +139,13 @@ public class ChattingService {
 		if (chatRoom.getGuestExited() && chatRoom.getHostExited()) {
 			chatRoom.inactivateChatRoom();
 		}
-
 		chatRoomRepository.save(chatRoom);
 
 		UserExitedPayload userExitedPayload = UserExitedPayload.builder()
 				.chatRoomId(chatRoom.getId())
 				.userId(user.getId())
 				.build();
+
 		chattingProducer.sendUserExitMessage(userExitedPayload);
 
 		return HttpResponseBody.buildSuccessResponse(
@@ -185,18 +187,8 @@ public class ChattingService {
 
 		String boardTitle = chatRoom.getBoard().getTitle();
 
-		AppliedStatus appliedStatus;
-		AppliedUser guestApplied;
-
-		if (isHost) {
-			guestApplied = appliedUserRepository.findByBoardIdAndUserId(chatRoom.getBoard().getId(), chatRoom.getGuest().getId())
-					.orElseThrow(() -> new GuestApplyNotFoundException("Guest did not apply yet"));
-		}
-		else {
-			guestApplied = appliedUserRepository.findByBoardIdAndUserId(chatRoom.getBoard().getId(), userId)
-					.orElseThrow(() -> new GuestApplyNotFoundException("Guest did not apply yet"));
-		}
-		appliedStatus = guestApplied.getStatus();
+		AppliedUser appliedUser = appliedUserRepository.findByBoardIdAndUserId(chatRoom.getBoard().getId(), chatRoom.getGuest().getId())
+				.orElseThrow(() -> new GuestApplyNotFoundException("Guest did not apply yet"));
 
 		return HttpResponseBody.buildChatMessagesResponse(
 				MessageResponsePayload.buildMessageResponsePayload(messageRepository, messages, isHost),
@@ -204,7 +196,7 @@ public class ChattingService {
 				ResponseType.SUCCESS,
 				firstUnreadChatMessageId,
 				boardTitle,
-				appliedStatus
+				appliedUser.getStatus()
 		);
 	}
 
