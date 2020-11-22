@@ -14,11 +14,13 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
 
 	List<ChatRoom> findAllByGuestId(Long guestId);
 
+	@Query(value = "select * from chat_room where board_id = ?1 and status = 'ACTIVE'", nativeQuery = true)
 	List<ChatRoom> findAllByBoardId(Long boardId);
 
 	@Query(value = "select * from chat_room where (host_id = ?1 or guest_id = ?1) and status = 'ACTIVE' order by updated_at desc", nativeQuery = true)
 	List<ChatRoom> findAllByUserId(Long userId);
 
+	@Query(value = "select * from chat_room where guest_id = ?1 and board_id = ?2 and status = 'ACTIVE'", nativeQuery = true)
 	Optional<ChatRoom> findByGuestIdAndBoardId(Long guestId, Long boardId);
 
 	ChatRoom save(ChatRoom chatRoom);
