@@ -36,6 +36,11 @@ public class AppliedUser {
 	private Board board;
 
 	@Setter(value = AccessLevel.PRIVATE)
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "chat_room_id", nullable = false)
+	private ChatRoom chatRoom;
+
+	@Setter(value = AccessLevel.PRIVATE)
 	@Column(nullable = false)
 	@Enumerated(value = EnumType.STRING)
 	private AppliedStatus status = AppliedStatus.PENDING;
@@ -60,6 +65,14 @@ public class AppliedUser {
 		setStatus(AppliedStatus.APPLIED);
 	}
 
+	public void hostExited() {
+		setStatus(AppliedStatus.HOST_EXITED);
+	}
+
+	public void guestExited() {
+		setStatus(AppliedStatus.GUEST_EXITED);
+	}
+
 	public static AppliedUserBuilder getBuilder() {
 		return new AppliedUserBuilder();
 	}
@@ -68,6 +81,7 @@ public class AppliedUser {
 
 		private User user;
 		private Board board;
+		private ChatRoom chatRoom;
 		private AppliedStatus status;
 
 		public AppliedUserBuilder withUser(User user) {
@@ -80,6 +94,11 @@ public class AppliedUser {
 			return this;
 		}
 
+		public AppliedUserBuilder withChatRoom(ChatRoom chatRoom) {
+			this.chatRoom = chatRoom;
+			return this;
+		}
+
 		public AppliedUserBuilder withStatus(AppliedStatus status) {
 			this.status = status;
 			return this;
@@ -89,6 +108,7 @@ public class AppliedUser {
 			AppliedUser appliedUser = new AppliedUser();
 			appliedUser.setUser(user);
 			appliedUser.setBoard(board);
+			appliedUser.setChatRoom(chatRoom);
 			appliedUser.setStatus(status);
 			return appliedUser;
 		}
