@@ -1,6 +1,7 @@
 package com.yapp.crew.domain.repository;
 
 import static com.yapp.crew.domain.model.QBoard.board;
+import static com.yapp.crew.domain.model.QHiddenBoard.hiddenBoard;
 
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -25,10 +26,18 @@ public class BoardSearchAndFilterRepository {
 		this.jpaQueryFactory = new JPAQueryFactory(entityManager);
 	}
 
+	/*
+	 * SELECT *
+	 *	FROM board as b left join hidden_board as hb
+	 *	on (b.id = hb.board_id and hb.user_id=1)
+	 *	where hb.user_id is null; */
+
 	public List<Board> search(BoardSearchCondition boardSearchCondition, Pageable pageable) {
-		return jpaQueryFactory
-				.selectFrom(board)
+		return jpaQueryFactory.select(board)
+				.from(board).leftJoin(hiddenBoard).on(
+						board.id.eq(hiddenBoard.board.id).and(hiddenBoard.user.id.eq(boardSearchCondition.getUserId())))
 				.where(
+						hiddenBoard.user.id.isNull(),
 						isSearchedKeywords(boardSearchCondition.getKeywords()),
 						isDeletedBoard()
 				).orderBy(board.createdAt.desc())
@@ -36,9 +45,11 @@ public class BoardSearchAndFilterRepository {
 	}
 
 	public List<Board> filter(BoardFilterCondition boardFilterCondition, Pageable pageable) {
-		return jpaQueryFactory
-				.selectFrom(board)
+		return jpaQueryFactory.select(board)
+				.from(board).leftJoin(hiddenBoard).on(
+						board.id.eq(hiddenBoard.board.id).and(hiddenBoard.user.id.eq(boardFilterCondition.getUserId())))
 				.where(
+						hiddenBoard.user.id.isNull(),
 						isFilteredCategories(boardFilterCondition.getCategory()),
 						isFilteredCities(boardFilterCondition.getCity()),
 						isDeletedBoard()
