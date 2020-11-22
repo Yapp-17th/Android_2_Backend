@@ -119,9 +119,6 @@ public class BoardService {
 	public List<BoardListResponseInfo> getBoardList(BoardFilterCondition boardFilterCondition, Pageable pageable) {
 		return filterBoard(boardFilterCondition, pageable)
 				.stream()
-				.filter(board -> board.getHiddenBoardUser().stream()
-						.map(hiddenBoard -> !hiddenBoard.getUser().getId().equals(boardFilterCondition.getUserId()))
-						.count() == 0)
 				.map(board -> BoardListResponseInfo.build(board, boardFilterCondition.getUserId()))
 				.collect(Collectors.toList());
 	}
