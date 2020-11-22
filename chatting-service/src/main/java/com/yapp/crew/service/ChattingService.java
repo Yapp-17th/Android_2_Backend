@@ -2,7 +2,11 @@ package com.yapp.crew.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.yapp.crew.domain.errors.AlreadyApprovedException;
+import com.yapp.crew.domain.errors.AlreadyExitedException;
 import com.yapp.crew.domain.errors.BoardNotFoundException;
+import com.yapp.crew.domain.errors.CannotApplyException;
+import com.yapp.crew.domain.errors.CannotApproveException;
+import com.yapp.crew.domain.errors.CannotDisapproveException;
 import com.yapp.crew.domain.errors.ChatRoomNotFoundException;
 import com.yapp.crew.domain.errors.GuestApplyNotFoundException;
 import com.yapp.crew.domain.errors.IsNotApprovedException;
@@ -74,8 +78,8 @@ public class ChattingService {
 		this.userRepository = userRepository;
 	}
 
-	public HttpResponseBody<ChatRoomResponsePayload> createChatRoom(
-			ChatRoomRequestPayload chatRoomRequestPayload) throws JsonProcessingException {
+	@Transactional
+	public HttpResponseBody<ChatRoomResponsePayload> createChatRoom(ChatRoomRequestPayload chatRoomRequestPayload) throws JsonProcessingException {
 		User host = userRepository.findUserById(chatRoomRequestPayload.getHostId())
 				.orElseThrow(() -> new UserNotFoundException("Cannot find host user with id"));
 
@@ -90,7 +94,7 @@ public class ChattingService {
 
 		Optional<ChatRoom> chatRoom = chatRoomRepository.findByGuestIdAndBoardId(guest.getId(), board.getId());
 
-		if (chatRoom.isPresent()) {
+		if (chatRoom.isPresent() && !chatRoom.get().getGuestExited() && !chatRoom.get().getHostExited()) {
 			return HttpResponseBody.buildChatRoomResponse(
 					ChatRoomResponsePayload.buildChatRoomResponsePayload(chatRoom.get()),
 					HttpStatus.OK.value(),
@@ -104,11 +108,14 @@ public class ChattingService {
 		guest.addChatRoomGuest(newChatRoom);
 		chatRoomRepository.save(newChatRoom);
 
-		AppliedUser appliedUser = AppliedUser.buildAppliedUser(guest, board, AppliedStatus.PENDING);
+		Optional<AppliedUser> appliedUser = appliedUserRepository.findByBoardIdAndUserId(board.getId(), guest.getId());
+		if (appliedUser.isEmpty()) {
+			AppliedUser newAppliedUser = AppliedUser.buildAppliedUser(guest, board, AppliedStatus.PENDING);
 
-		guest.addAppliedUser(appliedUser);
-		board.addAppliedUser(appliedUser);
-		appliedUserRepository.save(appliedUser);
+			guest.addAppliedUser(newAppliedUser);
+			board.addAppliedUser(newAppliedUser);
+			appliedUserRepository.save(newAppliedUser);
+		}
 
 		GuidelineRequestPayload guidelineRequestPayload = GuidelineRequestPayload.builder()
 				.senderId(bot.getId())
@@ -132,18 +139,20 @@ public class ChattingService {
 				.orElseThrow(() -> new ChatRoomNotFoundException("Chat room not found"));
 
 		boolean isHost = chatRoom.isUserChatRoomHost(userId);
-		chatRoom.exitUser(isHost);
-
-		if (chatRoom.getGuestExited() && chatRoom.getHostExited()) {
-			chatRoom.inactivateChatRoom();
+		if (isHost && chatRoom.getHostExited()) {
+			throw new AlreadyExitedException("This user already exited this chat room");
 		}
-
+		if (!isHost && chatRoom.getGuestExited()) {
+			throw new AlreadyExitedException("This user already exited this chat room");
+		}
+		chatRoom.exitUser(isHost);
 		chatRoomRepository.save(chatRoom);
 
 		UserExitedPayload userExitedPayload = UserExitedPayload.builder()
 				.chatRoomId(chatRoom.getId())
 				.userId(user.getId())
 				.build();
+
 		chattingProducer.sendUserExitMessage(userExitedPayload);
 
 		return HttpResponseBody.buildSuccessResponse(
@@ -185,18 +194,8 @@ public class ChattingService {
 
 		String boardTitle = chatRoom.getBoard().getTitle();
 
-		AppliedStatus appliedStatus;
-		AppliedUser guestApplied;
-
-		if (isHost) {
-			guestApplied = appliedUserRepository.findByBoardIdAndUserId(chatRoom.getBoard().getId(), chatRoom.getGuest().getId())
-					.orElseThrow(() -> new GuestApplyNotFoundException("Guest did not apply yet"));
-		}
-		else {
-			guestApplied = appliedUserRepository.findByBoardIdAndUserId(chatRoom.getBoard().getId(), userId)
-					.orElseThrow(() -> new GuestApplyNotFoundException("Guest did not apply yet"));
-		}
-		appliedStatus = guestApplied.getStatus();
+		AppliedUser appliedUser = appliedUserRepository.findByBoardIdAndUserId(chatRoom.getBoard().getId(), chatRoom.getGuest().getId())
+				.orElseThrow(() -> new GuestApplyNotFoundException("Guest did not apply yet"));
 
 		return HttpResponseBody.buildChatMessagesResponse(
 				MessageResponsePayload.buildMessageResponsePayload(messageRepository, messages, isHost),
@@ -204,7 +203,7 @@ public class ChattingService {
 				ResponseType.SUCCESS,
 				firstUnreadChatMessageId,
 				boardTitle,
-				appliedStatus
+				appliedUser.getStatus()
 		);
 	}
 
@@ -230,6 +229,13 @@ public class ChattingService {
 	}
 
 	public HttpResponseBody<?> applyUser(ApplyRequestPayload applyRequestPayload) throws JsonProcessingException {
+		ChatRoom chatRoom = chatRoomRepository.findById(applyRequestPayload.getChatRoomId())
+				.orElseThrow(() -> new ChatRoomNotFoundException("Chat room not found"));
+
+		if (chatRoom.getGuestExited() || chatRoom.getHostExited()) {
+			throw new CannotApplyException("Cannot apply since user exited");
+		}
+
 		chattingProducer.applyUser(applyRequestPayload);
 
 		return HttpResponseBody.buildSuccessResponse(
@@ -252,6 +258,10 @@ public class ChattingService {
 
 		ChatRoom chatRoom = chatRoomRepository.findById(approveRequestPayload.getChatRoomId())
 				.orElseThrow(() -> new ChatRoomNotFoundException("Chat room not found"));
+
+		if (chatRoom.getGuestExited() || chatRoom.getHostExited()) {
+			throw new CannotApproveException("Cannot approve since user exited");
+		}
 
 		if (!board.getUser().getId().equals(host.getId())) {
 			throw new WrongHostException("This user is not a host for this board");
@@ -305,6 +315,10 @@ public class ChattingService {
 
 		ChatRoom chatRoom = chatRoomRepository.findById(approveRequestPayload.getChatRoomId())
 				.orElseThrow(() -> new ChatRoomNotFoundException("Chat room not found"));
+
+		if (chatRoom.getGuestExited() || chatRoom.getHostExited()) {
+			throw new CannotDisapproveException("Cannot disapprove since user exited");
+		}
 
 		if (!board.getUser().getId().equals(host.getId())) {
 			throw new WrongHostException("This user is not a host for this board");

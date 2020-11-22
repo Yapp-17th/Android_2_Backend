@@ -126,8 +126,7 @@ public class ChatBotConsumer {
 		List<Evaluation> evaluations = evaluationRepository.findAllByEvaluatedId(applier.getId());
 
 		Optional<AppliedUser> appliedUser = appliedUserRepository.findByBoardIdAndUserId(board.getId(), applier.getId());
-		if (appliedUser.isPresent() && (appliedUser.get().getStatus().equals(AppliedStatus.APPLIED) || appliedUser.get().getStatus()
-				.equals(AppliedStatus.APPROVED))) {
+		if (appliedUser.isPresent() && (appliedUser.get().getStatus().equals(AppliedStatus.APPLIED) || appliedUser.get().getStatus().equals(AppliedStatus.APPROVED))) {
 			throw new AlreadyAppliedException("Already applied");
 		}
 		appliedUser.get().applyUser();
