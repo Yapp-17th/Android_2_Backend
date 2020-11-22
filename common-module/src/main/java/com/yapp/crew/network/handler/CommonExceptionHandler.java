@@ -6,6 +6,9 @@ import com.yapp.crew.domain.errors.AlreadyApprovedException;
 import com.yapp.crew.domain.errors.AlreadyExitedException;
 import com.yapp.crew.domain.errors.BoardNotFoundException;
 import com.yapp.crew.domain.errors.BoardTimeInvalidException;
+import com.yapp.crew.domain.errors.CannotApplyException;
+import com.yapp.crew.domain.errors.CannotApproveException;
+import com.yapp.crew.domain.errors.CannotDisapproveException;
 import com.yapp.crew.domain.errors.CategoryNotFoundException;
 import com.yapp.crew.domain.errors.ChatRoomNotFoundException;
 import com.yapp.crew.domain.errors.EvaluateImpossibleException;
@@ -148,6 +151,24 @@ public class CommonExceptionHandler {
 	@ExceptionHandler(value = AlreadyAppliedException.class)
 	public ResponseEntity<?> handleAlreadyAppliedException() {
 		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.BAD_REQUEST, ResponseType.ALREADY_APPLIED);
+		return ResponseEntity.ok().body(responseBody);
+	}
+
+	@ExceptionHandler(value = CannotApplyException.class)
+	public ResponseEntity<?> handleCannotApplyException() {
+		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.BAD_REQUEST, ResponseType.CANNOT_APPLY);
+		return ResponseEntity.ok().body(responseBody);
+	}
+
+	@ExceptionHandler(value = CannotApproveException.class)
+	public ResponseEntity<?> handleCannotApproveException() {
+		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.BAD_REQUEST, ResponseType.CANNOT_APPROVE);
+		return ResponseEntity.ok().body(responseBody);
+	}
+
+	@ExceptionHandler(value = CannotDisapproveException.class)
+	public ResponseEntity<?> handleCannotDisapproveException() {
+		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.BAD_REQUEST, ResponseType.CANNOT_DISAPPROVE);
 		return ResponseEntity.ok().body(responseBody);
 	}
 

@@ -4,6 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.yapp.crew.domain.errors.AlreadyApprovedException;
 import com.yapp.crew.domain.errors.AlreadyExitedException;
 import com.yapp.crew.domain.errors.BoardNotFoundException;
+import com.yapp.crew.domain.errors.CannotApplyException;
+import com.yapp.crew.domain.errors.CannotApproveException;
+import com.yapp.crew.domain.errors.CannotDisapproveException;
 import com.yapp.crew.domain.errors.ChatRoomNotFoundException;
 import com.yapp.crew.domain.errors.GuestApplyNotFoundException;
 import com.yapp.crew.domain.errors.IsNotApprovedException;
@@ -226,6 +229,13 @@ public class ChattingService {
 	}
 
 	public HttpResponseBody<?> applyUser(ApplyRequestPayload applyRequestPayload) throws JsonProcessingException {
+		ChatRoom chatRoom = chatRoomRepository.findById(applyRequestPayload.getChatRoomId())
+				.orElseThrow(() -> new ChatRoomNotFoundException("Chat room not found"));
+
+		if (chatRoom.getGuestExited() || chatRoom.getHostExited()) {
+			throw new CannotApplyException("Cannot apply since user exited");
+		}
+
 		chattingProducer.applyUser(applyRequestPayload);
 
 		return HttpResponseBody.buildSuccessResponse(
@@ -248,6 +258,10 @@ public class ChattingService {
 
 		ChatRoom chatRoom = chatRoomRepository.findById(approveRequestPayload.getChatRoomId())
 				.orElseThrow(() -> new ChatRoomNotFoundException("Chat room not found"));
+
+		if (chatRoom.getGuestExited() || chatRoom.getHostExited()) {
+			throw new CannotApproveException("Cannot approve since user exited");
+		}
 
 		if (!board.getUser().getId().equals(host.getId())) {
 			throw new WrongHostException("This user is not a host for this board");
@@ -301,6 +315,10 @@ public class ChattingService {
 
 		ChatRoom chatRoom = chatRoomRepository.findById(approveRequestPayload.getChatRoomId())
 				.orElseThrow(() -> new ChatRoomNotFoundException("Chat room not found"));
+
+		if (chatRoom.getGuestExited() || chatRoom.getHostExited()) {
+			throw new CannotDisapproveException("Cannot disapprove since user exited");
+		}
 
 		if (!board.getUser().getId().equals(host.getId())) {
 			throw new WrongHostException("This user is not a host for this board");
