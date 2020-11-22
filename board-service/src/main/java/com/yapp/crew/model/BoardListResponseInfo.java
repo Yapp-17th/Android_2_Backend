@@ -3,6 +3,7 @@ package com.yapp.crew.model;
 import com.yapp.crew.domain.model.Board;
 import com.yapp.crew.domain.model.User;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -20,7 +21,7 @@ public class BoardListResponseInfo {
 	private Boolean isBookMark;
 	private String boardTime;
 
-	public static BoardListResponseInfo build(Board board, User user) {
+	public static BoardListResponseInfo build(Board board, Long userId) {
 		BoardListResponseInfo boardListResponseInfo = new BoardListResponseInfo();
 		boardListResponseInfo.boardId = board.getId();
 		boardListResponseInfo.hostId = board.getUser().getId();
@@ -29,9 +30,9 @@ public class BoardListResponseInfo {
 		boardListResponseInfo.groupStatus = BoardStatusInfo.build(board.getStatus());
 		boardListResponseInfo.exercise = board.getCategory().getExercise().getName();
 		boardListResponseInfo.city = board.getAddress().getCity().getName();
-		boardListResponseInfo.isBookMark = user.getUserBookmark().stream()
-				.map(bookMark -> bookMark.getBoard().getId())
-				.anyMatch(Predicate.isEqual(board.getId()));
+		boardListResponseInfo.isBookMark = board.getBookMarkUser().stream()
+				.map(bookmark -> bookmark.getUser().getId())
+				.anyMatch(id -> id.equals(userId));
 		boardListResponseInfo.boardTime = board.showBoardTimeComparedToNow();
 
 		return boardListResponseInfo;
