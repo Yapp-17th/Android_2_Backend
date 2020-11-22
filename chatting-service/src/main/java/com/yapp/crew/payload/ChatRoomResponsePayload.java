@@ -88,7 +88,7 @@ public class ChatRoomResponsePayload {
 				.map(chatRoom -> {
 					List<Message> messages = chatRoom.getMessages();
 
-					boolean isHost = chatRoom.isSenderChatRoomHost(userId);
+					boolean isHost = chatRoom.isUserChatRoomHost(userId);
 					Long unreadMessages = chatRoom.countUnreadMessages(isHost);
 					String opponentNickname;
 					if (isHost) {

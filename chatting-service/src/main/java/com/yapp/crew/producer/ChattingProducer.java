@@ -8,6 +8,7 @@ import com.yapp.crew.payload.ApproveRequestPayload;
 import com.yapp.crew.payload.GuidelineRequestPayload;
 import com.yapp.crew.payload.MessageRequestPayload;
 import com.yapp.crew.payload.MessageResponsePayload;
+import com.yapp.crew.payload.UserExitedPayload;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -43,6 +44,9 @@ public class ChattingProducer {
 
 	@Value(value = "${kafka.topics.disapprove-user}")
 	private String disapproveUserTopic;
+
+	@Value(value = "${kafka.topics.user-exited}")
+	private String userExitedTopic;
 
 	private final SimpMessagingTemplate simpMessagingTemplate;
 
@@ -182,6 +186,34 @@ public class ChattingProducer {
 				simpMessagingTemplate.convertAndSend(
 						"/sub/chat/room/" + approveRequestPayload.getChatRoomId().toString(),
 						disapproveRealtimeUpdatePayload
+				);
+			}
+		});
+		return listenableFuture;
+	}
+
+	public ListenableFuture<SendResult<Long, String>> sendUserExitMessage(UserExitedPayload userExitedPayload) throws JsonProcessingException {
+		Long key = userExitedPayload.getChatRoomId();
+		String value = objectMapper.writeValueAsString(userExitedPayload);
+
+		ProducerRecord<Long, String> producerRecord = buildProducerRecord(key, value, userExitedTopic);
+		ListenableFuture<SendResult<Long, String>> listenableFuture = kafkaTemplate.send(producerRecord);
+
+		listenableFuture.addCallback(new ListenableFutureCallback<>() {
+			@Override
+			public void onFailure(Throwable ex) {
+				handleFailure(key, value, ex);
+			}
+
+			@Override
+			public void onSuccess(SendResult<Long, String> result) {
+				handleSuccess(key, value, result);
+
+				MessageResponsePayload userExitedRealtimeUpdatePayload = MessageResponsePayload.buildRealTimeUpdateResponsePayload(RealTimeUpdateType.USER_EXITED);
+
+				simpMessagingTemplate.convertAndSend(
+						"/sub/user/" + userExitedPayload.getUserId().toString() + "/chat/room",
+						userExitedRealtimeUpdatePayload
 				);
 			}
 		});
