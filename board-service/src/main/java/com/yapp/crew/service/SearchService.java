@@ -27,9 +27,6 @@ public class SearchService {
 	public List<BoardListResponseInfo> searchBoardList(BoardSearchCondition boardSearchCondition, Pageable pageable) {
 		return searchBoard(boardSearchCondition, pageable)
 				.stream()
-				.filter(board -> board.getHiddenBoardUser().stream()
-						.map(hiddenBoard -> !hiddenBoard.getUser().getId().equals(boardSearchCondition.getUserId()))
-						.count() == 0)
 				.map(board -> BoardListResponseInfo.build(board, boardSearchCondition.getUserId()))
 				.collect(Collectors.toList());
 	}
