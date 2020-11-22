@@ -2,6 +2,7 @@ package com.yapp.crew.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.yapp.crew.domain.errors.AlreadyApprovedException;
+import com.yapp.crew.domain.errors.AlreadyExitedException;
 import com.yapp.crew.domain.errors.BoardNotFoundException;
 import com.yapp.crew.domain.errors.ChatRoomNotFoundException;
 import com.yapp.crew.domain.errors.GuestApplyNotFoundException;
@@ -134,6 +135,12 @@ public class ChattingService {
 				.orElseThrow(() -> new ChatRoomNotFoundException("Chat room not found"));
 
 		boolean isHost = chatRoom.isUserChatRoomHost(userId);
+		if (isHost && chatRoom.getHostExited()) {
+			throw new AlreadyExitedException("This user already exited this chat room");
+		}
+		if (!isHost && chatRoom.getGuestExited()) {
+			throw new AlreadyExitedException("This user already exited this chat room");
+		}
 		chatRoom.exitUser(isHost);
 
 		if (chatRoom.getGuestExited() && chatRoom.getHostExited()) {

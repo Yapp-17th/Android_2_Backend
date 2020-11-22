@@ -3,6 +3,7 @@ package com.yapp.crew.network.handler;
 import com.yapp.crew.domain.errors.AddressNotFoundException;
 import com.yapp.crew.domain.errors.AlreadyAppliedException;
 import com.yapp.crew.domain.errors.AlreadyApprovedException;
+import com.yapp.crew.domain.errors.AlreadyExitedException;
 import com.yapp.crew.domain.errors.BoardNotFoundException;
 import com.yapp.crew.domain.errors.BoardTimeInvalidException;
 import com.yapp.crew.domain.errors.CategoryNotFoundException;
@@ -129,6 +130,12 @@ public class CommonExceptionHandler {
 	@ExceptionHandler(value = WrongGuestException.class)
 	public ResponseEntity<?> handleWrongGuestException() {
 		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.BAD_REQUEST, ResponseType.WRONG_CHATROOM_GUEST);
+		return ResponseEntity.ok().body(responseBody);
+	}
+
+	@ExceptionHandler(value = AlreadyExitedException.class)
+	public ResponseEntity<?> handleAlreadyExitedException() {
+		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.BAD_REQUEST, ResponseType.ALREADY_EXITED);
 		return ResponseEntity.ok().body(responseBody);
 	}
 
