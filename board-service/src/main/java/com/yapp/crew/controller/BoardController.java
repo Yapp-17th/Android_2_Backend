@@ -1,6 +1,7 @@
 package com.yapp.crew.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.yapp.crew.domain.condition.BoardFilterCondition;
 import com.yapp.crew.dto.request.BoardInfoRequestDto;
 import com.yapp.crew.dto.response.BoardContentSuccessResponseDto;
 import com.yapp.crew.dto.response.BoardListSuccessResponseDto;
@@ -50,9 +51,9 @@ public class BoardController {
 			@RequestParam(required = false) List<Long> category,
 			@RequestParam(required = false) List<Long> address
 	) {
-		List<BoardListResponseInfo> boardListResponseInfoList = boardService.getBoardList(BoardFilter.build(sorting, category, address, userId));
+		List<BoardListResponseInfo> boardList = boardService.getBoardList(BoardFilterCondition.build(sorting, category, address, userId), pageable);
 
-		PagedListHolder<BoardListResponseInfo> page = new PagedListHolder<>(boardListResponseInfoList);
+		PagedListHolder<BoardListResponseInfo> page = new PagedListHolder<>(boardList);
 		page.setPageSize(pageable.getPageSize());
 		page.setPage(pageable.getPageNumber());
 
