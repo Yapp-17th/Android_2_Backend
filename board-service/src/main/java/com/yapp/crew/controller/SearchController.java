@@ -1,5 +1,6 @@
 package com.yapp.crew.controller;
 
+import com.yapp.crew.domain.condition.BoardSearchCondition;
 import com.yapp.crew.dto.response.BoardListSuccessResponseDto;
 import com.yapp.crew.model.BoardListResponseInfo;
 import com.yapp.crew.model.BoardSearch;
@@ -36,9 +37,9 @@ public class SearchController {
 			@PageableDefault(size = 20, page = 0) Pageable pageable,
 			@RequestParam List<String> keyword
 	) {
-		List<BoardListResponseInfo> boardListResponseInfoList = searchService.searchBoardList(BoardSearch.build(keyword, userId));
+		List<BoardListResponseInfo> boardList = searchService.searchBoardList(BoardSearchCondition.build(keyword, userId), pageable);
 
-		PagedListHolder<BoardListResponseInfo> page = new PagedListHolder<>(boardListResponseInfoList);
+		PagedListHolder<BoardListResponseInfo> page = new PagedListHolder<>(boardList);
 		page.setPageSize(pageable.getPageSize());
 		page.setPage(pageable.getPageNumber());
 

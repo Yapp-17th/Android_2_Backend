@@ -1,6 +1,7 @@
 package com.yapp.crew.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.yapp.crew.domain.condition.BoardFilterCondition;
 import com.yapp.crew.domain.errors.AddressNotFoundException;
 import com.yapp.crew.domain.errors.BoardNotFoundException;
 import com.yapp.crew.domain.errors.BoardTimeInvalidException;
@@ -20,6 +21,7 @@ import com.yapp.crew.domain.model.Tag;
 import com.yapp.crew.domain.model.User;
 import com.yapp.crew.domain.repository.AddressRepository;
 import com.yapp.crew.domain.repository.BoardRepository;
+import com.yapp.crew.domain.repository.BoardSearchAndFilterRepository;
 import com.yapp.crew.domain.repository.CategoryRepository;
 import com.yapp.crew.domain.repository.EvaluationRepository;
 import com.yapp.crew.domain.repository.TagRepository;
@@ -42,6 +44,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,6 +60,7 @@ public class BoardService {
 	private final AddressRepository addressRepository;
 	private final CategoryRepository categoryRepository;
 	private final EvaluationRepository evaluationRepository;
+	private final BoardSearchAndFilterRepository boardSearchAndFilterRepository;
 
 	@Autowired
 	public BoardService(
@@ -66,7 +70,8 @@ public class BoardService {
 			BoardRepository boardRepository,
 			AddressRepository addressRepository,
 			CategoryRepository categoryRepository,
-			EvaluationRepository evaluationRepository
+			EvaluationRepository evaluationRepository,
+			BoardSearchAndFilterRepository boardSearchAndFilterRepository
 	) {
 		this.boardProducer = boardProducer;
 		this.tagRepository = tagRepository;
@@ -75,6 +80,7 @@ public class BoardService {
 		this.addressRepository = addressRepository;
 		this.categoryRepository = categoryRepository;
 		this.evaluationRepository = evaluationRepository;
+		this.boardSearchAndFilterRepository = boardSearchAndFilterRepository;
 	}
 
 	@Transactional
@@ -110,32 +116,13 @@ public class BoardService {
 	}
 
 	@Transactional
-	public List<BoardListResponseInfo> getBoardList(BoardFilter boardFilter) {
-		List<Category> categories;
-		List<Address> addresses;
-
-		User user = findUserById(boardFilter.getUserId())
-				.orElseThrow(() -> new UserNotFoundException("user not found"));
-
-		if (boardFilter.getCategory() != null) {
-			categories = findAllCategory().stream()
-					.filter(category -> boardFilter.getCategory().contains(category.getId()))
-					.collect(Collectors.toList());
-		} else {
-			categories = findAllCategory();
-		}
-
-		if (boardFilter.getCity() != null) {
-			addresses = findAllAddress().stream()
-					.filter(address -> boardFilter.getCity().contains(address.getId()))
-					.collect(Collectors.toList());
-		} else {
-			addresses = findAllAddress();
-		}
-
-		return sortBoardList(boardFilter.getSorting(), addresses, categories, user)
+	public List<BoardListResponseInfo> getBoardList(BoardFilterCondition boardFilterCondition, Pageable pageable) {
+		return filterBoard(boardFilterCondition, pageable)
 				.stream()
-				.map(board -> BoardListResponseInfo.build(board, board.getUser()))
+				.filter(board -> board.getHiddenBoardUser().stream()
+						.map(hiddenBoard -> !hiddenBoard.getUser().getId().equals(boardFilterCondition.getUserId()))
+						.count() == 0)
+				.map(board -> BoardListResponseInfo.build(board, boardFilterCondition.getUserId()))
 				.collect(Collectors.toList());
 	}
 
@@ -145,12 +132,12 @@ public class BoardService {
 				.orElseThrow(() -> new BoardNotFoundException("board not found"));
 
 		List<Evaluation> evaluations = findAllByEvaluatedId(userId);
-		return BoardContentResponseInfo.build(board, evaluations);
+		return BoardContentResponseInfo.build(board, userId, evaluations);
 	}
 
 	@Transactional
 	public SimpleResponse deleteBoard(Long boardId, Long userId) throws JsonProcessingException {
-		Board board = findBoardById(boardId)
+		Board board = findMyBoardById(boardId, userId)
 				.orElseThrow(() -> new BoardNotFoundException("board not found"));
 
 		if (!board.getUser().getId().equals(userId)) {
@@ -164,7 +151,7 @@ public class BoardService {
 
 	@Transactional
 	public BoardContentResponseInfo editBoardContent(Long boardId, Long userId, BoardPostRequiredInfo boardPostRequiredInfo) {
-		Board board = findBoardById(boardId)
+		Board board = findMyBoardById(boardId, userId)
 				.orElseThrow(() -> new BoardNotFoundException("board not found"));
 
 		if (!board.getUser().getId().equals(userId)) {
@@ -196,7 +183,7 @@ public class BoardService {
 				.build(board);
 		saveBoard(updateBoard);
 
-		return BoardContentResponseInfo.build(updateBoard, evaluations);
+		return BoardContentResponseInfo.build(updateBoard, userId, evaluations);
 	}
 
 	private void deleteBoard(Board board) {
@@ -214,6 +201,12 @@ public class BoardService {
 
 	private List<Evaluation> findAllByEvaluatedId(Long userId) {
 		return evaluationRepository.findAllByEvaluatedId(userId);
+	}
+
+	private Optional<Board> findMyBoardById(Long boardId, Long userId) {
+		return boardRepository.findBoardById(boardId)
+				.filter(board -> board.getStatus().getCode() != BoardStatus.CANCELED.getCode())
+				.filter(board -> board.getUser().getId().equals(userId));
 	}
 
 	private Optional<Board> findBoardById(Long boardId) {
@@ -237,45 +230,7 @@ public class BoardService {
 		return tagRepository.findTagById(tagId);
 	}
 
-	private List<Category> findAllCategory() {
-		return categoryRepository.findAll();
-	}
-
-	private List<Address> findAllAddress() {
-		return addressRepository.findAll();
-	}
-
-	private List<Board> sortBoardList(SortingType sorting, List<Address> addresses, List<Category> categories, User user) {
-		List<Board> boards = filterBoardList(addresses, categories, user);
-
-		if (sorting == SortingType.REMAIN) {
-			return boards.stream()
-					.sorted(Comparator.comparing(Board::getRemainRecruitNumber, Comparator.reverseOrder()))
-					.collect(Collectors.toList());
-		} else if (sorting == SortingType.DEADLINE) {
-			return boards.stream()
-					.sorted(Comparator.comparing(Board::getStartsAt, Comparator.naturalOrder()))
-					.collect(Collectors.toList());
-		}
-		return boards.stream()
-				.sorted(Comparator.comparing(BaseEntity::getCreatedAt, Comparator.reverseOrder()))
-				.collect(Collectors.toList());
-	}
-
-	private List<Board> filterBoardList(List<Address> addresses, List<Category> categories, User user) {
-		return findAllBoards(user).stream()
-				.filter(board -> addresses.contains(board.getAddress()))
-				.filter(board -> categories.contains(board.getCategory()))
-				.collect(Collectors.toList());
-	}
-
-	private List<Board> findAllBoards(User user) {
-		Set<Board> hiddenBoards = user.getUserHiddenBoard().stream()
-				.map(HiddenBoard::getBoard).collect(Collectors.toSet());
-
-		return boardRepository.findAll().stream()
-				.filter(board -> board.getStatus().getCode() != BoardStatus.CANCELED.getCode())
-				.filter(board -> !hiddenBoards.contains(board))
-				.collect(Collectors.toList());
+	private List<Board> filterBoard(BoardFilterCondition boardFilterCondition, Pageable pageable) {
+		return boardSearchAndFilterRepository.filter(boardFilterCondition, pageable);
 	}
 }
