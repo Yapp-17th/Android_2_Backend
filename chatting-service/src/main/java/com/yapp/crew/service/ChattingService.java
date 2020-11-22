@@ -75,6 +75,7 @@ public class ChattingService {
 		this.userRepository = userRepository;
 	}
 
+	@Transactional
 	public HttpResponseBody<ChatRoomResponsePayload> createChatRoom(ChatRoomRequestPayload chatRoomRequestPayload) throws JsonProcessingException {
 		User host = userRepository.findUserById(chatRoomRequestPayload.getHostId())
 				.orElseThrow(() -> new UserNotFoundException("Cannot find host user with id"));
@@ -142,10 +143,6 @@ public class ChattingService {
 			throw new AlreadyExitedException("This user already exited this chat room");
 		}
 		chatRoom.exitUser(isHost);
-
-		if (chatRoom.getGuestExited() && chatRoom.getHostExited()) {
-			chatRoom.inactivateChatRoom();
-		}
 		chatRoomRepository.save(chatRoom);
 
 		UserExitedPayload userExitedPayload = UserExitedPayload.builder()
