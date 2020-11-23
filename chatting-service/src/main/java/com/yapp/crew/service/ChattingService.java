@@ -26,6 +26,7 @@ import com.yapp.crew.domain.repository.ChatRoomRepository;
 import com.yapp.crew.domain.repository.MessageRepository;
 import com.yapp.crew.domain.repository.UserRepository;
 import com.yapp.crew.domain.status.AppliedStatus;
+import com.yapp.crew.domain.status.BoardStatus;
 import com.yapp.crew.domain.type.ResponseType;
 import com.yapp.crew.network.HttpResponseBody;
 import com.yapp.crew.payload.ApplyRequestPayload;
@@ -232,8 +233,15 @@ public class ChattingService {
 		ChatRoom chatRoom = chatRoomRepository.findById(applyRequestPayload.getChatRoomId())
 				.orElseThrow(() -> new ChatRoomNotFoundException("Chat room not found"));
 
+		Board board = boardRepository.findById(applyRequestPayload.getBoardId())
+				.orElseThrow(() -> new BoardNotFoundException("Board not found"));
+
+		if (board.getStatus() == BoardStatus.CANCELED || board.getStatus() == BoardStatus.FINISHED) {
+			throw new CannotApplyException("Cannot apply to this board");
+		}
+
 		if (chatRoom.getGuestExited() || chatRoom.getHostExited()) {
-			throw new CannotApplyException("Cannot apply since user exited");
+			throw new CannotApplyException("Cannot apply to this board");
 		}
 
 		chattingProducer.applyUser(applyRequestPayload);
@@ -259,8 +267,12 @@ public class ChattingService {
 		ChatRoom chatRoom = chatRoomRepository.findById(approveRequestPayload.getChatRoomId())
 				.orElseThrow(() -> new ChatRoomNotFoundException("Chat room not found"));
 
+		if (board.getStatus() == BoardStatus.CANCELED || board.getStatus() == BoardStatus.FINISHED) {
+			throw new CannotApproveException("Cannot approve to this board");
+		}
+
 		if (chatRoom.getGuestExited() || chatRoom.getHostExited()) {
-			throw new CannotApproveException("Cannot approve since user exited");
+			throw new CannotApproveException("Cannot approve to this board");
 		}
 
 		if (!board.getUser().getId().equals(host.getId())) {
@@ -316,8 +328,12 @@ public class ChattingService {
 		ChatRoom chatRoom = chatRoomRepository.findById(approveRequestPayload.getChatRoomId())
 				.orElseThrow(() -> new ChatRoomNotFoundException("Chat room not found"));
 
+		if (board.getStatus() == BoardStatus.CANCELED || board.getStatus() == BoardStatus.FINISHED) {
+			throw new CannotApproveException("Cannot disapprove to this board");
+		}
+
 		if (chatRoom.getGuestExited() || chatRoom.getHostExited()) {
-			throw new CannotDisapproveException("Cannot disapprove since user exited");
+			throw new CannotDisapproveException("Cannot disapprove to this board");
 		}
 
 		if (!board.getUser().getId().equals(host.getId())) {

@@ -26,9 +26,9 @@ public enum ResponseType {
 	ALREADY_EXITED("이 사용자는 이미 이 채팅방을 나갔습니다"),
 	ALREADY_APPROVED("이 사용자는 이미 승인받은 상태입니다"),
 	ALREADY_APPLIED("이 사용자는 이미 신청을 한 상태입니다"),
-	CANNOT_APPLY("사용자가 나갔으므로 신청이 불가능합니다"),
-	CANNOT_APPROVE("사용자가 나갔으므로 승인이 불가능합니다"),
-	CANNOT_DISAPPROVE("사용자가 나갔으므로 승인 거절이 불가능합니다"),
+	CANNOT_APPLY("신청을 할 수 없는 게시글입니다"),
+	CANNOT_APPROVE("승인을 할 수 없는 게시글입니다"),
+	CANNOT_DISAPPROVE("거절을 할 수 없는 게시글입니다"),
 	GUEST_APPLY_NOT_FOUND("게스트가 아직 신청하지 않았습니다"),
 	BOARD_POST_SUCCESS("글이 정상적으로 업로드 되었습니다"),
 	BOARD_DELETE_SUCCESS("글이 정상적으로 삭제 되었습니다"),
@@ -48,7 +48,7 @@ public enum ResponseType {
 	USERINFO_UPDATE_SUCCESS("회원 정보를 정상적으로 업데이트 했습니다."),
 	SIGN_UP_DUPLICATE("회원 정보가 중복 됩니다."),
 	BOARD_TIME_INVALID("모임 시간이 올바르지 않습니다."),
-	UNAUTORIZED_FAIL("요청이 올바르지 않습니다."),
+	UNAUTHORIZED_FAIL("요청이 올바르지 않습니다."),
 	EVALUATE_IMPOSSIBLE("아직 평가를 진행할 수 없습니다.");
 
 	private final String message;
