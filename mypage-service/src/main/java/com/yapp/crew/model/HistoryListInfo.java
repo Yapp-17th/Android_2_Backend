@@ -13,7 +13,6 @@ public class HistoryListInfo {
 	private Boolean isHost;
 	private String userName;
 	private Boolean isContinue;
-	private String leftTime;
 	private BoardListInfo boardInfo;
 
 	public static HistoryListInfo build(Board board, User user) {
@@ -21,7 +20,6 @@ public class HistoryListInfo {
 		historyListInfo.isHost = board.getUser().getId().equals(user.getId());
 		historyListInfo.userName = user.getNickname();
 		historyListInfo.isContinue = board.getStatus() != BoardStatus.RECRUITING;
-		historyListInfo.leftTime = board.showBoardTimeComparedToNow();
 		historyListInfo.boardInfo = BoardListInfo.build(board);
 
 		return historyListInfo;
