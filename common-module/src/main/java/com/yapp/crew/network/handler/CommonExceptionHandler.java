@@ -210,7 +210,7 @@ public class CommonExceptionHandler {
 
 	@ExceptionHandler(value = UnAuthorizedEventException.class)
 	public ResponseEntity<?> handleUnAuthorizedEventException() {
-		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.UNAUTHORIZED, ResponseType.UNAUTORIZED_FAIL);
+		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.UNAUTHORIZED, ResponseType.UNAUTHORIZED_FAIL);
 		return ResponseEntity.ok().body(responseBody);
 	}
 
