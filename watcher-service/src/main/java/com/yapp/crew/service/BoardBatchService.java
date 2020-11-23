@@ -35,18 +35,18 @@ public class BoardBatchService {
 		entityManager.flush();
 	}
 
-	void saveAll(List<Board> boardList){
+	void saveAll(List<Board> boardList) {
 		EvaluationBuilder evaluationBuilder = Evaluation.getBuilder();
 
-		for(Board board:boardList){
-			List<Long> userIds =board.getAppliedUsers().stream()
+		for (Board board : boardList) {
+			List<Long> userIds = board.getAppliedUsers().stream()
 					.filter(appliedUser -> appliedUser.getStatus() == AppliedStatus.APPROVED)
 					.map(appliedUser -> appliedUser.getUser().getId())
 					.collect(Collectors.toList());
 
-			for(int i=0;i<userIds.size();i++){
-				for(int j=0;j<userIds.size();j++){
-					if(i==j){
+			for (int i = 0; i < userIds.size(); i++) {
+				for (int j = 0; j < userIds.size(); j++) {
+					if (i == j) {
 						continue;
 					}
 

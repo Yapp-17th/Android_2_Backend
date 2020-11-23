@@ -38,7 +38,7 @@ public class WatcherService {
 
 		if (!boards.isEmpty()) {
 			boards.stream()
-					.filter(board -> board.getStatus().equals(BoardStatus.CANCELED) || board.getStatus().equals(BoardStatus.FINISHED))
+					.filter(board -> !board.getStatus().equals(BoardStatus.CANCELED) && !board.getStatus().equals(BoardStatus.FINISHED))
 					.forEach(board -> {
 						try {
 							BoardFinishedPayload payload = BoardFinishedPayload.builder()
