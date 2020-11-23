@@ -83,7 +83,7 @@ public class EvaluateService {
 		Report report = reportBuilder
 				.withReporter(reporter)
 				.withReported(reported)
-				.withType(ReportType.values()[(int) userReportRequest.getType()])
+				.withType(ReportType.values()[userReportRequest.getType().intValue()])
 				.withContent(userReportRequest.getContent())
 				.build();
 
