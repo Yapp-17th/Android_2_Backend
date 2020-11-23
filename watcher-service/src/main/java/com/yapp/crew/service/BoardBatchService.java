@@ -30,12 +30,12 @@ public class BoardBatchService {
 	}
 
 	void updateBoardFinishedAll(List<Board> boardList) {
-		saveAll(boardList);
+		saveEvaluationListAll(boardList);
 		boardList.forEach(Board::finishBoard);
 		entityManager.flush();
 	}
 
-	void saveAll(List<Board> boardList) {
+	private void saveEvaluationListAll(List<Board> boardList) {
 		EvaluationBuilder evaluationBuilder = Evaluation.getBuilder();
 
 		for (Board board : boardList) {

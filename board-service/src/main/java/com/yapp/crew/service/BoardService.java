@@ -15,6 +15,7 @@ import com.yapp.crew.domain.model.Board;
 import com.yapp.crew.domain.model.Board.BoardBuilder;
 import com.yapp.crew.domain.model.Category;
 import com.yapp.crew.domain.model.Evaluation;
+import com.yapp.crew.domain.model.Evaluation.EvaluationBuilder;
 import com.yapp.crew.domain.model.Tag;
 import com.yapp.crew.domain.model.User;
 import com.yapp.crew.domain.repository.AddressRepository;
@@ -24,6 +25,7 @@ import com.yapp.crew.domain.repository.CategoryRepository;
 import com.yapp.crew.domain.repository.EvaluationRepository;
 import com.yapp.crew.domain.repository.TagRepository;
 import com.yapp.crew.domain.repository.UserRepository;
+import com.yapp.crew.domain.status.AppliedStatus;
 import com.yapp.crew.domain.status.BoardStatus;
 import com.yapp.crew.domain.type.ResponseType;
 import com.yapp.crew.model.BoardCancel;
@@ -179,6 +181,7 @@ public class BoardService {
 	}
 
 	private void deleteBoard(Board board) {
+		saveEvaluationListAll(board);
 		board.deleteBoard();
 		boardRepository.save(board);
 	}
@@ -225,4 +228,31 @@ public class BoardService {
 	private List<Board> filterBoard(BoardFilterCondition boardFilterCondition, Pageable pageable) {
 		return boardSearchAndFilterRepository.filter(boardFilterCondition, pageable);
 	}
+
+	private void saveEvaluationListAll(Board board) {
+		EvaluationBuilder evaluationBuilder = Evaluation.getBuilder();
+
+		List<Long> userIds = board.getAppliedUsers().stream()
+				.filter(appliedUser -> appliedUser.getStatus() == AppliedStatus.APPROVED)
+				.map(appliedUser -> appliedUser.getUser().getId())
+				.collect(Collectors.toList());
+
+		for (int i = 0; i < userIds.size(); i++) {
+			for (int j = 0; j < userIds.size(); j++) {
+				if (i == j) {
+					continue;
+				}
+
+				Evaluation evaluation = evaluationBuilder
+						.withBoard(board)
+						.withEvaluateId(userIds.get(i))
+						.withEvaluateId(userIds.get(j))
+						.withIsDislike(false)
+						.withIsLike(false)
+						.build();
+				evaluationRepository.save(evaluation);
+			}
+		}
+	}
+
 }
