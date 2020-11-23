@@ -37,7 +37,7 @@ public class BoardBatchService {
 	}
 
 	@Transactional
-	private void saveEvaluationListAll(List<Board> boardList) {
+	void saveEvaluationListAll(List<Board> boardList) {
 		EvaluationBuilder evaluationBuilder = Evaluation.getBuilder();
 
 		for (Board board : boardList) {
