@@ -236,7 +236,7 @@ public class ChattingService {
 		Board board = boardRepository.findById(applyRequestPayload.getBoardId())
 				.orElseThrow(() -> new BoardNotFoundException("Board not found"));
 
-		if (board.getStatus().equals(BoardStatus.CANCELED) || board.getStatus().equals(BoardStatus.FINISHED)) {
+		if (board.getStatus() == BoardStatus.CANCELED || board.getStatus() == BoardStatus.FINISHED) {
 			throw new CannotApplyException("Cannot apply to this board");
 		}
 
@@ -267,7 +267,7 @@ public class ChattingService {
 		ChatRoom chatRoom = chatRoomRepository.findById(approveRequestPayload.getChatRoomId())
 				.orElseThrow(() -> new ChatRoomNotFoundException("Chat room not found"));
 
-		if (board.getStatus().equals(BoardStatus.CANCELED) || board.getStatus().equals(BoardStatus.FINISHED)) {
+		if (board.getStatus() == BoardStatus.CANCELED || board.getStatus() == BoardStatus.FINISHED) {
 			throw new CannotApproveException("Cannot approve to this board");
 		}
 
@@ -328,7 +328,7 @@ public class ChattingService {
 		ChatRoom chatRoom = chatRoomRepository.findById(approveRequestPayload.getChatRoomId())
 				.orElseThrow(() -> new ChatRoomNotFoundException("Chat room not found"));
 
-		if (board.getStatus().equals(BoardStatus.CANCELED) || board.getStatus().equals(BoardStatus.FINISHED)) {
+		if (board.getStatus() == BoardStatus.CANCELED || board.getStatus() == BoardStatus.FINISHED) {
 			throw new CannotApproveException("Cannot disapprove to this board");
 		}
 
