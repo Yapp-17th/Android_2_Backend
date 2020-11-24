@@ -38,13 +38,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Slf4j
 @Service
 public class BoardService {
 
@@ -82,16 +80,16 @@ public class BoardService {
 	@Transactional
 	public SimpleResponse postBoard(BoardPostRequiredInfo boardPostRequiredInfo, Long userId) {
 		User user = findUserById(userId)
-				.orElseThrow(() -> new UserNotFoundException("Board Service - Cannot find user with id: " + userId));
+				.orElseThrow(() -> new UserNotFoundException(userId));
 
 		Category category = findCategoryById(boardPostRequiredInfo.getCategory())
-				.orElseThrow(() -> new CategoryNotFoundException("Board Service - Cannot find category with id: " + boardPostRequiredInfo.getCategory()));
+				.orElseThrow(() -> new CategoryNotFoundException(boardPostRequiredInfo.getCategory()));
 
 		Address address = findAddressById(boardPostRequiredInfo.getCity())
-				.orElseThrow(() -> new AddressNotFoundException("Board Service - Cannot find address with id: " + boardPostRequiredInfo.getCity()));
+				.orElseThrow(() -> new AddressNotFoundException(boardPostRequiredInfo.getCity()));
 
 		Tag tag = findTagById(boardPostRequiredInfo.getUserTag())
-				.orElseThrow(() -> new TagNotFoundException("Board Service - Cannot find tag with id: " + boardPostRequiredInfo.getUserTag()));
+				.orElseThrow(() -> new TagNotFoundException(boardPostRequiredInfo.getUserTag()));
 
 		BoardBuilder boardBuilder = Board.getBuilder();
 		Board board = boardBuilder
@@ -114,7 +112,7 @@ public class BoardService {
 	@Transactional
 	public List<BoardListResponseInfo> getBoardList(BoardFilterCondition boardFilterCondition, Pageable pageable) {
 		User user = findUserById(boardFilterCondition.getUserId())
-				.orElseThrow(() -> new UserNotFoundException("Board Service - Cannot find user with id: " + boardFilterCondition.getUserId()));
+				.orElseThrow(() -> new UserNotFoundException(boardFilterCondition.getUserId()));
 
 		return filterBoard(boardFilterCondition, pageable).stream()
 				.map(board -> BoardListResponseInfo.build(board, user))
@@ -124,7 +122,7 @@ public class BoardService {
 	@Transactional
 	public BoardContentResponseInfo getBoardContent(Long boardId, Long userId) {
 		Board board = findBoardById(boardId)
-				.orElseThrow(() -> new BoardNotFoundException("Board Service - Cannot find board with id: " + boardId));
+				.orElseThrow(() -> new BoardNotFoundException(boardId));
 
 		List<Evaluation> evaluations = findAllByEvaluatedId(userId);
 		return BoardContentResponseInfo.build(board, userId, evaluations);
@@ -133,7 +131,7 @@ public class BoardService {
 	@Transactional
 	public SimpleResponse deleteBoard(Long boardId, Long userId) throws JsonProcessingException {
 		Board board = findMyBoardById(boardId, userId)
-				.orElseThrow(() -> new BoardNotFoundException("Board Service - Cannot find board with id: " + boardId));
+				.orElseThrow(() -> new BoardNotFoundException(boardId));
 
 		if (!board.getUser().getId().equals(userId)) {
 			throw new InvalidRequestBodyException("Board Service - Incorrect board host with id: " + userId);
@@ -147,20 +145,20 @@ public class BoardService {
 	@Transactional
 	public BoardContentResponseInfo editBoardContent(Long boardId, Long userId, BoardPostRequiredInfo boardPostRequiredInfo) {
 		Board board = findMyBoardById(boardId, userId)
-				.orElseThrow(() -> new BoardNotFoundException("Board Service - Cannot find board with id: " + boardId));
+				.orElseThrow(() -> new BoardNotFoundException(boardId));
 
 		if (!board.getUser().getId().equals(userId)) {
 			throw new UnAuthorizedEventException("Board Service - Incorrect board host with id: " + userId);
 		}
 
 		Category category = findCategoryById(boardPostRequiredInfo.getCategory())
-				.orElseThrow(() -> new CategoryNotFoundException("Board Service - Cannot find category with id: " + boardPostRequiredInfo.getCategory()));
+				.orElseThrow(() -> new CategoryNotFoundException(boardPostRequiredInfo.getCategory()));
 
 		Address address = findAddressById(boardPostRequiredInfo.getCity())
-				.orElseThrow(() -> new AddressNotFoundException("Board Service - Cannot find address with id: " + boardPostRequiredInfo.getCity()));
+				.orElseThrow(() -> new AddressNotFoundException(boardPostRequiredInfo.getCity()));
 
 		Tag tag = findTagById(boardPostRequiredInfo.getUserTag())
-				.orElseThrow(() -> new TagNotFoundException("Board Service - Cannot find address with id: " + boardPostRequiredInfo.getUserTag()));
+				.orElseThrow(() -> new TagNotFoundException(boardPostRequiredInfo.getUserTag()));
 
 		List<Evaluation> evaluations = findAllByEvaluatedId(board.getUser().getId());
 
