@@ -2,7 +2,7 @@ package com.yapp.crew.domain.errors;
 
 public class WrongGuestException extends RuntimeException {
 
-	public WrongGuestException(String message) {
-		super(message);
+	public WrongGuestException(Long userId, Long chatRoomId) {
+		super(String.format("Chatting Service - User(%d) is not the guest of chat room(%d)", userId, chatRoomId));
 	}
 }
