@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
-@Slf4j
+@Slf4j(topic = "Report Controller")
 @CrossOrigin
 @RestController
 public class ReportController {
@@ -32,6 +32,7 @@ public class ReportController {
 			@RequestHeader(value = "userId") Long userId,
 			@RequestBody @Valid BoardReportRequestDto boardReportRequestDto
 	) {
+		log.info("Post board -> userId: {}, payload: {}", userId, boardReportRequestDto);
 		SimpleResponse simpleResponse = reportService.postBoardReport(BoardReport.build(boardReportRequestDto, userId));
 
 		return ResponseEntity.ok().body(simpleResponse);

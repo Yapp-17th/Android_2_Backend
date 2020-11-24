@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@Slf4j
+@Slf4j(topic = "Board Service")
 @CrossOrigin
 @RestController
 public class BoardController {
@@ -49,6 +49,7 @@ public class BoardController {
 			@RequestParam(required = false) List<Long> category,
 			@RequestParam(required = false) List<Long> address
 	) {
+		log.info("Get board list -> userId: {}, pageable: {}, sorting: {}, category: {}, address: {}", userId, pageable, sorting, category, address);
 		List<BoardListResponseInfo> boardList = boardService.getBoardList(BoardFilterCondition.build(sorting, category, address, userId), pageable);
 
 		BoardListSuccessResponseDto boardListSuccessResponseDto = BoardListSuccessResponseDto.build(boardList);
@@ -60,6 +61,7 @@ public class BoardController {
 			@RequestHeader(value = "userId") Long userId,
 			@RequestBody @Valid BoardInfoRequestDto boardInfoRequestDto
 	) {
+		log.info("Post board -> userId: {}, payload: {}", userId, boardInfoRequestDto);
 		BoardPostRequiredInfo boardPostRequiredInfo = BoardPostRequiredInfo.build(boardInfoRequestDto);
 		SimpleResponse simpleResponse = boardService.postBoard(boardPostRequiredInfo, userId);
 
@@ -71,6 +73,7 @@ public class BoardController {
 			@RequestHeader(value = "userId") Long userId,
 			@PathVariable(name = "boardId") Long boardId
 	) {
+		log.info("Get board content -> userId: {}, boardId: {}", userId, boardId);
 		BoardContentResponseInfo boardContentResponseInfo = boardService.getBoardContent(boardId, userId);
 
 		return ResponseEntity.ok().body(BoardContentSuccessResponseDto.build(boardContentResponseInfo));
@@ -81,7 +84,7 @@ public class BoardController {
 			@RequestHeader(value = "userId") Long userId,
 			@PathVariable(name = "boardId") Long boardId
 	) throws JsonProcessingException {
-
+		log.info("Delete board -> userId: {}, boardId: {}", userId, boardId);
 		SimpleResponse simpleResponse = boardService.deleteBoard(boardId, userId);
 
 		return ResponseEntity.ok().body(simpleResponse);
@@ -93,6 +96,7 @@ public class BoardController {
 			@PathVariable(name = "boardId") Long boardId,
 			@RequestBody @Valid BoardInfoRequestDto boardInfoRequestDto
 	) {
+		log.info("Edit board -> userId: {}, boardId: {}, payload: {}", userId, boardId, boardInfoRequestDto);
 		BoardPostRequiredInfo boardPostRequiredInfo = BoardPostRequiredInfo.build(boardInfoRequestDto);
 		BoardContentResponseInfo boardContentResponseInfo = boardService.editBoardContent(boardId, userId, boardPostRequiredInfo);
 

@@ -35,4 +35,18 @@ public class BoardInfoRequestDto {
 
 	@NotBlank
 	private String place;
+
+	@Override
+	public String toString() {
+		return "BoardInfoRequestDto{" +
+				"title='" + title + '\'' +
+				", content='" + content + '\'' +
+				", category=" + category +
+				", city=" + city +
+				", userTag=" + userTag +
+				", recruitNumber=" + recruitNumber +
+				", date=" + date +
+				", place='" + place + '\'' +
+				'}';
+	}
 }

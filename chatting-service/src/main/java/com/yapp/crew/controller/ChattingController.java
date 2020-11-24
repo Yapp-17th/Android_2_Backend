@@ -101,7 +101,7 @@ public class ChattingController {
 	) throws JsonProcessingException {
 
 		chatRoomRequestPayload.setGuestId(userId);
-		log.info("Create chat room -> payload: {}", chatRoomRequestPayload);
+		log.info("Create chat room -> userId: {}, payload: {}", userId, chatRoomRequestPayload);
 
 		HttpResponseBody<ChatRoomResponsePayload> responseBody = chattingService.createChatRoom(chatRoomRequestPayload);
 		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
@@ -127,7 +127,7 @@ public class ChattingController {
 
 		applyRequestPayload.setBoardId(boardId);
 		applyRequestPayload.setApplierId(userId);
-		log.info("Apply user -> payload: {}", applyRequestPayload);
+		log.info("Apply user -> userId: {}, payload: {}", userId, applyRequestPayload);
 
 		HttpResponseBody<?> responseBody = chattingService.applyUser(applyRequestPayload);
 		return ResponseEntity.status(HttpStatus.CREATED).body(responseBody);
@@ -142,7 +142,7 @@ public class ChattingController {
 
 		approveRequestPayload.setBoardId(boardId);
 		approveRequestPayload.setHostId(userId);
-		log.info("Approve user -> payload: {}", approveRequestPayload);
+		log.info("Approve user -> userId: {}, payload: {}", userId, approveRequestPayload);
 
 		HttpResponseBody<?> responseBody = chattingService.approveUser(approveRequestPayload);
 		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
@@ -157,7 +157,7 @@ public class ChattingController {
 
 		approveRequestPayload.setBoardId(boardId);
 		approveRequestPayload.setHostId(userId);
-		log.info("Disapprove user -> payload: {}", approveRequestPayload);
+		log.info("Disapprove user -> userId: {}, payload: {}", userId, approveRequestPayload);
 
 		HttpResponseBody<?> responseBody = chattingService.disapproveUser(approveRequestPayload);
 		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);

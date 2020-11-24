@@ -10,4 +10,11 @@ public class BoardIdRequestDto {
 
 	@NotNull
 	private Long boardId;
+
+	@Override
+	public String toString() {
+		return "BoardIdRequestDto{" +
+				"boardId=" + boardId +
+				'}';
+	}
 }

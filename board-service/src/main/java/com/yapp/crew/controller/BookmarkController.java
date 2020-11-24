@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
-@Slf4j
+@Slf4j(topic = "Bookmark Controller")
 @CrossOrigin
 @RestController
 public class BookmarkController {
@@ -33,6 +33,7 @@ public class BookmarkController {
 			@RequestHeader(value = "userId") Long userId,
 			@RequestBody @Valid BoardIdRequestDto boardIdRequestDto
 	) {
+		log.info("Post board -> userId: {}, payload: {}", userId, boardIdRequestDto);
 		SimpleResponse simpleResponse = bookMarkService.createBookMark(boardIdRequestDto.getBoardId(), userId);
 
 		return ResponseEntity.ok().body(simpleResponse);
@@ -43,6 +44,7 @@ public class BookmarkController {
 			@RequestHeader(value = "userId") Long userId,
 			@PathVariable(name = "boardId") Long boardId
 	) {
+		log.info("Delete board -> userId: {}, boardId: {}", userId, boardId);
 		SimpleResponse simpleResponse = bookMarkService.deleteBookMark(boardId, userId);
 
 		return ResponseEntity.ok().body(simpleResponse);
