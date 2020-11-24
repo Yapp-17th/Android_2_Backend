@@ -21,4 +21,13 @@ public class ChatRoomRequestPayload {
 
 	@NotNull
 	private Long boardId;
+
+	@Override
+	public String toString() {
+		return "ChatRoomRequestPayload{" +
+				"hostId=" + hostId +
+				", guestId=" + guestId +
+				", boardId=" + boardId +
+				'}';
+	}
 }

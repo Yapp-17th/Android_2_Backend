@@ -13,12 +13,10 @@ import com.yapp.crew.domain.status.BoardStatus;
 import com.yapp.crew.domain.type.ResponseType;
 import com.yapp.crew.network.model.SimpleResponse;
 import java.util.Optional;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Slf4j
 @Service
 public class BookMarkService {
 
@@ -36,10 +34,10 @@ public class BookMarkService {
 	@Transactional
 	public SimpleResponse createBookMark(Long boardId, Long userId) {
 		Board board = findBoardById(boardId)
-				.orElseThrow(() -> new BoardNotFoundException("board not found"));
+				.orElseThrow(() -> new BoardNotFoundException(boardId));
 
 		User user = findUserById(userId)
-				.orElseThrow(() -> new UserNotFoundException("user not found"));
+				.orElseThrow(() -> new UserNotFoundException(userId));
 
 		saveBookMark(board, user);
 		return SimpleResponse.pass(ResponseType.BOOKMARK_POST_SUCCESS);
@@ -48,10 +46,10 @@ public class BookMarkService {
 	@Transactional
 	public SimpleResponse deleteBookMark(Long boardId, Long userId) {
 		Board board = findBoardById(boardId)
-				.orElseThrow(() -> new BoardNotFoundException("board not found"));
+				.orElseThrow(() -> new BoardNotFoundException(boardId));
 
 		User user = findUserById(userId)
-				.orElseThrow(() -> new UserNotFoundException("user not found"));
+				.orElseThrow(() -> new UserNotFoundException(userId));
 
 		deleteBookMark(board, user);
 		return SimpleResponse.pass(ResponseType.BOOKMARK_DELETE_SUCCESS);
@@ -59,7 +57,6 @@ public class BookMarkService {
 
 	private void deleteBookMark(Board board, User user) {
 		bookMarkRepository.deleteByUserAndBoard(user, board);
-		log.info("북마크 삭제 완료");
 	}
 
 	private void saveBookMark(Board board, User user) {
@@ -76,12 +73,10 @@ public class BookMarkService {
 	}
 
 	private Optional<Board> findBoardById(Long boardId) {
-		log.info("board 가져오기 성공");
 		return boardRepository.findBoardById(boardId).filter(board -> board.getStatus().getCode() != BoardStatus.CANCELED.getCode());
 	}
 
 	private Optional<User> findUserById(Long userId) {
-		log.info("user 가져오기 성공");
 		return userRepository.findUserById(userId);
 	}
 }

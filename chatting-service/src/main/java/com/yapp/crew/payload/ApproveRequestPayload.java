@@ -23,4 +23,14 @@ public class ApproveRequestPayload {
 
 	@NotNull
 	private Long guestId;
+
+	@Override
+	public String toString() {
+		return "ApproveRequestPayload{" +
+				"chatRoomId=" + chatRoomId +
+				", boardId=" + boardId +
+				", hostId=" + hostId +
+				", guestId=" + guestId +
+				'}';
+	}
 }

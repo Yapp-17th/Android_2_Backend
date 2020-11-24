@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
-@Slf4j
+@Slf4j(topic = "Hidden Board Controller")
 @CrossOrigin
 @RestController
 public class HiddenBoardController {
@@ -31,6 +31,7 @@ public class HiddenBoardController {
 			@RequestHeader(value = "userId") Long userId,
 			@RequestBody @Valid BoardIdRequestDto boardIdRequestDto
 	) {
+		log.info("Post board -> userId: {}, payload: {}", userId, boardIdRequestDto);
 		SimpleResponse simpleResponse = hiddenBoardService.createHiddenBoard(boardIdRequestDto.getBoardId(), userId);
 
 		return ResponseEntity.ok().body(simpleResponse);

@@ -2,7 +2,7 @@ package com.yapp.crew.domain.errors;
 
 public class CannotDisapproveException extends RuntimeException {
 
-	public CannotDisapproveException(String message) {
-		super(message);
+	public CannotDisapproveException(Long boardId) {
+		super("Cannot approve to board with id: " + boardId);
 	}
 }
