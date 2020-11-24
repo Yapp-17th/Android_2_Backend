@@ -40,13 +40,11 @@ import com.yapp.crew.producer.ChattingProducer;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Slf4j
 @Service
 public class ChattingService {
 
@@ -82,16 +80,16 @@ public class ChattingService {
 	@Transactional
 	public HttpResponseBody<ChatRoomResponsePayload> createChatRoom(ChatRoomRequestPayload chatRoomRequestPayload) throws JsonProcessingException {
 		User host = userRepository.findUserById(chatRoomRequestPayload.getHostId())
-				.orElseThrow(() -> new UserNotFoundException("Cannot find host user with id"));
+				.orElseThrow(() -> new UserNotFoundException(chatRoomRequestPayload.getHostId()));
 
 		User guest = userRepository.findUserById(chatRoomRequestPayload.getGuestId())
-				.orElseThrow(() -> new UserNotFoundException("Cannot find guest user"));
+				.orElseThrow(() -> new UserNotFoundException(chatRoomRequestPayload.getGuestId()));
 
 		User bot = userRepository.findUserById(-1L)
-				.orElseThrow(() -> new UserNotFoundException("Cannot find chat bot"));
+				.orElseThrow(() -> new UserNotFoundException(-1L));
 
 		Board board = boardRepository.findById(chatRoomRequestPayload.getBoardId())
-				.orElseThrow(() -> new BoardNotFoundException("Cannot find board"));
+				.orElseThrow(() -> new BoardNotFoundException(chatRoomRequestPayload.getBoardId()));
 
 		Optional<ChatRoom> chatRoom = chatRoomRepository.findByGuestIdAndBoardId(guest.getId(), board.getId());
 
@@ -134,17 +132,17 @@ public class ChattingService {
 
 	public HttpResponseBody<?> exitChatRoom(Long userId, Long chatRoomId) throws JsonProcessingException {
 		User user = userRepository.findUserById(userId)
-				.orElseThrow(() -> new UserNotFoundException("User not found"));
+				.orElseThrow(() -> new UserNotFoundException(userId));
 
 		ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
-				.orElseThrow(() -> new ChatRoomNotFoundException("Chat room not found"));
+				.orElseThrow(() -> new ChatRoomNotFoundException(chatRoomId));
 
 		boolean isHost = chatRoom.isUserChatRoomHost(userId);
 		if (isHost && chatRoom.getHostExited()) {
-			throw new AlreadyExitedException("This user already exited this chat room");
+			throw new AlreadyExitedException(userId, chatRoomId);
 		}
 		if (!isHost && chatRoom.getGuestExited()) {
-			throw new AlreadyExitedException("This user already exited this chat room");
+			throw new AlreadyExitedException(userId, chatRoomId);
 		}
 		chatRoom.exitUser(isHost);
 		chatRoomRepository.save(chatRoom);
@@ -188,7 +186,7 @@ public class ChattingService {
 		List<Message> messages = messageRepository.findAllByChatRoomIdOrderByCreatedAt(chatRoomId);
 
 		ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
-				.orElseThrow(() -> new ChatRoomNotFoundException("Chat room not found"));
+				.orElseThrow(() -> new ChatRoomNotFoundException(chatRoomId));
 
 		boolean isHost = chatRoom.isUserChatRoomHost(userId);
 		Long firstUnreadChatMessageId = chatRoom.findFirstUnreadChatMessage(isHost);
@@ -196,7 +194,7 @@ public class ChattingService {
 		String boardTitle = chatRoom.getBoard().getTitle();
 
 		AppliedUser appliedUser = appliedUserRepository.findByBoardIdAndUserId(chatRoom.getBoard().getId(), chatRoom.getGuest().getId())
-				.orElseThrow(() -> new GuestApplyNotFoundException("Guest did not apply yet"));
+				.orElseThrow(() -> new GuestApplyNotFoundException(chatRoom.getGuest().getId(), chatRoom.getBoard().getId()));
 
 		return HttpResponseBody.buildChatMessagesResponse(
 				MessageResponsePayload.buildMessageResponsePayload(messageRepository, messages, isHost),
@@ -211,10 +209,10 @@ public class ChattingService {
 	@Transactional
 	public HttpResponseBody<?> updateMessageIsRead(Long userId, Long chatRoomId, Long messageId) {
 		ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
-				.orElseThrow(() -> new ChatRoomNotFoundException("Chat room not found"));
+				.orElseThrow(() -> new ChatRoomNotFoundException(chatRoomId));
 
 		Message message = messageRepository.findById(messageId)
-				.orElseThrow(() -> new MessageNotFoundException("Message not found"));
+				.orElseThrow(() -> new MessageNotFoundException(messageId));
 
 		boolean isHost = chatRoom.isUserChatRoomHost(userId);
 
@@ -231,17 +229,17 @@ public class ChattingService {
 
 	public HttpResponseBody<?> applyUser(ApplyRequestPayload applyRequestPayload) throws JsonProcessingException {
 		ChatRoom chatRoom = chatRoomRepository.findById(applyRequestPayload.getChatRoomId())
-				.orElseThrow(() -> new ChatRoomNotFoundException("Chat room not found"));
+				.orElseThrow(() -> new ChatRoomNotFoundException(applyRequestPayload.getChatRoomId()));
 
 		Board board = boardRepository.findById(applyRequestPayload.getBoardId())
-				.orElseThrow(() -> new BoardNotFoundException("Board not found"));
+				.orElseThrow(() -> new BoardNotFoundException(applyRequestPayload.getBoardId()));
 
 		if (board.getStatus() == BoardStatus.CANCELED || board.getStatus() == BoardStatus.FINISHED) {
-			throw new CannotApplyException("Cannot apply to this board");
+			throw new CannotApplyException(applyRequestPayload.getBoardId());
 		}
 
 		if (chatRoom.getGuestExited() || chatRoom.getHostExited()) {
-			throw new CannotApplyException("Cannot apply to this board");
+			throw new CannotApplyException(applyRequestPayload.getBoardId());
 		}
 
 		chattingProducer.applyUser(applyRequestPayload);
@@ -256,46 +254,46 @@ public class ChattingService {
 	@Transactional
 	public HttpResponseBody<?> approveUser(ApproveRequestPayload approveRequestPayload) throws JsonProcessingException {
 		Board board = boardRepository.findById(approveRequestPayload.getBoardId())
-				.orElseThrow(() -> new BoardNotFoundException("Board not found"));
+				.orElseThrow(() -> new BoardNotFoundException(approveRequestPayload.getBoardId()));
 
 		User host = userRepository.findUserById(approveRequestPayload.getHostId())
-				.orElseThrow(() -> new UserNotFoundException("User not found"));
+				.orElseThrow(() -> new UserNotFoundException(approveRequestPayload.getHostId()));
 
 		User guest = userRepository.findUserById(approveRequestPayload.getGuestId())
-				.orElseThrow(() -> new UserNotFoundException("User not found"));
+				.orElseThrow(() -> new UserNotFoundException(approveRequestPayload.getGuestId()));
 
 		ChatRoom chatRoom = chatRoomRepository.findById(approveRequestPayload.getChatRoomId())
-				.orElseThrow(() -> new ChatRoomNotFoundException("Chat room not found"));
+				.orElseThrow(() -> new ChatRoomNotFoundException(approveRequestPayload.getChatRoomId()));
 
 		if (board.getStatus() == BoardStatus.CANCELED || board.getStatus() == BoardStatus.FINISHED) {
-			throw new CannotApproveException("Cannot approve to this board");
+			throw new CannotApproveException(approveRequestPayload.getBoardId());
 		}
 
 		if (chatRoom.getGuestExited() || chatRoom.getHostExited()) {
-			throw new CannotApproveException("Cannot approve to this board");
+			throw new CannotApproveException(approveRequestPayload.getBoardId());
 		}
 
 		if (!board.getUser().getId().equals(host.getId())) {
-			throw new WrongHostException("This user is not a host for this board");
+			throw new WrongHostException(host.getId(), board.getId(), "board");
 		}
 
 		if (!chatRoom.getHost().getId().equals(host.getId())) {
-			throw new WrongHostException("This user is not a host for this chat room");
+			throw new WrongHostException(host.getId(), chatRoom.getId(), "chat room");
 		}
 
 		if (!chatRoom.getGuest().getId().equals(guest.getId())) {
-			throw new WrongGuestException("This user is not a guest for this chat room");
+			throw new WrongGuestException(guest.getId(), chatRoom.getId());
 		}
 
 		AppliedUser isApplied = appliedUserRepository.findByBoardIdAndUserId(board.getId(), guest.getId())
-				.orElseThrow(() -> new GuestApplyNotFoundException("This user did not apply"));
+				.orElseThrow(() -> new GuestApplyNotFoundException(guest.getId(), board.getId()));
 
 		if (isApplied.getStatus().equals(AppliedStatus.APPROVED)) {
-			throw new AlreadyApprovedException("This user is already approved");
+			throw new AlreadyApprovedException(guest.getId(), board.getId());
 		}
 
 		if (board.getRemainRecruitNumber() < 1) {
-			throw new NoSpaceToApplyException("This board is already full");
+			throw new NoSpaceToApplyException(board.getId());
 		}
 
 		isApplied.approveUser();
@@ -317,42 +315,42 @@ public class ChattingService {
 
 	public HttpResponseBody<?> disapproveUser(ApproveRequestPayload approveRequestPayload) throws JsonProcessingException {
 		Board board = boardRepository.findById(approveRequestPayload.getBoardId())
-				.orElseThrow(() -> new BoardNotFoundException("Board not found"));
+				.orElseThrow(() -> new BoardNotFoundException(approveRequestPayload.getBoardId()));
 
 		User host = userRepository.findUserById(approveRequestPayload.getHostId())
-				.orElseThrow(() -> new UserNotFoundException("User not found"));
+				.orElseThrow(() -> new UserNotFoundException(approveRequestPayload.getHostId()));
 
 		User guest = userRepository.findUserById(approveRequestPayload.getGuestId())
-				.orElseThrow(() -> new UserNotFoundException("User not found"));
+				.orElseThrow(() -> new UserNotFoundException(approveRequestPayload.getGuestId()));
 
 		ChatRoom chatRoom = chatRoomRepository.findById(approveRequestPayload.getChatRoomId())
-				.orElseThrow(() -> new ChatRoomNotFoundException("Chat room not found"));
+				.orElseThrow(() -> new ChatRoomNotFoundException(approveRequestPayload.getChatRoomId()));
 
 		if (board.getStatus() == BoardStatus.CANCELED || board.getStatus() == BoardStatus.FINISHED) {
-			throw new CannotApproveException("Cannot disapprove to this board");
+			throw new CannotApproveException(board.getId());
 		}
 
 		if (chatRoom.getGuestExited() || chatRoom.getHostExited()) {
-			throw new CannotDisapproveException("Cannot disapprove to this board");
+			throw new CannotDisapproveException(board.getId());
 		}
 
 		if (!board.getUser().getId().equals(host.getId())) {
-			throw new WrongHostException("This user is not a host for this board");
+			throw new WrongHostException(host.getId(), board.getId(), "board");
 		}
 
 		if (!chatRoom.getHost().getId().equals(host.getId())) {
-			throw new WrongHostException("This user is not a host for this chat room");
+			throw new WrongHostException(host.getId(), chatRoom.getId(), "chat room");
 		}
 
 		if (!chatRoom.getGuest().getId().equals(guest.getId())) {
-			throw new WrongGuestException("This user is not a guest for this chat room");
+			throw new WrongGuestException(guest.getId(), chatRoom.getId());
 		}
 
 		AppliedUser isApproved = appliedUserRepository.findByBoardIdAndUserId(board.getId(), guest.getId())
-				.orElseThrow(() -> new GuestApplyNotFoundException("This user did not apply"));
+				.orElseThrow(() -> new GuestApplyNotFoundException(guest.getId(), board.getId()));
 
 		if (!isApproved.getStatus().equals(AppliedStatus.APPROVED)) {
-			throw new IsNotApprovedException("This user is not approved");
+			throw new IsNotApprovedException(guest.getId(), board.getId());
 		}
 
 		isApproved.disapproveUser();

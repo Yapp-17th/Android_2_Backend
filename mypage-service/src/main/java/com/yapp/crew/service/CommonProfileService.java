@@ -15,12 +15,10 @@ import com.yapp.crew.model.UserProfileInfo;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Slf4j
 @Service
 public class CommonProfileService {
 
@@ -38,7 +36,8 @@ public class CommonProfileService {
 	@Transactional
 	public UserProfileInfo getProfile(long userId) {
 		User user = findUserById(userId)
-				.orElseThrow(() -> new UserNotFoundException("user not found"));
+				.orElseThrow(() -> new UserNotFoundException(userId));
+
 		List<Evaluation> evaluations = findAllByEvaluatedId(userId);
 
 		return UserProfileInfo.build(user, false, evaluations);
@@ -47,7 +46,7 @@ public class CommonProfileService {
 	@Transactional
 	public List<HistoryListInfo> getHistoryList(long userId) {
 		User user = findUserById(userId)
-				.orElseThrow(() -> new UserNotFoundException("user not found"));
+				.orElseThrow(() -> new UserNotFoundException(userId));
 
 		return findAllBoards(user).stream()
 				.filter(board -> board.getStatus() == BoardStatus.CANCELED || board.getStatus() == BoardStatus.FINISHED)

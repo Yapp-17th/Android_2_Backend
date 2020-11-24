@@ -11,12 +11,10 @@ import com.yapp.crew.model.LoginUserInfo;
 import com.yapp.crew.model.UserAuthResponse;
 import com.yapp.crew.network.model.SimpleResponse;
 import java.util.Optional;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
-@Slf4j
 @Service
 public class SignInService {
 
@@ -31,14 +29,13 @@ public class SignInService {
 
 	public UserAuthResponse signIn(LoginUserInfo loginUserInfo) {
 		User existingUser = getUserByOauthId(loginUserInfo.getOauthId())
-				.orElseThrow(() -> new UserNotFoundException("user not found"));
+				.orElseThrow(() -> new UserNotFoundException(Long.parseLong(loginUserInfo.getOauthId())));
 
 		if (existingUser.getStatus() == UserStatus.SUSPENDED) {
-			log.info("suspended user가 로그인을 시도했습니다.");
-			throw new SuspendedUserException("suspend user exception");
+			throw new SuspendedUserException(existingUser.getId());
+
 		} else if (existingUser.getStatus() == UserStatus.INACTIVE) {
-			log.info("inactive user가 로그인을 시도했습니다.");
-			throw new InactiveUserException("inactive user exception");
+			throw new InactiveUserException(existingUser.getId());
 		}
 
 		HttpHeaders httpHeaders = tokenService.setToken(existingUser);
@@ -48,7 +45,6 @@ public class SignInService {
 	}
 
 	private Optional<User> getUserByOauthId(String oauthId) {
-		log.info("user 가져오기 성공");
 		return userRepository.findByOauthId(oauthId);
 	}
 }

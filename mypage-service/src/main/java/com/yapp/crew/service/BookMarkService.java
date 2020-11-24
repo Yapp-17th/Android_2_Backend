@@ -3,19 +3,16 @@ package com.yapp.crew.service;
 import com.yapp.crew.domain.errors.UserNotFoundException;
 import com.yapp.crew.domain.model.BookMark;
 import com.yapp.crew.domain.model.User;
-import com.yapp.crew.domain.repository.BookMarkRepository;
 import com.yapp.crew.domain.repository.UserRepository;
 import com.yapp.crew.model.BoardListInfo;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Slf4j
 @Service
 public class BookMarkService {
 
@@ -29,7 +26,7 @@ public class BookMarkService {
 	@Transactional
 	public List<BoardListInfo> getBookMarks(long userId) {
 		User user = findUserById(userId)
-				.orElseThrow(() -> new UserNotFoundException("user not found"));
+				.orElseThrow(() -> new UserNotFoundException(userId));
 
 		Set<BookMark> bookMarkSet = user.getUserBookmark();
 		return bookMarkSet.stream()

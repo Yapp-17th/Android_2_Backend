@@ -14,12 +14,10 @@ import com.yapp.crew.domain.type.ResponseType;
 import com.yapp.crew.model.BoardReport;
 import com.yapp.crew.network.model.SimpleResponse;
 import java.util.Optional;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Slf4j
 @Service
 public class ReportService {
 
@@ -37,10 +35,10 @@ public class ReportService {
 	@Transactional
 	public SimpleResponse postBoardReport(BoardReport boardReport) {
 		User reporter = findUserById(boardReport.getReporter())
-				.orElseThrow(() -> new UserNotFoundException("user not found"));
+				.orElseThrow(() -> new UserNotFoundException(boardReport.getReporter()));
 
 		Board board = findBoardById(boardReport.getBoardId())
-				.orElseThrow(() -> new BoardNotFoundException("board not found"));
+				.orElseThrow(() -> new BoardNotFoundException(boardReport.getBoardId()));
 
 		ReportBuilder reportBuilder = Report.getBuilder();
 		Report report = reportBuilder

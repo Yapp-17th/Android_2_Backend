@@ -7,6 +7,7 @@ import com.yapp.crew.model.UserProfileInfo;
 import com.yapp.crew.service.CommonProfileService;
 import com.yapp.crew.service.MyProfileService;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j(topic = "Common Profile Controller")
 @RestController
 public class CommonProfileController {
 
@@ -32,6 +34,7 @@ public class CommonProfileController {
 			@RequestHeader(value = "userId") Long tokenUserId,
 			@PathVariable("userId") Long userId
 	) {
+		log.info("Get common profile -> tokenUserId: {}, userId: {}", tokenUserId, userId);
 		if (tokenUserId.equals(userId)) {
 			UserProfileInfo userProfileInfo = myProfileService.getProfile(userId);
 			UserProfileResponseDto userProfileResponseDto = UserProfileResponseDto.build(userProfileInfo);
@@ -50,6 +53,7 @@ public class CommonProfileController {
 			@RequestHeader(value = "userId") Long tokenUserId,
 			@PathVariable("userId") Long userId
 	) {
+		log.info("Get common history -> tokenUserId: {}, userId: {}", tokenUserId, userId);
 		List<HistoryListInfo> historyListInfos = commonProfileService.getHistoryList(userId);
 		HistoryListResponseDto historyListResponseDto = HistoryListResponseDto.build("complete", historyListInfos);
 

@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
-@Slf4j
+@Slf4j(topic = "Chatting Controller")
 @CrossOrigin
 @RestController
 public class ChattingController {
@@ -71,6 +71,7 @@ public class ChattingController {
 			@RequestHeader(value = "userId") Long userId,
 			@PathVariable(name = "chatRoomId") Long chatRoomId
 	) {
+		log.info("Receive chat messages -> userId: {}, chatRoomId: {}", userId, chatRoomId);
 		HttpResponseBody<List<MessageResponsePayload>> responseBody = chattingService.receiveChatMessages(chatRoomId, userId);
 		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
 	}
@@ -81,12 +82,14 @@ public class ChattingController {
 			@PathVariable(name = "chatRoomId") Long chatRoomId,
 			@PathVariable(name = "messageId") Long messageId
 	) {
+		log.info("Update message isRead -> userId: {}, chatRoomId: {}, messageId: {}", userId, chatRoomId, messageId);
 		HttpResponseBody<?> responseBody = chattingService.updateMessageIsRead(userId, chatRoomId, messageId);
 		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
 	}
 
 	@GetMapping(path = "/v1/chat/room")
 	public ResponseEntity<?> receiveChatRooms(@RequestHeader(value = "userId") Long userId) {
+		log.info("Receive chat rooms -> userId: {}", userId);
 		HttpResponseBody<List<ChatRoomResponsePayload>> responseBody = chattingService.receiveChatRooms(userId);
 		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
 	}
@@ -98,6 +101,7 @@ public class ChattingController {
 	) throws JsonProcessingException {
 
 		chatRoomRequestPayload.setGuestId(userId);
+		log.info("Create chat room -> userId: {}, payload: {}", userId, chatRoomRequestPayload);
 
 		HttpResponseBody<ChatRoomResponsePayload> responseBody = chattingService.createChatRoom(chatRoomRequestPayload);
 		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
@@ -108,6 +112,7 @@ public class ChattingController {
 			@RequestHeader(value = "userId") Long userId,
 			@PathVariable(name = "chatRoomId") Long chatRoomId
 	) throws JsonProcessingException {
+		log.info("Exit chat room -> userId: {}, chatRoomId: {}", userId, chatRoomId);
 
 		HttpResponseBody<?> responseBody = chattingService.exitChatRoom(userId, chatRoomId);
 		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
@@ -116,26 +121,28 @@ public class ChattingController {
 	@PostMapping(path = "/v1/board/{boardId}/apply")
 	public ResponseEntity<?> applyUser(
 			@RequestHeader(value = "userId") Long userId,
-			@Valid @RequestBody ApplyRequestPayload applyRequestPayload,
-			@PathVariable(name = "boardId") Long boardId
+			@PathVariable(name = "boardId") Long boardId,
+			@Valid @RequestBody ApplyRequestPayload applyRequestPayload
 	) throws JsonProcessingException {
 
 		applyRequestPayload.setBoardId(boardId);
 		applyRequestPayload.setApplierId(userId);
-		HttpResponseBody<?> responseBody = chattingService.applyUser(applyRequestPayload);
+		log.info("Apply user -> userId: {}, payload: {}", userId, applyRequestPayload);
 
+		HttpResponseBody<?> responseBody = chattingService.applyUser(applyRequestPayload);
 		return ResponseEntity.status(HttpStatus.CREATED).body(responseBody);
 	}
 
 	@PostMapping(path = "/v1/board/{boardId}/approve")
 	public ResponseEntity<?> approveUser(
 			@RequestHeader(value = "userId") Long userId,
-			@Valid @RequestBody ApproveRequestPayload approveRequestPayload,
-			@PathVariable(name = "boardId") Long boardId
+			@PathVariable(name = "boardId") Long boardId,
+			@Valid @RequestBody ApproveRequestPayload approveRequestPayload
 	) throws JsonProcessingException {
 
 		approveRequestPayload.setBoardId(boardId);
 		approveRequestPayload.setHostId(userId);
+		log.info("Approve user -> userId: {}, payload: {}", userId, approveRequestPayload);
 
 		HttpResponseBody<?> responseBody = chattingService.approveUser(approveRequestPayload);
 		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
@@ -144,12 +151,13 @@ public class ChattingController {
 	@DeleteMapping(path = "/v1/board/{boardId}/approve")
 	public ResponseEntity<?> disapproveUser(
 			@RequestHeader(value = "userId") Long userId,
-			@Valid @RequestBody ApproveRequestPayload approveRequestPayload,
-			@PathVariable(name = "boardId") Long boardId
+			@PathVariable(name = "boardId") Long boardId,
+			@Valid @RequestBody ApproveRequestPayload approveRequestPayload
 	) throws JsonProcessingException {
 
 		approveRequestPayload.setBoardId(boardId);
 		approveRequestPayload.setHostId(userId);
+		log.info("Disapprove user -> userId: {}, payload: {}", userId, approveRequestPayload);
 
 		HttpResponseBody<?> responseBody = chattingService.disapproveUser(approveRequestPayload);
 		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);

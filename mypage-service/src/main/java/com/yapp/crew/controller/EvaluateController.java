@@ -9,6 +9,7 @@ import com.yapp.crew.network.model.SimpleResponse;
 import com.yapp.crew.service.EvaluateService;
 import java.util.List;
 import javax.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j(topic = "Evaluate Controller")
 @RestController
 public class EvaluateController {
 
@@ -36,6 +38,7 @@ public class EvaluateController {
 			@RequestHeader(value = "userId") Long userId,
 			@PathVariable(name = "boardId") Long boardId
 	) {
+		log.info("Get evaluate list -> userId: {}, boardId: {}", userId, boardId);
 		List<EvaluateListInfo> evaluateListInfos = evaluateService.getEvaluateList(userId, boardId);
 		EvaluateListResponseDto evaluateListResponseDto = EvaluateListResponseDto.build(evaluateListInfos);
 
@@ -49,6 +52,7 @@ public class EvaluateController {
 			@PathVariable(name = "userId") Long userId,
 			@RequestParam boolean isLike
 	) {
+		log.info("Put evaluate -> evaluatedId: {}, boardId: {}, userId: {}, isLike: {}", evaluateId, boardId, userId, isLike);
 		SimpleResponse simpleResponse = evaluateService.putUserEvaluation(evaluateId, userId, boardId, isLike);
 
 		return ResponseEntity.ok().body(SimpleResponseDto.build(simpleResponse));
@@ -59,6 +63,7 @@ public class EvaluateController {
 			@RequestHeader(value = "userId") Long userId,
 			@RequestBody @Valid UserReportRequestDto reportRequestDto
 	) {
+		log.info("Post evaluated Report -> userId: {}, payload: {}", userId, reportRequestDto);
 		UserReportRequest userReportRequest = UserReportRequest.build(userId, reportRequestDto);
 		SimpleResponse simpleResponse = evaluateService.postUserReport(userReportRequest);
 

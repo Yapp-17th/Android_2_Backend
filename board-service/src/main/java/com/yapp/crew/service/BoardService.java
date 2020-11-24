@@ -38,13 +38,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Slf4j
 @Service
 public class BoardService {
 
@@ -82,16 +80,16 @@ public class BoardService {
 	@Transactional
 	public SimpleResponse postBoard(BoardPostRequiredInfo boardPostRequiredInfo, Long userId) {
 		User user = findUserById(userId)
-				.orElseThrow(() -> new UserNotFoundException(ResponseType.USER_NOT_FOUND.getMessage()));
+				.orElseThrow(() -> new UserNotFoundException(userId));
 
 		Category category = findCategoryById(boardPostRequiredInfo.getCategory())
-				.orElseThrow(() -> new CategoryNotFoundException("category not found"));
+				.orElseThrow(() -> new CategoryNotFoundException(boardPostRequiredInfo.getCategory()));
 
 		Address address = findAddressById(boardPostRequiredInfo.getCity())
-				.orElseThrow(() -> new AddressNotFoundException("address not found"));
+				.orElseThrow(() -> new AddressNotFoundException(boardPostRequiredInfo.getCity()));
 
 		Tag tag = findTagById(boardPostRequiredInfo.getUserTag())
-				.orElseThrow(() -> new TagNotFoundException("tag not found"));
+				.orElseThrow(() -> new TagNotFoundException(boardPostRequiredInfo.getUserTag()));
 
 		BoardBuilder boardBuilder = Board.getBuilder();
 		Board board = boardBuilder
@@ -114,7 +112,8 @@ public class BoardService {
 	@Transactional
 	public List<BoardListResponseInfo> getBoardList(BoardFilterCondition boardFilterCondition, Pageable pageable) {
 		User user = findUserById(boardFilterCondition.getUserId())
-				.orElseThrow(() -> new UserNotFoundException("user not found"));
+				.orElseThrow(() -> new UserNotFoundException(boardFilterCondition.getUserId()));
+
 		return filterBoard(boardFilterCondition, pageable).stream()
 				.map(board -> BoardListResponseInfo.build(board, user))
 				.collect(Collectors.toList());
@@ -123,7 +122,7 @@ public class BoardService {
 	@Transactional
 	public BoardContentResponseInfo getBoardContent(Long boardId, Long userId) {
 		Board board = findBoardById(boardId)
-				.orElseThrow(() -> new BoardNotFoundException("board not found"));
+				.orElseThrow(() -> new BoardNotFoundException(boardId));
 
 		List<Evaluation> evaluations = findAllByEvaluatedId(userId);
 		return BoardContentResponseInfo.build(board, userId, evaluations);
@@ -132,10 +131,10 @@ public class BoardService {
 	@Transactional
 	public SimpleResponse deleteBoard(Long boardId, Long userId) throws JsonProcessingException {
 		Board board = findMyBoardById(boardId, userId)
-				.orElseThrow(() -> new BoardNotFoundException("board not found"));
+				.orElseThrow(() -> new BoardNotFoundException(boardId));
 
 		if (!board.getUser().getId().equals(userId)) {
-			throw new InvalidRequestBodyException("invalid user_id");
+			throw new InvalidRequestBodyException("Board Service - Incorrect board host with id: " + userId);
 		}
 		deleteBoard(board);
 		boardProducer.produceBoardCanceledEvent(BoardCancel.build(boardId, userId));
@@ -146,20 +145,20 @@ public class BoardService {
 	@Transactional
 	public BoardContentResponseInfo editBoardContent(Long boardId, Long userId, BoardPostRequiredInfo boardPostRequiredInfo) {
 		Board board = findMyBoardById(boardId, userId)
-				.orElseThrow(() -> new BoardNotFoundException("board not found"));
+				.orElseThrow(() -> new BoardNotFoundException(boardId));
 
 		if (!board.getUser().getId().equals(userId)) {
-			throw new UnAuthorizedEventException("not authorized edit");
+			throw new UnAuthorizedEventException("Board Service - Incorrect board host with id: " + userId);
 		}
 
 		Category category = findCategoryById(boardPostRequiredInfo.getCategory())
-				.orElseThrow(() -> new CategoryNotFoundException("category not found"));
+				.orElseThrow(() -> new CategoryNotFoundException(boardPostRequiredInfo.getCategory()));
 
 		Address address = findAddressById(boardPostRequiredInfo.getCity())
-				.orElseThrow(() -> new AddressNotFoundException("address not found"));
+				.orElseThrow(() -> new AddressNotFoundException(boardPostRequiredInfo.getCity()));
 
 		Tag tag = findTagById(boardPostRequiredInfo.getUserTag())
-				.orElseThrow(() -> new TagNotFoundException("tag not found"));
+				.orElseThrow(() -> new TagNotFoundException(boardPostRequiredInfo.getUserTag()));
 
 		List<Evaluation> evaluations = findAllByEvaluatedId(board.getUser().getId());
 
@@ -188,9 +187,8 @@ public class BoardService {
 
 	private void saveBoard(Board board) {
 		if (board.getStartsAt().isBefore(LocalDateTime.now())) {
-			throw new BoardTimeInvalidException("board time invalid");
+			throw new BoardTimeInvalidException("Board Service - Cannot set starting time before than current time");
 		}
-
 		boardRepository.save(board);
 	}
 
@@ -254,5 +252,4 @@ public class BoardService {
 			}
 		}
 	}
-
 }

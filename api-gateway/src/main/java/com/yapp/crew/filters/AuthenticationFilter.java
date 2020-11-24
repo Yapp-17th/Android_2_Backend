@@ -1,5 +1,8 @@
 package com.yapp.crew.filters;
 
+import static org.springframework.cloud.netflix.zuul.filters.support.FilterConstants.PRE_DECORATION_FILTER_ORDER;
+import static org.springframework.cloud.netflix.zuul.filters.support.FilterConstants.PRE_TYPE;
+
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import com.yapp.crew.auth.Auth;
@@ -12,10 +15,12 @@ import com.yapp.crew.errors.TokenRequiredException;
 import com.yapp.crew.errors.UserNotFoundException;
 import com.yapp.crew.handlers.ExceptionHandler;
 import javax.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 
+@Slf4j(topic = "Zuul Authentication Filter")
 @Component
 public class AuthenticationFilter extends ZuulFilter {
 
@@ -32,17 +37,20 @@ public class AuthenticationFilter extends ZuulFilter {
 
 	@Override
 	public String filterType() {
-		return "pre";
+		return PRE_TYPE;
 	}
 
 	@Override
 	public int filterOrder() {
-		return 10;
+		return PRE_DECORATION_FILTER_ORDER - 1;
 	}
 
 	@Override
 	public boolean shouldFilter() {
 		RequestContext ctx = RequestContext.getCurrentContext();
+		HttpServletRequest request = ctx.getRequest();
+
+		log.info("Method: {}, URL: {}", request.getMethod(), request.getRequestURL());
 
 		if ((ctx.get("proxy") != null) && ctx.get("proxy").equals("base-service")) {
 			return false;
@@ -62,15 +70,15 @@ public class AuthenticationFilter extends ZuulFilter {
 			String token = request.getHeader(HttpHeaders.AUTHORIZATION);
 
 			if (token == null) {
-				throw new TokenRequiredException("[Zuul Proxy Exception] token is required");
+				throw new TokenRequiredException("[Zuul Proxy Exception] Token is required but wasn't sent");
 			}
 
 			auth.verifyToken(token);
 			Long userId = auth.parseUserIdFromToken(token);
 			User user = userRepository.findUserById(userId)
-					.orElseThrow(() -> new UserNotFoundException("[Zuul Proxy Exception] user not found"));
+					.orElseThrow(() -> new UserNotFoundException("[Zuul Proxy Exception] Cannot find user with id: " + userId));
 
-			checkUserStatus(user.getStatus());
+			checkUserStatus(user.getStatus(), userId);
 
 			ctx.addZuulRequestHeader("userId", userId.toString());
 		}
@@ -80,12 +88,12 @@ public class AuthenticationFilter extends ZuulFilter {
 		return null;
 	}
 
-	private void checkUserStatus(UserStatus userStatus) throws InactiveUserException, SuspendedUserException {
+	private void checkUserStatus(UserStatus userStatus, Long userId) throws InactiveUserException, SuspendedUserException {
 		if (userStatus.equals(UserStatus.INACTIVE)) {
-			throw new InactiveUserException("[Zuul Proxy Exception] Inactive user");
+			throw new InactiveUserException("[Zuul Proxy Exception] Inactive user has accessed with id: " + userId);
 		}
 		else if (userStatus.equals(UserStatus.SUSPENDED)) {
-			throw new SuspendedUserException("[Zuul Proxy Exception] suspended user");
+			throw new SuspendedUserException("[Zuul Proxy Exception] Suspended user has accessed with id: " + userId);
 		}
 	}
 }

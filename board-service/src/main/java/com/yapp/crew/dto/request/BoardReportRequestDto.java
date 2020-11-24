@@ -10,7 +10,18 @@ public class BoardReportRequestDto {
 
 	@NotNull
 	private Long boardId;
+
 	@NotNull
 	private Long reportType;
+
 	private String content;
+
+	@Override
+	public String toString() {
+		return "BoardReportRequestDto{" +
+				"boardId=" + boardId +
+				", reportType=" + reportType +
+				", content='" + content + '\'' +
+				'}';
+	}
 }

@@ -10,7 +10,6 @@ import com.yapp.crew.domain.model.User;
 import com.yapp.crew.domain.repository.ChatRoomRepository;
 import com.yapp.crew.domain.repository.MessageRepository;
 import com.yapp.crew.domain.repository.UserRepository;
-import com.yapp.crew.domain.type.ResponseType;
 import com.yapp.crew.payload.MessageRequestPayload;
 import com.yapp.crew.payload.MessageResponsePayload;
 import java.util.Optional;
@@ -59,10 +58,10 @@ public class ChattingConsumer {
 		MessageRequestPayload messageRequestPayload = objectMapper.readValue(consumerRecord.value(), MessageRequestPayload.class);
 
 		ChatRoom chatRoom = chatRoomRepository.findById(messageRequestPayload.getChatRoomId())
-				.orElseThrow(() -> new ChatRoomNotFoundException(ResponseType.CHATROOM_NOT_FOUND.getMessage()));
+				.orElseThrow(() -> new ChatRoomNotFoundException(messageRequestPayload.getChatRoomId()));
 
 		User sender = userRepository.findById(messageRequestPayload.getSenderId())
-				.orElseThrow(() -> new UserNotFoundException(ResponseType.USER_NOT_FOUND.getMessage()));
+				.orElseThrow(() -> new UserNotFoundException(messageRequestPayload.getSenderId()));
 
 		long lastMessageId = 0;
 		Optional<Message> lastMessage = messageRepository.findFirstByChatRoomIdOrderByIdDesc(chatRoom.getId());
@@ -98,8 +97,5 @@ public class ChattingConsumer {
 			simpMessagingTemplate.convertAndSend("/sub/user/" + chatRoom.getHost().getId().toString() + "/chat/room", payload);
 			simpMessagingTemplate.convertAndSend("/sub/user/" + chatRoom.getGuest().getId().toString() + "/chat/room", payload);
 		}
-
-		String messageJson = objectMapper.writeValueAsString(message);
-		log.info("Successfully consumed message: {}", messageJson);
 	}
 }

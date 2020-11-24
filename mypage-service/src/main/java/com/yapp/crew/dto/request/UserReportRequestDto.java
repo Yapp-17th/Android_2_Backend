@@ -15,4 +15,13 @@ public class UserReportRequestDto {
 	private Long reportType;
 
 	private String content;
+
+	@Override
+	public String toString() {
+		return "UserReportRequestDto{" +
+				"userId=" + userId +
+				", reportType=" + reportType +
+				", content='" + content + '\'' +
+				'}';
+	}
 }

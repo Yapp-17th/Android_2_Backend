@@ -13,12 +13,10 @@ import com.yapp.crew.domain.status.BoardStatus;
 import com.yapp.crew.domain.type.ResponseType;
 import com.yapp.crew.network.model.SimpleResponse;
 import java.util.Optional;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Slf4j
 @Service
 public class HiddenBoardService {
 
@@ -36,10 +34,10 @@ public class HiddenBoardService {
 	@Transactional
 	public SimpleResponse createHiddenBoard(Long boardId, Long userId) {
 		Board board = findBoardById(boardId)
-				.orElseThrow(() -> new BoardNotFoundException("board not found"));
+				.orElseThrow(() -> new BoardNotFoundException(boardId));
 
 		User user = findUserById(userId)
-				.orElseThrow(() -> new UserNotFoundException("user not found"));
+				.orElseThrow(() -> new UserNotFoundException(userId));
 
 		HiddenBoardBuilder hiddenBoardBuilder = HiddenBoard.getBuilder();
 		HiddenBoard hiddenBoard = hiddenBoardBuilder
@@ -55,17 +53,14 @@ public class HiddenBoardService {
 	}
 
 	private void saveHiddenBoard(HiddenBoard hiddenBoard) {
-		log.info("hidden board 저장 성공");
 		hiddenBoardRepository.save(hiddenBoard);
 	}
 
 	private Optional<Board> findBoardById(Long boardId) {
-		log.info("board 가져오기 성공");
 		return boardRepository.findBoardById(boardId).filter(board -> board.getStatus().getCode() != BoardStatus.CANCELED.getCode());
 	}
 
 	private Optional<User> findUserById(Long userId) {
-		log.info("user 가져오기 성공");
 		return userRepository.findUserById(userId);
 	}
 }

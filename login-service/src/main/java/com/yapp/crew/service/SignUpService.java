@@ -24,7 +24,6 @@ import com.yapp.crew.utils.UniqueIndexEnum;
 import java.util.List;
 import java.util.Optional;
 import javax.transaction.Transactional;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +31,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-@Slf4j
 @Service
 public class SignUpService {
 
@@ -44,7 +42,13 @@ public class SignUpService {
 	private TokenService tokenService;
 
 	@Autowired
-	public SignUpService(UserRepository userRepository, CategoryRepository categoryRepository, AddressRepository addressRepository, UserExerciseRepository userExerciseRepository, TokenService tokenService) {
+	public SignUpService(
+			UserRepository userRepository,
+			CategoryRepository categoryRepository,
+			AddressRepository addressRepository,
+			UserExerciseRepository userExerciseRepository,
+			TokenService tokenService
+	) {
 		this.userRepository = userRepository;
 		this.categoryRepository = categoryRepository;
 		this.addressRepository = addressRepository;
@@ -62,7 +66,7 @@ public class SignUpService {
 		}
 
 		if (user.getStatus() == UserStatus.SUSPENDED) {
-			throw new SuspendedUserException("suspended user");
+			throw new SuspendedUserException(user.getId());
 		}
 
 		return signUpExistingUser(user);
@@ -73,7 +77,7 @@ public class SignUpService {
 		UserBuilder userBuilder = User.getBuilder();
 
 		Address address = findAddressById(signupUserInfo.getAddress())
-				.orElseThrow(() -> new AddressNotFoundException("address not found"));
+				.orElseThrow(() -> new AddressNotFoundException(signupUserInfo.getAddress()));
 
 		User user = userBuilder
 				.withOauthId(signupUserInfo.getOauthId())
@@ -89,7 +93,6 @@ public class SignUpService {
 			save(user, signupUserInfo.getCategory());
 		} catch (Exception e) {
 			if (e.getCause() instanceof ConstraintViolationException) {
-				log.info("Request server error: " + e.getLocalizedMessage());
 				for (UniqueIndexEnum uniqueIndexEnum : UniqueIndexEnum.values()) {
 					if (StringUtils.containsIgnoreCase(e.getLocalizedMessage(), uniqueIndexEnum.toString())) {
 						throw new UserDuplicateFieldException(uniqueIndexEnum.getName());
@@ -120,7 +123,6 @@ public class SignUpService {
 
 	private void saveUser(User user) {
 		userRepository.save(user);
-		log.info("user login 성공");
 	}
 
 	private void saveUserExercise(User user, Category category) {
@@ -136,34 +138,30 @@ public class SignUpService {
 	private void save(User user, List<Long> category) {
 		saveUser(user);
 		User savedUser = findUserByOauthId(user.getOauthId())
-				.orElseThrow(() -> new UserNotFoundException("user not found"));
+				.orElseThrow(() -> new UserNotFoundException(Long.parseLong(user.getOauthId())));
 
 		for (long categoryId : category) {
 			Category userCategory = findCategoryById(categoryId)
-					.orElseThrow(() -> new CategoryNotFoundException("category not found"));
+					.orElseThrow(() -> new CategoryNotFoundException(categoryId));
 
 			saveUserExercise(savedUser, userCategory);
 		}
 	}
 
 	private Optional<Category> findCategoryById(Long id) {
-		log.info("find category by category_id");
 		return categoryRepository.findCategoryById(id);
 	}
 
 	private Optional<User> findUserByOauthId(String oauthId) {
-		log.info("find user by oauth_id");
 		return userRepository.findByOauthId(oauthId);
 	}
 
 	private Optional<Address> findAddressById(Long id) {
-		log.info("find address by address_id");
 		return addressRepository.findAddressById(id);
 	}
 
 	private void updateUserActive(User user) {
 		user.setUserStatusActive();
 		userRepository.save(user);
-		log.info("user update 완료");
 	}
 }

@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-@Slf4j
+@Slf4j(topic = "SignIn Controller")
 @CrossOrigin
 @RestController
 public class SignInController {
@@ -33,6 +33,7 @@ public class SignInController {
 
 	@PostMapping(path = "/v1/user/sign-in", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> postSignIn(@RequestBody @Valid LoginRequestDto loginRequestDto) {
+		log.info("Post sign in -> payload: {}", loginRequestDto);
 
 		LoginUserInfo loginUserInfo = new LoginUserInfo(loginRequestDto.getUserId());
 		UserAuthResponse userAuthResponse = signInService.signIn(loginUserInfo);

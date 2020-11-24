@@ -30,14 +30,12 @@ import com.yapp.crew.network.model.SimpleResponse;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Slf4j
 @Service
 public class MyProfileService {
 
@@ -49,7 +47,14 @@ public class MyProfileService {
 	private UserExerciseRepository userExerciseRepository;
 
 	@Autowired
-	public MyProfileService(UserRepository userRepository, EvaluationRepository evaluationRepository, BoardRepository boardRepository, AddressRepository addressRepository, CategoryRepository categoryRepository, UserExerciseRepository userExerciseRepository) {
+	public MyProfileService(
+			UserRepository userRepository,
+			EvaluationRepository evaluationRepository,
+			BoardRepository boardRepository,
+			AddressRepository addressRepository,
+			CategoryRepository categoryRepository,
+			UserExerciseRepository userExerciseRepository
+	) {
 		this.userRepository = userRepository;
 		this.evaluationRepository = evaluationRepository;
 		this.boardRepository = boardRepository;
@@ -61,7 +66,7 @@ public class MyProfileService {
 	@Transactional
 	public UserProfileInfo getProfile(long userId) {
 		User user = findUserById(userId)
-				.orElseThrow(() -> new UserNotFoundException("user not found"));
+				.orElseThrow(() -> new UserNotFoundException(userId));
 		List<Evaluation> evaluations = findAllByEvaluatedId(userId);
 
 		return UserProfileInfo.build(user, true, evaluations);
@@ -70,7 +75,7 @@ public class MyProfileService {
 	@Transactional
 	public SimpleResponse updateProfile(long userId, UserUpdateRequest userUpdateRequest) {
 		User user = findUserById(userId)
-				.orElseThrow(() -> new UserNotFoundException("user not found"));
+				.orElseThrow(() -> new UserNotFoundException(userId));
 		updateUser(user, userUpdateRequest);
 
 		return SimpleResponse.pass(ResponseType.USERINFO_UPDATE_SUCCESS);
@@ -79,7 +84,7 @@ public class MyProfileService {
 	@Transactional
 	public List<HistoryListInfo> getHistoryList(long userId, String type) {
 		User user = findUserById(userId)
-				.orElseThrow(() -> new UserNotFoundException("user not found"));
+				.orElseThrow(() -> new UserNotFoundException(userId));
 
 		if (StringUtils.equalsIgnoreCase(type, "continue")) {
 			return findAllBoards(user).stream()
@@ -116,7 +121,7 @@ public class MyProfileService {
 
 	private void updateUser(User user, UserUpdateRequest userUpdateRequest) {
 		Address address = findAddressById(userUpdateRequest.getAddress())
-				.orElseThrow(() -> new AddressNotFoundException("address not found"));
+				.orElseThrow(() -> new AddressNotFoundException(userUpdateRequest.getAddress()));
 
 		UserBuilder userBuilder = User.getBuilder();
 		User updatedUser = userBuilder
@@ -131,7 +136,6 @@ public class MyProfileService {
 			userRepository.save(updatedUser);
 		} catch (Exception e) {
 			if (e.getCause() instanceof ConstraintViolationException) {
-				log.info("Request server error: " + e.getLocalizedMessage());
 				for (UniqueIndexEnum uniqueIndexEnum : UniqueIndexEnum.values()) {
 					if (StringUtils.containsIgnoreCase(e.getLocalizedMessage(), uniqueIndexEnum.toString())) {
 						throw new UserDuplicateFieldException(uniqueIndexEnum.getName());
@@ -144,7 +148,7 @@ public class MyProfileService {
 		removeAllUserExercise(updatedUser);
 		for (long categoryId : userUpdateRequest.getCategory()) {
 			Category userCategory = findCategoryById(categoryId)
-					.orElseThrow(() -> new CategoryNotFoundException("category not found"));
+					.orElseThrow(() -> new CategoryNotFoundException(categoryId));
 
 			saveUserExercise(updatedUser, userCategory);
 		}
