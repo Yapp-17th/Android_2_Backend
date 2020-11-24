@@ -20,4 +20,13 @@ public class ApplyRequestPayload {
 	private Long boardId;
 
 	private Long applierId;
+
+	@Override
+	public String toString() {
+		return "ApplyRequestPayload{" +
+				"chatRoomId=" + chatRoomId +
+				", boardId=" + boardId +
+				", applierId=" + applierId +
+				'}';
+	}
 }
