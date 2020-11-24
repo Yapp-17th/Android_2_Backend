@@ -40,4 +40,18 @@ public class SignUpRequestDto {
 
 	@NotBlank
 	private String intro;
+
+	@Override
+	public String toString() {
+		return "SignUpRequestDto{" +
+				"userId='" + userId + '\'' +
+				", userName='" + userName + '\'' +
+				", nickName='" + nickName + '\'' +
+				", email='" + email + '\'' +
+				", accessToken='" + accessToken + '\'' +
+				", category=" + category +
+				", address=" + address +
+				", intro='" + intro + '\'' +
+				'}';
+	}
 }
