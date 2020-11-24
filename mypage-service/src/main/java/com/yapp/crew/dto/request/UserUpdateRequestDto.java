@@ -32,4 +32,16 @@ public class UserUpdateRequestDto {
 
 	@NotBlank
 	private String intro;
+
+	@Override
+	public String toString() {
+		return "UserUpdateRequestDto{" +
+				"userName='" + userName + '\'' +
+				", nickName='" + nickName + '\'' +
+				", email='" + email + '\'' +
+				", category=" + category +
+				", address=" + address +
+				", intro='" + intro + '\'' +
+				'}';
+	}
 }

@@ -11,6 +11,7 @@ import com.yapp.crew.network.model.SimpleResponse;
 import com.yapp.crew.service.MyProfileService;
 import java.util.List;
 import javax.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j(topic = "My Profile Controller")
 @RestController
 public class MyProfileController {
 
@@ -33,6 +35,7 @@ public class MyProfileController {
 
 	@GetMapping(path = "/v1/user/my-profile", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> getMyProfile(@RequestHeader(value = "userId") Long userId) {
+		log.info("Get my profile -> userId: {}", userId);
 		UserProfileInfo userProfileInfo = myProfileService.getProfile(userId);
 		UserProfileResponseDto userProfileResponseDto = UserProfileResponseDto.build(userProfileInfo);
 
@@ -44,6 +47,7 @@ public class MyProfileController {
 			@RequestHeader(value = "userId") Long userId,
 			@RequestBody @Valid UserUpdateRequestDto userUpdateRequestDto
 	) {
+		log.info("Update my profile -> userId: {}, payload: {}", userId, userUpdateRequestDto);
 		UserUpdateRequest userUpdateRequest = UserUpdateRequest.build(userUpdateRequestDto);
 
 		SimpleResponse simpleResponse = myProfileService.updateProfile(userId, userUpdateRequest);
@@ -56,6 +60,7 @@ public class MyProfileController {
 			@RequestHeader(value = "userId") Long userId,
 			@RequestParam(required = false, defaultValue = "continue") String type
 	) {
+		log.info("Get my history -> userId: {}, type: {}", userId, type);
 		List<HistoryListInfo> historyListInfos = myProfileService.getHistoryList(userId, type);
 		HistoryListResponseDto historyListResponseDto = HistoryListResponseDto.build(type, historyListInfos);
 
