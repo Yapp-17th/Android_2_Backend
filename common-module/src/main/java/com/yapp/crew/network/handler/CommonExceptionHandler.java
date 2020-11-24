@@ -233,18 +233,21 @@ public class CommonExceptionHandler {
 
 	@ExceptionHandler(value = BoardTimeInvalidException.class)
 	public ResponseEntity<?> handleBoardTimeInvalidException() {
+		log.error("Board time invalid exception");
 		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.BAD_REQUEST, ResponseType.BOARD_TIME_INVALID);
 		return ResponseEntity.ok().body(responseBody);
 	}
 
 	@ExceptionHandler(value = UnAuthorizedEventException.class)
 	public ResponseEntity<?> handleUnAuthorizedEventException() {
+		log.error("Unauthorized event exception");
 		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.UNAUTHORIZED, ResponseType.UNAUTHORIZED_FAIL);
 		return ResponseEntity.ok().body(responseBody);
 	}
 
 	@ExceptionHandler(value = EvaluateImpossibleException.class)
 	public ResponseEntity<?> handleEvaluateImpossibleException() {
+		log.error("Evaluate impossible exception");
 		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.UNAUTHORIZED, ResponseType.EVALUATE_IMPOSSIBLE);
 		return ResponseEntity.ok().body(responseBody);
 	}
