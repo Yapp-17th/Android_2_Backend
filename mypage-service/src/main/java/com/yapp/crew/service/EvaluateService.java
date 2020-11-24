@@ -18,16 +18,13 @@ import com.yapp.crew.model.EvaluateListInfo;
 import com.yapp.crew.model.UserReportRequest;
 import com.yapp.crew.network.model.SimpleResponse;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Slf4j
 @Service
 public class EvaluateService {
 
@@ -47,7 +44,7 @@ public class EvaluateService {
 	@Transactional
 	public List<EvaluateListInfo> getEvaluateList(long evaluateId, long boardId) {
 		Board board = findBoardById(boardId)
-				.orElseThrow(() -> new BoardNotFoundException("board not found"));
+				.orElseThrow(() -> new BoardNotFoundException(boardId));
 
 		Set<Evaluation> evaluations = board.getEvaluations().stream().filter(evaluation -> evaluation.getEvaluateId() == evaluateId).collect(Collectors.toSet());
 
@@ -60,7 +57,7 @@ public class EvaluateService {
 	@Transactional
 	public SimpleResponse putUserEvaluation(long evaluateId, long evaluatedId, long boardId, boolean isLike) {
 		Board board = findBoardById(boardId)
-				.orElseThrow(() -> new BoardNotFoundException("board not found"));
+				.orElseThrow(() -> new BoardNotFoundException(boardId));
 
 		Optional<Evaluation> existingEvaluate = board.getEvaluations().stream().filter(evaluation -> evaluation.getEvaluateId() == evaluateId && evaluation.getEvaluatedId() == evaluatedId).findFirst();
 		if (existingEvaluate.isPresent()) {
@@ -75,9 +72,10 @@ public class EvaluateService {
 	@Transactional
 	public SimpleResponse postUserReport(UserReportRequest userReportRequest) {
 		User reporter = findUserById(userReportRequest.getReportId())
-				.orElseThrow(() -> new UserNotFoundException("user not found"));
+				.orElseThrow(() -> new UserNotFoundException(userReportRequest.getReportId()));
+
 		User reported = findUserById(userReportRequest.getReportedId())
-				.orElseThrow(() -> new UserNotFoundException("user not found"));
+				.orElseThrow(() -> new UserNotFoundException(userReportRequest.getReportedId()));
 
 		ReportBuilder reportBuilder = Report.getBuilder();
 		Report report = reportBuilder

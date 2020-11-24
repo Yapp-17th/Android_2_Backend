@@ -10,12 +10,10 @@ import com.yapp.crew.model.ApplyListInfo;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Slf4j
 @Service
 public class ApplyListService {
 
@@ -31,10 +29,17 @@ public class ApplyListService {
 	@Transactional
 	public List<ApplyListInfo> getApplyList(long hostId, long boardId) {
 		Board board = findBoardById(boardId)
-				.orElseThrow(() -> new BoardNotFoundException("board not found"));
+				.orElseThrow(() -> new BoardNotFoundException(boardId));
 
 		return board.getAppliedUsers().stream()
-				.map(appliedUser -> ApplyListInfo.build(hostId, appliedUser.getUser(), board, findChatRoomByBoardIdAndGuestId(appliedUser.getUser().getId(), boardId).orElseThrow(() -> new ChatRoomNotFoundException("chatroom not found")).getId()))
+				.map(appliedUser -> {
+					return ApplyListInfo.build(
+							hostId,
+							appliedUser.getUser(),
+							board,
+							findChatRoomByBoardIdAndGuestId(appliedUser.getUser().getId(), boardId)
+									.orElseThrow(() -> new ChatRoomNotFoundException(null)).getId());
+				})
 				.collect(Collectors.toList());
 	}
 
