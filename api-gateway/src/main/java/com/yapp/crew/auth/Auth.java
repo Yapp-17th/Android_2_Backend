@@ -22,11 +22,11 @@ public class Auth {
 
 	public void verifyToken(String token) throws TokenRequiredException, WrongTokenPrefixException {
 		if (token == null || token.isBlank()) {
-			throw new TokenRequiredException("[Auth] Token is required but wasn't sent");
+			throw new TokenRequiredException("[Zuul Proxy Exception] Token is required but wasn't sent");
 		}
 
 		if (!token.startsWith("Bearer")) {
-			throw new WrongTokenPrefixException("[Auth] Bearer is required for token prefix");
+			throw new WrongTokenPrefixException("[Zuul Proxy Exception] Bearer is required for token prefix");
 		}
 	}
 
