@@ -101,16 +101,16 @@ public class ChatBotConsumer {
 		ApplyRequestPayload applyRequestPayload = objectMapper.readValue(consumerRecord.value(), ApplyRequestPayload.class);
 
 		User applier = userRepository.findUserById(applyRequestPayload.getApplierId())
-				.orElseThrow(() -> new UserNotFoundException("[Not Found] User not found"));
+				.orElseThrow(() -> new UserNotFoundException(applyRequestPayload.getApplierId()));
 
 		User bot = userRepository.findUserById(-1L)
-				.orElseThrow(() -> new UserNotFoundException("[Not Found] Bot not found"));
+				.orElseThrow(() -> new UserNotFoundException(-1L));
 
 		Board board = boardRepository.findById(applyRequestPayload.getBoardId())
-				.orElseThrow(() -> new BoardNotFoundException("[Not Found] Board not found"));
+				.orElseThrow(() -> new BoardNotFoundException(applyRequestPayload.getBoardId()));
 
 		ChatRoom chatRoom = chatRoomRepository.findById(applyRequestPayload.getChatRoomId())
-				.orElseThrow(() -> new ChatRoomNotFoundException("[Not Found] Chat room not found"));
+				.orElseThrow(() -> new ChatRoomNotFoundException(applyRequestPayload.getChatRoomId()));
 
 		MessageRequestPayload applyMessagePayload = MessageRequestPayload.builder()
 				.content(String.format(
@@ -127,7 +127,7 @@ public class ChatBotConsumer {
 
 		Optional<AppliedUser> appliedUser = appliedUserRepository.findByBoardIdAndUserId(board.getId(), applier.getId());
 		if (appliedUser.isPresent() && (appliedUser.get().getStatus().equals(AppliedStatus.APPLIED) || appliedUser.get().getStatus().equals(AppliedStatus.APPROVED))) {
-			throw new AlreadyAppliedException("Already applied");
+			throw new AlreadyAppliedException(applier.getId(), board.getId());
 		}
 		appliedUser.get().applyUser();
 		appliedUserRepository.save(appliedUser.get());
@@ -157,10 +157,10 @@ public class ChatBotConsumer {
 		ApproveRequestPayload approveRequestPayload = objectMapper.readValue(consumerRecord.value(), ApproveRequestPayload.class);
 
 		User host = userRepository.findUserById(approveRequestPayload.getHostId())
-				.orElseThrow(() -> new UserNotFoundException("[Not Found] User not found"));
+				.orElseThrow(() -> new UserNotFoundException(approveRequestPayload.getHostId()));
 
 		User bot = userRepository.findUserById(-1L)
-				.orElseThrow(() -> new UserNotFoundException("[Not Found] Bot not found"));
+				.orElseThrow(() -> new UserNotFoundException(-1L));
 
 		MessageRequestPayload approveMessagePayload = MessageRequestPayload.builder()
 				.content(String.format(
@@ -183,10 +183,10 @@ public class ChatBotConsumer {
 		ApproveRequestPayload approveRequestPayload = objectMapper.readValue(consumerRecord.value(), ApproveRequestPayload.class);
 
 		User host = userRepository.findUserById(approveRequestPayload.getHostId())
-				.orElseThrow(() -> new UserNotFoundException("[Not Found] User not found"));
+				.orElseThrow(() -> new UserNotFoundException(approveRequestPayload.getHostId()));
 
 		User bot = userRepository.findUserById(-1L)
-				.orElseThrow(() -> new UserNotFoundException("[Not Found] Bot not found"));
+				.orElseThrow(() -> new UserNotFoundException(-1L));
 
 		MessageRequestPayload disapproveMessagePayload = MessageRequestPayload.builder()
 				.content(String.format(
@@ -209,10 +209,10 @@ public class ChatBotConsumer {
 		BoardFinishedPayload boardFinishedPayload = objectMapper.readValue(consumerRecord.value(), BoardFinishedPayload.class);
 
 		Board board = boardRepository.findById(boardFinishedPayload.getBoardId())
-				.orElseThrow(() -> new BoardNotFoundException("Board not found"));
+				.orElseThrow(() -> new BoardNotFoundException(boardFinishedPayload.getBoardId()));
 
 		User bot = userRepository.findUserById(-1L)
-				.orElseThrow(() -> new UserNotFoundException("Bot not found"));
+				.orElseThrow(() -> new UserNotFoundException(-1L));
 
 		chatRoomRepository.findAllByBoardId(board.getId())
 				.forEach(chatRoom -> {
@@ -240,13 +240,13 @@ public class ChatBotConsumer {
 		BoardCanceledPayload boardCanceledPayload = objectMapper.readValue(consumerRecord.value(), BoardCanceledPayload.class);
 
 		Board board = boardRepository.findById(boardCanceledPayload.getBoardId())
-				.orElseThrow(() -> new BoardNotFoundException("Board not found"));
+				.orElseThrow(() -> new BoardNotFoundException(boardCanceledPayload.getBoardId()));
 
 		User host = userRepository.findUserById(boardCanceledPayload.getUserId())
-				.orElseThrow(() -> new UserNotFoundException("Host not found"));
+				.orElseThrow(() -> new UserNotFoundException(boardCanceledPayload.getUserId()));
 
 		User bot = userRepository.findUserById(-1L)
-				.orElseThrow(() -> new UserNotFoundException("Bot not found"));
+				.orElseThrow(() -> new UserNotFoundException(-1L));
 
 		chatRoomRepository.findAllByBoardId(board.getId())
 				.forEach(chatRoom -> {
@@ -277,13 +277,13 @@ public class ChatBotConsumer {
 		UserExitedPayload userExitedPayload = objectMapper.readValue(consumerRecord.value(), UserExitedPayload.class);
 
 		ChatRoom chatRoom = chatRoomRepository.findById(userExitedPayload.getChatRoomId())
-				.orElseThrow(() -> new ChatRoomNotFoundException("Chat room not found"));
+				.orElseThrow(() -> new ChatRoomNotFoundException(userExitedPayload.getChatRoomId()));
 
 		User user = userRepository.findUserById(userExitedPayload.getUserId())
-				.orElseThrow(() -> new UserNotFoundException("User not found"));
+				.orElseThrow(() -> new UserNotFoundException(userExitedPayload.getUserId()));
 
 		User bot = userRepository.findUserById(-1L)
-				.orElseThrow(() -> new UserNotFoundException("Bot not found"));
+				.orElseThrow(() -> new UserNotFoundException(-1L));
 
 		MessageRequestPayload userExitedMessagePayload = MessageRequestPayload.builder()
 				.content(String.format(
