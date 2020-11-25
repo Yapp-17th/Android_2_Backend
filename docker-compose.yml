@@ -1,29 +1,76 @@
-version: '3'
+version: "3"
 services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.9.3
+    container_name: elasticsearch
+    ports:
+      - "9200:9200"
+    environment:
+      - "discovery.type=single-node"
+    volumes:
+      - ./elasticsearch/data:/usr/share/elasticsearch/data:rw
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:7.9.3
+    container_name: logstash
+    ports:
+      - "25826:25826"
+      - "5044:5044"
+    volumes:
+      - ./logstash/pipeline:/usr/share/logstash/pipeline:ro
+    restart: on-failure
+    depends_on:
+      - elasticsearch
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.9.3
+    container_name: kibana
+    ports:
+      - "5601:5601"
+    restart: on-failure
+    depends_on:
+      - elasticsearch
+
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:7.9.3
+    container_name: filebeat
+    volumes:
+      - ./filebeat/filebeat.docker.yml:/usr/share/filebeat/filebeat.yml:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./filebeat/data:/usr/share/filebeat/data:rw
+    user: root
+    restart: on-failure
+    depends_on:
+      - logstash
+
   zookeeper:
     image: wurstmeister/zookeeper
     container_name: zookeeper
     ports:
-      - 2181:2181
+      - "2181:2181"
 
   kafka:
     image: wurstmeister/kafka
     container_name: kafka
     ports:
-      - 9092:9092
+      - "9092:9092"
     environment:
       KAFKA_ADVERTISED_HOST_NAME: 13.124.197.125
-      KAFKA_ZOOKEEPER_CONNECT: 13.124.197.125:2181
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_CREATE_TOPICS: "guideline-message:1:1,apply-user:1:1,approve-user:1:1,disapprove-user:1:1,board-finished:1:1,user-exited:1:1,chat-message:1:1"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - zookeeper
 
   mysql:
     image: mysql
     container_name: mysql
     ports:
-      - 3306:3306
+      - "3306:3306"
     volumes:
-      - ./data/mysql:/var/lib/mysql
+      - ./mysql/data:/var/lib/mysql
     environment:
       - MYSQL_ROOT_PASSWORD=dnjscksdn98@
       - MYSQL_DATABASE=explanet_dev
@@ -33,9 +80,14 @@ services:
   api-gateway:
     container_name: api-gateway
     ports:
-      - 80:80
+      - "80:80"
+    labels:
+      collect_logs_with_filebeat: "true"
+      decode_log_event_to_json_object: "true"
     build:
       context: ./api-gateway
+      args:
+        ENVIRONMENT: dev
       dockerfile: Dockerfile
     depends_on:
       - mysql
@@ -43,35 +95,48 @@ services:
   chatting-service:
     container_name: chatting-service
     ports:
-      - 8080:8080
+      - "8080:8080"
+    labels:
+      collect_logs_with_filebeat: "true"
+      decode_log_event_to_json_object: "true"
     build:
       context: ./chatting-service
+      args:
+        ENVIRONMENT: dev
       dockerfile: Dockerfile
     depends_on:
       - mysql
-      - zookeeper
       - kafka
       - api-gateway
 
   chat-bot-service:
     container_name: chat-bot-service
     ports:
-      - 8081:8081
+      - "8081:8081"
+    labels:
+      collect_logs_with_filebeat: "true"
+      decode_log_event_to_json_object: "true"
     build:
       context: ./chat-bot-service
+      args:
+        ENVIRONMENT: dev
       dockerfile: Dockerfile
     depends_on:
       - mysql
-      - zookeeper
       - kafka
       - api-gateway
 
   base-service:
     container_name: base-service
     ports:
-      - 8082:8082
+      - "8082:8082"
+    labels:
+      collect_logs_with_filebeat: "true"
+      decode_log_event_to_json_object: "true"
     build:
       context: ./base-service
+      args:
+        ENVIRONMENT: dev
       dockerfile: Dockerfile
     depends_on:
       - mysql
@@ -80,22 +145,31 @@ services:
   board-service:
     container_name: board-service
     ports:
-      - 8083:8083
+      - "8083:8083"
+    labels:
+      collect_logs_with_filebeat: "true"
+      decode_log_event_to_json_object: "true"
     build:
       context: ./board-service
+      args:
+        ENVIRONMENT: dev
       dockerfile: Dockerfile
     depends_on:
       - mysql
-      - zookeeper
       - kafka
       - api-gateway
 
   login-service:
     container_name: login-service
     ports:
-      - 8084:8084
+      - "8084:8084"
+    labels:
+      collect_logs_with_filebeat: "true"
+      decode_log_event_to_json_object: "true"
     build:
       context: ./login-service
+      args:
+        ENVIRONMENT: dev
       dockerfile: Dockerfile
     depends_on:
       - mysql
@@ -104,9 +178,14 @@ services:
   mypage-service:
     container_name: mypage-service
     ports:
-      - 8085:8085
+      - "8085:8085"
+    labels:
+      collect_logs_with_filebeat: "true"
+      decode_log_event_to_json_object: "true"
     build:
       context: ./mypage-service
+      args:
+        ENVIRONMENT: dev
       dockerfile: Dockerfile
     depends_on:
       - mysql
