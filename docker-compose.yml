@@ -25,7 +25,7 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - ./mysql/data:/var/lib/mysql
+      - ./data/mysql:/var/lib/mysql:rw
     environment:
       - MYSQL_ROOT_PASSWORD=dnjscksdn98@
       - MYSQL_DATABASE=explanet_dev
