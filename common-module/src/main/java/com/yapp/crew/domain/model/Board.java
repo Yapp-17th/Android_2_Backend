@@ -71,7 +71,7 @@ public class Board extends BaseEntity {
 	private Tag tag;
 
 	@Column(nullable = false)
-	@Enumerated(value = EnumType.STRING)
+	@Enumerated(value = EnumType.ORDINAL)
 	private BoardStatus status = BoardStatus.RECRUITING;
 
 	@Column(name = "recruit_count", nullable = false)

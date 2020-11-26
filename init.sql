@@ -97,7 +97,7 @@ CREATE TABLE `board` (
   `content` varchar(255) NOT NULL,
   `place` varchar(255) NOT NULL,
   `recruit_count` int NOT NULL,
-  `status` varchar(255) NOT NULL DEFAULT 'RECRUITING',
+  `status` int NOT NULL DEFAULT 0,
   `title` varchar(255) NOT NULL,
   `address_id` bigint NOT NULL,
   `category_id` bigint NOT NULL,
