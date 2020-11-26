@@ -1,6 +1,5 @@
 package com.yapp.crew.filters;
 
-import static org.springframework.cloud.netflix.zuul.filters.support.FilterConstants.PRE_DECORATION_FILTER_ORDER;
 import static org.springframework.cloud.netflix.zuul.filters.support.FilterConstants.PRE_TYPE;
 
 import com.netflix.zuul.ZuulFilter;
@@ -42,7 +41,7 @@ public class AuthenticationFilter extends ZuulFilter {
 
 	@Override
 	public int filterOrder() {
-		return PRE_DECORATION_FILTER_ORDER - 1;
+		return 10;
 	}
 
 	@Override
