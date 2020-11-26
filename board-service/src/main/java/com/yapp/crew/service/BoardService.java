@@ -6,7 +6,6 @@ import com.yapp.crew.domain.errors.AddressNotFoundException;
 import com.yapp.crew.domain.errors.BoardNotFoundException;
 import com.yapp.crew.domain.errors.BoardTimeInvalidException;
 import com.yapp.crew.domain.errors.CategoryNotFoundException;
-import com.yapp.crew.domain.errors.InvalidRequestBodyException;
 import com.yapp.crew.domain.errors.TagNotFoundException;
 import com.yapp.crew.domain.errors.UnAuthorizedEventException;
 import com.yapp.crew.domain.errors.UserNotFoundException;
@@ -134,7 +133,7 @@ public class BoardService {
 				.orElseThrow(() -> new BoardNotFoundException(boardId));
 
 		if (!board.getUser().getId().equals(userId)) {
-			throw new InvalidRequestBodyException("Board Service - Incorrect board host with id: " + userId);
+			throw new UnAuthorizedEventException("Board Service - Incorrect board host with id: " + userId);
 		}
 		deleteBoard(board);
 		boardProducer.produceBoardCanceledEvent(BoardCancel.build(boardId, userId));
