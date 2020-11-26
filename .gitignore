@@ -37,3 +37,6 @@ out/
 ### Elastic ###
 /filebeat/data
 /elasticsearch/data
+
+### MySQL ###
+/mysql/data

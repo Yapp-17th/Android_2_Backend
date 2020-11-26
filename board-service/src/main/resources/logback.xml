@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+  <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+
+  <springProperty scope="context" name="application_name" source="spring.application.name"/>
+
+  <springProfile name="dev">
+
+    <appender name="LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+      <destination>3.35.87.254:4560</destination>
+      <encoder class="net.logstash.logback.encoder.LogstashEncoder" />
+    </appender>
+
+    <root>
+      <level value="INFO"/>
+      <appender-ref ref="LOGSTASH"/>
+    </root>
+
+  </springProfile>
+
+</configuration>
