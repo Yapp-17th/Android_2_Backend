@@ -13,25 +13,25 @@ zuul:
   routes:
     chatting-service:
       path: /api/chatting-service/**
-      url: http://13.124.197.125:8080
+      url: http://52.78.52.254:8080
     chat-bot-service:
       path: /api/chat-bot-service/**
-      url: http://13.124.197.125:8081
+      url: http://52.78.52.254:8081
     base-service:
       path: /api/base-service/**
-      url: http://13.124.197.125:8082
+      url: http://52.78.52.254:8082
     board-service:
       path: /api/board-service/**
-      url: http://13.124.197.125:8083
+      url: http://52.78.52.254:8083
     login-service:
       path: /api/login-service/**
-      url: http://13.124.197.125:8084
+      url: http://52.78.52.254:8084
     mypage-service:
       path: /api/mypage-service/**
-      url: http://13.124.197.125:8085
+      url: http://52.78.52.254:8085
     watcher-service:
       path: /api/watcher-service/**
-      url: http://13.124.197.125:8086
+      url: http://52.78.52.254:8086
 
 spring:
   profiles:
