@@ -17,6 +17,7 @@ import com.yapp.crew.domain.errors.InactiveUserException;
 import com.yapp.crew.domain.errors.InternalServerErrorException;
 import com.yapp.crew.domain.errors.InvalidRequestBodyException;
 import com.yapp.crew.domain.errors.MessageNotFoundException;
+import com.yapp.crew.domain.errors.ReportCodeNotFoundException;
 import com.yapp.crew.domain.errors.SuspendedUserException;
 import com.yapp.crew.domain.errors.TagNotFoundException;
 import com.yapp.crew.domain.errors.UnAuthorizedEventException;
@@ -249,6 +250,13 @@ public class CommonExceptionHandler {
 	public ResponseEntity<?> handleEvaluateImpossibleException() {
 		log.error("Evaluate impossible exception");
 		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.UNAUTHORIZED, ResponseType.EVALUATE_IMPOSSIBLE);
+		return ResponseEntity.ok().body(responseBody);
+	}
+
+	@ExceptionHandler(value = ReportCodeNotFoundException.class)
+	public ResponseEntity<?> handleReportCodeNotFoundException(ReportCodeNotFoundException ex) {
+		log.error(ex.getMessage());
+		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.NOT_FOUND, ResponseType.REPORT_CODE_NOT_FOUND);
 		return ResponseEntity.ok().body(responseBody);
 	}
 }

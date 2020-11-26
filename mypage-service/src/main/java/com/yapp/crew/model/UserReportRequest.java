@@ -17,8 +17,8 @@ public class UserReportRequest {
 		UserReportRequest userReportRequest = new UserReportRequest();
 		userReportRequest.reportId = userId;
 		userReportRequest.reportedId = userReportRequestDto.getUserId();
-		userReportRequest.type = userReportRequest.getType();
-		userReportRequest.content = userReportRequest.getContent();
+		userReportRequest.type = userReportRequestDto.getReportType();
+		userReportRequest.content = userReportRequestDto.getContent();
 
 		return userReportRequest;
 	}

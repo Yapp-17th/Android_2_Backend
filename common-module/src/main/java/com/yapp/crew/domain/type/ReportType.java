@@ -1,5 +1,7 @@
 package com.yapp.crew.domain.type;
 
+import com.yapp.crew.domain.errors.ReportCodeNotFoundException;
+
 public enum ReportType {
 	BOARD_NO_MANNERS(1, "욕설 및 악의성 내용이 포함돼있어요"),
 	BOARD_BOTHERING_CONTENTS(2, "선정적인 내용이 포함돼있어요"),
@@ -27,5 +29,14 @@ public enum ReportType {
 
 	public String getName() {
 		return this.name;
+	}
+
+	public static ReportType valueOfCode(int code){
+		for (ReportType reportType : ReportType.values()) {
+			if (reportType.code == code) {
+				return reportType;
+			}
+		}
+		throw new ReportCodeNotFoundException((long) code);
 	}
 }
