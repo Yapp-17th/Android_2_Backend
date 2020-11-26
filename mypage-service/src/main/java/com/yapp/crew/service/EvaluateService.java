@@ -21,10 +21,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 public class EvaluateService {
 
@@ -81,7 +83,7 @@ public class EvaluateService {
 		Report report = reportBuilder
 				.withReporter(reporter)
 				.withReported(reported)
-				.withType(ReportType.values()[userReportRequest.getType().intValue()])
+				.withType(ReportType.valueOfCode(userReportRequest.getType().intValue()))
 				.withContent(userReportRequest.getContent())
 				.build();
 
