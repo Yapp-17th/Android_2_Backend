@@ -10,6 +10,7 @@ public enum ReportType {
 	USER_BOTHERING(7, "원치 않는 연락을 계속 보내요"),
 	USER_NO_MANNERS(8, "욕설 및 비 매너 행위를 했어요"),
 	USER_RUN(9, "대관비 등 활동 내 비용을 내지 않았어요"),
+	USER_CANCELED(10, "활동을 중간에 취소했어요"),
 	OTHERS(0, "기타");
 
 	private final int code;
