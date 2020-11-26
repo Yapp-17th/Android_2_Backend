@@ -103,12 +103,7 @@ public class EvaluateService {
 	}
 
 	private void updateEvaluation(Evaluation evaluation, boolean isLike) {
-		if (isLike) {
-			evaluation.evaluateLike();
-		} else {
-			evaluation.evaluateDislike();
-		}
-
+		evaluation.evaluate(isLike);
 		saveEvaluation(evaluation);
 	}
 
