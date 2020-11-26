@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+  <springProfile name="dev">
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+      <layout class="ch.qos.logback.classic.PatternLayout">
+        <Pattern>
+          %green(%d{yyyy-MM-dd HH:mm:ss}) %magenta([%thread]) %blue(%-5level) %yellow(%logger{36}) - %msg%n
+        </Pattern>
+      </layout>
+    </appender>
+
+    <appender name="LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+      <destination>3.35.87.254:4560</destination>
+      <encoder class="net.logstash.logback.encoder.LogstashEncoder" />
+    </appender>
+
+    <root level="INFO">
+      <appender-ref ref="STDOUT"/>
+      <appender-ref ref="LOGSTASH"/>
+    </root>
+
+  </springProfile>
+
+  <springProfile name="!dev">
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+      <layout class="ch.qos.logback.classic.PatternLayout">
+        <Pattern>
+          %green(%d{yyyy-MM-dd HH:mm:ss}) %magenta([%thread]) %blue(%-5level) %yellow(%logger{36}) - %msg%n
+        </Pattern>
+      </layout>
+    </appender>
+
+    <root level="INFO">
+      <appender-ref ref="STDOUT"/>
+    </root>
+
+  </springProfile>
+
+</configuration>
