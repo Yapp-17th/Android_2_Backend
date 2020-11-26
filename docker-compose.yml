@@ -12,9 +12,8 @@ services:
     ports:
       - "9092:9092"
     environment:
-      KAFKA_ADVERTISED_HOST_NAME: 13.124.197.125
+      KAFKA_ADVERTISED_HOST_NAME: 52.78.52.254
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_CREATE_TOPICS: "guideline-message:1:1,apply-user:1:1,approve-user:1:1,disapprove-user:1:1,board-finished:1:1,user-exited:1:1,chat-message:1:1"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
