@@ -37,14 +37,9 @@ public class Evaluation extends BaseEntity {
 	@Column(name = "is_dislike", nullable = false)
 	private Boolean isDislike = false;
 
-	public void evaluateLike(){
-		this.isLike=true;
-		this.isDislike=false;
-	}
-
-	public void evaluateDislike(){
-		this.isLike=false;
-		this.isDislike=true;
+	public void evaluate(boolean isLike){
+		this.isLike=isLike;
+		this.isDislike=!isLike;
 	}
 
 	public static EvaluationBuilder getBuilder() {

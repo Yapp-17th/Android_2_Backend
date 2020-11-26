@@ -37,7 +37,7 @@ public class BoardSearchAndFilterRepository {
 						isSearchedKeywords(boardSearchCondition.getKeywords()),
 						isDeletedBoard()
 				)
-				.orderBy(board.createdAt.desc()) // 최신순 정렬
+				.orderBy(board.status.asc(), board.createdAt.desc()) // 최신순 정렬
 				.offset(pageable.getOffset())
 				.limit(pageable.getPageSize())
 				.fetch();
@@ -72,7 +72,7 @@ public class BoardSearchAndFilterRepository {
 						isDeletedBoard()
 				)
 				.groupBy(board.id)
-				.orderBy(orderType(boardFilterCondition.getSorting()))
+				.orderBy(board.status.asc(), orderType(boardFilterCondition.getSorting()))
 				.offset(pageable.getOffset())
 				.limit(pageable.getPageSize())
 				.fetch();
