@@ -11,7 +11,6 @@ DROP TABLE IF EXISTS `user`;
 DROP TABLE IF EXISTS `alarm`;
 DROP TABLE IF EXISTS `address`;
 DROP TABLE IF EXISTS `category`;
-DROP TABLE IF EXISTS `category`;
 DROP TABLE IF EXISTS `tag`;
 
 CREATE TABLE `tag` (
@@ -98,7 +97,7 @@ CREATE TABLE `board` (
   `content` varchar(255) NOT NULL,
   `place` varchar(255) NOT NULL,
   `recruit_count` int NOT NULL,
-  `status` int NOT NULL DEFAULT 'RECRUITING',
+  `status` varchar(255) NOT NULL DEFAULT 'RECRUITING',
   `title` varchar(255) NOT NULL,
   `address_id` bigint NOT NULL,
   `category_id` bigint NOT NULL,
