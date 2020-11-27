@@ -22,6 +22,7 @@ public class BoardContentResponseInfo {
 	private Integer recruitedNumber;
 	private Boolean isBookMark;
 	private HostInfo host;
+	private String boardTime;
 	private LocalDateTime startsAt;
 
 	public static BoardContentResponseInfo build(Board board, Long userId, List<Evaluation> evaluationList) {
@@ -41,6 +42,7 @@ public class BoardContentResponseInfo {
 
 		boardContentResponseInfo.host = HostInfo.build(board.getUser(), evaluationList);
 		boardContentResponseInfo.startsAt = board.getStartsAt();
+		boardContentResponseInfo.boardTime = board.showBoardTimeComparedToNow();
 
 		return boardContentResponseInfo;
 	}
