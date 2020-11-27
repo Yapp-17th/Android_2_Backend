@@ -3,17 +3,13 @@ package com.yapp.crew.service;
 import com.yapp.crew.domain.model.Board;
 import com.yapp.crew.domain.model.Evaluation;
 import com.yapp.crew.domain.model.Evaluation.EvaluationBuilder;
-import com.yapp.crew.domain.repository.BoardRepository;
 import com.yapp.crew.domain.repository.EvaluationRepository;
 import com.yapp.crew.domain.status.AppliedStatus;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

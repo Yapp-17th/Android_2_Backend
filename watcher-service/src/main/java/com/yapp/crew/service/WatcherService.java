@@ -8,10 +8,12 @@ import com.yapp.crew.payload.BoardFinishedPayload;
 import com.yapp.crew.producer.WatcherProducer;
 import java.time.LocalDateTime;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+@Slf4j(topic = "Watcher Service")
 @Service
 public class WatcherService {
 
@@ -34,6 +36,7 @@ public class WatcherService {
 
 	@Scheduled(cron = "0 0 0 * * *")
 	public void boardSuccessfullyFinishedWatcher() {
+		log.info("Watcher start...");
 		List<Board> boards = boardRepository.findAllByStartsAtBetween(LocalDateTime.now().minusDays(1), LocalDateTime.now());
 
 		if (!boards.isEmpty()) {
@@ -45,6 +48,7 @@ public class WatcherService {
 									.boardId(board.getId())
 									.build();
 
+							log.info("Produce board successfully finished event");
 							watcherProducer.produceBoardSuccessfullyFinishedEvent(payload);
 						} catch (JsonProcessingException ex) {
 							// TODO: handle exception
