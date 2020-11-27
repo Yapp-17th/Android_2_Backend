@@ -30,7 +30,7 @@ spring:
         bootstrap.servers: 52.78.52.254:9092
 
   datasource:
-    url: jdbc:mysql://52.78.52.254:3306/explanet_dev?rewriteBatchedStatements=true&allowPublicKeyRetrieval=true&useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul&createDatabaseIfNotExist=true
+    url: jdbc:mysql://mysql:3306/explanet_dev?rewriteBatchedStatements=true&allowPublicKeyRetrieval=true&useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul&createDatabaseIfNotExist=true
     username: alex
     password: dnjscksdn98@
     driver-class-name: com.mysql.cj.jdbc.Driver

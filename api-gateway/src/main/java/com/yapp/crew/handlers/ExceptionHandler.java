@@ -70,6 +70,7 @@ public class ExceptionHandler {
 
 		else {
 			log.error(ex.getMessage());
+			ex.printStackTrace();
 			response = SimpleResponse.fail(HttpStatus.INTERNAL_SERVER_ERROR, ResponseType.INTERNAL_SERVER_FAIL);
 		}
 
