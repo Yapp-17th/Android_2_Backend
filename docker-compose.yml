@@ -124,3 +124,17 @@ services:
     depends_on:
       - mysql
       - api-gateway
+
+  watcher-service:
+    container_name: watcher-service
+    ports:
+      - "8086:8086"
+    build:
+      context: ./watcher-service
+      args:
+        ENVIRONMENT: dev
+      dockerfile: Dockerfile
+    depends_on:
+      - mysql
+      - kafka
+      - api-gateway

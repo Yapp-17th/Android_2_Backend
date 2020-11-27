@@ -34,6 +34,9 @@ zuul:
       url: http://52.78.52.254:8086
 
 spring:
+  application:
+    name: api-gateway
+
   profiles:
     active: dev
 
