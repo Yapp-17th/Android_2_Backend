@@ -26,7 +26,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 
-@Slf4j
+@Slf4j(topic = "Chatting Producer")
 @Component
 public class ChattingProducer {
 
@@ -131,6 +131,7 @@ public class ChattingProducer {
 						"/sub/chat/room/" + applyRequestPayload.getChatRoomId().toString(),
 						applyRealtimeUpdatePayload
 				);
+				log.info("Send real-time apply message to chat room with id: {}", applyRequestPayload.getChatRoomId());
 			}
 		});
 		return listenableFuture;
@@ -159,6 +160,7 @@ public class ChattingProducer {
 						"/sub/chat/room/" + approveRequestPayload.getChatRoomId().toString(),
 						approveRealtimeUpdatePayload
 				);
+				log.info("Send real-time approve message to chat room with id: {}", approveRequestPayload.getChatRoomId());
 			}
 		});
 		return listenableFuture;
@@ -187,6 +189,7 @@ public class ChattingProducer {
 						"/sub/chat/room/" + approveRequestPayload.getChatRoomId().toString(),
 						disapproveRealtimeUpdatePayload
 				);
+				log.info("Send real-time disapprove message to chat room with id: {}", approveRequestPayload.getChatRoomId());
 			}
 		});
 		return listenableFuture;
@@ -215,6 +218,7 @@ public class ChattingProducer {
 						"/sub/user/" + userExitedPayload.getUserId().toString() + "/chat/room",
 						userExitedRealtimeUpdatePayload
 				);
+				log.info("Send real-time exit message to user chat list with id: {}", userExitedPayload.getUserId());
 			}
 		});
 		return listenableFuture;
