@@ -21,7 +21,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-@Slf4j
+@Slf4j(topic = "Chatting Consumer")
 @Component
 public class ChattingConsumer {
 

@@ -68,10 +68,13 @@ public class ExceptionHandler {
 			response = SimpleResponse.fail(HttpStatus.FORBIDDEN, ResponseType.INVALID_JWT_SIGNATURE);
 		}
 
-		if (response != null) {
-			Gson gson = new Gson();
-			String responseBody = gson.toJson(response);
-			ctx.setResponseBody(responseBody);
+		else {
+			log.error(ex.getMessage());
+			response = SimpleResponse.fail(HttpStatus.INTERNAL_SERVER_ERROR, ResponseType.INTERNAL_SERVER_FAIL);
 		}
+
+		Gson gson = new Gson();
+		String responseBody = gson.toJson(response);
+		ctx.setResponseBody(responseBody);
 	}
 }
