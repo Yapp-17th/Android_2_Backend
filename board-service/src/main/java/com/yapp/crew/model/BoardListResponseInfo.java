@@ -19,6 +19,8 @@ public class BoardListResponseInfo {
 	private String city;
 	private Boolean isBookMark;
 	private String boardTime;
+	private Integer recruitNumber;
+	private Integer recruitedNumber;
 
 	public static BoardListResponseInfo build(Board board, User user) {
 		BoardListResponseInfo boardListResponseInfo = new BoardListResponseInfo();
@@ -33,6 +35,8 @@ public class BoardListResponseInfo {
 				.map(bookMark -> bookMark.getBoard().getId())
 				.anyMatch(Predicate.isEqual(board.getId()));
 		boardListResponseInfo.boardTime = board.showBoardTimeComparedToNow();
+		boardListResponseInfo.recruitNumber = board.getRecruitCount();
+		boardListResponseInfo.recruitedNumber = boardListResponseInfo.recruitNumber - board.getRemainRecruitNumber();
 
 		return boardListResponseInfo;
 	}
