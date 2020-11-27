@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 
-@Slf4j
+@Slf4j(topic = "Watcher Producer")
 @Component
 public class WatcherProducer {
 
