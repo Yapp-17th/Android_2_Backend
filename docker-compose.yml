@@ -37,7 +37,6 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 20s
 
   api-gateway:
     container_name: api-gateway
@@ -53,7 +52,6 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 20s
     depends_on:
       - mysql
 
@@ -71,7 +69,6 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 20s
     depends_on:
       - mysql
       - kafka
@@ -91,7 +88,6 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 20s
     depends_on:
       - mysql
       - kafka
@@ -111,7 +107,6 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 20s
     depends_on:
       - mysql
       - api-gateway
@@ -130,7 +125,6 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 20s
     depends_on:
       - mysql
       - kafka
@@ -150,7 +144,6 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 20s
     depends_on:
       - mysql
       - api-gateway
@@ -169,7 +162,6 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 20s
     depends_on:
       - mysql
       - api-gateway
@@ -188,7 +180,6 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 20s
     depends_on:
       - mysql
       - kafka
