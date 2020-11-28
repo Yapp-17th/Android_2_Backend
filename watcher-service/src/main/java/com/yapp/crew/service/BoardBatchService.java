@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Slf4j
+@Slf4j(topic = "Board Batch Service")
 @Service
 public class BoardBatchService {
 
@@ -26,10 +26,12 @@ public class BoardBatchService {
 		this.entityManager = entityManager;
 	}
 
+	@Transactional
 	void updateBoardFinishedAll(List<Board> boardList) {
 		saveEvaluationListAll(boardList);
 		boardList.forEach(Board::finishBoard);
 		entityManager.flush();
+		log.info("Successfully updated board");
 	}
 
 	@Transactional
@@ -59,5 +61,6 @@ public class BoardBatchService {
 				}
 			}
 		}
+		log.info("Successfully created evaluations");
 	}
 }
