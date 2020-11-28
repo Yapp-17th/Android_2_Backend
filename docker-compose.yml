@@ -31,6 +31,13 @@ services:
       - MYSQL_DATABASE=explanet_dev
       - MYSQL_USER=alex
       - MYSQL_PASSWORD=dnjscksdn98@
+      - docker exec mysql mysqladmin -ualex -pdnjscksdn98@ ping
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "52.78.52.254", "-u", "alex", "-p$$MYSQL_ROOT_PASSWORD" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
 
   api-gateway:
     container_name: api-gateway
@@ -43,7 +50,7 @@ services:
       dockerfile: Dockerfile
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://52.78.52.254/health-check" ]
-      interval: 1m30s
+      interval: 30s
       timeout: 10s
       retries: 3
       start_period: 20s
@@ -60,8 +67,8 @@ services:
         ENVIRONMENT: dev
       dockerfile: Dockerfile
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://52.78.52.254:8080/health-check"]
-      interval: 1m30s
+      test: [ "CMD", "curl", "-f", "http://52.78.52.254:8080/health-check" ]
+      interval: 30s
       timeout: 10s
       retries: 3
       start_period: 20s
@@ -81,7 +88,7 @@ services:
       dockerfile: Dockerfile
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://52.78.52.254:8081/health-check" ]
-      interval: 1m30s
+      interval: 30s
       timeout: 10s
       retries: 3
       start_period: 20s
@@ -101,7 +108,7 @@ services:
       dockerfile: Dockerfile
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://52.78.52.254:8082/health-check" ]
-      interval: 1m30s
+      interval: 30s
       timeout: 10s
       retries: 3
       start_period: 20s
@@ -120,7 +127,7 @@ services:
       dockerfile: Dockerfile
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://52.78.52.254:8083/health-check" ]
-      interval: 1m30s
+      interval: 30s
       timeout: 10s
       retries: 3
       start_period: 20s
@@ -140,7 +147,7 @@ services:
       dockerfile: Dockerfile
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://52.78.52.254:8084/health-check" ]
-      interval: 1m30s
+      interval: 30s
       timeout: 10s
       retries: 3
       start_period: 20s
@@ -159,7 +166,7 @@ services:
       dockerfile: Dockerfile
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://52.78.52.254:8085/health-check" ]
-      interval: 1m30s
+      interval: 30s
       timeout: 10s
       retries: 3
       start_period: 20s
@@ -178,7 +185,7 @@ services:
       dockerfile: Dockerfile
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://52.78.52.254:8086/health-check" ]
-      interval: 1m30s
+      interval: 30s
       timeout: 10s
       retries: 3
       start_period: 20s
