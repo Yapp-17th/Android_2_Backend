@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j(topic = "Watcher Service")
 @Service
@@ -34,6 +35,7 @@ public class WatcherService {
 		this.boardBatchService = boardBatchService;
 	}
 
+	@Transactional
 	@Scheduled(cron = "0 0 0 * * *")
 	public void boardSuccessfullyFinishedWatcher() {
 		log.info("Watcher start...");
