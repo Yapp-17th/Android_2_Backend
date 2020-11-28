@@ -116,7 +116,7 @@ public class ChatBotConsumer {
 				.content(String.format(
 						botMessages.getApplyMessage(),
 						applier.getNickname()
-				).replace("\"", ""))
+				))
 				.type(MessageType.BOT_MESSAGE)
 				.senderId(bot.getId())
 				.chatRoomId(chatRoom.getId())
@@ -139,7 +139,7 @@ public class ChatBotConsumer {
 						applier.calculateLikes(evaluations),
 						applier.calculateDislikes(evaluations),
 						applier.getIntro()
-				).replace("\"", ""))
+				))
 				.type(MessageType.PROFILE)
 				.senderId(applier.getId())
 				.chatRoomId(chatRoom.getId())
@@ -166,7 +166,7 @@ public class ChatBotConsumer {
 				.content(String.format(
 						botMessages.getApproveMessage(),
 						host.getNickname()
-				).replace("\"", ""))
+				))
 				.type(MessageType.BOT_MESSAGE)
 				.senderId(bot.getId())
 				.chatRoomId(approveRequestPayload.getChatRoomId())
@@ -192,7 +192,7 @@ public class ChatBotConsumer {
 				.content(String.format(
 						botMessages.getDisapproveMessage(),
 						host.getNickname()
-				).replace("\"", ""))
+				))
 				.type(MessageType.BOT_MESSAGE)
 				.senderId(bot.getId())
 				.chatRoomId(approveRequestPayload.getChatRoomId())
@@ -217,7 +217,7 @@ public class ChatBotConsumer {
 		chatRoomRepository.findAllByBoardId(board.getId())
 				.forEach(chatRoom -> {
 					MessageRequestPayload boardFinishedMessagePayload = MessageRequestPayload.builder()
-							.content(botMessages.getBoardFinished().replace("\"", ""))
+							.content(botMessages.getBoardFinished())
 							.type(MessageType.BOT_MESSAGE)
 							.senderId(bot.getId())
 							.chatRoomId(chatRoom.getId())
@@ -254,7 +254,7 @@ public class ChatBotConsumer {
 							.content(String.format(
 									botMessages.getBoardCanceled(),
 									host.getNickname()
-							).replace("\"", ""))
+							))
 							.type(MessageType.BOT_MESSAGE)
 							.senderId(bot.getId())
 							.chatRoomId(chatRoom.getId())
@@ -289,7 +289,7 @@ public class ChatBotConsumer {
 				.content(String.format(
 						botMessages.getUserExited(),
 						user.getNickname()
-				).replace("\"", ""))
+				))
 				.type(MessageType.BOT_MESSAGE)
 				.senderId(bot.getId())
 				.chatRoomId(chatRoom.getId())
