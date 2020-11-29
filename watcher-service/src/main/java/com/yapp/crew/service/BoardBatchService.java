@@ -8,7 +8,6 @@ import com.yapp.crew.domain.status.AppliedStatus;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
