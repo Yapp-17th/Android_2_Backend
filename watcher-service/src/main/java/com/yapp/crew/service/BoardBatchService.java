@@ -53,7 +53,7 @@ public class BoardBatchService {
 					Evaluation evaluation = evaluationBuilder
 							.withBoard(board)
 							.withEvaluateId(userIds.get(i))
-							.withEvaluateId(userIds.get(j))
+							.withEvaluatedId(userIds.get(j))
 							.withIsDislike(false)
 							.withIsLike(false)
 							.build();
