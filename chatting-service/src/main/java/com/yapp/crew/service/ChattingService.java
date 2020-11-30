@@ -327,7 +327,7 @@ public class ChattingService {
 				.orElseThrow(() -> new ChatRoomNotFoundException(approveRequestPayload.getChatRoomId()));
 
 		if (board.getStatus() == BoardStatus.CANCELED || board.getStatus() == BoardStatus.FINISHED) {
-			throw new CannotApproveException(board.getId());
+			throw new CannotDisapproveException(board.getId());
 		}
 
 		if (chatRoom.getGuestExited() || chatRoom.getHostExited()) {

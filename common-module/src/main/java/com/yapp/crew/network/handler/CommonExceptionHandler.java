@@ -16,7 +16,9 @@ import com.yapp.crew.domain.errors.GuestApplyNotFoundException;
 import com.yapp.crew.domain.errors.InactiveUserException;
 import com.yapp.crew.domain.errors.InternalServerErrorException;
 import com.yapp.crew.domain.errors.InvalidRequestBodyException;
+import com.yapp.crew.domain.errors.IsNotApprovedException;
 import com.yapp.crew.domain.errors.MessageNotFoundException;
+import com.yapp.crew.domain.errors.NoSpaceToApplyException;
 import com.yapp.crew.domain.errors.ReportCodeNotFoundException;
 import com.yapp.crew.domain.errors.SuspendedUserException;
 import com.yapp.crew.domain.errors.TagNotFoundException;
@@ -191,6 +193,13 @@ public class CommonExceptionHandler {
 		return ResponseEntity.ok().body(responseBody);
 	}
 
+	@ExceptionHandler(value = NoSpaceToApplyException.class)
+	public ResponseEntity<?> handleNoSpaceToApplyException(NoSpaceToApplyException ex) {
+		log.error(ex.getMessage());
+		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.BAD_REQUEST, ResponseType.NO_SPACE_TO_APPLY);
+		return ResponseEntity.ok().body(responseBody);
+	}
+
 	@ExceptionHandler(value = CannotApplyException.class)
 	public ResponseEntity<?> handleCannotApplyException(CannotApplyException ex) {
 		log.error(ex.getMessage());
@@ -216,6 +225,13 @@ public class CommonExceptionHandler {
 	public ResponseEntity<?> handleGuestApplyNotFoundException(GuestApplyNotFoundException ex) {
 		log.error(ex.getMessage());
 		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.BAD_REQUEST, ResponseType.GUEST_APPLY_NOT_FOUND);
+		return ResponseEntity.ok().body(responseBody);
+	}
+
+	@ExceptionHandler(value = IsNotApprovedException.class)
+	public ResponseEntity<?> handleIsNotApprovedException(IsNotApprovedException ex) {
+		log.error(ex.getMessage());
+		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.BAD_REQUEST, ResponseType.IS_NOT_APPROVED);
 		return ResponseEntity.ok().body(responseBody);
 	}
 
