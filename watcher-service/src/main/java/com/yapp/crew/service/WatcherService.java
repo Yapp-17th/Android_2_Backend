@@ -47,18 +47,18 @@ public class WatcherService {
 
 		if (!boards.isEmpty()) {
 			boards.forEach(board -> {
-						try {
-							BoardFinishedPayload payload = BoardFinishedPayload.builder()
-									.boardId(board.getId())
-									.build();
-
-							log.info("Produce board successfully finished event");
-							watcherProducer.produceBoardSuccessfullyFinishedEvent(payload);
-						} catch (JsonProcessingException ex) {
-							// TODO: handle exception
-							ex.printStackTrace();
-						}
-					});
+				try {
+					BoardFinishedPayload payload = BoardFinishedPayload.builder()
+							.boardId(board.getId())
+							.build();
+					log.info("Produce board successfully finished event");
+					watcherProducer.produceBoardSuccessfullyFinishedEvent(payload);
+					boardBatchService.saveEvaluationList(board);
+				} catch (JsonProcessingException ex) {
+					// TODO: handle exception
+					ex.printStackTrace();
+				}
+			});
 
 			boardBatchService.updateBoardFinishedAll(boards);
 		}

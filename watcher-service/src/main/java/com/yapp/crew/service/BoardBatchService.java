@@ -29,7 +29,6 @@ public class BoardBatchService {
 
 	@Transactional
 	void updateBoardFinishedAll(List<Board> boardList) {
-		saveEvaluationListAll(boardList);
 		boardList.forEach(Board::finishBoard);
 		entityManager.flush();
 		log.info("Successfully updated board");
@@ -37,33 +36,32 @@ public class BoardBatchService {
 
 	@Retryable(maxAttempts = 5)
 	@Transactional
-	void saveEvaluationListAll(List<Board> boardList) {
+	void saveEvaluationList(Board board) {
 		EvaluationBuilder evaluationBuilder = Evaluation.getBuilder();
 
-		for (Board board : boardList) {
-			List<Long> userIds = board.getAppliedUsers().stream()
-					.filter(appliedUser -> appliedUser.getStatus() == AppliedStatus.APPROVED)
-					.map(appliedUser -> appliedUser.getUser().getId())
-					.collect(Collectors.toList());
+		List<Long> userIds = board.getAppliedUsers().stream()
+				.filter(appliedUser -> appliedUser.getStatus() == AppliedStatus.APPROVED)
+				.map(appliedUser -> appliedUser.getUser().getId())
+				.collect(Collectors.toList());
 
-			for (int i = 0; i < userIds.size(); i++) {
-				for (int j = 0; j < userIds.size(); j++) {
-					if (i == j) {
-						continue;
-					}
-
-					Evaluation evaluation = evaluationBuilder
-							.withBoard(board)
-							.withEvaluateId(userIds.get(i))
-							.withEvaluatedId(userIds.get(j))
-							.withIsDislike(false)
-							.withIsLike(false)
-							.build();
-					board.addEvaluation(evaluation);
-					evaluationRepository.save(evaluation);
+		for (int i = 0; i < userIds.size(); i++) {
+			for (int j = 0; j < userIds.size(); j++) {
+				if (i == j) {
+					continue;
 				}
+
+				Evaluation evaluation = evaluationBuilder
+						.withBoard(board)
+						.withEvaluateId(userIds.get(i))
+						.withEvaluatedId(userIds.get(j))
+						.withIsDislike(false)
+						.withIsLike(false)
+						.build();
+				board.addEvaluation(evaluation);
+				evaluationRepository.save(evaluation);
 			}
 		}
-		log.info("Successfully created evaluations");
+
+		log.info("Successfully created evaluations for boardId = {}", board.getId());
 	}
 }
