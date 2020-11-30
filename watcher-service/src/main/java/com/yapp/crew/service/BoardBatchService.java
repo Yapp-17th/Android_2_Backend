@@ -57,6 +57,7 @@ public class BoardBatchService {
 							.withIsDislike(false)
 							.withIsLike(false)
 							.build();
+					board.addEvaluation(evaluation);
 					evaluationRepository.save(evaluation);
 				}
 			}
