@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,6 +35,7 @@ public class BoardBatchService {
 		log.info("Successfully updated board");
 	}
 
+	@Retryable(maxAttempts = 5)
 	@Transactional
 	void saveEvaluationListAll(List<Board> boardList) {
 		EvaluationBuilder evaluationBuilder = Evaluation.getBuilder();
