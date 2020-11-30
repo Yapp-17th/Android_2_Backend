@@ -3,12 +3,11 @@ package com.yapp.crew.domain.model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.yapp.crew.domain.status.AppliedStatus;
 import com.yapp.crew.domain.status.BoardStatus;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Calendar;
-import java.util.Date;
+import java.time.Period;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -105,6 +104,10 @@ public class Board extends BaseEntity {
 		appliedUsers.add(appliedUser);
 	}
 
+	public void addEvaluation(Evaluation evaluation){
+		evaluations.add(evaluation);
+	}
+
 	public void deleteBoard() {
 		this.status = BoardStatus.CANCELED;
 	}
@@ -126,21 +129,17 @@ public class Board extends BaseEntity {
 	}
 
 	public String showBoardTimeComparedToNow() {
-		Calendar calendar = Calendar.getInstance();
-		Date now = java.sql.Timestamp.valueOf(LocalDateTime.now());
-		Date startDate = java.sql.Timestamp.valueOf(startsAt);
-
-		if (status == BoardStatus.RECRUITING || status == BoardStatus.COMPLETE) {
-			return "[D-" + calculateLeftDays(now, startDate) + "]";
+		if (status == BoardStatus.CANCELED || status == BoardStatus.COMPLETE) {
+			return "[D-" + calculateLeftDays(LocalDate.now(), startsAt) + "]";
 		}
 
-		calendar.setTime(startDate);
-		return "[" + calendar.get(Calendar.MONTH) + "/" + calendar.get(Calendar.DATE) + "]";
+		return "[" + startsAt.getMonthValue() + "/" + startsAt.getDayOfMonth() + "]";
 	}
 
-	private int calculateLeftDays(Date now, Date end) {
-		long diffInMillies = Math.abs(now.getTime() - end.getTime());
-		return (int) TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+	private int calculateLeftDays(LocalDate now, LocalDateTime end) {
+		LocalDate before = LocalDate.from(end);
+		Period period = Period.between(before, now);
+		return period.getDays();
 	}
 
 	public int getApprovedCount() {
