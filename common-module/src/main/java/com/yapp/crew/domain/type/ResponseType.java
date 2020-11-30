@@ -30,6 +30,8 @@ public enum ResponseType {
 	CANNOT_APPROVE("승인을 할 수 없는 게시글입니다"),
 	CANNOT_DISAPPROVE("거절을 할 수 없는 게시글입니다"),
 	GUEST_APPLY_NOT_FOUND("게스트가 아직 신청하지 않았습니다"),
+	NO_SPACE_TO_APPLY("더 이상 승인을 해줄 자리가 없습니다"),
+	IS_NOT_APPROVED("이 사용자는 승인 상태가 아닙니다"),
 	BOARD_POST_SUCCESS("글이 정상적으로 업로드 되었습니다"),
 	BOARD_DELETE_SUCCESS("글이 정상적으로 삭제 되었습니다"),
 	BOARD_CONTENT_SUCCESS("글 내용 조회 성공"),
