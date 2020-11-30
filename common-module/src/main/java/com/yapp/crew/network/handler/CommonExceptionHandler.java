@@ -28,10 +28,13 @@ import com.yapp.crew.domain.errors.WrongHostException;
 import com.yapp.crew.domain.type.ResponseType;
 import com.yapp.crew.network.model.SimpleResponse;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageExceptionHandler;
+import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingRequestHeaderException;
@@ -80,8 +83,12 @@ public class CommonExceptionHandler {
 	}
 
 	@ExceptionHandler(value = MethodArgumentNotValidException.class)
-	public ResponseEntity<?> handleMethodArgumentNotValidException() {
-		log.error("Method argument not valid exception");
+	public ResponseEntity<?> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+		Map<String, String> errors = new HashMap<>();
+		ex.getBindingResult().getAllErrors()
+				.forEach(c -> errors.put(((FieldError) c).getField(), c.getDefaultMessage()));
+		log.error("Method argument not valid exception: " + errors);
+
 		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.BAD_REQUEST, ResponseType.INVALID_REQUEST_BODY);
 		return ResponseEntity.ok().body(responseBody);
 	}
