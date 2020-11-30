@@ -85,6 +85,10 @@ public class ChattingConsumer {
 		messageRepository.save(message);
 
 		MessageResponsePayload payload = MessageResponsePayload.buildChatMessageResponsePayload(message);
+		sendMessage(message, sender, chatRoom, payload);
+	}
+
+	private void sendMessage(Message message, User sender, ChatRoom chatRoom, MessageResponsePayload payload) {
 		simpMessagingTemplate.convertAndSend("/sub/chat/room/" + message.getChatRoom().getId().toString(), payload);
 
 		if (sender.getId().equals(chatRoom.getGuest().getId())) {

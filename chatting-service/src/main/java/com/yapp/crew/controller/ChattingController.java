@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,7 +49,7 @@ public class ChattingController {
 	}
 
 	@MessageMapping(value = "/v1/chat/message")
-	public void sendMessageByWebsocket(MessageRequestPayload messageRequestPayload) throws JsonProcessingException {
+	public void sendMessageByWebsocket(@Payload @Valid MessageRequestPayload messageRequestPayload) throws JsonProcessingException {
 		chattingProducer.sendMessage(messageRequestPayload);
 	}
 
