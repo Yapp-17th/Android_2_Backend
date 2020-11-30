@@ -33,6 +33,7 @@ import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.MessageExceptionHandler;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -45,6 +46,13 @@ import org.springframework.web.client.HttpServerErrorException.InternalServerErr
 @Slf4j(topic = "Common Exception Handler")
 @ControllerAdvice
 public class CommonExceptionHandler {
+
+	@MessageExceptionHandler
+	public ResponseEntity<?> handleMessageException(Exception ex) {
+		log.error(ex.getMessage());
+		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.INTERNAL_SERVER_ERROR, ResponseType.INTERNAL_SERVER_FAIL);
+		return ResponseEntity.ok().body(responseBody);
+	}
 
 	@ExceptionHandler(value = InternalServerError.class)
 	public ResponseEntity<?> handleInternalServerException() {
