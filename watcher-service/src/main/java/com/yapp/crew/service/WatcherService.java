@@ -8,6 +8,7 @@ import com.yapp.crew.payload.BoardFinishedPayload;
 import com.yapp.crew.producer.WatcherProducer;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -39,24 +40,26 @@ public class WatcherService {
 	@Scheduled(cron = "0 0 0 * * *")
 	public void boardSuccessfullyFinishedWatcher() {
 		log.info("Watcher start...");
-		List<Board> boards = boardRepository.findAllByStartsAtBetween(LocalDateTime.now().minusDays(1), LocalDateTime.now());
+		List<Board> boards = boardRepository.findAllByStartsAtBetween(LocalDateTime.now().minusDays(1), LocalDateTime.now())
+				.stream()
+				.filter(board -> !board.getStatus().equals(BoardStatus.CANCELED) && !board.getStatus().equals(BoardStatus.FINISHED))
+				.collect(Collectors.toList());
+		log.info("Boards that needs an update -> {}", boards);
 
 		if (!boards.isEmpty()) {
-			boards.stream()
-					.filter(board -> !board.getStatus().equals(BoardStatus.CANCELED) && !board.getStatus().equals(BoardStatus.FINISHED))
-					.forEach(board -> {
-						try {
-							BoardFinishedPayload payload = BoardFinishedPayload.builder()
-									.boardId(board.getId())
-									.build();
-
-							log.info("Produce board successfully finished event");
-							watcherProducer.produceBoardSuccessfullyFinishedEvent(payload);
-						} catch (JsonProcessingException ex) {
-							// TODO: handle exception
-							ex.printStackTrace();
-						}
-					});
+			boards.forEach(board -> {
+				try {
+					BoardFinishedPayload payload = BoardFinishedPayload.builder()
+							.boardId(board.getId())
+							.build();
+					log.info("Produce board successfully finished event");
+					watcherProducer.produceBoardSuccessfullyFinishedEvent(payload);
+					boardBatchService.saveEvaluationList(board);
+				} catch (JsonProcessingException ex) {
+					// TODO: handle exception
+					ex.printStackTrace();
+				}
+			});
 
 			boardBatchService.updateBoardFinishedAll(boards);
 		}
