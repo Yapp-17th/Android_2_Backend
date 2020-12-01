@@ -20,7 +20,7 @@ public class MessageRequestPayload {
 	@NotBlank
 	private String content;
 
-	@NotBlank
+	@NotNull
 	private MessageType type;
 
 	private RealTimeUpdateType realTimeUpdateType;
