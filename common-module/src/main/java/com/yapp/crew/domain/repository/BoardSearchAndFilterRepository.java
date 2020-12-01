@@ -43,22 +43,6 @@ public class BoardSearchAndFilterRepository {
 				.fetch();
 	}
 
-	/*
-	 * SELECT HIDDEN_FILTERED.*, COALESCE(APPROVED_USER.approved_number, 0) as approved_number, (HIDDEN_FILTERED.recruit_count - COALESCE(APPROVED_USER.approved_number, 0)) as remain_number
-	 * FROM (SELECT b.* FROM board as b left join hidden_board as hb on (b.id = hb.board_id and hb.user_id=1) where hb.user_id is null) as HIDDEN_FILTERED
-	 * left join (select board_id, count(user_id) as approved_number from applied_user where status='APPROVED' group by board_id) as APPROVED_USER
-	 * on HIDDEN_FILTERED.id = APPROVED_USER.board_id
-	 * order by approved_number DESC;
-	 * */
-
-	/*
-	 * SELECT b.*, (b.recruit_count - COALESCE(count(au.user_id), 0)) as remain_count
-	 * FROM (board as b left join hidden_board as hb on b.id = hb.board_id and hb.user_id=1) left join applied_user as au on b.id = au.board_id and au.status = 'APPROVED'
-	 * where hb.user_id is null
-	 * group by b.id
-	 * order by remain_count DESC;
-	 * */
-
 	public List<Board> filter(BoardFilterCondition boardFilterCondition, Pageable pageable) {
 		return jpaQueryFactory
 				.select(board)
@@ -89,7 +73,11 @@ public class BoardSearchAndFilterRepository {
 	}
 
 	private BooleanExpression isFilteredCategories(List<Long> categories) {
-		return categories != null ? Expressions.anyOf(categories.stream().map(this::isFilteredCategory).toArray(BooleanExpression[]::new)) : null;
+		if(categories.contains(0L)){
+			return null;
+		}
+
+		return Expressions.anyOf(categories.stream().map(this::isFilteredCategory).toArray(BooleanExpression[]::new));
 	}
 
 	private BooleanExpression isFilteredCategory(Long categoryId) {
@@ -97,7 +85,11 @@ public class BoardSearchAndFilterRepository {
 	}
 
 	private BooleanExpression isFilteredCities(List<Long> cities) {
-		return cities != null ? Expressions.anyOf(cities.stream().map(this::isFilteredCity).toArray(BooleanExpression[]::new)) : null;
+		if(cities.contains(0L)){
+			return null;
+		}
+
+		return Expressions.anyOf(cities.stream().map(this::isFilteredCity).toArray(BooleanExpression[]::new));
 	}
 
 	private BooleanExpression isFilteredCity(Long cityId) {
