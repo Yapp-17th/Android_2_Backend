@@ -1,8 +1,10 @@
 package com.yapp.crew.model;
 
 import com.yapp.crew.domain.model.Board;
+import com.yapp.crew.domain.model.ChatRoom;
 import com.yapp.crew.domain.model.User;
 import com.yapp.crew.domain.status.BoardStatus;
+import java.util.Optional;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -18,7 +20,7 @@ public class ApplyListInfo {
 	private Long chattingRoomId;
 	private Long boardId;
 
-	public static ApplyListInfo build(long hostId, User guest, Board board, long chattingRoomId) {
+	public static ApplyListInfo build(long hostId, User guest, Board board, Optional<ChatRoom> chatRoom) {
 		ApplyListInfo applyListInfo = new ApplyListInfo();
 		applyListInfo.hostId = hostId;
 		applyListInfo.guestId = guest.getId();
@@ -26,7 +28,7 @@ public class ApplyListInfo {
 		applyListInfo.applyStatus = ApplyStatusInfo.build(board.getAppliedUsers().stream()
 				.filter(appliedUser -> appliedUser.getUser().getId().equals(guest.getId()))
 				.findFirst().get().getStatus());
-		applyListInfo.chattingRoomId = chattingRoomId;
+		applyListInfo.chattingRoomId = chatRoom.isPresent() ? chatRoom.get().getId() : 0L;
 		applyListInfo.boardId = board.getId();
 
 		return applyListInfo;
