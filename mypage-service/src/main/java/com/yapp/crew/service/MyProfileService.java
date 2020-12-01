@@ -113,9 +113,10 @@ public class MyProfileService {
 
 	private List<Board> findAllBoards(User user) {
 		return boardRepository.findAll().stream()
-				.filter(board -> board.getUser().equals(user) ||
+				.filter(board -> board.getUser().getId().equals(user.getId()) ||
 						(board.getAppliedUsers().stream()
-								.map(appliedUser -> appliedUser.getUser().equals(user) && appliedUser.getStatus() == AppliedStatus.APPROVED).count() != 0))
+								.map(appliedUser -> appliedUser.getUser().getId().equals(user.getId())
+										&& appliedUser.getStatus() == AppliedStatus.APPROVED).count() > 0))
 				.collect(Collectors.toList());
 	}
 
