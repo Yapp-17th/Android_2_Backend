@@ -16,6 +16,7 @@ public class ApplyListInfo {
 	private Boolean isHost = false;
 	private ApplyStatusInfo applyStatus;
 	private Long chattingRoomId;
+	private Long boardId;
 
 	public static ApplyListInfo build(long hostId, User guest, Board board, long chattingRoomId) {
 		ApplyListInfo applyListInfo = new ApplyListInfo();
@@ -26,6 +27,7 @@ public class ApplyListInfo {
 				.filter(appliedUser -> appliedUser.getUser().getId().equals(guest.getId()))
 				.findFirst().get().getStatus());
 		applyListInfo.chattingRoomId = chattingRoomId;
+		applyListInfo.boardId = board.getId();
 
 		return applyListInfo;
 	}
