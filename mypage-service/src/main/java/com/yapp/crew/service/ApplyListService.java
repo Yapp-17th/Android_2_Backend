@@ -32,14 +32,12 @@ public class ApplyListService {
 				.orElseThrow(() -> new BoardNotFoundException(boardId));
 
 		return board.getAppliedUsers().stream()
-				.map(appliedUser -> {
-					return ApplyListInfo.build(
-							hostId,
-							appliedUser.getUser(),
-							board,
-							findChatRoomByBoardIdAndGuestId(appliedUser.getUser().getId(), boardId)
-									.orElseThrow(() -> new ChatRoomNotFoundException(null)).getId());
-				})
+				.map(appliedUser -> ApplyListInfo.build(
+						hostId,
+						appliedUser.getUser(),
+						board,
+						findChatRoomByBoardIdAndGuestId(appliedUser.getUser().getId(), boardId)
+								.orElseThrow(() -> new ChatRoomNotFoundException(null)).getId()))
 				.collect(Collectors.toList());
 	}
 
