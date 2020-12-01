@@ -37,7 +37,7 @@ public class ApplyListService {
 						appliedUser.getUser(),
 						board,
 						findChatRoomByBoardIdAndGuestId(appliedUser.getUser().getId(), boardId)
-								.orElseThrow(() -> new ChatRoomNotFoundException(null)).getId()))
+				))
 				.collect(Collectors.toList());
 	}
 
