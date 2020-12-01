@@ -3,6 +3,7 @@ package com.yapp.crew.service;
 import com.yapp.crew.domain.model.Board;
 import com.yapp.crew.domain.model.Evaluation;
 import com.yapp.crew.domain.model.Evaluation.EvaluationBuilder;
+import com.yapp.crew.domain.repository.BoardRepository;
 import com.yapp.crew.domain.repository.EvaluationRepository;
 import com.yapp.crew.domain.status.AppliedStatus;
 import java.util.List;
@@ -19,18 +20,18 @@ import org.springframework.transaction.annotation.Transactional;
 public class BoardBatchService {
 
 	private EvaluationRepository evaluationRepository;
-	private EntityManager entityManager;
+	private BoardRepository boardRepository;
 
 	@Autowired
-	public BoardBatchService(EvaluationRepository evaluationRepository, EntityManager entityManager) {
+	public BoardBatchService(EvaluationRepository evaluationRepository, BoardRepository boardRepository) {
 		this.evaluationRepository = evaluationRepository;
-		this.entityManager = entityManager;
+		this.boardRepository = boardRepository;
 	}
 
 	@Transactional
 	void updateBoardFinishedAll(List<Board> boardList) {
 		boardList.forEach(Board::finishBoard);
-		entityManager.flush();
+		boardRepository.saveAll(boardList);
 		log.info("Successfully updated board");
 	}
 
