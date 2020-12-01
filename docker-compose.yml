@@ -31,9 +31,8 @@ services:
       - MYSQL_DATABASE=explanet_dev
       - MYSQL_USER=alex
       - MYSQL_PASSWORD=dnjscksdn98@
-      - docker exec mysql mysqladmin -ualex -pdnjscksdn98@ ping
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "52.78.52.254", "-u", "alex", "-p$$MYSQL_ROOT_PASSWORD" ]
+      test: ["CMD", "mysqladmin", "ping", "-h", "mysql", "-u$$MYSQL_USER", "-p$$MYSQL_ROOT_PASSWORD" ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -48,7 +47,7 @@ services:
         ENVIRONMENT: dev
       dockerfile: Dockerfile
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://52.78.52.254/health-check" ]
+      test: [ "CMD", "curl", "-f", "http://api-gateway/health-check" ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -65,7 +64,7 @@ services:
         ENVIRONMENT: dev
       dockerfile: Dockerfile
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://52.78.52.254:8080/health-check" ]
+      test: [ "CMD", "curl", "-f", "http://chatting-service:8080/health-check" ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -84,7 +83,7 @@ services:
         ENVIRONMENT: dev
       dockerfile: Dockerfile
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://52.78.52.254:8081/health-check" ]
+      test: [ "CMD", "curl", "-f", "http://chat-bot-service:8081/health-check" ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -103,7 +102,7 @@ services:
         ENVIRONMENT: dev
       dockerfile: Dockerfile
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://52.78.52.254:8082/health-check" ]
+      test: [ "CMD", "curl", "-f", "http://base-service:8082/health-check" ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -121,7 +120,7 @@ services:
         ENVIRONMENT: dev
       dockerfile: Dockerfile
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://52.78.52.254:8083/health-check" ]
+      test: [ "CMD", "curl", "-f", "http://board-service:8083/health-check" ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -140,7 +139,7 @@ services:
         ENVIRONMENT: dev
       dockerfile: Dockerfile
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://52.78.52.254:8084/health-check" ]
+      test: [ "CMD", "curl", "-f", "http://login-service:8084/health-check" ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -158,7 +157,7 @@ services:
         ENVIRONMENT: dev
       dockerfile: Dockerfile
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://52.78.52.254:8085/health-check" ]
+      test: [ "CMD", "curl", "-f", "http://mypage-service:8085/health-check" ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -176,7 +175,7 @@ services:
         ENVIRONMENT: dev
       dockerfile: Dockerfile
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://52.78.52.254:8086/health-check" ]
+      test: [ "CMD", "curl", "-f", "http://watcher-service:8086/health-check" ]
       interval: 30s
       timeout: 10s
       retries: 3
