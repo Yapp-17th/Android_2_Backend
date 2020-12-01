@@ -46,8 +46,8 @@ public class BoardController {
 			@RequestHeader(value = "userId") Long userId,
 			@PageableDefault(size = 20) Pageable pageable,
 			@RequestParam(required = false) String sorting,
-			@RequestParam(required = false) List<Long> category,
-			@RequestParam(required = false) List<Long> address
+			@RequestParam List<Long> category,
+			@RequestParam List<Long> address
 	) {
 		log.info("Get board list -> userId: {}, pageable: {}, sorting: {}, category: {}, address: {}", userId, pageable, sorting, category, address);
 		List<BoardListResponseInfo> boardList = boardService.getBoardList(BoardFilterCondition.build(sorting, category, address, userId), pageable);
