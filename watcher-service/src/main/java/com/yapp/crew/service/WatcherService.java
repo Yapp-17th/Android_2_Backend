@@ -44,6 +44,7 @@ public class WatcherService {
 				.stream()
 				.filter(board -> !board.getStatus().equals(BoardStatus.CANCELED) && !board.getStatus().equals(BoardStatus.FINISHED))
 				.collect(Collectors.toList());
+		log.info("Boards that needs an update -> {}", boards);
 
 		if (!boards.isEmpty()) {
 			boards.forEach(board -> {

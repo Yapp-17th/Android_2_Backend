@@ -43,6 +43,7 @@ public class BoardBatchService {
 				.filter(appliedUser -> appliedUser.getStatus() == AppliedStatus.APPROVED)
 				.map(appliedUser -> appliedUser.getUser().getId())
 				.collect(Collectors.toList());
+		log.info("Board approved user ids -> {}", userIds);
 
 		for (int i = 0; i < userIds.size(); i++) {
 			for (int j = 0; j < userIds.size(); j++) {
@@ -57,11 +58,11 @@ public class BoardBatchService {
 						.withIsDislike(false)
 						.withIsLike(false)
 						.build();
+				log.info("Create evaluation -> {}", evaluation);
 				board.addEvaluation(evaluation);
 				evaluationRepository.save(evaluation);
 			}
 		}
-
-		log.info("Successfully created evaluations for boardId = {}", board.getId());
+		log.info("Successfully created evaluations for boardId -> {}", board.getId());
 	}
 }

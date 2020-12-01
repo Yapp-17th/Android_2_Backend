@@ -90,4 +90,9 @@ public class Evaluation extends BaseEntity {
 			return evaluation;
 		}
 	}
+
+	@Override
+	public String toString() {
+		return this.getId().toString();
+	}
 }

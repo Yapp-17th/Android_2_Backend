@@ -227,4 +227,9 @@ public class Board extends BaseEntity {
 			return board;
 		}
 	}
+
+	@Override
+	public String toString() {
+		return this.getId().toString();
+	}
 }
