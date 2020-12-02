@@ -1,0 +1,63 @@
+spring:
+  profiles:
+    active: prod
+
+  application:
+    name: chatting-service
+
+  kafka:
+    producer:
+      bootstrap-servers:
+        - 101.101.219.23:9092
+      key-serializer: org.apache.kafka.common.serialization.LongSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      properties:
+        acks: all
+        retries: 10
+
+    consumer:
+      bootstrap-servers:
+        - 101.101.219.23:9092
+      key-deserializer: org.apache.kafka.common.serialization.LongDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      group-id: chat-message-group
+
+    admin:
+      properties:
+        bootstrap.servers: 101.101.219.23:9092
+
+  datasource:
+    url: jdbc:mysql://mysql:3306/explanet_prod?allowPublicKeyRetrieval=true&useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul&createDatabaseIfNotExist=true
+    username: explanet
+    password: hJSd<@C8'Qz>4+Dq
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  data:
+    jpa:
+      repositories:
+        bootstrap-mode: default
+
+  jpa:
+    database: mysql
+    show-sql: true
+    generate-ddl: true
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: update
+
+kafka:
+  topics:
+    chat-message: chat-message
+    guideline-message: guideline-message
+    apply-user: apply-user
+    approve-user: approve-user
+    disapprove-user: disapprove-user
+    user-exited: user-exited
+
+  groups:
+    chat-message-group: chat-message-group
+
+jwt:
+  header: Authorization
+  prefix: Bearer
+  secret: DLAAW49Pg59WHI6uEoaLv1OnUlaRvMI-hdh5eYnFIlCfrEhBCnWYfFK0q9nIBf3dqqpwq0GJYiU1bx7xqZWX

@@ -1,0 +1,29 @@
+server:
+  port: 8084
+
+spring:
+  profiles:
+    active: prod
+
+  application:
+    name: login-service
+
+  datasource:
+    url: jdbc:mysql://mysql:3306/explanet_prod?allowPublicKeyRetrieval=true&useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul&createDatabaseIfNotExist=true
+    username: explanet
+    password: hJSd<@C8'Qz>4+Dq
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    database: mysql
+    show-sql: true
+    generate-ddl: true
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: update
+
+jwt:
+  header: Authorization
+  prefix: Bearer
+  secret: DLAAW49Pg59WHI6uEoaLv1OnUlaRvMI-hdh5eYnFIlCfrEhBCnWYfFK0q9nIBf3dqqpwq0GJYiU1bx7xqZWX
+  expiration: 4
