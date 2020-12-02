@@ -1,0 +1,185 @@
+version: "3"
+services:
+  zookeeper:
+    image: wurstmeister/zookeeper
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+
+  kafka:
+    image: wurstmeister/kafka
+    container_name: kafka
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: 101.101.219.23
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - zookeeper
+
+  mysql:
+    image: mysql
+    container_name: mysql
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mysql/data:/var/lib/mysql:rw
+    environment:
+      - MYSQL_ROOT_PASSWORD=hJSd<@C8'Qz>4+Dq
+      - MYSQL_DATABASE=explanet_prod
+      - MYSQL_USER=explanet
+      - MYSQL_PASSWORD=hJSd<@C8'Qz>4+Dq
+#    healthcheck:
+#      test: ["CMD", "mysqladmin", "ping", "-h", "mysql", "-u$$MYSQL_USER", "-p$$MYSQL_ROOT_PASSWORD" ]
+#      interval: 30s
+#      timeout: 10s
+#      retries: 3
+
+  api-gateway:
+    container_name: api-gateway
+    ports:
+      - "80:80"
+    build:
+      context: ./api-gateway
+      args:
+        ENVIRONMENT: prod
+      dockerfile: Dockerfile
+#    healthcheck:
+#      test: [ "CMD", "curl", "-f", "http://api-gateway/health-check" ]
+#      interval: 30s
+#      timeout: 10s
+#      retries: 3
+    depends_on:
+      - mysql
+
+  chatting-service:
+    container_name: chatting-service
+    ports:
+      - "8080:8080"
+    build:
+      context: ./chatting-service
+      args:
+        ENVIRONMENT: prod
+      dockerfile: Dockerfile
+#    healthcheck:
+#      test: [ "CMD", "curl", "-f", "http://chatting-service:8080/health-check" ]
+#      interval: 30s
+#      timeout: 10s
+#      retries: 3
+    depends_on:
+      - mysql
+      - kafka
+      - api-gateway
+
+  chat-bot-service:
+    container_name: chat-bot-service
+    ports:
+      - "8081:8081"
+    build:
+      context: ./chat-bot-service
+      args:
+        ENVIRONMENT: prod
+      dockerfile: Dockerfile
+#    healthcheck:
+#      test: [ "CMD", "curl", "-f", "http://chat-bot-service:8081/health-check" ]
+#      interval: 30s
+#      timeout: 10s
+#      retries: 3
+    depends_on:
+      - mysql
+      - kafka
+      - api-gateway
+
+  base-service:
+    container_name: base-service
+    ports:
+      - "8082:8082"
+    build:
+      context: ./base-service
+      args:
+        ENVIRONMENT: prod
+      dockerfile: Dockerfile
+#    healthcheck:
+#      test: [ "CMD", "curl", "-f", "http://base-service:8082/health-check" ]
+#      interval: 30s
+#      timeout: 10s
+#      retries: 3
+    depends_on:
+      - mysql
+      - api-gateway
+
+  board-service:
+    container_name: board-service
+    ports:
+      - "8083:8083"
+    build:
+      context: ./board-service
+      args:
+        ENVIRONMENT: prod
+      dockerfile: Dockerfile
+#    healthcheck:
+#      test: [ "CMD", "curl", "-f", "http://board-service:8083/health-check" ]
+#      interval: 30s
+#      timeout: 10s
+#      retries: 3
+    depends_on:
+      - mysql
+      - kafka
+      - api-gateway
+
+  login-service:
+    container_name: login-service
+    ports:
+      - "8084:8084"
+    build:
+      context: ./login-service
+      args:
+        ENVIRONMENT: prod
+      dockerfile: Dockerfile
+#    healthcheck:
+#      test: [ "CMD", "curl", "-f", "http://login-service:8084/health-check" ]
+#      interval: 30s
+#      timeout: 10s
+#      retries: 3
+    depends_on:
+      - mysql
+      - api-gateway
+
+  mypage-service:
+    container_name: mypage-service
+    ports:
+      - "8085:8085"
+    build:
+      context: ./mypage-service
+      args:
+        ENVIRONMENT: prod
+      dockerfile: Dockerfile
+#    healthcheck:
+#      test: [ "CMD", "curl", "-f", "http://mypage-service:8085/health-check" ]
+#      interval: 30s
+#      timeout: 10s
+#      retries: 3
+    depends_on:
+      - mysql
+      - api-gateway
+
+  watcher-service:
+    container_name: watcher-service
+    ports:
+      - "8086:8086"
+    build:
+      context: ./watcher-service
+      args:
+        ENVIRONMENT: prod
+      dockerfile: Dockerfile
+#    healthcheck:
+#      test: [ "CMD", "curl", "-f", "http://watcher-service:8086/health-check" ]
+#      interval: 30s
+#      timeout: 10s
+#      retries: 3
+    depends_on:
+      - mysql
+      - kafka
+      - api-gateway

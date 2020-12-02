@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.kafka.config.TopicBuilder;
 
 @Configuration
-@Profile(value = "dev")
+@Profile(value = "prod")
 public class KafkaTopicConfig {
 
 	@Value(value = "${kafka.topics.chat-message}")
