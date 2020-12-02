@@ -27,10 +27,10 @@ services:
     volumes:
       - ./mysql/data:/var/lib/mysql:rw
     environment:
-      - MYSQL_ROOT_PASSWORD=hJSd<@C8'Qz>4+Dq
+      - MYSQL_ROOT_PASSWORD=QPVYXdeVWbFP4YK6sLrd
       - MYSQL_DATABASE=explanet_prod
       - MYSQL_USER=explanet
-      - MYSQL_PASSWORD=hJSd<@C8'Qz>4+Dq
+      - MYSQL_PASSWORD=QPVYXdeVWbFP4YK6sLrd
 #    healthcheck:
 #      test: ["CMD", "mysqladmin", "ping", "-h", "mysql", "-u$$MYSQL_USER", "-p$$MYSQL_ROOT_PASSWORD" ]
 #      interval: 30s

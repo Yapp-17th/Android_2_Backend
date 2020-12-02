@@ -29,7 +29,7 @@ spring:
   datasource:
     url: jdbc:mysql://mysql:3306/explanet_prod?allowPublicKeyRetrieval=true&useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul&createDatabaseIfNotExist=true
     username: explanet
-    password: hJSd<@C8'Qz>4+Dq
+    password: QPVYXdeVWbFP4YK6sLrd
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   data:
