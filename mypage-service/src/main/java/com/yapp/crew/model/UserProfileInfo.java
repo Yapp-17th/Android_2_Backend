@@ -16,7 +16,7 @@ public class UserProfileInfo {
 
 	private Long userId;
 	private Boolean isMine;
-	private String userName;
+	private String nickName;
 	private Integer like;
 	private Integer dislike;
 	private String intro;
@@ -34,7 +34,7 @@ public class UserProfileInfo {
 	public static class UserProfileInfoBuilder {
 		private Long userId = -1L;
 		private Boolean isMine = false;
-		private String userName = "";
+		private String nickName = "";
 		private Integer like = -1;
 		private Integer dislike = -1;
 		private String intro = "";
@@ -51,8 +51,8 @@ public class UserProfileInfo {
 			return this;
 		}
 
-		public UserProfileInfoBuilder withUserName(String userName) {
-			this.userName = userName;
+		public UserProfileInfoBuilder withNickName(String nickName) {
+			this.nickName = nickName;
 			return this;
 		}
 
@@ -85,7 +85,7 @@ public class UserProfileInfo {
 			UserProfileInfo userProfileInfo = new UserProfileInfo();
 			userProfileInfo.setUserId(userId);
 			userProfileInfo.setIsMine(isMine);
-			userProfileInfo.setUserName(userName);
+			userProfileInfo.setNickName(nickName);
 			userProfileInfo.setLike(like);
 			userProfileInfo.setDislike(dislike);
 			userProfileInfo.setIntro(intro);
@@ -99,7 +99,7 @@ public class UserProfileInfo {
 		return UserProfileInfo.getBuilder()
 				.withUserId(user.getId())
 				.withIsMine(isMine)
-				.withUserName(user.getNickname())
+				.withNickName(user.getNickname())
 				.withLike(Math.toIntExact(user.calculateLikes(evaluations)))
 				.withDislike(Math.toIntExact(user.calculateDislikes(evaluations)))
 				.withIntro(user.getIntro())

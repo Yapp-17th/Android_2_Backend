@@ -24,6 +24,7 @@ import com.yapp.crew.domain.status.BoardStatus;
 import com.yapp.crew.domain.type.ResponseType;
 import com.yapp.crew.domain.type.UniqueIndexEnum;
 import com.yapp.crew.model.HistoryListInfo;
+import com.yapp.crew.model.UserInfo;
 import com.yapp.crew.model.UserProfileInfo;
 import com.yapp.crew.model.UserUpdateRequest;
 import com.yapp.crew.network.model.SimpleResponse;
@@ -70,6 +71,14 @@ public class MyProfileService {
 		List<Evaluation> evaluations = findAllByEvaluatedId(userId);
 
 		return UserProfileInfo.build(user, true, evaluations);
+	}
+
+	@Transactional
+	public UserInfo getEditProfile(long userId) {
+		User user = findUserById(userId)
+				.orElseThrow(() -> new UserNotFoundException(userId));
+
+		return UserInfo.build(user);
 	}
 
 	@Transactional
