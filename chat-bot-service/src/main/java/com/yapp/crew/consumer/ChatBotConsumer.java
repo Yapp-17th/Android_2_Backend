@@ -103,8 +103,8 @@ public class ChatBotConsumer {
 		User applier = userRepository.findUserById(applyRequestPayload.getApplierId())
 				.orElseThrow(() -> new UserNotFoundException(applyRequestPayload.getApplierId()));
 
-		User bot = userRepository.findUserById(-1L)
-				.orElseThrow(() -> new UserNotFoundException(-1L));
+		User bot = userRepository.findUserById(0L)
+				.orElseThrow(() -> new UserNotFoundException(0L));
 
 		Board board = boardRepository.findById(applyRequestPayload.getBoardId())
 				.orElseThrow(() -> new BoardNotFoundException(applyRequestPayload.getBoardId()));
@@ -159,8 +159,8 @@ public class ChatBotConsumer {
 		User host = userRepository.findUserById(approveRequestPayload.getHostId())
 				.orElseThrow(() -> new UserNotFoundException(approveRequestPayload.getHostId()));
 
-		User bot = userRepository.findUserById(-1L)
-				.orElseThrow(() -> new UserNotFoundException(-1L));
+		User bot = userRepository.findUserById(0L)
+				.orElseThrow(() -> new UserNotFoundException(0L));
 
 		MessageRequestPayload approveMessagePayload = MessageRequestPayload.builder()
 				.content(String.format(
@@ -185,8 +185,8 @@ public class ChatBotConsumer {
 		User host = userRepository.findUserById(approveRequestPayload.getHostId())
 				.orElseThrow(() -> new UserNotFoundException(approveRequestPayload.getHostId()));
 
-		User bot = userRepository.findUserById(-1L)
-				.orElseThrow(() -> new UserNotFoundException(-1L));
+		User bot = userRepository.findUserById(0L)
+				.orElseThrow(() -> new UserNotFoundException(0L));
 
 		MessageRequestPayload disapproveMessagePayload = MessageRequestPayload.builder()
 				.content(String.format(
@@ -211,8 +211,8 @@ public class ChatBotConsumer {
 		Board board = boardRepository.findById(boardFinishedPayload.getBoardId())
 				.orElseThrow(() -> new BoardNotFoundException(boardFinishedPayload.getBoardId()));
 
-		User bot = userRepository.findUserById(-1L)
-				.orElseThrow(() -> new UserNotFoundException(-1L));
+		User bot = userRepository.findUserById(0L)
+				.orElseThrow(() -> new UserNotFoundException(0L));
 
 		chatRoomRepository.findAllByBoardId(board.getId())
 				.forEach(chatRoom -> {
@@ -245,8 +245,8 @@ public class ChatBotConsumer {
 		User host = userRepository.findUserById(boardCanceledPayload.getUserId())
 				.orElseThrow(() -> new UserNotFoundException(boardCanceledPayload.getUserId()));
 
-		User bot = userRepository.findUserById(-1L)
-				.orElseThrow(() -> new UserNotFoundException(-1L));
+		User bot = userRepository.findUserById(0L)
+				.orElseThrow(() -> new UserNotFoundException(0L));
 
 		chatRoomRepository.findAllByBoardId(board.getId())
 				.forEach(chatRoom -> {
@@ -282,8 +282,8 @@ public class ChatBotConsumer {
 		User user = userRepository.findUserById(userExitedPayload.getUserId())
 				.orElseThrow(() -> new UserNotFoundException(userExitedPayload.getUserId()));
 
-		User bot = userRepository.findUserById(-1L)
-				.orElseThrow(() -> new UserNotFoundException(-1L));
+		User bot = userRepository.findUserById(0L)
+				.orElseThrow(() -> new UserNotFoundException(0L));
 
 		MessageRequestPayload userExitedMessagePayload = MessageRequestPayload.builder()
 				.content(String.format(
