@@ -2,8 +2,10 @@ package com.yapp.crew.controller;
 
 import com.yapp.crew.dto.request.UserUpdateRequestDto;
 import com.yapp.crew.dto.response.HistoryListResponseDto;
+import com.yapp.crew.dto.response.UserEditProfileResponseDto;
 import com.yapp.crew.dto.response.UserProfileResponseDto;
 import com.yapp.crew.model.HistoryListInfo;
+import com.yapp.crew.model.UserInfo;
 import com.yapp.crew.model.UserProfileInfo;
 import com.yapp.crew.model.UserUpdateRequest;
 import com.yapp.crew.network.dto.SimpleResponseDto;
@@ -40,6 +42,15 @@ public class MyProfileController {
 		UserProfileResponseDto userProfileResponseDto = UserProfileResponseDto.build(userProfileInfo);
 
 		return ResponseEntity.ok().body(userProfileResponseDto);
+	}
+
+	@GetMapping(path = "/v1/user/my-profile/edit", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> getEditMyProfile(@RequestHeader(value = "userId") Long userId) {
+		log.info("Get my edit profile -> userId: {}", userId);
+		UserInfo userInfo = myProfileService.getEditProfile(userId);
+		UserEditProfileResponseDto userEditProfileResponseDto = UserEditProfileResponseDto.build(userInfo);
+
+		return ResponseEntity.ok().body(userEditProfileResponseDto);
 	}
 
 	@PutMapping(path = "/v1/user/my-profile", produces = MediaType.APPLICATION_JSON_VALUE)
