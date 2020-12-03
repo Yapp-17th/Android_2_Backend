@@ -129,7 +129,7 @@ public class Board extends BaseEntity {
 	}
 
 	public String showBoardTimeComparedToNow() {
-		if (status == BoardStatus.CANCELED || status == BoardStatus.COMPLETE) {
+		if (status == BoardStatus.RECRUITING || status == BoardStatus.COMPLETE) {
 			return "[D-" + calculateLeftDays(LocalDate.now(), startsAt) + "]";
 		}
 
@@ -139,7 +139,7 @@ public class Board extends BaseEntity {
 	private int calculateLeftDays(LocalDate now, LocalDateTime end) {
 		LocalDate before = LocalDate.from(end);
 		Period period = Period.between(before, now);
-		return period.getDays();
+		return Math.abs(period.getDays());
 	}
 
 	public int getApprovedCount() {
