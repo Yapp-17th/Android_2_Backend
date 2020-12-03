@@ -3,7 +3,6 @@ package com.yapp.crew.model;
 import com.yapp.crew.domain.model.Board;
 import com.yapp.crew.domain.model.ChatRoom;
 import com.yapp.crew.domain.model.User;
-import com.yapp.crew.domain.status.BoardStatus;
 import java.util.Optional;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
