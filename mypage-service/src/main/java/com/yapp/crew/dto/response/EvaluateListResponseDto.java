@@ -1,24 +1,64 @@
 package com.yapp.crew.dto.response;
 
 import com.yapp.crew.model.EvaluateListInfo;
+import java.util.Collections;
 import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.http.HttpStatus;
 
 @Getter
+@Setter
 @NoArgsConstructor
 public class EvaluateListResponseDto {
 
-	private Integer status = HttpStatus.OK.value();
-	private Boolean success = true;
-	private String message = "평가 리스트 조회 성공";
+	private Integer status ;
+	private Boolean success;
+	private String message;
 	private List<EvaluateListInfo> data;
 
-	public static EvaluateListResponseDto build(List<EvaluateListInfo> data) {
-		EvaluateListResponseDto evaluateListResponseDto = new EvaluateListResponseDto();
-		evaluateListResponseDto.data = data;
+	public static EvaluateListResponseDtoBuilder getBuilder() {
+		return new EvaluateListResponseDtoBuilder();
+	}
 
-		return evaluateListResponseDto;
+	public static class EvaluateListResponseDtoBuilder {
+		private Integer status = HttpStatus.OK.value();
+		private Boolean success = true;
+		private String message = "평가 리스트 조회 성공";
+		private List<EvaluateListInfo> data = Collections.emptyList();
+
+		public EvaluateListResponseDtoBuilder withStatus(Integer status) {
+			this.status = status;
+			return this;
+		}
+
+		public EvaluateListResponseDtoBuilder withSuccess(Boolean success) {
+			this.success = success;
+			return this;
+		}
+
+		public EvaluateListResponseDtoBuilder withMessage(String message) {
+			this.message = message;
+			return this;
+		}
+
+		public EvaluateListResponseDtoBuilder withData(List<EvaluateListInfo> data) {
+			this.data = data;
+			return this;
+		}
+
+		public EvaluateListResponseDto build() {
+			EvaluateListResponseDto evaluateListResponseDto = new EvaluateListResponseDto();
+			evaluateListResponseDto.setStatus(status);
+			evaluateListResponseDto.setSuccess(success);
+			evaluateListResponseDto.setMessage(message);
+			evaluateListResponseDto.setData(data);
+			return evaluateListResponseDto;
+		}
+	}
+
+	public static EvaluateListResponseDto build(List<EvaluateListInfo> data) {
+		return EvaluateListResponseDto.getBuilder().withData(data).build();
 	}
 }
