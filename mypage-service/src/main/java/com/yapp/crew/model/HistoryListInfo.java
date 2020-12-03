@@ -11,14 +11,14 @@ import lombok.NoArgsConstructor;
 public class HistoryListInfo {
 
 	private Boolean isHost;
-	private String userName;
+	private String nickName;
 	private Boolean isContinue;
 	private BoardListInfo boardInfo;
 
 	public static HistoryListInfo build(Board board, User user) {
 		HistoryListInfo historyListInfo = new HistoryListInfo();
 		historyListInfo.isHost = board.getUser().getId().equals(user.getId());
-		historyListInfo.userName = user.getNickname();
+		historyListInfo.nickName = user.getNickname();
 		historyListInfo.isContinue = board.getStatus() != BoardStatus.RECRUITING;
 		historyListInfo.boardInfo = BoardListInfo.build(board);
 
