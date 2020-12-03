@@ -85,8 +85,8 @@ public class ChattingService {
 		User guest = userRepository.findUserById(chatRoomRequestPayload.getGuestId())
 				.orElseThrow(() -> new UserNotFoundException(chatRoomRequestPayload.getGuestId()));
 
-		User bot = userRepository.findUserById(-1L)
-				.orElseThrow(() -> new UserNotFoundException(-1L));
+		User bot = userRepository.findUserById(0L)
+				.orElseThrow(() -> new UserNotFoundException(0L));
 
 		Board board = boardRepository.findById(chatRoomRequestPayload.getBoardId())
 				.orElseThrow(() -> new BoardNotFoundException(chatRoomRequestPayload.getBoardId()));
