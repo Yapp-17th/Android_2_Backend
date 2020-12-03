@@ -1,7 +1,5 @@
 package com.yapp.crew.payload;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.yapp.crew.domain.model.ChatRoom;
 import com.yapp.crew.domain.model.Message;
 import com.yapp.crew.domain.status.ChatRoomStatus;
@@ -9,14 +7,12 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class ChatRoomResponsePayload {
@@ -29,61 +25,130 @@ public class ChatRoomResponsePayload {
 
 	private Long boardId;
 
-	@JsonInclude(value = Include.NON_NULL)
 	private String opponentNickname;
 
-	private ChatRoomStatus status;
+	private String status;
 
 	private LocalDateTime createdAt;
 
-	@JsonInclude(value = Include.NON_NULL)
 	private MessageResponsePayload lastMessage;
 
-	@JsonInclude(value = Include.NON_NULL)
-	private long unreadMessages;
+	private Long unreadMessages;
+
+	public static ChatRoomResponseBuilder getBuilder() {
+		return new ChatRoomResponseBuilder();
+	}
+
+	public static class ChatRoomResponseBuilder {
+		private Long id = -1L;
+		private Long hostId = -1L;
+		private Long guestId = -1L;
+		private Long boardId = -1L;
+		private String opponentNickname = "";
+		private String status = "";
+		private LocalDateTime createdAt = LocalDateTime.now();
+		private MessageResponsePayload lastMessage = MessageResponsePayload.emptyBody();
+		private Long unreadMessages = -1L;
+
+		public ChatRoomResponseBuilder withId(Long id) {
+			this.id = id;
+			return this;
+		}
+
+		public ChatRoomResponseBuilder withHostId(Long hostId) {
+			this.hostId = hostId;
+			return this;
+		}
+
+		public ChatRoomResponseBuilder withGuestId(Long guestId) {
+			this.guestId = guestId;
+			return this;
+		}
+
+		public ChatRoomResponseBuilder withBoardId(Long boardId) {
+			this.boardId = boardId;
+			return this;
+		}
+
+		public ChatRoomResponseBuilder withOpponentNickname(String opponentNickname) {
+			this.opponentNickname = opponentNickname;
+			return this;
+		}
+
+		public ChatRoomResponseBuilder withStatus(ChatRoomStatus status) {
+			this.status = status.name();
+			return this;
+		}
+
+		public ChatRoomResponseBuilder withCreatedAt(LocalDateTime createdAt) {
+			this.createdAt = createdAt;
+			return this;
+		}
+
+		public ChatRoomResponseBuilder withLastMessage(MessageResponsePayload lastMessage) {
+			this.lastMessage = lastMessage;
+			return this;
+		}
+
+		public ChatRoomResponseBuilder withUnreadMessages(Long unreadMessages) {
+			this.unreadMessages = unreadMessages;
+			return this;
+		}
+
+		public ChatRoomResponsePayload build() {
+			ChatRoomResponsePayload payload = new ChatRoomResponsePayload();
+			payload.setId(id);
+			payload.setHostId(hostId);
+			payload.setGuestId(guestId);
+			payload.setBoardId(boardId);
+			payload.setOpponentNickname(opponentNickname);
+			payload.setStatus(status);
+			payload.setCreatedAt(createdAt);
+			payload.setLastMessage(lastMessage);
+			payload.setUnreadMessages(unreadMessages);
+			return payload;
+		}
+	}
 
 	public static ChatRoomResponsePayload buildChatRoomResponsePayload(ChatRoom chatRoom) {
-		return ChatRoomResponsePayload.builder()
-				.id(chatRoom.getId())
-				.hostId(chatRoom.getHost().getId())
-				.guestId(chatRoom.getGuest().getId())
-				.boardId(chatRoom.getBoard().getId())
-				.status(chatRoom.getStatus())
-				.createdAt(chatRoom.getCreatedAt())
+		return ChatRoomResponsePayload.getBuilder()
+				.withId(chatRoom.getId())
+				.withHostId(chatRoom.getHost().getId())
+				.withGuestId(chatRoom.getGuest().getId())
+				.withBoardId(chatRoom.getBoard().getId())
+				.withStatus(chatRoom.getStatus())
+				.withCreatedAt(chatRoom.getCreatedAt())
 				.build();
 	}
 
-	public static ChatRoomResponsePayload buildChatRoomResponsePayload(ChatRoom chatRoom,
-			MessageResponsePayload lastMessage, Long unreadMessages) {
-		return ChatRoomResponsePayload.builder()
-				.id(chatRoom.getId())
-				.hostId(chatRoom.getHost().getId())
-				.guestId(chatRoom.getGuest().getId())
-				.boardId(chatRoom.getBoard().getId())
-				.status(chatRoom.getStatus())
-				.lastMessage(lastMessage)
-				.unreadMessages(unreadMessages)
-				.createdAt(chatRoom.getCreatedAt())
+	public static ChatRoomResponsePayload buildChatRoomResponsePayload(ChatRoom chatRoom, MessageResponsePayload lastMessage, Long unreadMessages) {
+		return ChatRoomResponsePayload.getBuilder()
+				.withId(chatRoom.getId())
+				.withHostId(chatRoom.getHost().getId())
+				.withGuestId(chatRoom.getGuest().getId())
+				.withBoardId(chatRoom.getBoard().getId())
+				.withStatus(chatRoom.getStatus())
+				.withLastMessage(lastMessage)
+				.withUnreadMessages(unreadMessages)
+				.withCreatedAt(chatRoom.getCreatedAt())
 				.build();
 	}
 
-	public static ChatRoomResponsePayload buildChatRoomResponsePayload(ChatRoom chatRoom,
-			MessageResponsePayload lastMessage, Long unreadMessages, String opponentNickname) {
-		return ChatRoomResponsePayload.builder()
-				.id(chatRoom.getId())
-				.hostId(chatRoom.getHost().getId())
-				.guestId(chatRoom.getGuest().getId())
-				.boardId(chatRoom.getBoard().getId())
-				.status(chatRoom.getStatus())
-				.lastMessage(lastMessage)
-				.unreadMessages(unreadMessages)
-				.opponentNickname(opponentNickname)
-				.createdAt(chatRoom.getCreatedAt())
+	public static ChatRoomResponsePayload buildChatRoomResponsePayload(ChatRoom chatRoom, MessageResponsePayload lastMessage, Long unreadMessages, String opponentNickname) {
+		return ChatRoomResponsePayload.getBuilder()
+				.withId(chatRoom.getId())
+				.withHostId(chatRoom.getHost().getId())
+				.withGuestId(chatRoom.getGuest().getId())
+				.withBoardId(chatRoom.getBoard().getId())
+				.withStatus(chatRoom.getStatus())
+				.withLastMessage(lastMessage)
+				.withUnreadMessages(unreadMessages)
+				.withOpponentNickname(opponentNickname)
+				.withCreatedAt(chatRoom.getCreatedAt())
 				.build();
 	}
 
-	public static List<ChatRoomResponsePayload> buildChatRoomResponsePayload(List<ChatRoom> chatRooms,
-			Long userId) {
+	public static List<ChatRoomResponsePayload> buildChatRoomResponsePayload(List<ChatRoom> chatRooms, Long userId) {
 		return chatRooms.stream()
 				.map(chatRoom -> {
 					List<Message> messages = chatRoom.getMessages();
@@ -106,9 +171,7 @@ public class ChatRoomResponsePayload {
 					if (lastMessage != null) {
 						messagePayload = MessageResponsePayload.buildChatMessageResponsePayload(lastMessage);
 					}
-					return ChatRoomResponsePayload
-							.buildChatRoomResponsePayload(chatRoom, messagePayload, unreadMessages,
-									opponentNickname);
+					return ChatRoomResponsePayload.buildChatRoomResponsePayload(chatRoom, messagePayload, unreadMessages, opponentNickname);
 				})
 				.collect(Collectors.toList());
 	}

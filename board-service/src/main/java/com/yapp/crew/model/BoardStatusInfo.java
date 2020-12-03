@@ -11,6 +11,13 @@ public class BoardStatusInfo {
 	Integer code;
 	String name;
 
+	public static BoardStatusInfo emptyBody() {
+		BoardStatusInfo boardStatusInfo = new BoardStatusInfo();
+		boardStatusInfo.code = -1;
+		boardStatusInfo.name = "";
+		return boardStatusInfo;
+	}
+
 	public static BoardStatusInfo build(BoardStatus boardStatus) {
 		BoardStatusInfo boardStatusInfo = new BoardStatusInfo();
 		boardStatusInfo.code = boardStatus.getCode();
