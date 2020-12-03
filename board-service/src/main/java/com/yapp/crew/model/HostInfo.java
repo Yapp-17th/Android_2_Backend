@@ -15,6 +15,15 @@ public class HostInfo {
 	private Long likes;
 	private Long dislikes;
 
+	public static HostInfo emptyBody() {
+		HostInfo hostInfo = new HostInfo();
+		hostInfo.hostId = -1L;
+		hostInfo.hostName = "";
+		hostInfo.likes = -1L;
+		hostInfo.dislikes = -1L;
+		return hostInfo;
+	}
+
 	public static HostInfo build(User user, List<Evaluation> evaluationList) {
 		HostInfo hostInfo = new HostInfo();
 		hostInfo.hostId = user.getId();
