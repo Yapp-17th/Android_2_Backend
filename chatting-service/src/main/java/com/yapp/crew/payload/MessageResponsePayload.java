@@ -41,19 +41,7 @@ public class MessageResponsePayload {
 	private LocalDateTime createdAt;
 
 	public static MessageResponsePayload emptyBody() {
-		MessageResponsePayload payload = new MessageResponsePayload();
-		payload.setId(-1L);
-		payload.setContent("");
-		payload.setType("");
-		payload.setRealTimeUpdateType("");
-		payload.setIsHostRead(false);
-		payload.setIsGuestRead(false);
-		payload.setMessageId(-1L);
-		payload.setChatRoomId(-1L);
-		payload.setSenderId(-1L);
-		payload.setSenderNickname("");
-		payload.setCreatedAt(LocalDateTime.now());
-		return payload;
+		return MessageResponsePayload.getBuilder().build();
 	}
 
 	public static MessageResponsePayloadBuilder getBuilder() {
