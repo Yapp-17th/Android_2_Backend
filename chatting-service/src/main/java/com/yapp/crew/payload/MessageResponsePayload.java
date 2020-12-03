@@ -77,7 +77,7 @@ public class MessageResponsePayload {
 		}
 
 		public MessageResponsePayloadBuilder withRealTimeUpdateType(RealTimeUpdateType realTimeUpdateType) {
-			this.realTimeUpdateType = realTimeUpdateType.getName();
+			this.realTimeUpdateType = realTimeUpdateType.name();
 			return this;
 		}
 
