@@ -39,6 +39,14 @@ services:
 
   api-gateway:
     container_name: api-gateway
+    links:
+      - chatting-service
+      - chat-bot-service
+      - base-service
+      - board-service
+      - login-service
+      - mypage-service
+      - watcher-service
     ports:
       - "80:80"
     build:
