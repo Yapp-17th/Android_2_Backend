@@ -140,7 +140,7 @@ public class BoardContentResponseInfo {
 				.withExcercise(board.getCategory().getExercise().getName())
 				.withCity(board.getAddress().getCity().getName())
 				.withRecruitNumber(board.getRecruitCount())
-				.withRecruitedNumber(board.getRemainRecruitNumber())
+				.withRecruitedNumber(board.getApprovedCount())
 				.withIsBookMark(board.getBookMarkUser().stream().map(bookmark -> bookmark.getUser().getId()).anyMatch(id -> id.equals(userId)))
 				.withHost(HostInfo.build(board.getUser(), evaluationList))
 				.withBoardTime(board.showBoardTimeComparedToNow())
