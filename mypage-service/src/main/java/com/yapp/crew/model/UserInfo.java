@@ -16,18 +16,18 @@ public class UserInfo {
 	private String nickName;
 	private String email;
 	private String intro;
-	private List<String> category = new ArrayList<>();
-	private String city;
+	private List<CategoryCode> category = new ArrayList<>();
+	private CityCode city;
 
-	public static UserInfo build(User user){
+	public static UserInfo build(User user) {
 		UserInfo userInfo = new UserInfo();
 		userInfo.userId = user.getId();
 		userInfo.userName = user.getUsername();
 		userInfo.nickName = user.getNickname();
 		userInfo.email = user.getEmail();
 		userInfo.intro = user.getIntro();
-		userInfo.category.addAll(user.getUserExercise().stream().map(exercise -> exercise.getCategory().getExercise().getName()).collect(Collectors.toSet()));
-		userInfo.city = user.getAddress().getCity().getName();
+		userInfo.category.addAll(user.getUserExercise().stream().map(exercise -> CategoryCode.build(exercise.getCategory())).collect(Collectors.toSet()));
+		userInfo.city = CityCode.build(user.getAddress());
 
 		return userInfo;
 	}
