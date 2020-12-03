@@ -40,6 +40,22 @@ public class MessageResponsePayload {
 
 	private LocalDateTime createdAt;
 
+	public static MessageResponsePayload emptyBody() {
+		MessageResponsePayload payload = new MessageResponsePayload();
+		payload.setId(-1L);
+		payload.setContent("");
+		payload.setType("");
+		payload.setRealTimeUpdateType("");
+		payload.setIsHostRead(false);
+		payload.setIsGuestRead(false);
+		payload.setMessageId(-1L);
+		payload.setChatRoomId(-1L);
+		payload.setSenderId(-1L);
+		payload.setSenderNickname("");
+		payload.setCreatedAt(LocalDateTime.now());
+		return payload;
+	}
+
 	public static MessageResponsePayloadBuilder getBuilder() {
 		return new MessageResponsePayloadBuilder();
 	}
@@ -48,14 +64,14 @@ public class MessageResponsePayload {
 		private Long id = -1L;
 		private String content = "";
 		private String type = "";
-		private String realTimeUpdateType;
+		private String realTimeUpdateType = "";
 		private Boolean isHostRead = false;
 		private Boolean isGuestRead = false;
 		private Long messageId = -1L;
 		private Long chatRoomId = -1L;
 		private Long senderId = -1L;
 		private String senderNickname = "";
-		private LocalDateTime createdAt = null;
+		private LocalDateTime createdAt = LocalDateTime.now();
 
 		public MessageResponsePayloadBuilder withId(Long id) {
 			this.id = id;

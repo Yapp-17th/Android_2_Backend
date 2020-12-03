@@ -46,8 +46,8 @@ public class ChatRoomResponsePayload {
 		private Long boardId = -1L;
 		private String opponentNickname = "";
 		private String status = "";
-		private LocalDateTime createdAt = null;
-		private MessageResponsePayload lastMessage = null;
+		private LocalDateTime createdAt = LocalDateTime.now();
+		private MessageResponsePayload lastMessage = MessageResponsePayload.emptyBody();
 		private Long unreadMessages = -1L;
 
 		public ChatRoomResponseBuilder withId(Long id) {
