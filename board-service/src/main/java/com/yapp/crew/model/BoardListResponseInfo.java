@@ -123,7 +123,7 @@ public class BoardListResponseInfo {
 				.withExercise(board.getCategory().getExercise().getName())
 				.withCity(board.getAddress().getCity().getName())
 				.withRecruitNumber(board.getRecruitCount())
-				.withRecruitedNumber(board.getRemainRecruitNumber())
+				.withRecruitedNumber(board.getApprovedCount())
 				.withIsBookMark(user.getUserBookmark().stream().map(bookMark -> bookMark.getBoard().getId()).anyMatch(Predicate.isEqual(board.getId())))
 				.withBoardTime(board.showBoardTimeComparedToNow())
 				.build();
