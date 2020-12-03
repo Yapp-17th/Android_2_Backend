@@ -14,7 +14,7 @@ public class UserProfileInfo {
 
 	private Long userId;
 	private Boolean isMine;
-	private String userName;
+	private String nickName;
 	private Integer like;
 	private Integer dislike;
 	private String intro;
@@ -25,7 +25,7 @@ public class UserProfileInfo {
 		UserProfileInfo userProfileInfo = new UserProfileInfo();
 		userProfileInfo.userId = user.getId();
 		userProfileInfo.isMine = isMine;
-		userProfileInfo.userName = user.getNickname();
+		userProfileInfo.nickName = user.getNickname();
 		userProfileInfo.like = Math.toIntExact(user.calculateLikes(evaluations));
 		userProfileInfo.dislike = Math.toIntExact(user.calculateDislikes(evaluations));
 		userProfileInfo.intro = user.getIntro();

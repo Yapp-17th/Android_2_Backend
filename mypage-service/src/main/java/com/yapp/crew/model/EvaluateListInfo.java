@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 public class EvaluateListInfo {
 
 	private Long userId;
-	private String userName;
+	private String nickName;
 	private Boolean isHost;
 	private Boolean isLike;
 	private Boolean isDislike;
@@ -19,7 +19,7 @@ public class EvaluateListInfo {
 	public static EvaluateListInfo build(Evaluation evaluation, User user, Board board) {
 		EvaluateListInfo evaluateListInfo = new EvaluateListInfo();
 		evaluateListInfo.userId = user.getId();
-		evaluateListInfo.userName = user.getNickname();
+		evaluateListInfo.nickName = user.getNickname();
 		evaluateListInfo.isHost = board.getUser().getId().equals(user.getId());
 		evaluateListInfo.isLike = evaluation.getIsLike();
 		evaluateListInfo.isDislike = evaluation.getIsDislike();
