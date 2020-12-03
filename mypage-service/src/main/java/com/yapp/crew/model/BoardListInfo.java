@@ -1,7 +1,6 @@
 package com.yapp.crew.model;
 
 import com.yapp.crew.domain.model.Board;
-import com.yapp.crew.domain.model.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

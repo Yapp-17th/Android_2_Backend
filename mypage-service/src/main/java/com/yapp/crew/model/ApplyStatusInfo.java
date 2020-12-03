@@ -1,7 +1,6 @@
 package com.yapp.crew.model;
 
 import com.yapp.crew.domain.status.AppliedStatus;
-import com.yapp.crew.domain.status.BoardStatus;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
