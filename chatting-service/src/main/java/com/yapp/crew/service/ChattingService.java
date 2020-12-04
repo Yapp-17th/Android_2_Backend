@@ -95,7 +95,7 @@ public class ChattingService {
 
 		if (chatRoom.isPresent() && !chatRoom.get().getGuestExited() && !chatRoom.get().getHostExited()) {
 			return HttpResponseBody.buildChatRoomResponse(
-					ChatRoomResponsePayload.buildChatRoomResponsePayload(chatRoom.get()),
+					ChatRoomResponsePayload.buildChatRoomResponsePayload(chatRoom.get(), host),
 					HttpStatus.OK.value(),
 					ResponseType.CHATROOM_ALREADY_CREATED
 			);
@@ -124,7 +124,7 @@ public class ChattingService {
 		chattingProducer.sendGuidelineBotMessage(guidelineRequestPayload);
 
 		return HttpResponseBody.buildChatRoomResponse(
-				ChatRoomResponsePayload.buildChatRoomResponsePayload(newChatRoom),
+				ChatRoomResponsePayload.buildChatRoomResponsePayload(newChatRoom, host),
 				HttpStatus.CREATED.value(),
 				ResponseType.SUCCESS
 		);
