@@ -2,7 +2,11 @@ package com.yapp.crew.model;
 
 import com.yapp.crew.domain.model.Board;
 import com.yapp.crew.domain.model.Evaluation;
+import com.yapp.crew.domain.model.Tag;
+import com.yapp.crew.domain.type.UserTag;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,13 +29,15 @@ public class BoardContentResponseInfo {
 	private Boolean isBookMark;
 	private HostInfo host;
 	private String boardTime;
-	private LocalDateTime startsAt;
+	private Date startsAt;
+	private String userTag;
 
 	public static BoardContentResponseInfoBuilder getBuilder() {
 		return new BoardContentResponseInfoBuilder();
 	}
 
 	public static class BoardContentResponseInfoBuilder {
+
 		private Long boardId = -1L;
 		private String title = "";
 		private String content = "";
@@ -44,7 +50,8 @@ public class BoardContentResponseInfo {
 		private Boolean isBookMark = false;
 		private HostInfo host = HostInfo.emptyBody();
 		private String boardTime = "";
-		private LocalDateTime startsAt = LocalDateTime.now();
+		private Date startsAt = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
+		private String userTag = "";
 
 		public BoardContentResponseInfoBuilder withBoardId(Long boardId) {
 			this.boardId = boardId;
@@ -107,7 +114,12 @@ public class BoardContentResponseInfo {
 		}
 
 		public BoardContentResponseInfoBuilder withStartsAt(LocalDateTime startsAt) {
-			this.startsAt = startsAt;
+			this.startsAt = Date.from(startsAt.atZone(ZoneId.systemDefault()).toInstant());
+			return this;
+		}
+
+		public BoardContentResponseInfoBuilder withUserTag(UserTag userTag) {
+			this.userTag = userTag.getName();
 			return this;
 		}
 
@@ -126,6 +138,7 @@ public class BoardContentResponseInfo {
 			boardContentResponseInfo.setHost(host);
 			boardContentResponseInfo.setBoardTime(boardTime);
 			boardContentResponseInfo.setStartsAt(startsAt);
+			boardContentResponseInfo.setUserTag(userTag);
 			return boardContentResponseInfo;
 		}
 	}
@@ -145,6 +158,7 @@ public class BoardContentResponseInfo {
 				.withHost(HostInfo.build(board.getUser(), evaluationList))
 				.withBoardTime(board.showBoardTimeComparedToNow())
 				.withStartsAt(board.getStartsAt())
+				.withUserTag(board.getTag().getName())
 				.build();
 	}
 }

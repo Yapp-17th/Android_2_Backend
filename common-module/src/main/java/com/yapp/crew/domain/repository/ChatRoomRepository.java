@@ -19,4 +19,6 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
 
 	@Query(value = "select * from chat_room where guest_id = ?1 and board_id = ?2 and status = 'ACTIVE'", nativeQuery = true)
 	Optional<ChatRoom> findByGuestIdAndBoardId(Long guestId, Long boardId);
+
+	Optional<ChatRoom> findFirstByBoardIdAndGuestIdOrderByIdDesc(Long boardId, Long guestId);
 }
