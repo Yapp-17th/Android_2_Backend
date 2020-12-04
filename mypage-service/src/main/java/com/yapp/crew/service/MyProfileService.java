@@ -99,13 +99,13 @@ public class MyProfileService {
 
 		if (StringUtils.equalsIgnoreCase(type, "continue")) {
 			return findAllBoards(user).stream()
-					.filter(board -> board.getStatus() == BoardStatus.RECRUITING || board.getStatus() == BoardStatus.COMPLETE)
+					.filter(board -> (board.getStatus() == BoardStatus.RECRUITING || board.getStatus() == BoardStatus.COMPLETE))
 					.map(board -> HistoryListInfo.build(board, user))
 					.collect(Collectors.toList());
 		}
 
 		return findAllBoards(user).stream()
-				.filter(board -> board.getStatus() == BoardStatus.CANCELED || board.getStatus() == BoardStatus.FINISHED)
+				.filter(board -> (board.getStatus() == BoardStatus.CANCELED || board.getStatus() == BoardStatus.FINISHED))
 				.map(board -> HistoryListInfo.build(board, user))
 				.collect(Collectors.toList());
 	}
