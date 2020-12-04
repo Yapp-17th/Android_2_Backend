@@ -31,12 +31,14 @@ import com.yapp.crew.network.model.SimpleResponse;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 public class MyProfileService {
 
@@ -97,13 +99,13 @@ public class MyProfileService {
 
 		if (StringUtils.equalsIgnoreCase(type, "continue")) {
 			return findAllBoards(user).stream()
-					.filter(board -> board.getStatus() == BoardStatus.RECRUITING || board.getStatus() == BoardStatus.COMPLETE)
+					.filter(board -> (board.getStatus() == BoardStatus.RECRUITING || board.getStatus() == BoardStatus.COMPLETE))
 					.map(board -> HistoryListInfo.build(board, user))
 					.collect(Collectors.toList());
 		}
 
 		return findAllBoards(user).stream()
-				.filter(board -> board.getStatus() == BoardStatus.CANCELED || board.getStatus() == BoardStatus.FINISHED)
+				.filter(board -> (board.getStatus() == BoardStatus.CANCELED || board.getStatus() == BoardStatus.FINISHED))
 				.map(board -> HistoryListInfo.build(board, user))
 				.collect(Collectors.toList());
 	}
@@ -122,10 +124,11 @@ public class MyProfileService {
 
 	private List<Board> findAllBoards(User user) {
 		return boardRepository.findAll().stream()
-				.filter(board -> board.getUser().getId().equals(user.getId()) ||
-						(board.getAppliedUsers().stream()
-								.map(appliedUser -> appliedUser.getUser().getId().equals(user.getId())
-										&& appliedUser.getStatus() == AppliedStatus.APPROVED).count() > 0))
+				.filter(
+						board ->
+								(board.getUser().getId().equals(user.getId())) ||
+										(board.getAppliedUsers().stream().anyMatch(appliedUser -> (appliedUser.getUser().getId().equals(user.getId())) && (appliedUser.getStatus() == AppliedStatus.APPROVED)))
+				)
 				.collect(Collectors.toList());
 	}
 
