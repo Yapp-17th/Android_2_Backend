@@ -2,6 +2,7 @@ package com.yapp.crew.payload;
 
 import com.yapp.crew.domain.model.ChatRoom;
 import com.yapp.crew.domain.model.Message;
+import com.yapp.crew.domain.model.User;
 import com.yapp.crew.domain.status.ChatRoomStatus;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -110,12 +111,13 @@ public class ChatRoomResponsePayload {
 		}
 	}
 
-	public static ChatRoomResponsePayload buildChatRoomResponsePayload(ChatRoom chatRoom) {
+	public static ChatRoomResponsePayload buildChatRoomResponsePayload(ChatRoom chatRoom, User user) {
 		return ChatRoomResponsePayload.getBuilder()
 				.withId(chatRoom.getId())
 				.withHostId(chatRoom.getHost().getId())
 				.withGuestId(chatRoom.getGuest().getId())
 				.withBoardId(chatRoom.getBoard().getId())
+				.withOpponentNickname(user.getNickname())
 				.withStatus(chatRoom.getStatus())
 				.withCreatedAt(chatRoom.getCreatedAt())
 				.build();
