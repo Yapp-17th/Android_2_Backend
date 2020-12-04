@@ -36,7 +36,7 @@ public class ApplyListService {
 						hostId,
 						appliedUser.getUser(),
 						board,
-						findChatRoomByBoardIdAndGuestId(appliedUser.getUser().getId(), boardId)
+						findChatRoomByBoardIdAndGuestId(boardId, appliedUser.getUser().getId())
 				))
 				.collect(Collectors.toList());
 	}
@@ -45,7 +45,7 @@ public class ApplyListService {
 		return boardRepository.findBoardById(boardId);
 	}
 
-	private Optional<ChatRoom> findChatRoomByBoardIdAndGuestId(Long guestId, Long boardId) {
-		return chatRoomRepository.findByGuestIdAndBoardId(guestId, boardId);
+	private Optional<ChatRoom> findChatRoomByBoardIdAndGuestId(Long boardId, Long guestId) {
+		return chatRoomRepository.findFirstByBoardIdAndGuestIdOrderByIdDesc(boardId, guestId);
 	}
 }
