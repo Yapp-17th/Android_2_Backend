@@ -42,7 +42,7 @@ public class ApplyListService {
 				.map(appliedUser -> {
 					boolean isNewRoom = false;
 					ChatRoom newChatRoom = null;
-					Optional<ChatRoom> chatRoom = findChatRoomByBoardIdAndGuestId(appliedUser.getUser().getId(), boardId);
+					Optional<ChatRoom> chatRoom = findByGuestIdAndBoardId(appliedUser.getUser().getId(), boardId);
 					if (chatRoom.isEmpty()) {
 						newChatRoom = ChatRoom.buildChatRoom(host, appliedUser.getUser(), board);
 						chatRoomRepository.save(newChatRoom);
@@ -81,7 +81,7 @@ public class ApplyListService {
 		return boardRepository.findBoardById(boardId);
 	}
 
-	private Optional<ChatRoom> findChatRoomByBoardIdAndGuestId(Long boardId, Long guestId) {
-		return chatRoomRepository.findFirstByBoardIdAndGuestIdOrderByIdDesc(boardId, guestId);
+	private Optional<ChatRoom> findByGuestIdAndBoardId(Long guestId, Long boardId) {
+		return chatRoomRepository.findByGuestIdAndBoardId(guestId, boardId);
 	}
 }
