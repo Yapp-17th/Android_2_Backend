@@ -16,8 +16,8 @@ DROP TABLE IF EXISTS `tag`;
 CREATE TABLE `tag` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP(),
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP(),
+  `created_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `updated_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB
   DEFAULT CHARSET=utf8mb4
@@ -26,8 +26,8 @@ CREATE TABLE `tag` (
 CREATE TABLE `category` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `exercise` varchar(255) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP(),
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP(),
+  `created_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `updated_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB
   DEFAULT CHARSET=utf8mb4
@@ -36,8 +36,8 @@ CREATE TABLE `category` (
 CREATE TABLE `address` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `city` varchar(255) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP(),
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP(),
+  `created_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `updated_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB
   DEFAULT CHARSET=utf8mb4
@@ -47,8 +47,8 @@ CREATE TABLE `alarm` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `content` varchar(255) NOT NULL,
   `type` int NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP(),
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP(),
+  `created_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `updated_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB
   DEFAULT CHARSET=utf8mb4
@@ -64,8 +64,8 @@ CREATE TABLE `user` (
   `status` varchar(255) NOT NULL DEFAULT 'ACTIVE',
   `username` varchar(100) NOT NULL,
   `address_id` bigint NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP(),
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP(),
+  `created_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `updated_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
   PRIMARY KEY (`id`),
   UNIQUE KEY `nickname` (`nickname`),
   UNIQUE KEY `email` (`email`),
@@ -81,8 +81,8 @@ CREATE TABLE `user_exercise` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `category_id` bigint NOT NULL,
   `user_id` bigint NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP(),
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP(),
+  `created_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `updated_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
   PRIMARY KEY (`id`),
   KEY `FK_UserExercise_categoryId` (`category_id`),
   KEY `FK_UserExercise_userId` (`user_id`),
@@ -104,8 +104,8 @@ CREATE TABLE `board` (
   `tag_id` bigint NOT NULL,
   `user_id` bigint NOT NULL,
   `starts_at` datetime(6) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP(),
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP(),
+  `created_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `updated_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
   PRIMARY KEY (`id`),
   KEY `FK_Board_addressId` (`address_id`),
   KEY `FK_Board_categoryId` (`category_id`),
@@ -124,8 +124,8 @@ CREATE TABLE `applied_user` (
   `status` varchar(255) NOT NULL DEFAULT 'PENDING',
   `board_id` bigint NOT NULL,
   `user_id` bigint NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP(),
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP(),
+  `created_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `updated_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
   PRIMARY KEY (`id`),
   KEY `FK_AppliedUser_boardId` (`board_id`),
   KEY `FK_AppliedUser_userId` (`user_id`),
@@ -139,8 +139,8 @@ CREATE TABLE `book_mark` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `board_id` bigint NOT NULL,
   `user_id` bigint NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP(),
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP(),
+  `created_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `updated_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
   PRIMARY KEY (`id`),
   KEY `FK_BookMark_boardId` (`board_id`),
   KEY `FK_BookMark_userId` (`user_id`),
@@ -158,8 +158,8 @@ CREATE TABLE `chat_room` (
   `host_id` bigint NOT NULL,
   `guest_exited` boolean NOT NULL DEFAULT FALSE,
   `host_exited` boolean NOT NULL DEFAULT FALSE,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP(),
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP(),
+  `created_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `updated_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
   PRIMARY KEY (`id`),
   KEY `FK_ChatRoom_boardId` (`board_id`),
   KEY `FK_ChatRoom_guestId` (`guest_id`),
@@ -180,8 +180,8 @@ CREATE TABLE `message` (
   `chat_room_id` bigint NOT NULL,
   `sender_id` bigint NOT NULL,
   `message_id` int NOT NULL DEFAULT '0',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP(),
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP(),
+  `created_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `updated_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
   PRIMARY KEY (`id`),
   KEY `FK_Message_chatRoomId` (`chat_room_id`),
   KEY `FK_Message_senderId` (`sender_id`),
@@ -198,8 +198,8 @@ CREATE TABLE `evaluation` (
   `is_dislike` boolean NOT NULL DEFAULT FALSE,
   `is_like` boolean NOT NULL DEFAULT FALSE,
   `board_id` bigint NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP(),
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP(),
+  `created_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `updated_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
   PRIMARY KEY (`id`),
   KEY `FK_Evaluation_boardId` (`board_id`),
   CONSTRAINT `FK_Evaluation_boardId` FOREIGN KEY (`board_id`) REFERENCES `board` (`id`)
@@ -211,8 +211,8 @@ CREATE TABLE `hidden_board` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `board_id` bigint NOT NULL,
   `user_id` bigint NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP(),
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP(),
+  `created_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `updated_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
   PRIMARY KEY (`id`),
   KEY `FK_HiddenBoard_boardId` (`board_id`),
   KEY `FK_HiddenBoard_userId` (`user_id`),
@@ -228,8 +228,8 @@ CREATE TABLE `report` (
   `type` int NOT NULL,
   `reported_id` bigint NOT NULL,
   `reporter_id` bigint NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP(),
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP(),
+  `created_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `updated_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
   PRIMARY KEY (`id`),
   KEY `FK_Report_reportedId` (`reported_id`),
   KEY `FK_Report_reporterId` (`reporter_id`),
