@@ -101,33 +101,55 @@ public class ChattingService {
 			);
 		}
 
-		ChatRoom newChatRoom = ChatRoom.buildChatRoom(host, guest, board);
-
-		host.addChatRoomHost(newChatRoom);
-		guest.addChatRoomGuest(newChatRoom);
-		chatRoomRepository.save(newChatRoom);
-
-		Optional<AppliedUser> appliedUser = appliedUserRepository.findByBoardIdAndUserId(board.getId(), guest.getId());
-		if (appliedUser.isEmpty()) {
-			AppliedUser newAppliedUser = AppliedUser.buildAppliedUser(guest, board, AppliedStatus.PENDING);
-
-			guest.addAppliedUser(newAppliedUser);
-			board.addAppliedUser(newAppliedUser);
-			appliedUserRepository.save(newAppliedUser);
+		else if (chatRoom.isPresent() && chatRoom.get().getGuestExited() && !chatRoom.get().getHostExited()) {
+			chatRoom.get().inviteUser(false);
+			chatRoomRepository.save(chatRoom.get());
+			return HttpResponseBody.buildChatRoomResponse(
+					ChatRoomResponsePayload.buildChatRoomResponsePayload(chatRoom.get(), host),
+					HttpStatus.OK.value(),
+					ResponseType.SUCCESS
+			);
 		}
 
-		GuidelineRequestPayload guidelineRequestPayload = GuidelineRequestPayload.builder()
-				.senderId(bot.getId())
-				.chatRoomId(newChatRoom.getId())
-				.build();
+		else if (chatRoom.isPresent() && !chatRoom.get().getGuestExited() && chatRoom.get().getHostExited()) {
+			chatRoom.get().inviteUser(true);
+			chatRoomRepository.save(chatRoom.get());
+			return HttpResponseBody.buildChatRoomResponse(
+					ChatRoomResponsePayload.buildChatRoomResponsePayload(chatRoom.get(), host),
+					HttpStatus.OK.value(),
+					ResponseType.SUCCESS
+			);
+		}
 
-		chattingProducer.sendGuidelineBotMessage(guidelineRequestPayload);
+		else {
+			ChatRoom newChatRoom = ChatRoom.buildChatRoom(host, guest, board);
 
-		return HttpResponseBody.buildChatRoomResponse(
-				ChatRoomResponsePayload.buildChatRoomResponsePayload(newChatRoom, host),
-				HttpStatus.CREATED.value(),
-				ResponseType.SUCCESS
-		);
+			host.addChatRoomHost(newChatRoom);
+			guest.addChatRoomGuest(newChatRoom);
+			chatRoomRepository.save(newChatRoom);
+
+			Optional<AppliedUser> appliedUser = appliedUserRepository.findByBoardIdAndUserId(board.getId(), guest.getId());
+			if (appliedUser.isEmpty()) {
+				AppliedUser newAppliedUser = AppliedUser.buildAppliedUser(guest, board, AppliedStatus.PENDING);
+
+				guest.addAppliedUser(newAppliedUser);
+				board.addAppliedUser(newAppliedUser);
+				appliedUserRepository.save(newAppliedUser);
+			}
+
+			GuidelineRequestPayload guidelineRequestPayload = GuidelineRequestPayload.builder()
+					.senderId(bot.getId())
+					.chatRoomId(newChatRoom.getId())
+					.build();
+
+			chattingProducer.sendGuidelineBotMessage(guidelineRequestPayload);
+
+			return HttpResponseBody.buildChatRoomResponse(
+					ChatRoomResponsePayload.buildChatRoomResponsePayload(newChatRoom, host),
+					HttpStatus.CREATED.value(),
+					ResponseType.SUCCESS
+			);
+		}
 	}
 
 	public HttpResponseBody<?> exitChatRoom(Long userId, Long chatRoomId) throws JsonProcessingException {

@@ -79,6 +79,14 @@ public class ChatRoom extends BaseEntity {
 		setGuestExited(true);
 	}
 
+	public void inviteUser(boolean isHost) {
+		if (isHost) {
+			setHostExited(false);
+			return;
+		}
+		setGuestExited(false);
+	}
+
 	public void inactivateChatRoom() {
 		setStatus(ChatRoomStatus.INACTIVE);
 	}
