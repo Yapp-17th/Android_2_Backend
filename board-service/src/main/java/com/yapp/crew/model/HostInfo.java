@@ -14,6 +14,7 @@ public class HostInfo {
 	private String hostName;
 	private Long likes;
 	private Long dislikes;
+	private String intro;
 
 	public static HostInfo emptyBody() {
 		HostInfo hostInfo = new HostInfo();
@@ -21,6 +22,7 @@ public class HostInfo {
 		hostInfo.hostName = "";
 		hostInfo.likes = -1L;
 		hostInfo.dislikes = -1L;
+		hostInfo.intro = "";
 		return hostInfo;
 	}
 
@@ -30,6 +32,7 @@ public class HostInfo {
 		hostInfo.hostName = user.getNickname();
 		hostInfo.likes = user.calculateLikes(evaluationList);
 		hostInfo.dislikes = user.calculateDislikes(evaluationList);
+		hostInfo.intro = user.getIntro();
 
 		return hostInfo;
 	}
