@@ -81,7 +81,7 @@ public class ApplyListService {
 		return boardRepository.findBoardById(boardId);
 	}
 
-	private Optional<ChatRoom> findChatRoomByBoardIdAndGuestId(Long guestId, Long boardId) {
-		return chatRoomRepository.findByGuestIdAndBoardId(guestId, boardId);
+	private Optional<ChatRoom> findChatRoomByBoardIdAndGuestId(Long boardId, Long guestId) {
+		return chatRoomRepository.findFirstByBoardIdAndGuestIdOrderByIdDesc(boardId, guestId);
 	}
 }
