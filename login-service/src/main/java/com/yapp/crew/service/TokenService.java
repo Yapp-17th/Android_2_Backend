@@ -20,7 +20,7 @@ public class TokenService {
 		String accessToken = jwtUtil.createToken(user);
 
 		HttpHeaders responseHeaders = new HttpHeaders();
-		responseHeaders.set(jwtUtil.getHeader(), accessToken);
+		responseHeaders.set("token", accessToken);
 
 		return responseHeaders;
 	}
