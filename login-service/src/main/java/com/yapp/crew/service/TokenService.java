@@ -21,6 +21,7 @@ public class TokenService {
 
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.set("token", accessToken);
+		responseHeaders.set("userId", String.valueOf(user.getId()));
 
 		return responseHeaders;
 	}
