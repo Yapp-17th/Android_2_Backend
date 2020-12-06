@@ -17,6 +17,7 @@ import com.yapp.crew.domain.type.ResponseType;
 import com.yapp.crew.model.EvaluateListInfo;
 import com.yapp.crew.model.UserReportRequest;
 import com.yapp.crew.network.model.SimpleResponse;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -53,6 +54,7 @@ public class EvaluateService {
 		return evaluations.stream()
 				.filter(evaluation -> findUserById(evaluation.getEvaluatedId()).orElse(null) != null)
 				.map(evaluation -> EvaluateListInfo.build(evaluation, findUserById(evaluation.getEvaluatedId()).get(), board))
+				.sorted(Comparator.comparing(EvaluateListInfo::getIsHost))
 				.collect(Collectors.toList());
 	}
 
