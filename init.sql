@@ -64,6 +64,7 @@ CREATE TABLE `user` (
   `status` varchar(255) NOT NULL DEFAULT 'ACTIVE',
   `username` varchar(100) NOT NULL,
   `address_id` bigint NOT NULL,
+  `suspended_day` int NOT NULL,
   `created_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
   `updated_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
   PRIMARY KEY (`id`),

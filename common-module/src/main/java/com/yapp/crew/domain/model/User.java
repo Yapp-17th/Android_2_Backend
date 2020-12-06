@@ -75,6 +75,10 @@ public class User extends BaseEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Address address;
 
+	@Setter(value = AccessLevel.PRIVATE)
+	@Column(nullable = false)
+	private Integer suspendedDay = 0;
+
 	@JsonManagedReference
 	@Setter(value = AccessLevel.PRIVATE)
 	@OneToMany(mappedBy = "user")
