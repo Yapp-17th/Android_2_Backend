@@ -229,7 +229,8 @@ public class ChattingService {
 				ResponseType.SUCCESS,
 				firstUnreadChatMessageId,
 				boardTitle,
-				appliedUser.getStatus()
+				appliedUser.getStatus(),
+				chatRoom
 		);
 	}
 
