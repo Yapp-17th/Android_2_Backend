@@ -3,6 +3,7 @@ package com.yapp.crew.network;
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.yapp.crew.domain.model.ChatRoom;
 import com.yapp.crew.domain.status.AppliedStatus;
 import com.yapp.crew.domain.type.ResponseType;
 import java.time.LocalDateTime;
@@ -36,10 +37,16 @@ public class HttpResponseBody<T> {
 	private AppliedStatus appliedStatus;
 
 	@JsonInclude(NON_NULL)
+	private Boolean isHostExited;
+
+	@JsonInclude(NON_NULL)
+	private Boolean isGuestExited;
+
+	@JsonInclude(NON_NULL)
 	private T data;
 
 	public static <T> HttpResponseBody<T> buildChatMessagesResponse(T data, Integer status,
-			ResponseType responseType, Long firstUnreadMessageId, String boardTitle, AppliedStatus appliedStatus) {
+			ResponseType responseType, Long firstUnreadMessageId, String boardTitle, AppliedStatus appliedStatus, ChatRoom chatRoom) {
 
 		return (HttpResponseBody<T>) HttpResponseBody.builder()
 				.transactionTime(LocalDateTime.now())
@@ -48,6 +55,8 @@ public class HttpResponseBody<T> {
 				.firstUnreadMessageId(firstUnreadMessageId)
 				.boardTitle(boardTitle)
 				.appliedStatus(appliedStatus)
+				.isHostExited(chatRoom.getHostExited())
+				.isGuestExited(chatRoom.getGuestExited())
 				.data(data)
 				.build();
 	}
