@@ -5,6 +5,7 @@ import com.yapp.crew.domain.errors.AlreadyApprovedException;
 import com.yapp.crew.domain.errors.AlreadyExitedException;
 import com.yapp.crew.domain.errors.BoardNotFoundException;
 import com.yapp.crew.domain.errors.CannotApplyException;
+import com.yapp.crew.domain.errors.CannotApplyToMyBoardException;
 import com.yapp.crew.domain.errors.CannotApproveException;
 import com.yapp.crew.domain.errors.CannotDisapproveException;
 import com.yapp.crew.domain.errors.ChatRoomNotFoundException;
@@ -90,6 +91,10 @@ public class ChattingService {
 
 		Board board = boardRepository.findById(chatRoomRequestPayload.getBoardId())
 				.orElseThrow(() -> new BoardNotFoundException(chatRoomRequestPayload.getBoardId()));
+
+		if (board.getUser().getId().equals(guest.getId())) {
+			throw new CannotApplyToMyBoardException(guest.getId(), board.getId());
+		}
 
 		Optional<ChatRoom> chatRoom = chatRoomRepository.findByGuestIdAndBoardId(guest.getId(), board.getId());
 

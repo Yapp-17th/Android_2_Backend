@@ -29,6 +29,7 @@ public enum ResponseType {
 	CANNOT_APPLY("신청을 할 수 없는 게시글입니다"),
 	CANNOT_APPROVE("승인을 할 수 없는 게시글입니다"),
 	CANNOT_DISAPPROVE("거절을 할 수 없는 게시글입니다"),
+	CANNOT_APPLY_TO_MY_BOARD("자기 자신의 게시글에는 신청이 불가능합니다"),
 	GUEST_APPLY_NOT_FOUND("게스트가 아직 신청하지 않았습니다"),
 	NO_SPACE_TO_APPLY("더 이상 승인을 해줄 자리가 없습니다"),
 	IS_NOT_APPROVED("이 사용자는 승인 상태가 아닙니다"),
