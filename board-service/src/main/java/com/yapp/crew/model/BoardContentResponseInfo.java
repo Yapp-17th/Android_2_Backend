@@ -1,6 +1,8 @@
 package com.yapp.crew.model;
 
+import com.yapp.crew.domain.model.Address;
 import com.yapp.crew.domain.model.Board;
+import com.yapp.crew.domain.model.Category;
 import com.yapp.crew.domain.model.Evaluation;
 import com.yapp.crew.domain.model.Tag;
 import com.yapp.crew.domain.type.UserTag;
@@ -22,15 +24,15 @@ public class BoardContentResponseInfo {
 	private String content;
 	private String place;
 	private BoardStatusInfo groupStatus;
-	private String exercise;
-	private String city;
+	private CategoryCode exercise;
+	private CityCode city;
 	private Integer recruitNumber;
 	private Integer recruitedNumber;
 	private Boolean isBookMark;
 	private HostInfo host;
 	private String boardTime;
 	private Date startsAt;
-	private String userTag;
+	private TagCode userTag;
 
 	public static BoardContentResponseInfoBuilder getBuilder() {
 		return new BoardContentResponseInfoBuilder();
@@ -43,15 +45,15 @@ public class BoardContentResponseInfo {
 		private String content = "";
 		private String place = "";
 		private BoardStatusInfo groupStatus = BoardStatusInfo.emptyBody();
-		private String exercise = "";
-		private String city = "";
+		private CategoryCode exercise = CategoryCode.build(-1L, "");
+		private CityCode city = CityCode.build(-1L, "");
 		private Integer recruitNumber = -1;
 		private Integer recruitedNumber = -1;
 		private Boolean isBookMark = false;
 		private HostInfo host = HostInfo.emptyBody();
 		private String boardTime = "";
 		private Date startsAt = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
-		private String userTag = "";
+		private TagCode userTag = TagCode.build(-1L, "");
 
 		public BoardContentResponseInfoBuilder withBoardId(Long boardId) {
 			this.boardId = boardId;
@@ -78,13 +80,13 @@ public class BoardContentResponseInfo {
 			return this;
 		}
 
-		public BoardContentResponseInfoBuilder withExcercise(String excercise) {
-			this.exercise = excercise;
+		public BoardContentResponseInfoBuilder withExcercise(Category category) {
+			this.exercise = CategoryCode.build(category);
 			return this;
 		}
 
-		public BoardContentResponseInfoBuilder withCity(String city) {
-			this.city = city;
+		public BoardContentResponseInfoBuilder withCity(Address address) {
+			this.city = CityCode.build(address);
 			return this;
 		}
 
@@ -118,8 +120,8 @@ public class BoardContentResponseInfo {
 			return this;
 		}
 
-		public BoardContentResponseInfoBuilder withUserTag(UserTag userTag) {
-			this.userTag = userTag.getName();
+		public BoardContentResponseInfoBuilder withUserTag(Tag tag) {
+			this.userTag = TagCode.build(tag);
 			return this;
 		}
 
@@ -150,15 +152,15 @@ public class BoardContentResponseInfo {
 				.withContent(board.getContent())
 				.withPlace(board.getPlace())
 				.withGroupStatus(BoardStatusInfo.build(board.getStatus()))
-				.withExcercise(board.getCategory().getExercise().getName())
-				.withCity(board.getAddress().getCity().getName())
+				.withExcercise(board.getCategory())
+				.withCity(board.getAddress())
 				.withRecruitNumber(board.getRecruitCount())
 				.withRecruitedNumber(board.getApprovedCount())
 				.withIsBookMark(board.getBookMarkUser().stream().map(bookmark -> bookmark.getUser().getId()).anyMatch(id -> id.equals(userId)))
 				.withHost(HostInfo.build(board.getUser(), evaluationList))
 				.withBoardTime(board.showBoardTimeComparedToNow())
 				.withStartsAt(board.getStartsAt())
-				.withUserTag(board.getTag().getName())
+				.withUserTag(board.getTag())
 				.build();
 	}
 }
