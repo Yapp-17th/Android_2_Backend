@@ -16,21 +16,21 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
-	private final Auth auth;
-
-	private final UserRepository userRepository;
-
-	@Autowired
-	public WebSocketConfig(Auth auth, UserRepository userRepository) {
-		this.auth = auth;
-		this.userRepository = userRepository;
-	}
+//	private final Auth auth;
+//
+//	private final UserRepository userRepository;
+//
+//	@Autowired
+//	public WebSocketConfig(Auth auth, UserRepository userRepository) {
+//		this.auth = auth;
+//		this.userRepository = userRepository;
+//	}
 
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
 		registry
 				.addEndpoint("/ws/chat")
-				.addInterceptors(new CustomHandshakeInterceptor(auth, userRepository))
+//				.addInterceptors(new CustomHandshakeInterceptor(auth, userRepository))
 				.setAllowedOrigins("*")
 				.withSockJS();
 	}
