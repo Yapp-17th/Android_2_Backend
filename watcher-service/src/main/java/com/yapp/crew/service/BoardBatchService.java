@@ -43,6 +43,7 @@ public class BoardBatchService {
 				.filter(appliedUser -> appliedUser.getStatus() == AppliedStatus.APPROVED)
 				.map(appliedUser -> appliedUser.getUser().getId())
 				.collect(Collectors.toList());
+		userIds.add(board.getUser().getId());
 		log.info("Board approved user ids -> {}", userIds);
 
 		for (int i = 0; i < userIds.size(); i++) {
