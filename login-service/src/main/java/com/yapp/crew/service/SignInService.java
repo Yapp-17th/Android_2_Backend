@@ -1,5 +1,6 @@
 package com.yapp.crew.service;
 
+import com.yapp.crew.domain.errors.ForbiddenUserSignUpException;
 import com.yapp.crew.domain.errors.InactiveUserException;
 import com.yapp.crew.domain.errors.SuspendedUserException;
 import com.yapp.crew.domain.errors.UserNotFoundException;
@@ -36,6 +37,8 @@ public class SignInService {
 
 		} else if (existingUser.getStatus() == UserStatus.INACTIVE) {
 			throw new InactiveUserException(existingUser.getId());
+		} else if(existingUser.getStatus() == UserStatus.FORBIDDEN){
+			throw new ForbiddenUserSignUpException(existingUser.getId());
 		}
 
 		HttpHeaders httpHeaders = tokenService.setToken(existingUser);

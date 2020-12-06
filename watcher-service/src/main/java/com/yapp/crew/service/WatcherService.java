@@ -25,15 +25,19 @@ public class WatcherService {
 
 	private final BoardBatchService boardBatchService;
 
+	private UserAuthenticationService userAuthenticationService;
+
 	@Autowired
 	public WatcherService(
 			WatcherProducer watcherProducer,
 			BoardRepository boardRepository,
-			BoardBatchService boardBatchService
+			BoardBatchService boardBatchService,
+			UserAuthenticationService userAuthenticationService
 	) {
 		this.watcherProducer = watcherProducer;
 		this.boardRepository = boardRepository;
 		this.boardBatchService = boardBatchService;
+		this.userAuthenticationService = userAuthenticationService;
 	}
 
 	@Transactional
@@ -63,5 +67,12 @@ public class WatcherService {
 
 			boardBatchService.updateBoardFinishedAll(boards);
 		}
+	}
+
+	@Transactional
+	@Scheduled(cron = "0 0 0 * * *")
+	public void userAuthenticationWatcher() {
+		log.info("User Authentication Watcher start");
+		userAuthenticationService.countUserSuspendedDays();
 	}
 }

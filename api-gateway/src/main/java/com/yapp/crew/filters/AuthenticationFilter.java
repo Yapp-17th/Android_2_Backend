@@ -80,18 +80,16 @@ public class AuthenticationFilter extends ZuulFilter {
 			checkUserStatus(user.getStatus(), userId);
 
 			ctx.addZuulRequestHeader("userId", userId.toString());
-		}
-		catch (Exception ex) {
+		} catch (Exception ex) {
 			exceptionHandler.handleException(ex);
 		}
 		return null;
 	}
 
 	private void checkUserStatus(UserStatus userStatus, Long userId) throws InactiveUserException, SuspendedUserException {
-		if (userStatus.equals(UserStatus.INACTIVE)) {
+		if (userStatus == UserStatus.INACTIVE) {
 			throw new InactiveUserException("[Zuul Proxy Exception] Inactive user has accessed with id: " + userId);
-		}
-		else if (userStatus.equals(UserStatus.SUSPENDED)) {
+		} else if (userStatus == UserStatus.SUSPENDED || userStatus == UserStatus.FORBIDDEN) {
 			throw new SuspendedUserException("[Zuul Proxy Exception] Suspended user has accessed with id: " + userId);
 		}
 	}
