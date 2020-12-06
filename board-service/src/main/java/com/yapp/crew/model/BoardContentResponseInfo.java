@@ -1,14 +1,13 @@
 package com.yapp.crew.model;
 
+import static java.time.LocalDateTime.now;
+
 import com.yapp.crew.domain.model.Address;
 import com.yapp.crew.domain.model.Board;
 import com.yapp.crew.domain.model.Category;
 import com.yapp.crew.domain.model.Evaluation;
 import com.yapp.crew.domain.model.Tag;
-import com.yapp.crew.domain.type.UserTag;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
 import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,7 +30,7 @@ public class BoardContentResponseInfo {
 	private Boolean isBookMark;
 	private HostInfo host;
 	private String boardTime;
-	private Date startsAt;
+	private LocalDateTime startsAt;
 	private TagCode userTag;
 
 	public static BoardContentResponseInfoBuilder getBuilder() {
@@ -52,7 +51,7 @@ public class BoardContentResponseInfo {
 		private Boolean isBookMark = false;
 		private HostInfo host = HostInfo.emptyBody();
 		private String boardTime = "";
-		private Date startsAt = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
+		private LocalDateTime startsAt = now();
 		private TagCode userTag = TagCode.build(-1L, "");
 
 		public BoardContentResponseInfoBuilder withBoardId(Long boardId) {
@@ -116,7 +115,7 @@ public class BoardContentResponseInfo {
 		}
 
 		public BoardContentResponseInfoBuilder withStartsAt(LocalDateTime startsAt) {
-			this.startsAt = Date.from(startsAt.atZone(ZoneId.systemDefault()).toInstant());
+			this.startsAt = startsAt;
 			return this;
 		}
 
