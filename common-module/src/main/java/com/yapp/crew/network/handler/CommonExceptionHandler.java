@@ -23,11 +23,13 @@ import com.yapp.crew.domain.errors.NoSpaceToApplyException;
 import com.yapp.crew.domain.errors.ReportCodeNotFoundException;
 import com.yapp.crew.domain.errors.SuspendedUserException;
 import com.yapp.crew.domain.errors.TagNotFoundException;
+import com.yapp.crew.domain.errors.TokenRequiredException;
 import com.yapp.crew.domain.errors.UnAuthorizedEventException;
 import com.yapp.crew.domain.errors.UserDuplicateFieldException;
 import com.yapp.crew.domain.errors.UserNotFoundException;
 import com.yapp.crew.domain.errors.WrongGuestException;
 import com.yapp.crew.domain.errors.WrongHostException;
+import com.yapp.crew.domain.errors.WrongTokenPrefixException;
 import com.yapp.crew.domain.type.ResponseType;
 import com.yapp.crew.network.model.SimpleResponse;
 import java.sql.SQLException;
@@ -296,6 +298,20 @@ public class CommonExceptionHandler {
 	public ResponseEntity<?> handleReportCodeNotFoundException(ReportCodeNotFoundException ex) {
 		log.error(ex.getMessage());
 		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.NOT_FOUND, ResponseType.REPORT_CODE_NOT_FOUND);
+		return ResponseEntity.ok().body(responseBody);
+	}
+
+	@ExceptionHandler(value = WrongTokenPrefixException.class)
+	public ResponseEntity<?> handleWrongTokenPrefixException(WrongTokenPrefixException ex) {
+		log.error(ex.getMessage());
+		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.FORBIDDEN, ResponseType.AUTHORIZATION_HEADER_REQUIRED);
+		return ResponseEntity.ok().body(responseBody);
+	}
+
+	@ExceptionHandler(value = TokenRequiredException.class)
+	public ResponseEntity<?> handleTokenRequiredException(TokenRequiredException ex) {
+		log.error(ex.getMessage());
+		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.FORBIDDEN, ResponseType.TOKEN_REQUIRED);
 		return ResponseEntity.ok().body(responseBody);
 	}
 }
