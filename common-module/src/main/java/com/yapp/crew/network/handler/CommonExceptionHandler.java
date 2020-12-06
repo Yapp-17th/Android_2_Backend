@@ -7,6 +7,7 @@ import com.yapp.crew.domain.errors.AlreadyExitedException;
 import com.yapp.crew.domain.errors.BoardNotFoundException;
 import com.yapp.crew.domain.errors.BoardTimeInvalidException;
 import com.yapp.crew.domain.errors.CannotApplyException;
+import com.yapp.crew.domain.errors.CannotApplyToMyBoardException;
 import com.yapp.crew.domain.errors.CannotApproveException;
 import com.yapp.crew.domain.errors.CannotDisapproveException;
 import com.yapp.crew.domain.errors.CategoryNotFoundException;
@@ -218,6 +219,13 @@ public class CommonExceptionHandler {
 	public ResponseEntity<?> handleCannotDisapproveException(CannotDisapproveException ex) {
 		log.error(ex.getMessage());
 		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.BAD_REQUEST, ResponseType.CANNOT_DISAPPROVE);
+		return ResponseEntity.ok().body(responseBody);
+	}
+
+	@ExceptionHandler(value = CannotApplyToMyBoardException.class)
+	public ResponseEntity<?> handleCannotApplyToMyBoardException(CannotApplyToMyBoardException ex) {
+		log.error(ex.getMessage());
+		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.BAD_REQUEST, ResponseType.CANNOT_APPLY_TO_MY_BOARD);
 		return ResponseEntity.ok().body(responseBody);
 	}
 
