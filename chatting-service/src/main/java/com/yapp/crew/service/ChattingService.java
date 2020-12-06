@@ -218,9 +218,11 @@ public class ChattingService {
 
 		boolean isHost = chatRoom.isUserChatRoomHost(userId);
 		Long firstUnreadChatMessageId = chatRoom.findFirstUnreadChatMessage(isHost);
-		List<Message> unreadMessages = messageRepository.findAllByChatRoomIdAndMessageIdGreaterThan(chatRoomId, firstUnreadChatMessageId - 1);
-		unreadMessages.forEach(message -> message.readMessage(isHost));
-		messageRepository.saveAll(unreadMessages);
+		if (firstUnreadChatMessageId != -1L) {
+			List<Message> unreadMessages = messageRepository.findAllByChatRoomIdAndMessageIdGreaterThan(chatRoomId, firstUnreadChatMessageId - 1);
+			unreadMessages.forEach(message -> message.readMessage(isHost));
+			messageRepository.saveAll(unreadMessages);
+		}
 
 		String boardTitle = chatRoom.getBoard().getTitle();
 
