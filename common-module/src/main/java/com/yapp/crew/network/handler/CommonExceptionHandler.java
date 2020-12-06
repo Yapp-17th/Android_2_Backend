@@ -13,6 +13,7 @@ import com.yapp.crew.domain.errors.CannotDisapproveException;
 import com.yapp.crew.domain.errors.CategoryNotFoundException;
 import com.yapp.crew.domain.errors.ChatRoomNotFoundException;
 import com.yapp.crew.domain.errors.EvaluateImpossibleException;
+import com.yapp.crew.domain.errors.ForbiddenUserSignUpException;
 import com.yapp.crew.domain.errors.GuestApplyNotFoundException;
 import com.yapp.crew.domain.errors.InactiveUserException;
 import com.yapp.crew.domain.errors.InternalServerErrorException;
@@ -107,6 +108,13 @@ public class CommonExceptionHandler {
 	public ResponseEntity<?> handleInactiveUserException(InactiveUserException ex) {
 		log.error(ex.getMessage());
 		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.FORBIDDEN, ResponseType.INACTIVE_USER_FAIL);
+		return ResponseEntity.ok().body(responseBody);
+	}
+
+	@ExceptionHandler(value = ForbiddenUserSignUpException.class)
+	public ResponseEntity<?> handleForbiddenUserException(ForbiddenUserSignUpException ex) {
+		log.error(ex.getMessage());
+		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.FORBIDDEN, ResponseType.FORBIDDEN_SIGN_UP);
 		return ResponseEntity.ok().body(responseBody);
 	}
 
