@@ -75,6 +75,10 @@ public class User extends BaseEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Address address;
 
+	@Setter(value = AccessLevel.PRIVATE)
+	@Column(name = "suspended_day", nullable = false)
+	private Integer suspendedDay = 0;
+
 	@JsonManagedReference
 	@Setter(value = AccessLevel.PRIVATE)
 	@OneToMany(mappedBy = "user")
@@ -183,6 +187,18 @@ public class User extends BaseEntity {
 		this.setStatus(UserStatus.SUSPENDED);
 	}
 
+	public void increaseSuspendedDays() {
+		this.suspendedDay += 1;
+	}
+
+	public void resetSuspendedDays() {
+		this.suspendedDay = 0;
+	}
+
+	public void setUserStatusForbidden() {
+		this.setStatus(UserStatus.FORBIDDEN);
+	}
+
 	public static UserBuilder getBuilder() {
 		return new UserBuilder();
 	}
@@ -244,7 +260,7 @@ public class User extends BaseEntity {
 			return user;
 		}
 
-		public User build(User user){
+		public User build(User user) {
 			user.setUsername(username);
 			user.setNickname(nickname);
 			user.setEmail(email);
