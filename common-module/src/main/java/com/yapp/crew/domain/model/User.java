@@ -76,7 +76,7 @@ public class User extends BaseEntity {
 	private Address address;
 
 	@Setter(value = AccessLevel.PRIVATE)
-	@Column(nullable = false)
+	@Column(name = "suspended_day", nullable = false)
 	private Integer suspendedDay = 0;
 
 	@JsonManagedReference

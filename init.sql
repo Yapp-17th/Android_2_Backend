@@ -45,4 +45,3 @@ insert into tag(id, name, created_at, updated_at) values(1, 'TIGHT_USER', now(),
 insert into tag(id, name, created_at, updated_at) values(2, 'FUN_USER', now(), now());
 
 insert into user(id, access_token, oauth_id, username, nickname, email, intro, status, address_id, created_at, updated_at) values(-9, "explanet_bot", "explanet_bot", "운동플래닛", "운동플래닛", "ex_planet@gmail.com", "운동플래닛", "ACTIVE", 1, now(), now());
-insert into user(id, access_token, oauth_id, username, nickname, email, intro, status, address_id, created_at, updated_at) values(-10, "forbidden_user", "forbidden_user", "알수없음", "알수없음", "forbidden_user@gmail.com", "알수없음", "ACTIVE", 1, now(), now());
