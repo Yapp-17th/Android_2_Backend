@@ -1,7 +1,6 @@
 package com.yapp.crew.domain.condition;
 
 import com.yapp.crew.domain.type.SortingType;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
