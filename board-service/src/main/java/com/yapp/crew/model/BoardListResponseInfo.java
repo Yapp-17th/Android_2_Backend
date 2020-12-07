@@ -2,6 +2,7 @@ package com.yapp.crew.model;
 
 import com.yapp.crew.domain.model.Board;
 import com.yapp.crew.domain.model.User;
+import com.yapp.crew.domain.status.UserStatus;
 import java.util.function.Predicate;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,9 +30,10 @@ public class BoardListResponseInfo {
 	}
 
 	public static class BoardListResponseInfoBuilder {
+
 		private Long boardId = -1L;
 		private Long hostId = -1L;
-		private String hostName = "";
+		private String hostName = "(알수없음)";
 		private String title = "";
 		private BoardStatusInfo groupStatus = BoardStatusInfo.emptyBody();
 		private String exercise = "";
@@ -114,10 +116,9 @@ public class BoardListResponseInfo {
 	}
 
 	public static BoardListResponseInfo build(Board board, User user) {
-		return BoardListResponseInfo.getBuilder()
+		BoardListResponseInfoBuilder boardListResponseInfoBuilder = BoardListResponseInfo.getBuilder()
 				.withBoardId(board.getId())
 				.withHostId(board.getUser().getId())
-				.withHostName(board.getUser().getNickname())
 				.withTitle(board.getTitle())
 				.withGroupStatus(BoardStatusInfo.build(board.getStatus()))
 				.withExercise(board.getCategory().getExercise().getName())
@@ -125,7 +126,14 @@ public class BoardListResponseInfo {
 				.withRecruitNumber(board.getRecruitCount())
 				.withRecruitedNumber(board.getApprovedCount())
 				.withIsBookMark(user.getUserBookmark().stream().map(bookMark -> bookMark.getBoard().getId()).anyMatch(Predicate.isEqual(board.getId())))
-				.withBoardTime(board.showBoardTimeComparedToNow())
-				.build();
+				.withBoardTime(board.showBoardTimeComparedToNow());
+
+		if (user.getStatus() == UserStatus.ACTIVE || user.getStatus() == UserStatus.SUSPENDED) {
+			return boardListResponseInfoBuilder
+					.withHostName(board.getUser().getNickname())
+					.build();
+		}
+
+		return boardListResponseInfoBuilder.build();
 	}
 }

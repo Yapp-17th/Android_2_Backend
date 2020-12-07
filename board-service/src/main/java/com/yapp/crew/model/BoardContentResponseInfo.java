@@ -46,13 +46,13 @@ public class BoardContentResponseInfo {
 		private BoardStatusInfo groupStatus = BoardStatusInfo.emptyBody();
 		private CategoryCode exercise = CategoryCode.build(-1L, "");
 		private CityCode city = CityCode.build(-1L, "");
-		private Integer recruitNumber = -1;
-		private Integer recruitedNumber = -1;
+		private TagCode userTag = TagCode.build(-1L, "");
+		private Integer recruitNumber = 0;
+		private Integer recruitedNumber = 0;
 		private Boolean isBookMark = false;
 		private HostInfo host = HostInfo.emptyBody();
 		private String boardTime = "";
 		private LocalDateTime startsAt = now();
-		private TagCode userTag = TagCode.build(-1L, "");
 
 		public BoardContentResponseInfoBuilder withBoardId(Long boardId) {
 			this.boardId = boardId;
