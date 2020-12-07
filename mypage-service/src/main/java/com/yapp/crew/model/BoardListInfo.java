@@ -32,7 +32,7 @@ public class BoardListInfo {
 		boardListInfo.recruitedNumber = board.getApprovedCount();
 		boardListInfo.time = board.showBoardTimeComparedToNow();
 
-		if (board.getUser().getStatus() == UserStatus.ACTIVE || board.getUser().getStatus() == UserStatus.SUSPENDED) {
+		if (board.getUser().isValidUser()) {
 			boardListInfo.hostId = board.getUser().getId();
 			boardListInfo.hostName = board.getUser().getNickname();
 		}

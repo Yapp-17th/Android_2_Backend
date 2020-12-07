@@ -22,7 +22,7 @@ public class HistoryListInfo {
 		historyListInfo.isContinue = board.getStatus() != BoardStatus.RECRUITING;
 		historyListInfo.boardInfo = BoardListInfo.build(board);
 
-		if (user.getStatus() == UserStatus.ACTIVE || user.getStatus() == UserStatus.SUSPENDED) {
+		if (user.isValidUser()) {
 			historyListInfo.nickName = user.getNickname();
 		}
 

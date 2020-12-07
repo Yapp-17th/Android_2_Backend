@@ -29,7 +29,7 @@ public class HostInfo {
 
 	public static HostInfo build(User user, List<Evaluation> evaluationList) {
 
-		if (user.getStatus() == UserStatus.ACTIVE || user.getStatus() == UserStatus.SUSPENDED) {
+		if (user.isValidUser()) {
 			HostInfo hostInfo = new HostInfo();
 			hostInfo.hostId = user.getId();
 			hostInfo.hostName = user.getNickname();

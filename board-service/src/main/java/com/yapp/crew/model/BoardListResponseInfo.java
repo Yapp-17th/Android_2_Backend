@@ -128,7 +128,7 @@ public class BoardListResponseInfo {
 				.withIsBookMark(user.getUserBookmark().stream().map(bookMark -> bookMark.getBoard().getId()).anyMatch(Predicate.isEqual(board.getId())))
 				.withBoardTime(board.showBoardTimeComparedToNow());
 
-		if (user.getStatus() == UserStatus.ACTIVE || user.getStatus() == UserStatus.SUSPENDED) {
+		if (user.isValidUser()) {
 			return boardListResponseInfoBuilder
 					.withHostName(board.getUser().getNickname())
 					.build();

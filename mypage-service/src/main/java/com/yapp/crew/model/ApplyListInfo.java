@@ -97,7 +97,7 @@ public class ApplyListInfo {
 				.withChattingRoomId(chattingRoomId)
 				.withBoardId(board.getId());
 
-		if (guest.getStatus() == UserStatus.ACTIVE || guest.getStatus() == UserStatus.SUSPENDED) {
+		if (guest.isValidUser()) {
 			return applyListInfoBuilder
 					.withGuestId(guest.getId())
 					.withGuestName(guest.getNickname())

@@ -23,7 +23,7 @@ public class UserInfo {
 	public static UserInfo build(User user) {
 		UserInfo userInfo = new UserInfo();
 
-		if (user.getStatus() == UserStatus.ACTIVE || user.getStatus() == UserStatus.SUSPENDED) {
+		if (user.isValidUser()) {
 			userInfo.userId = user.getId();
 			userInfo.userName = user.getUsername();
 			userInfo.nickName = user.getNickname();

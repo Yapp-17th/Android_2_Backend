@@ -23,7 +23,7 @@ public class EvaluateListInfo {
 		evaluateListInfo.isLike = evaluation.getIsLike();
 		evaluateListInfo.isDislike = evaluation.getIsDislike();
 
-		if (user.getStatus() == UserStatus.ACTIVE || user.getStatus() == UserStatus.SUSPENDED) {
+		if (user.isValidUser()) {
 			evaluateListInfo.userId = user.getId();
 			evaluateListInfo.nickName = user.getNickname();
 		}

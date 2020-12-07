@@ -98,7 +98,7 @@ public class UserProfileInfo {
 	}
 
 	public static UserProfileInfo build(User user, boolean isMine, List<Evaluation> evaluations) {
-		if (user.getStatus() == UserStatus.ACTIVE || user.getStatus() == UserStatus.SUSPENDED) {
+		if (user.isValidUser()) {
 			return UserProfileInfo.getBuilder()
 					.withUserId(user.getId())
 					.withIsMine(isMine)
