@@ -2,6 +2,7 @@ package com.yapp.crew.model;
 
 import com.yapp.crew.domain.model.Evaluation;
 import com.yapp.crew.domain.model.User;
+import com.yapp.crew.domain.status.UserStatus;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,11 +33,12 @@ public class UserProfileInfo {
 	}
 
 	public static class UserProfileInfoBuilder {
+
 		private Long userId = -1L;
 		private Boolean isMine = false;
-		private String nickName = "";
-		private Integer like = -1;
-		private Integer dislike = -1;
+		private String nickName = "(알수없음)";
+		private Integer like = 0;
+		private Integer dislike = 0;
 		private String intro = "";
 		private String city = "";
 		private List<String> category = Collections.emptyList();
@@ -96,15 +98,18 @@ public class UserProfileInfo {
 	}
 
 	public static UserProfileInfo build(User user, boolean isMine, List<Evaluation> evaluations) {
-		return UserProfileInfo.getBuilder()
-				.withUserId(user.getId())
-				.withIsMine(isMine)
-				.withNickName(user.getNickname())
-				.withLike(Math.toIntExact(user.calculateLikes(evaluations)))
-				.withDislike(Math.toIntExact(user.calculateDislikes(evaluations)))
-				.withIntro(user.getIntro())
-				.withCity(user.getAddress().getCity().getName())
-				.withCategory(user.getUserExercise().stream().map(exercise -> exercise.getCategory().getExercise().getName()).collect(Collectors.toList()))
-				.build();
+		if (user.isValidUser()) {
+			return UserProfileInfo.getBuilder()
+					.withUserId(user.getId())
+					.withIsMine(isMine)
+					.withNickName(user.getNickname())
+					.withLike(Math.toIntExact(user.calculateLikes(evaluations)))
+					.withDislike(Math.toIntExact(user.calculateDislikes(evaluations)))
+					.withIntro(user.getIntro())
+					.withCity(user.getAddress().getCity().getName())
+					.withCategory(user.getUserExercise().stream().map(exercise -> exercise.getCategory().getExercise().getName()).collect(Collectors.toList()))
+					.build();
+		}
+		return UserProfileInfo.getBuilder().build();
 	}
 }

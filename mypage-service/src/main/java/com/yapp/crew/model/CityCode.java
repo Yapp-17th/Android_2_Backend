@@ -8,8 +8,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CityCode {
 
-	private Long id;
-	private String name;
+	private Long id = -1L;
+	private String name = "";
+
+	public static CityCode build(Long id, String name) {
+		CityCode cityCode = new CityCode();
+		return cityCode;
+	}
 
 	public static CityCode build(Address address) {
 		CityCode cityCode = new CityCode();

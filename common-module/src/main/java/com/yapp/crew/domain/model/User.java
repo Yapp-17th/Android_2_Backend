@@ -199,6 +199,10 @@ public class User extends BaseEntity {
 		this.setStatus(UserStatus.FORBIDDEN);
 	}
 
+	public boolean isValidUser() {
+		return this.getStatus() == UserStatus.ACTIVE || this.getStatus() == UserStatus.SUSPENDED;
+	}
+
 	public static UserBuilder getBuilder() {
 		return new UserBuilder();
 	}
