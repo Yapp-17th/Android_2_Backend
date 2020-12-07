@@ -18,6 +18,8 @@ services:
       KAFKA_LOG_RETENTION_CHECK_INTERVAL_MS: 5000
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
     depends_on:
       - zookeeper
 
@@ -28,6 +30,8 @@ services:
       - "3306:3306"
     volumes:
       - ./data/mysql:/var/lib/mysql:rw
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
     environment:
       - MYSQL_ROOT_PASSWORD=QPVYXdeVWbFP4YK6sLrd
       - MYSQL_DATABASE=explanet_prod
