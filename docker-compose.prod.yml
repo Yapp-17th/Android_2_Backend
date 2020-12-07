@@ -57,6 +57,9 @@ services:
 #      interval: 30s
 #      timeout: 10s
 #      retries: 3
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
     depends_on:
       - mysql
 
@@ -74,6 +77,9 @@ services:
 #      interval: 30s
 #      timeout: 10s
 #      retries: 3
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
     depends_on:
       - mysql
       - kafka
@@ -93,6 +99,9 @@ services:
 #      interval: 30s
 #      timeout: 10s
 #      retries: 3
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
     depends_on:
       - mysql
       - kafka
@@ -112,6 +121,9 @@ services:
 #      interval: 30s
 #      timeout: 10s
 #      retries: 3
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
     depends_on:
       - mysql
       - api-gateway
@@ -130,6 +142,9 @@ services:
 #      interval: 30s
 #      timeout: 10s
 #      retries: 3
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
     depends_on:
       - mysql
       - kafka
@@ -149,6 +164,9 @@ services:
 #      interval: 30s
 #      timeout: 10s
 #      retries: 3
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
     depends_on:
       - mysql
       - api-gateway
@@ -167,6 +185,9 @@ services:
 #      interval: 30s
 #      timeout: 10s
 #      retries: 3
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
     depends_on:
       - mysql
       - api-gateway
@@ -185,6 +206,9 @@ services:
 #      interval: 30s
 #      timeout: 10s
 #      retries: 3
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
     depends_on:
       - mysql
       - kafka
