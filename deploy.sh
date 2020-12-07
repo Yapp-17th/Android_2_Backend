@@ -5,7 +5,7 @@ then
   git pull
   docker-compose down
   docker image prune -f
-  ./gradlew clean build
+  ./gradlew clean bootJar
   docker-compose build --no-cache
   docker-compose up -d
 
@@ -14,7 +14,7 @@ then
   git pull
   docker-compose -f docker-compose.prod.yml down
   docker image prune -f
-  ./gradlew clean build
+  ./gradlew clean bootJar
   docker-compose -f docker-compose.prod.yml build --no-cache
   docker-compose -f docker-compose.prod.yml up -d
 

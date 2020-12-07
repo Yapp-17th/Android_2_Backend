@@ -2,9 +2,7 @@ package com.yapp.crew.utils;
 
 import com.yapp.crew.domain.type.CityType;
 import com.yapp.crew.domain.type.ExerciseType;
-import com.yapp.crew.domain.type.ReportType;
 import com.yapp.crew.domain.type.UserTag;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
