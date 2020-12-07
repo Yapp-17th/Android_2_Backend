@@ -53,7 +53,8 @@ public enum ResponseType {
 	BOARD_TIME_INVALID("모임 시간이 올바르지 않습니다."),
 	UNAUTHORIZED_FAIL("요청이 올바르지 않습니다."),
 	EVALUATE_IMPOSSIBLE("아직 평가를 진행할 수 없습니다."),
-	REPORT_CODE_NOT_FOUND("보낸 신고 코드가 올바르지 않습니다.");
+	REPORT_CODE_NOT_FOUND("보낸 신고 코드가 올바르지 않습니다."),
+	FORBIDDEN_SIGN_UP("신고 누적으로 재가입이 불가능한 계정입니다.");
 
 	private final String message;
 
