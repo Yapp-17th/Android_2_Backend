@@ -44,7 +44,7 @@ public class BoardController {
 	@GetMapping(path = "/v1/board", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> getBoardList(
 			@RequestHeader(value = "userId") Long userId,
-			@PageableDefault(size = 20) Pageable pageable,
+			@PageableDefault(size = 200) Pageable pageable,
 			@RequestParam(required = false) String sorting,
 			@RequestParam List<Long> category,
 			@RequestParam List<Long> address
