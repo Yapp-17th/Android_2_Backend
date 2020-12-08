@@ -1,5 +1,6 @@
 package com.yapp.crew.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.yapp.crew.domain.model.Board;
 import com.yapp.crew.domain.model.User;
 import java.util.function.Predicate;
@@ -13,15 +14,26 @@ import lombok.Setter;
 public class BoardListResponseInfo {
 
 	private long boardId;
+
 	private long hostId;
+
 	private String hostName;
+
 	private String title;
+
 	private BoardStatusInfo groupStatus;
+
 	private String exercise;
+
 	private String city;
+
+	@JsonProperty(value = "isBookMark")
 	private boolean isBookMark;
+
 	private String boardTime;
+
 	private int recruitNumber;
+
 	private int recruitedNumber;
 
 	public static BoardListResponseInfoBuilder getBuilder() {

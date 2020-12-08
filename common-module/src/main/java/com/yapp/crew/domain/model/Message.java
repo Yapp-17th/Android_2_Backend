@@ -25,7 +25,7 @@ public class Message extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
+	private Long id;
 
 	@Setter(value = AccessLevel.PRIVATE)
 	@Column(nullable = false, length = 500)

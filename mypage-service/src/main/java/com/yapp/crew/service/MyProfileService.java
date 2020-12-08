@@ -126,8 +126,9 @@ public class MyProfileService {
 		return boardRepository.findAll().stream()
 				.filter(
 						board ->
-								(board.getUser().getId() == user.getId()) ||
-										(board.getAppliedUsers().stream().anyMatch(appliedUser -> (appliedUser.getUser().getId() == user.getId()) && (appliedUser.getStatus() == AppliedStatus.APPROVED)))
+								(board.getUser().getId().equals(user.getId())) ||
+										(board.getAppliedUsers().stream().anyMatch(appliedUser -> (appliedUser.getUser()
+												.getId().equals(user.getId())) && (appliedUser.getStatus() == AppliedStatus.APPROVED)))
 				)
 				.collect(Collectors.toList());
 	}

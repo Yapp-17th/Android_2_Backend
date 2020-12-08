@@ -23,7 +23,7 @@ public class AppliedUser extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
+	private Long id;
 
 	@Setter(value = AccessLevel.PRIVATE)
 	@ManyToOne(fetch = FetchType.LAZY)

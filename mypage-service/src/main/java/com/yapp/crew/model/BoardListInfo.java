@@ -1,5 +1,6 @@
 package com.yapp.crew.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.yapp.crew.domain.model.Board;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,15 +10,26 @@ import lombok.NoArgsConstructor;
 public class BoardListInfo {
 
 	private long boardId = -1L;
+
 	private long hostId = -1L;
+
 	private String hostName = "(알수없음)";
+
 	private String title = "";
+
 	private String groupStatus = "";
+
 	private String exercise = "";
+
 	private String city = "";
+
+	@JsonProperty(value = "isBookMark")
 	private boolean isBookMark = true;
+
 	private int recruitNumber = 0;
+
 	private int recruitedNumber = 0;
+
 	private String time = "";
 
 	public static BoardListInfo build(Board board) {

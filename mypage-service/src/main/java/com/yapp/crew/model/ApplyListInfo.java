@@ -1,5 +1,6 @@
 package com.yapp.crew.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.yapp.crew.domain.model.Board;
 import com.yapp.crew.domain.model.ChatRoom;
 import com.yapp.crew.domain.model.User;
@@ -14,11 +15,18 @@ import lombok.Setter;
 public class ApplyListInfo {
 
 	private long hostId;
+
 	private long guestId;
+
 	private String guestName;
+
+	@JsonProperty(value = "isHost")
 	private boolean isHost;
+
 	private ApplyStatusInfo applyStatus;
+
 	private long chattingRoomId;
+
 	private long boardId;
 
 	public static ApplyListInfoBuilder getBuilder() {
@@ -90,7 +98,7 @@ public class ApplyListInfo {
 		ApplyListInfoBuilder applyListInfoBuilder = ApplyListInfo.getBuilder()
 				.withHostId(hostId)
 				.withApplyStatusInfo(board.getAppliedUsers().stream()
-						.filter(appliedUser -> appliedUser.getUser().getId() == guest.getId())
+						.filter(appliedUser -> appliedUser.getUser().getId().equals(guest.getId()))
 						.findFirst().get().getStatus())
 				.withChattingRoomId(chattingRoomId)
 				.withBoardId(board.getId());

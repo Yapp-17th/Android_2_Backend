@@ -87,10 +87,10 @@ public class ChattingConsumer {
 	private void sendMessage(Message message, User sender, ChatRoom chatRoom, MessageResponsePayload payload) {
 		simpMessagingTemplate.convertAndSend("/sub/chat/room/" + message.getChatRoom().getId(), payload);
 
-		if (sender.getId() == chatRoom.getGuest().getId()) {
+		if (sender.getId().equals(chatRoom.getGuest().getId())) {
 			simpMessagingTemplate.convertAndSend("/sub/user/" + chatRoom.getHost().getId() + "/chat/room", payload);
 		}
-		else if (sender.getId() == chatRoom.getHost().getId()) {
+		else if (sender.getId().equals(chatRoom.getHost().getId())) {
 			simpMessagingTemplate.convertAndSend("/sub/user/" + chatRoom.getGuest().getId() + "/chat/room", payload);
 		}
 		else {

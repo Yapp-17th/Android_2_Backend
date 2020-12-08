@@ -1,5 +1,6 @@
 package com.yapp.crew.payload;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.yapp.crew.domain.model.Message;
 import com.yapp.crew.domain.repository.MessageRepository;
 import com.yapp.crew.domain.type.MessageType;
@@ -26,8 +27,10 @@ public class MessageResponsePayload {
 
 	private String realTimeUpdateType;
 
+	@JsonProperty(value = "isHostRead")
 	private boolean isHostRead;
 
+	@JsonProperty(value = "isGuestRead")
 	private boolean isGuestRead;
 
 	private long messageId;

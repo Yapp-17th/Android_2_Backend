@@ -2,6 +2,7 @@ package com.yapp.crew.model;
 
 import static java.time.LocalDateTime.now;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.yapp.crew.domain.model.Address;
 import com.yapp.crew.domain.model.Board;
 import com.yapp.crew.domain.model.Category;
@@ -19,18 +20,32 @@ import lombok.Setter;
 public class BoardContentResponseInfo {
 
 	private long boardId;
+
 	private String title;
+
 	private String content;
+
 	private String place;
+
 	private BoardStatusInfo groupStatus;
+
 	private CategoryCode exercise;
+
 	private CityCode city;
+
 	private int recruitNumber;
+
 	private int recruitedNumber;
+
+	@JsonProperty(value = "isBookMark")
 	private boolean isBookMark;
+
 	private HostInfo host;
+
 	private String boardTime;
+
 	private LocalDateTime startsAt;
+
 	private TagCode userTag;
 
 	public static BoardContentResponseInfoBuilder getBuilder() {

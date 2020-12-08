@@ -1,5 +1,6 @@
 package com.yapp.crew.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.yapp.crew.domain.model.Evaluation;
 import com.yapp.crew.domain.model.User;
 import java.util.Collections;
@@ -15,12 +16,20 @@ import lombok.Setter;
 public class UserProfileInfo {
 
 	private long userId;
+
+	@JsonProperty(value = "isMine")
 	private boolean isMine;
+
 	private String nickName;
+
 	private int like;
+
 	private int dislike;
+
 	private String intro;
+
 	private String city;
+
 	private List<String> category;
 
 	public static UserProfileInfo emptyBody() {

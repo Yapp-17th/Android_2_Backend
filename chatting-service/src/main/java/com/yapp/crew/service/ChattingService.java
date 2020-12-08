@@ -91,7 +91,7 @@ public class ChattingService {
 		Board board = boardRepository.findById(chatRoomRequestPayload.getBoardId())
 				.orElseThrow(() -> new BoardNotFoundException(chatRoomRequestPayload.getBoardId()));
 
-		if (board.getUser().getId() == guest.getId()) {
+		if (board.getUser().getId().equals(guest.getId())) {
 			throw new CannotApplyToMyBoardException(guest.getId(), board.getId());
 		}
 
@@ -326,15 +326,15 @@ public class ChattingService {
 			throw new CannotApproveException(approveRequestPayload.getBoardId());
 		}
 
-		if (board.getUser().getId() != host.getId()) {
+		if (!board.getUser().getId().equals(host.getId())) {
 			throw new WrongHostException(host.getId(), board.getId(), "board");
 		}
 
-		if (chatRoom.getHost().getId() != host.getId()) {
+		if (!chatRoom.getHost().getId().equals(host.getId())) {
 			throw new WrongHostException(host.getId(), chatRoom.getId(), "chat room");
 		}
 
-		if (chatRoom.getGuest().getId() != guest.getId()) {
+		if (!chatRoom.getGuest().getId().equals(guest.getId())) {
 			throw new WrongGuestException(guest.getId(), chatRoom.getId());
 		}
 
@@ -387,15 +387,15 @@ public class ChattingService {
 			throw new CannotDisapproveException(board.getId());
 		}
 
-		if (board.getUser().getId() != host.getId()) {
+		if (!board.getUser().getId().equals(host.getId())) {
 			throw new WrongHostException(host.getId(), board.getId(), "board");
 		}
 
-		if (chatRoom.getHost().getId() != host.getId()) {
+		if (!chatRoom.getHost().getId().equals(host.getId())) {
 			throw new WrongHostException(host.getId(), chatRoom.getId(), "chat room");
 		}
 
-		if (chatRoom.getGuest().getId() != guest.getId()) {
+		if (!chatRoom.getGuest().getId().equals(guest.getId())) {
 			throw new WrongGuestException(guest.getId(), chatRoom.getId());
 		}
 
