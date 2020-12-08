@@ -86,8 +86,7 @@ public class ChattingProducer {
 		return listenableFuture;
 	}
 
-	public ListenableFuture<SendResult<Long, String>> sendGuidelineBotMessage(GuidelineRequestPayload guidelineRequestPayload)
-			throws JsonProcessingException {
+	public ListenableFuture<SendResult<Long, String>> sendGuidelineBotMessage(GuidelineRequestPayload guidelineRequestPayload) throws JsonProcessingException {
 		Long key = guidelineRequestPayload.getChatRoomId();
 		String value = objectMapper.writeValueAsString(guidelineRequestPayload);
 

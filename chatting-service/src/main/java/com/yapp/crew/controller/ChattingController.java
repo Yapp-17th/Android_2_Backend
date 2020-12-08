@@ -53,6 +53,11 @@ public class ChattingController {
 		chattingProducer.sendMessage(messageRequestPayload);
 	}
 
+	@MessageMapping(value = "/v1/chat/message/update")
+	public void updateMessageByWebsocket(@Payload @Valid MessageRequestPayload messageRequestPayload) {
+		chattingService.messageBulkUpdate(messageRequestPayload);
+	}
+
 	@PostMapping(path = "/v1/chat/message")
 	public ResponseEntity<?> sendMessageByHttpRequest(@RequestBody MessageRequestPayload messageRequestPayload) throws JsonProcessingException {
 		chattingProducer.sendMessage(messageRequestPayload);
@@ -84,7 +89,7 @@ public class ChattingController {
 			@PathVariable(name = "messageId") Long messageId
 	) {
 		log.info("Update message isRead -> userId: {}, chatRoomId: {}, messageId: {}", userId, chatRoomId, messageId);
-		HttpResponseBody<?> responseBody = chattingService.updateMessageIsRead(userId, chatRoomId, messageId);
+		HttpResponseBody<?> responseBody = chattingService.messageUpdate(userId, chatRoomId, messageId);
 		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
 	}
 
