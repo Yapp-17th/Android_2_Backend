@@ -26,13 +26,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class ChattingConsumer {
 
 	private final SimpMessagingTemplate simpMessagingTemplate;
-
 	private final ChatRoomRepository chatRoomRepository;
-
 	private final MessageRepository messageRepository;
-
 	private final UserRepository userRepository;
-
 	private final ObjectMapper objectMapper;
 
 	@Autowired
@@ -78,7 +74,7 @@ public class ChattingConsumer {
 		);
 		chatRoom.addMessage(message);
 
-		if (chatRoom.getGuestExited() && chatRoom.getHostExited()) {
+		if (chatRoom.isGuestExited() && chatRoom.isHostExited()) {
 			chatRoom.inactivateChatRoom();
 		}
 		chatRoomRepository.save(chatRoom);
@@ -89,17 +85,17 @@ public class ChattingConsumer {
 	}
 
 	private void sendMessage(Message message, User sender, ChatRoom chatRoom, MessageResponsePayload payload) {
-		simpMessagingTemplate.convertAndSend("/sub/chat/room/" + message.getChatRoom().getId().toString(), payload);
+		simpMessagingTemplate.convertAndSend("/sub/chat/room/" + message.getChatRoom().getId(), payload);
 
-		if (sender.getId().equals(chatRoom.getGuest().getId())) {
-			simpMessagingTemplate.convertAndSend("/sub/user/" + chatRoom.getHost().getId().toString() + "/chat/room", payload);
+		if (sender.getId() == chatRoom.getGuest().getId()) {
+			simpMessagingTemplate.convertAndSend("/sub/user/" + chatRoom.getHost().getId() + "/chat/room", payload);
 		}
-		else if (sender.getId().equals(chatRoom.getHost().getId())) {
-			simpMessagingTemplate.convertAndSend("/sub/user/" + chatRoom.getGuest().getId().toString() + "/chat/room", payload);
+		else if (sender.getId() == chatRoom.getHost().getId()) {
+			simpMessagingTemplate.convertAndSend("/sub/user/" + chatRoom.getGuest().getId() + "/chat/room", payload);
 		}
 		else {
-			simpMessagingTemplate.convertAndSend("/sub/user/" + chatRoom.getHost().getId().toString() + "/chat/room", payload);
-			simpMessagingTemplate.convertAndSend("/sub/user/" + chatRoom.getGuest().getId().toString() + "/chat/room", payload);
+			simpMessagingTemplate.convertAndSend("/sub/user/" + chatRoom.getHost().getId() + "/chat/room", payload);
+			simpMessagingTemplate.convertAndSend("/sub/user/" + chatRoom.getGuest().getId() + "/chat/room", payload);
 		}
 	}
 }

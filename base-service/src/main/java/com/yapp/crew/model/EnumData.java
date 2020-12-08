@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class EnumData {
 
-	private Integer id;
+	private int id;
 	private String name;
 }

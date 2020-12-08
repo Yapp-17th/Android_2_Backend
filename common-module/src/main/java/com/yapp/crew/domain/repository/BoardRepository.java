@@ -8,15 +8,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface BoardRepository extends JpaRepository<Board, Long> {
 
+	Optional<Board> findBoardById(long boardId);
+
 	List<Board> findAll();
 
-	List<Board> findAllByUserId(Long userId);
-
-	Optional<Board> findBoardById(Long boardId);
+	List<Board> findAllByStartsAtBetween(LocalDateTime starts, LocalDateTime ends);
 
 	Board save(Board board);
-
-	List<Board> findByContentIsContaining(String keyWord);
-
-	List<Board> findAllByStartsAtBetween(LocalDateTime starts, LocalDateTime ends);
 }

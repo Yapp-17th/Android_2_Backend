@@ -24,7 +24,7 @@ public class Report extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private long id;
 
 	@JsonBackReference
 	@Setter(value = AccessLevel.PROTECTED)
@@ -51,7 +51,6 @@ public class Report extends BaseEntity {
 	}
 
 	public static class ReportBuilder {
-
 		private User reporter;
 		private User reported;
 		private ReportType type;

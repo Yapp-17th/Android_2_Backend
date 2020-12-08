@@ -10,7 +10,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 	List<User> findAll();
 
-	Optional<User> findUserById(Long userId);
+	Optional<User> findUserById(long userId);
 
 	User save(User user);
 
@@ -18,5 +18,4 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 	@Query(value = "select * from user where status = 'SUSPENDED'", nativeQuery = true)
 	List<User> findSuspendedUsers();
-
 }

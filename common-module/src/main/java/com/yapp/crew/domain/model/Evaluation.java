@@ -19,27 +19,27 @@ public class Evaluation extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private long id;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "board_id", nullable = false)
+	@JoinColumn(nullable = false)
 	private Board board;
 
 	@Column(name = "evaluate_id", nullable = false)
-	private Long evaluateId;
+	private long evaluateId;
 
 	@Column(name = "evaluated_id", nullable = false)
-	private Long evaluatedId;
+	private long evaluatedId;
 
 	@Column(name = "is_like", nullable = false)
-	private Boolean isLike = false;
+	private boolean isLike;
 
 	@Column(name = "is_dislike", nullable = false)
-	private Boolean isDislike = false;
+	private boolean isDislike;
 
 	public void evaluate(boolean isLike){
-		this.isLike=isLike;
-		this.isDislike=!isLike;
+		this.isLike = isLike;
+		this.isDislike = !isLike;
 	}
 
 	public static EvaluationBuilder getBuilder() {
@@ -47,34 +47,33 @@ public class Evaluation extends BaseEntity {
 	}
 
 	public static class EvaluationBuilder {
-
-		private Long evaluateId;
-		private Long evaluatedId;
+		private long evaluateId;
+		private long evaluatedId;
 		private Board board;
-		private Boolean isLike;
-		private Boolean isDislike;
+		private boolean isLike;
+		private boolean isDislike;
 
 		public EvaluationBuilder withBoard(Board board) {
 			this.board = board;
 			return this;
 		}
 
-		public EvaluationBuilder withEvaluateId(Long evaluateId) {
+		public EvaluationBuilder withEvaluateId(long evaluateId) {
 			this.evaluateId = evaluateId;
 			return this;
 		}
 
-		public EvaluationBuilder withEvaluatedId(Long evaluatedId) {
+		public EvaluationBuilder withEvaluatedId(long evaluatedId) {
 			this.evaluatedId = evaluatedId;
 			return this;
 		}
 
-		public EvaluationBuilder withIsLike(Boolean isLike) {
+		public EvaluationBuilder withIsLike(boolean isLike) {
 			this.isLike = isLike;
 			return this;
 		}
 
-		public EvaluationBuilder withIsDislike(Boolean isDislike) {
+		public EvaluationBuilder withIsDislike(boolean isDislike) {
 			this.isDislike = isDislike;
 			return this;
 		}
@@ -93,6 +92,6 @@ public class Evaluation extends BaseEntity {
 
 	@Override
 	public String toString() {
-		return this.getId().toString();
+		return String.valueOf(this.getId());
 	}
 }

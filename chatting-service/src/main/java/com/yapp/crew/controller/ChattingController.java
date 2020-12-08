@@ -36,7 +36,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class ChattingController {
 
 	private final ChattingProducer chattingProducer;
-
 	private final ChattingService chattingService;
 
 	@Autowired
@@ -74,8 +73,8 @@ public class ChattingController {
 
 	@GetMapping(path = "/v1/chat/room/{chatRoomId}/message")
 	public ResponseEntity<?> receiveChatMessages(
-			@RequestHeader(value = "userId") Long userId,
-			@PathVariable(name = "chatRoomId") Long chatRoomId
+			@RequestHeader(value = "userId") long userId,
+			@PathVariable(name = "chatRoomId") long chatRoomId
 	) {
 		log.info("Receive chat messages -> userId: {}, chatRoomId: {}", userId, chatRoomId);
 		HttpResponseBody<List<MessageResponsePayload>> responseBody = chattingService.receiveChatMessages(chatRoomId, userId);
@@ -84,9 +83,9 @@ public class ChattingController {
 
 	@PutMapping(path = "/v1/chat/room/{chatRoomId}/message/{messageId}")
 	public ResponseEntity<?> updateMessageIsRead(
-			@RequestHeader(value = "userId") Long userId,
-			@PathVariable(name = "chatRoomId") Long chatRoomId,
-			@PathVariable(name = "messageId") Long messageId
+			@RequestHeader(value = "userId") long userId,
+			@PathVariable(name = "chatRoomId") long chatRoomId,
+			@PathVariable(name = "messageId") long messageId
 	) {
 		log.info("Update message isRead -> userId: {}, chatRoomId: {}, messageId: {}", userId, chatRoomId, messageId);
 		HttpResponseBody<?> responseBody = chattingService.messageUpdate(userId, chatRoomId, messageId);
@@ -94,7 +93,7 @@ public class ChattingController {
 	}
 
 	@GetMapping(path = "/v1/chat/room")
-	public ResponseEntity<?> receiveChatRooms(@RequestHeader(value = "userId") Long userId) {
+	public ResponseEntity<?> receiveChatRooms(@RequestHeader(value = "userId") long userId) {
 		log.info("Receive chat rooms -> userId: {}", userId);
 		HttpResponseBody<List<ChatRoomResponsePayload>> responseBody = chattingService.receiveChatRooms(userId);
 		return ResponseEntity.status(responseBody.getStatus()).body(responseBody);
@@ -102,7 +101,7 @@ public class ChattingController {
 
 	@PostMapping(path = "/v1/chat/room")
 	public ResponseEntity<?> createChatRoom(
-			@RequestHeader(value = "userId") Long userId,
+			@RequestHeader(value = "userId") long userId,
 			@Valid @RequestBody ChatRoomRequestPayload chatRoomRequestPayload
 	) throws JsonProcessingException {
 
@@ -115,8 +114,8 @@ public class ChattingController {
 
 	@DeleteMapping(path = "/v1/chat/room/{chatRoomId}")
 	public ResponseEntity<?> exitChatRoom(
-			@RequestHeader(value = "userId") Long userId,
-			@PathVariable(name = "chatRoomId") Long chatRoomId
+			@RequestHeader(value = "userId") long userId,
+			@PathVariable(name = "chatRoomId") long chatRoomId
 	) throws JsonProcessingException {
 		log.info("Exit chat room -> userId: {}, chatRoomId: {}", userId, chatRoomId);
 
@@ -126,8 +125,8 @@ public class ChattingController {
 
 	@PostMapping(path = "/v1/board/{boardId}/apply")
 	public ResponseEntity<?> applyUser(
-			@RequestHeader(value = "userId") Long userId,
-			@PathVariable(name = "boardId") Long boardId,
+			@RequestHeader(value = "userId") long userId,
+			@PathVariable(name = "boardId") long boardId,
 			@Valid @RequestBody ApplyRequestPayload applyRequestPayload
 	) throws JsonProcessingException {
 
@@ -141,8 +140,8 @@ public class ChattingController {
 
 	@PostMapping(path = "/v1/board/{boardId}/approve")
 	public ResponseEntity<?> approveUser(
-			@RequestHeader(value = "userId") Long userId,
-			@PathVariable(name = "boardId") Long boardId,
+			@RequestHeader(value = "userId") long userId,
+			@PathVariable(name = "boardId") long boardId,
 			@Valid @RequestBody ApproveRequestPayload approveRequestPayload
 	) throws JsonProcessingException {
 
@@ -156,8 +155,8 @@ public class ChattingController {
 
 	@DeleteMapping(path = "/v1/board/{boardId}/approve")
 	public ResponseEntity<?> disapproveUser(
-			@RequestHeader(value = "userId") Long userId,
-			@PathVariable(name = "boardId") Long boardId,
+			@RequestHeader(value = "userId") long userId,
+			@PathVariable(name = "boardId") long boardId,
 			@Valid @RequestBody ApproveRequestPayload approveRequestPayload
 	) throws JsonProcessingException {
 

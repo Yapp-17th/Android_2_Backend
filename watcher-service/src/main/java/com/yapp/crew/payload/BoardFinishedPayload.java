@@ -13,5 +13,5 @@ import lombok.Setter;
 @AllArgsConstructor
 public class BoardFinishedPayload {
 
-	Long boardId;
+	long boardId;
 }

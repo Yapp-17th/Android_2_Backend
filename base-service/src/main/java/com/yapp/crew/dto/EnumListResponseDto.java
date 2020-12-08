@@ -13,7 +13,7 @@ import org.springframework.http.HttpStatus;
 public class EnumListResponseDto {
 
 	private String type;
-	private Integer status;
+	private int status;
 	private ResponseType message;
 	private List<EnumData> data;
 

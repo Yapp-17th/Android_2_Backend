@@ -25,12 +25,10 @@ public class WithdrawController {
 
 	@DeleteMapping("/v1/user/withdraw")
 	public ResponseEntity<?> deleteUser(@RequestHeader(value = "Authorization") String token) {
-
 		UserAuthResponse userAuthResponse = withdrawService.withdraw(token);
 		if (userAuthResponse.getSimpleResponse().isSuccess()) {
 			return ResponseEntity.ok(userAuthResponse.getSimpleResponse());
 		}
-
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(userAuthResponse.getSimpleResponse());
 	}
 }

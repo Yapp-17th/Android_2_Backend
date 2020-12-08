@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 public class BoardIdRequestDto {
 
 	@NotNull
-	private Long boardId;
+	private long boardId;
 
 	@Override
 	public String toString() {

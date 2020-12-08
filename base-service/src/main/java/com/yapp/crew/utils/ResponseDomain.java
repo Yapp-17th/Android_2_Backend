@@ -5,7 +5,7 @@ public enum ResponseDomain {
 	EXERCISE("exercise"),
 	USER_TAG("userTag");
 
-	private String name;
+	private final String name;
 
 	ResponseDomain(String name) {
 		this.name = name;

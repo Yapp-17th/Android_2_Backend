@@ -19,15 +19,15 @@ public class BookMark extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private long id;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id", nullable = false)
+	@JoinColumn(nullable = false)
 	@Setter(value = AccessLevel.PRIVATE)
 	private User user;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "board_id", nullable = false)
+	@JoinColumn(nullable = false)
 	@Setter(value = AccessLevel.PRIVATE)
 	private Board board;
 
@@ -36,7 +36,6 @@ public class BookMark extends BaseEntity {
 	}
 
 	public static class BookMarkBuilder {
-
 		private User user;
 		private Board board;
 

@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class BoardFilter {
 
-	private Long userId;
+	private long userId;
 	private SortingType sorting;
 	List<Long> category;
 	List<Long> city;

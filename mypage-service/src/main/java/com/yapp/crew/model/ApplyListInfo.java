@@ -4,7 +4,6 @@ import com.yapp.crew.domain.model.Board;
 import com.yapp.crew.domain.model.ChatRoom;
 import com.yapp.crew.domain.model.User;
 import com.yapp.crew.domain.status.AppliedStatus;
-import com.yapp.crew.domain.status.UserStatus;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,34 +13,33 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ApplyListInfo {
 
-	private Long hostId;
-	private Long guestId;
+	private long hostId;
+	private long guestId;
 	private String guestName;
-	private Boolean isHost = false;
+	private boolean isHost;
 	private ApplyStatusInfo applyStatus;
-	private Long chattingRoomId;
-	private Long boardId;
+	private long chattingRoomId;
+	private long boardId;
 
 	public static ApplyListInfoBuilder getBuilder() {
 		return new ApplyListInfoBuilder();
 	}
 
 	public static class ApplyListInfoBuilder {
-
-		private Long hostId = -1L;
-		private Long guestId = -1L;
+		private long hostId = -1L;
+		private long guestId = -1L;
 		private String guestName = "(알수없음)";
-		private Boolean isHost = false;
+		private boolean isHost = false;
 		private ApplyStatusInfo applyStatus = ApplyStatusInfo.build(AppliedStatus.PENDING);
-		private Long chattingRoomId = -1L;
-		private Long boardId = -1L;
+		private long chattingRoomId = -1L;
+		private long boardId = -1L;
 
-		public ApplyListInfoBuilder withHostId(Long hostId) {
+		public ApplyListInfoBuilder withHostId(long hostId) {
 			this.hostId = hostId;
 			return this;
 		}
 
-		public ApplyListInfoBuilder withGuestId(Long guestId) {
+		public ApplyListInfoBuilder withGuestId(long guestId) {
 			this.guestId = guestId;
 			return this;
 		}
@@ -51,7 +49,7 @@ public class ApplyListInfo {
 			return this;
 		}
 
-		public ApplyListInfoBuilder withIsHost(Boolean isHost) {
+		public ApplyListInfoBuilder withIsHost(boolean isHost) {
 			this.isHost = isHost;
 			return this;
 		}
@@ -61,12 +59,12 @@ public class ApplyListInfo {
 			return this;
 		}
 
-		public ApplyListInfoBuilder withChattingRoomId(Long chattingRoomId) {
+		public ApplyListInfoBuilder withChattingRoomId(long chattingRoomId) {
 			this.chattingRoomId = chattingRoomId;
 			return this;
 		}
 
-		public ApplyListInfoBuilder withBoardId(Long boardId) {
+		public ApplyListInfoBuilder withBoardId(long boardId) {
 			this.boardId = boardId;
 			return this;
 		}
@@ -76,7 +74,7 @@ public class ApplyListInfo {
 			applyListInfo.setHostId(hostId);
 			applyListInfo.setGuestId(guestId);
 			applyListInfo.setGuestName(guestName);
-			applyListInfo.setIsHost(isHost);
+			applyListInfo.setHost(isHost);
 			applyListInfo.setApplyStatus(applyStatus);
 			applyListInfo.setChattingRoomId(chattingRoomId);
 			applyListInfo.setBoardId(boardId);
@@ -87,12 +85,12 @@ public class ApplyListInfo {
 	}
 
 	public static ApplyListInfo build(long hostId, User guest, Board board, ChatRoom chatRoom) {
-		Long chattingRoomId = chatRoom != null ? chatRoom.getId() : 0L;
+		long chattingRoomId = chatRoom != null ? chatRoom.getId() : 0L;
 
 		ApplyListInfoBuilder applyListInfoBuilder = ApplyListInfo.getBuilder()
 				.withHostId(hostId)
 				.withApplyStatusInfo(board.getAppliedUsers().stream()
-						.filter(appliedUser -> appliedUser.getUser().getId().equals(guest.getId()))
+						.filter(appliedUser -> appliedUser.getUser().getId() == guest.getId())
 						.findFirst().get().getStatus())
 				.withChattingRoomId(chattingRoomId)
 				.withBoardId(board.getId());
@@ -103,7 +101,6 @@ public class ApplyListInfo {
 					.withGuestName(guest.getNickname())
 					.build();
 		}
-
 		return applyListInfoBuilder.build();
 	}
 }

@@ -36,7 +36,7 @@ public class SignUpRequestDto {
 	private List<Long> category;
 
 	@NotNull
-	private Long address;
+	private long address;
 
 	@NotBlank
 	private String intro;

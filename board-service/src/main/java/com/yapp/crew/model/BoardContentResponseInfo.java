@@ -18,16 +18,16 @@ import lombok.Setter;
 @NoArgsConstructor
 public class BoardContentResponseInfo {
 
-	private Long boardId;
+	private long boardId;
 	private String title;
 	private String content;
 	private String place;
 	private BoardStatusInfo groupStatus;
 	private CategoryCode exercise;
 	private CityCode city;
-	private Integer recruitNumber;
-	private Integer recruitedNumber;
-	private Boolean isBookMark;
+	private int recruitNumber;
+	private int recruitedNumber;
+	private boolean isBookMark;
 	private HostInfo host;
 	private String boardTime;
 	private LocalDateTime startsAt;
@@ -38,8 +38,7 @@ public class BoardContentResponseInfo {
 	}
 
 	public static class BoardContentResponseInfoBuilder {
-
-		private Long boardId = -1L;
+		private long boardId = -1L;
 		private String title = "";
 		private String content = "";
 		private String place = "";
@@ -47,14 +46,14 @@ public class BoardContentResponseInfo {
 		private CategoryCode exercise = CategoryCode.build(-1L, "");
 		private CityCode city = CityCode.build(-1L, "");
 		private TagCode userTag = TagCode.build(-1L, "");
-		private Integer recruitNumber = 0;
-		private Integer recruitedNumber = 0;
-		private Boolean isBookMark = false;
+		private int recruitNumber = 0;
+		private int recruitedNumber = 0;
+		private boolean isBookMark = false;
 		private HostInfo host = HostInfo.emptyBody();
 		private String boardTime = "";
 		private LocalDateTime startsAt = now();
 
-		public BoardContentResponseInfoBuilder withBoardId(Long boardId) {
+		public BoardContentResponseInfoBuilder withBoardId(long boardId) {
 			this.boardId = boardId;
 			return this;
 		}
@@ -79,7 +78,7 @@ public class BoardContentResponseInfo {
 			return this;
 		}
 
-		public BoardContentResponseInfoBuilder withExcercise(Category category) {
+		public BoardContentResponseInfoBuilder withExercise(Category category) {
 			this.exercise = CategoryCode.build(category);
 			return this;
 		}
@@ -89,17 +88,17 @@ public class BoardContentResponseInfo {
 			return this;
 		}
 
-		public BoardContentResponseInfoBuilder withRecruitNumber(Integer recruitNumber) {
+		public BoardContentResponseInfoBuilder withRecruitNumber(int recruitNumber) {
 			this.recruitNumber = recruitNumber;
 			return this;
 		}
 
-		public BoardContentResponseInfoBuilder withRecruitedNumber(Integer recruitedNumber) {
+		public BoardContentResponseInfoBuilder withRecruitedNumber(int recruitedNumber) {
 			this.recruitedNumber = recruitedNumber;
 			return this;
 		}
 
-		public BoardContentResponseInfoBuilder withIsBookMark(Boolean isBookMark) {
+		public BoardContentResponseInfoBuilder withIsBookMark(boolean isBookMark) {
 			this.isBookMark = isBookMark;
 			return this;
 		}
@@ -135,7 +134,7 @@ public class BoardContentResponseInfo {
 			boardContentResponseInfo.setCity(city);
 			boardContentResponseInfo.setRecruitNumber(recruitNumber);
 			boardContentResponseInfo.setRecruitedNumber(recruitedNumber);
-			boardContentResponseInfo.setIsBookMark(isBookMark);
+			boardContentResponseInfo.setBookMark(isBookMark);
 			boardContentResponseInfo.setHost(host);
 			boardContentResponseInfo.setBoardTime(boardTime);
 			boardContentResponseInfo.setStartsAt(startsAt);
@@ -144,18 +143,18 @@ public class BoardContentResponseInfo {
 		}
 	}
 
-	public static BoardContentResponseInfo build(Board board, Long userId, List<Evaluation> evaluationList) {
+	public static BoardContentResponseInfo build(Board board, long userId, List<Evaluation> evaluationList) {
 		return BoardContentResponseInfo.getBuilder()
 				.withBoardId(board.getId())
 				.withTitle(board.getTitle())
 				.withContent(board.getContent())
 				.withPlace(board.getPlace())
 				.withGroupStatus(BoardStatusInfo.build(board.getStatus()))
-				.withExcercise(board.getCategory())
+				.withExercise(board.getCategory())
 				.withCity(board.getAddress())
 				.withRecruitNumber(board.getRecruitCount())
 				.withRecruitedNumber(board.getApprovedCount())
-				.withIsBookMark(board.getBookMarkUser().stream().map(bookmark -> bookmark.getUser().getId()).anyMatch(id -> id.equals(userId)))
+				.withIsBookMark(board.getBookMarkUser().stream().map(bookmark -> bookmark.getUser().getId()).anyMatch(id -> id == userId))
 				.withHost(HostInfo.build(board.getUser(), evaluationList))
 				.withBoardTime(board.showBoardTimeComparedToNow())
 				.withStartsAt(board.getStartsAt())

@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 
-@Slf4j
+@Slf4j(topic = "Chat Bot Producer")
 @Component
 public class ChatBotProducer {
 
@@ -37,7 +37,7 @@ public class ChatBotProducer {
 	}
 
 	public ListenableFuture<SendResult<Long, String>> sendBotMessage(MessageRequestPayload messageRequestPayload) throws JsonProcessingException {
-		Long key = messageRequestPayload.getChatRoomId();
+		long key = messageRequestPayload.getChatRoomId();
 		String value = objectMapper.writeValueAsString(messageRequestPayload);
 
 		ProducerRecord<Long, String> producerRecord = buildProducerRecord(key, value, chatMessageTopic);
@@ -57,12 +57,12 @@ public class ChatBotProducer {
 		return listenableFuture;
 	}
 
-	private ProducerRecord<Long, String> buildProducerRecord(Long key, String value, String topic) {
+	private ProducerRecord<Long, String> buildProducerRecord(long key, String value, String topic) {
 		List<Header> recordHeaders = List.of(new RecordHeader("event-source", "scanner".getBytes()));
 		return new ProducerRecord<Long, String>(topic, null, key, value, recordHeaders);
 	}
 
-	private void handleFailure(Long key, String value, Throwable ex) {
+	private void handleFailure(long key, String value, Throwable ex) {
 		log.error("Error sending the message and exception is {}", ex.getMessage());
 		try {
 			throw ex;
@@ -71,7 +71,7 @@ public class ChatBotProducer {
 		}
 	}
 
-	private void handleSuccess(Long key, String value, SendResult<Long, String> result) {
+	private void handleSuccess(long key, String value, SendResult<Long, String> result) {
 		log.info("Message send successfully for the key: {} and the value is {}, partition is {}", key, value, result.getRecordMetadata().partition());
 	}
 }

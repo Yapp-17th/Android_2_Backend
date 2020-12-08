@@ -13,7 +13,7 @@ public class UserUpdateRequest {
 	private String nickName;
 	private String email;
 	private List<Long> category;
-	private Long address;
+	private long address;
 	private String intro;
 
 	public static UserUpdateRequest build(UserUpdateRequestDto userUpdateRequestDto) {

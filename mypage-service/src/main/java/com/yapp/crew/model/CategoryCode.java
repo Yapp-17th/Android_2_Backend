@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CategoryCode {
 
-	private Long id;
+	private long id;
 	private String name;
 
 	public static CategoryCode build(Category category) {

@@ -13,9 +13,9 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ApplyRequestPayload {
 
-	private Long chatRoomId;
+	private long chatRoomId;
 
-	private Long boardId;
+	private long boardId;
 
-	private Long applierId;
+	private long applierId;
 }

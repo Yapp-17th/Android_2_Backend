@@ -11,10 +11,10 @@ public class BoardPostRequiredInfo {
 
 	private String title;
 	private String content;
-	private Long category;
-	private Long city;
-	private Long userTag;
-	private Integer recruitNumber;
+	private long category;
+	private long city;
+	private long userTag;
+	private int recruitNumber;
 	private LocalDateTime date;
 	private String place;
 

@@ -38,18 +38,18 @@ public class User extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private long id;
 
 	@Setter(value = AccessLevel.PRIVATE)
-	@Column(nullable = false, length = 100)
+	@Column(nullable = false, length = 30)
 	private String username;
 
 	@Setter(value = AccessLevel.PRIVATE)
-	@Column(nullable = false, length = 100)
+	@Column(nullable = false, length = 30)
 	private String nickname;
 
 	@Setter(value = AccessLevel.PRIVATE)
-	@Column(nullable = false, length = 100)
+	@Column(nullable = false, length = 30)
 	private String email;
 
 	@Setter(value = AccessLevel.PRIVATE)
@@ -77,7 +77,7 @@ public class User extends BaseEntity {
 
 	@Setter(value = AccessLevel.PRIVATE)
 	@Column(name = "suspended_day", nullable = false)
-	private Integer suspendedDay = 0;
+	private int suspendedDay;
 
 	@JsonManagedReference
 	@Setter(value = AccessLevel.PRIVATE)
@@ -155,23 +155,21 @@ public class User extends BaseEntity {
 		guestList.add(chatRoom);
 	}
 
-	public Long calculateLikes(List<Evaluation> evaluations) {
+	public long calculateLikes(List<Evaluation> evaluations) {
 		if (evaluations == null) {
 			return 0L;
 		}
-
 		return evaluations.stream()
-				.filter(Evaluation::getIsLike)
+				.filter(Evaluation::isLike)
 				.count();
 	}
 
-	public Long calculateDislikes(List<Evaluation> evaluations) {
+	public long calculateDislikes(List<Evaluation> evaluations) {
 		if (evaluations == null) {
 			return 0L;
 		}
-
 		return evaluations.stream()
-				.filter(Evaluation::getIsDislike)
+				.filter(Evaluation::isDislike)
 				.count();
 	}
 
@@ -208,7 +206,6 @@ public class User extends BaseEntity {
 	}
 
 	public static class UserBuilder {
-
 		private String username;
 		private String nickname;
 		private String email;

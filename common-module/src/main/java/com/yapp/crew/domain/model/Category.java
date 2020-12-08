@@ -27,7 +27,7 @@ public class Category extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private long id;
 
 	@Setter(value = AccessLevel.PRIVATE)
 	@Enumerated(value = EnumType.STRING)

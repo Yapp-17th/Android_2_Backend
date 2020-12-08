@@ -20,7 +20,7 @@ public class Alarm extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private long id;
 
 	@Setter(value = AccessLevel.PRIVATE)
 	@Column(nullable = false)
@@ -36,7 +36,6 @@ public class Alarm extends BaseEntity {
 	}
 
 	public static class AlarmBuilder {
-
 		private AlarmType type;
 		private String content;
 

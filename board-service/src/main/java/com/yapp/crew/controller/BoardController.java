@@ -43,7 +43,7 @@ public class BoardController {
 
 	@GetMapping(path = "/v1/board", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> getBoardList(
-			@RequestHeader(value = "userId") Long userId,
+			@RequestHeader(value = "userId") long userId,
 			@PageableDefault(size = 20) Pageable pageable,
 			@RequestParam(required = false) String sorting,
 			@RequestParam List<Long> category,
@@ -58,7 +58,7 @@ public class BoardController {
 
 	@PostMapping(path = "/v1/board", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> postBoard(
-			@RequestHeader(value = "userId") Long userId,
+			@RequestHeader(value = "userId") long userId,
 			@RequestBody @Valid BoardInfoRequestDto boardInfoRequestDto
 	) {
 		log.info("Post board -> userId: {}, payload: {}", userId, boardInfoRequestDto);
@@ -70,8 +70,8 @@ public class BoardController {
 
 	@GetMapping(path = "/v1/board/{boardId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> getBoardContent(
-			@RequestHeader(value = "userId") Long userId,
-			@PathVariable(name = "boardId") Long boardId
+			@RequestHeader(value = "userId") long userId,
+			@PathVariable(name = "boardId") long boardId
 	) {
 		log.info("Get board content -> userId: {}, boardId: {}", userId, boardId);
 		BoardContentResponseInfo boardContentResponseInfo = boardService.getBoardContent(boardId, userId);
@@ -81,8 +81,8 @@ public class BoardController {
 
 	@DeleteMapping(path = "/v1/board/{boardId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> deleteBoard(
-			@RequestHeader(value = "userId") Long userId,
-			@PathVariable(name = "boardId") Long boardId
+			@RequestHeader(value = "userId") long userId,
+			@PathVariable(name = "boardId") long boardId
 	) throws JsonProcessingException {
 		log.info("Delete board -> userId: {}, boardId: {}", userId, boardId);
 		SimpleResponse simpleResponse = boardService.deleteBoard(boardId, userId);
@@ -92,8 +92,8 @@ public class BoardController {
 
 	@PutMapping(path = "/v1/board/{boardId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> editBoard(
-			@RequestHeader(value = "userId") Long userId,
-			@PathVariable(name = "boardId") Long boardId,
+			@RequestHeader(value = "userId") long userId,
+			@PathVariable(name = "boardId") long boardId,
 			@RequestBody @Valid BoardInfoRequestDto boardInfoRequestDto
 	) {
 		log.info("Edit board -> userId: {}, boardId: {}, payload: {}", userId, boardId, boardInfoRequestDto);

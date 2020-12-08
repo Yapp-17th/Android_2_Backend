@@ -19,7 +19,7 @@ public class UserExercise extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private long id;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id", nullable = false)
@@ -36,7 +36,6 @@ public class UserExercise extends BaseEntity {
 	}
 
 	public static class UserExerciseBuilder {
-
 		private User user;
 		private Category category;
 

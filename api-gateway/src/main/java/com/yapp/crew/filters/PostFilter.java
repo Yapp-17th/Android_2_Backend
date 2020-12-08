@@ -58,7 +58,6 @@ public class PostFilter extends ZuulFilter {
 		catch (Exception ex) {
 			exceptionHandler.handleException(ex);
 		}
-
 		return null;
 	}
 }

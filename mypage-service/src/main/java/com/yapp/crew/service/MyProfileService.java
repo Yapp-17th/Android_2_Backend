@@ -110,15 +110,15 @@ public class MyProfileService {
 				.collect(Collectors.toList());
 	}
 
-	private Optional<User> findUserById(Long userId) {
+	private Optional<User> findUserById(long userId) {
 		return userRepository.findUserById(userId);
 	}
 
-	private Optional<Address> findAddressById(Long addressId) {
+	private Optional<Address> findAddressById(long addressId) {
 		return addressRepository.findAddressById(addressId);
 	}
 
-	private List<Evaluation> findAllByEvaluatedId(Long userId) {
+	private List<Evaluation> findAllByEvaluatedId(long userId) {
 		return evaluationRepository.findAllByEvaluatedId(userId);
 	}
 
@@ -126,8 +126,8 @@ public class MyProfileService {
 		return boardRepository.findAll().stream()
 				.filter(
 						board ->
-								(board.getUser().getId().equals(user.getId())) ||
-										(board.getAppliedUsers().stream().anyMatch(appliedUser -> (appliedUser.getUser().getId().equals(user.getId())) && (appliedUser.getStatus() == AppliedStatus.APPROVED)))
+								(board.getUser().getId() == user.getId()) ||
+										(board.getAppliedUsers().stream().anyMatch(appliedUser -> (appliedUser.getUser().getId() == user.getId()) && (appliedUser.getStatus() == AppliedStatus.APPROVED)))
 				)
 				.collect(Collectors.toList());
 	}
@@ -167,7 +167,7 @@ public class MyProfileService {
 		}
 	}
 
-	private Optional<Category> findCategoryById(Long id) {
+	private Optional<Category> findCategoryById(long id) {
 		return categoryRepository.findCategoryById(id);
 	}
 

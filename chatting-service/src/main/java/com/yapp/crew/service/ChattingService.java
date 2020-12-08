@@ -2,7 +2,6 @@ package com.yapp.crew.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.base.CharMatcher;
-import com.google.common.base.Objects;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.yapp.crew.domain.errors.AlreadyApprovedException;
@@ -55,15 +54,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class ChattingService {
 
 	private final ChattingProducer chattingProducer;
-
 	private final AppliedUserRepository appliedUserRepository;
-
 	private final ChatRoomRepository chatRoomRepository;
-
 	private final MessageRepository messageRepository;
-
 	private final BoardRepository boardRepository;
-
 	private final UserRepository userRepository;
 
 	@Autowired
@@ -97,13 +91,13 @@ public class ChattingService {
 		Board board = boardRepository.findById(chatRoomRequestPayload.getBoardId())
 				.orElseThrow(() -> new BoardNotFoundException(chatRoomRequestPayload.getBoardId()));
 
-		if (board.getUser().getId().equals(guest.getId())) {
+		if (board.getUser().getId() == guest.getId()) {
 			throw new CannotApplyToMyBoardException(guest.getId(), board.getId());
 		}
 
 		Optional<ChatRoom> chatRoom = chatRoomRepository.findByGuestIdAndBoardId(guest.getId(), board.getId());
 
-		if (chatRoom.isPresent() && !chatRoom.get().getGuestExited() && !chatRoom.get().getHostExited()) {
+		if (chatRoom.isPresent() && !chatRoom.get().isGuestExited() && !chatRoom.get().isHostExited()) {
 			return HttpResponseBody.buildChatRoomResponse(
 					ChatRoomResponsePayload.buildChatRoomResponsePayload(chatRoom.get(), host),
 					HttpStatus.OK.value(),
@@ -111,7 +105,7 @@ public class ChattingService {
 			);
 		}
 
-		else if (chatRoom.isPresent() && chatRoom.get().getGuestExited() && !chatRoom.get().getHostExited()) {
+		else if (chatRoom.isPresent() && chatRoom.get().isGuestExited() && !chatRoom.get().isHostExited()) {
 			chatRoom.get().inviteUser(false);
 			chatRoomRepository.save(chatRoom.get());
 			return HttpResponseBody.buildChatRoomResponse(
@@ -121,7 +115,7 @@ public class ChattingService {
 			);
 		}
 
-		else if (chatRoom.isPresent() && !chatRoom.get().getGuestExited() && chatRoom.get().getHostExited()) {
+		else if (chatRoom.isPresent() && !chatRoom.get().isGuestExited() && chatRoom.get().isHostExited()) {
 			chatRoom.get().inviteUser(true);
 			chatRoomRepository.save(chatRoom.get());
 			return HttpResponseBody.buildChatRoomResponse(
@@ -162,7 +156,7 @@ public class ChattingService {
 		}
 	}
 
-	public HttpResponseBody<?> exitChatRoom(Long userId, Long chatRoomId) throws JsonProcessingException {
+	public HttpResponseBody<?> exitChatRoom(long userId, long chatRoomId) throws JsonProcessingException {
 		User user = userRepository.findUserById(userId)
 				.orElseThrow(() -> new UserNotFoundException(userId));
 
@@ -170,10 +164,10 @@ public class ChattingService {
 				.orElseThrow(() -> new ChatRoomNotFoundException(chatRoomId));
 
 		boolean isHost = chatRoom.isUserChatRoomHost(userId);
-		if (isHost && chatRoom.getHostExited()) {
+		if (isHost && chatRoom.isHostExited()) {
 			throw new AlreadyExitedException(userId, chatRoomId);
 		}
-		if (!isHost && chatRoom.getGuestExited()) {
+		if (!isHost && chatRoom.isGuestExited()) {
 			throw new AlreadyExitedException(userId, chatRoomId);
 		}
 		chatRoom.exitUser(isHost);
@@ -193,14 +187,14 @@ public class ChattingService {
 		);
 	}
 
-	public HttpResponseBody<List<ChatRoomResponsePayload>> receiveChatRooms(Long userId) {
+	public HttpResponseBody<List<ChatRoomResponsePayload>> receiveChatRooms(long userId) {
 		List<ChatRoom> chatRooms = chatRoomRepository.findAllByUserId(userId).stream()
 				.filter(chatRoom -> {
 					boolean isHost = chatRoom.isUserChatRoomHost(userId);
-					if (isHost && chatRoom.getHostExited()) {
+					if (isHost && chatRoom.isHostExited()) {
 						return false;
 					}
-					if (!isHost && chatRoom.getGuestExited()) {
+					if (!isHost && chatRoom.isGuestExited()) {
 						return false;
 					}
 					return true;
@@ -215,14 +209,14 @@ public class ChattingService {
 	}
 
 	@Transactional
-	public HttpResponseBody<List<MessageResponsePayload>> receiveChatMessages(Long chatRoomId, Long userId) {
+	public HttpResponseBody<List<MessageResponsePayload>> receiveChatMessages(long chatRoomId, long userId) {
 		List<Message> messages = messageRepository.findAllByChatRoomIdOrderByCreatedAt(chatRoomId);
 
 		ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
 				.orElseThrow(() -> new ChatRoomNotFoundException(chatRoomId));
 
 		boolean isHost = chatRoom.isUserChatRoomHost(userId);
-		Long firstUnreadChatMessageId = chatRoom.findFirstUnreadChatMessage(isHost);
+		long firstUnreadChatMessageId = chatRoom.findFirstUnreadChatMessage(isHost);
 		if (firstUnreadChatMessageId != -1L) {
 			List<Message> unreadMessages = messageRepository.findAllByChatRoomIdAndMessageIdGreaterThan(chatRoomId, firstUnreadChatMessageId - 1);
 			unreadMessages.forEach(message -> message.readMessage(isHost));
@@ -246,7 +240,7 @@ public class ChattingService {
 	}
 
 	@Transactional
-	public HttpResponseBody<?> messageUpdate(Long userId, Long chatRoomId, Long messageId) {
+	public HttpResponseBody<?> messageUpdate(long userId, long chatRoomId, long messageId) {
 		ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
 				.orElseThrow(() -> new ChatRoomNotFoundException(chatRoomId));
 
@@ -297,7 +291,7 @@ public class ChattingService {
 			throw new CannotApplyException(applyRequestPayload.getBoardId());
 		}
 
-		if (chatRoom.getGuestExited() || chatRoom.getHostExited()) {
+		if (chatRoom.isGuestExited() || chatRoom.isHostExited()) {
 			throw new CannotApplyException(applyRequestPayload.getBoardId());
 		}
 
@@ -328,19 +322,19 @@ public class ChattingService {
 			throw new CannotApproveException(approveRequestPayload.getBoardId());
 		}
 
-		if (chatRoom.getGuestExited() || chatRoom.getHostExited()) {
+		if (chatRoom.isGuestExited() || chatRoom.isHostExited()) {
 			throw new CannotApproveException(approveRequestPayload.getBoardId());
 		}
 
-		if (!board.getUser().getId().equals(host.getId())) {
+		if (board.getUser().getId() != host.getId()) {
 			throw new WrongHostException(host.getId(), board.getId(), "board");
 		}
 
-		if (!chatRoom.getHost().getId().equals(host.getId())) {
+		if (chatRoom.getHost().getId() != host.getId()) {
 			throw new WrongHostException(host.getId(), chatRoom.getId(), "chat room");
 		}
 
-		if (!chatRoom.getGuest().getId().equals(guest.getId())) {
+		if (chatRoom.getGuest().getId() != guest.getId()) {
 			throw new WrongGuestException(guest.getId(), chatRoom.getId());
 		}
 
@@ -389,19 +383,19 @@ public class ChattingService {
 			throw new CannotDisapproveException(board.getId());
 		}
 
-		if (chatRoom.getGuestExited() || chatRoom.getHostExited()) {
+		if (chatRoom.isGuestExited() || chatRoom.isHostExited()) {
 			throw new CannotDisapproveException(board.getId());
 		}
 
-		if (!board.getUser().getId().equals(host.getId())) {
+		if (board.getUser().getId() != host.getId()) {
 			throw new WrongHostException(host.getId(), board.getId(), "board");
 		}
 
-		if (!chatRoom.getHost().getId().equals(host.getId())) {
+		if (chatRoom.getHost().getId() != host.getId()) {
 			throw new WrongHostException(host.getId(), chatRoom.getId(), "chat room");
 		}
 
-		if (!chatRoom.getGuest().getId().equals(guest.getId())) {
+		if (chatRoom.getGuest().getId() != guest.getId()) {
 			throw new WrongGuestException(guest.getId(), chatRoom.getId());
 		}
 

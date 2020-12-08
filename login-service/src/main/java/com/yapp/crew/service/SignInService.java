@@ -34,7 +34,6 @@ public class SignInService {
 
 		if (existingUser.getStatus() == UserStatus.SUSPENDED) {
 			throw new SuspendedUserException(existingUser.getId());
-
 		} else if (existingUser.getStatus() == UserStatus.INACTIVE) {
 			throw new InactiveUserException(existingUser.getId());
 		} else if(existingUser.getStatus() == UserStatus.FORBIDDEN){

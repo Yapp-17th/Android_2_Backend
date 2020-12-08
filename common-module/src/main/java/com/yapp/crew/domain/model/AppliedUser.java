@@ -23,16 +23,16 @@ public class AppliedUser extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private long id;
 
 	@Setter(value = AccessLevel.PRIVATE)
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id", nullable = false)
+	@JoinColumn(nullable = false)
 	private User user;
 
 	@Setter(value = AccessLevel.PRIVATE)
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "board_id", nullable = false)
+	@JoinColumn(nullable = false)
 	private Board board;
 
 	@Setter(value = AccessLevel.PRIVATE)
@@ -65,7 +65,6 @@ public class AppliedUser extends BaseEntity {
 	}
 
 	public static class AppliedUserBuilder {
-
 		private User user;
 		private Board board;
 		private AppliedStatus status;

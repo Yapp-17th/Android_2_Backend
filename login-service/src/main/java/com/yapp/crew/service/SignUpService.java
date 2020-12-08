@@ -68,7 +68,6 @@ public class SignUpService {
 		if (user.getStatus() == UserStatus.SUSPENDED) {
 			throw new SuspendedUserException(user.getId());
 		}
-
 		return signUpExistingUser(user);
 	}
 
@@ -110,14 +109,12 @@ public class SignUpService {
 
 	@Transactional
 	public UserAuthResponse signUpExistingUser(User user) {
-
 		updateUserActive(user);
 		HttpHeaders httpHeaders = tokenService.setToken(user);
 		if (httpHeaders != null) {
 			SimpleResponse simpleResponse = SimpleResponse.pass(ResponseType.SIGNUP_SUCCESS);
 			return new UserAuthResponse(httpHeaders, simpleResponse);
 		}
-
 		return new UserAuthResponse(SimpleResponse.fail(HttpStatus.BAD_REQUEST, ResponseType.INTERNAL_SERVER_FAIL));
 	}
 
@@ -148,7 +145,7 @@ public class SignUpService {
 		}
 	}
 
-	private Optional<Category> findCategoryById(Long id) {
+	private Optional<Category> findCategoryById(long id) {
 		return categoryRepository.findCategoryById(id);
 	}
 
@@ -156,7 +153,7 @@ public class SignUpService {
 		return userRepository.findByOauthId(oauthId);
 	}
 
-	private Optional<Address> findAddressById(Long id) {
+	private Optional<Address> findAddressById(long id) {
 		return addressRepository.findAddressById(id);
 	}
 

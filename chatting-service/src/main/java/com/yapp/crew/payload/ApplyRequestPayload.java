@@ -15,11 +15,11 @@ import lombok.Setter;
 public class ApplyRequestPayload {
 
 	@NotNull
-	private Long chatRoomId;
+	private long chatRoomId;
 
-	private Long boardId;
+	private long boardId;
 
-	private Long applierId;
+	private long applierId;
 
 	@Override
 	public String toString() {

@@ -35,8 +35,8 @@ public class EvaluateController {
 
 	@GetMapping(path = "/v1/user/my-profile/history/{boardId}/evaluate", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> getEvaluateList(
-			@RequestHeader(value = "userId") Long userId,
-			@PathVariable(name = "boardId") Long boardId
+			@RequestHeader(value = "userId") long userId,
+			@PathVariable(name = "boardId") long boardId
 	) {
 		log.info("Get evaluate list -> userId: {}, boardId: {}", userId, boardId);
 		List<EvaluateListInfo> evaluateListInfos = evaluateService.getEvaluateList(userId, boardId);
@@ -47,9 +47,9 @@ public class EvaluateController {
 
 	@PutMapping(path = "/v1/user/my-profile/history/{boardId}/evaluate/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> putEvaluate(
-			@RequestHeader(value = "userId") Long evaluateId,
-			@PathVariable(name = "boardId") Long boardId,
-			@PathVariable(name = "userId") Long userId,
+			@RequestHeader(value = "userId") long evaluateId,
+			@PathVariable(name = "boardId") long boardId,
+			@PathVariable(name = "userId") long userId,
 			@RequestParam boolean isLike
 	) {
 		log.info("Put evaluate -> evaluatedId: {}, boardId: {}, userId: {}, isLike: {}", evaluateId, boardId, userId, isLike);
@@ -60,7 +60,7 @@ public class EvaluateController {
 
 	@PostMapping(path = "/v1/user/my-profile/history/evaluate/report", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> postEvaluateReport(
-			@RequestHeader(value = "userId") Long userId,
+			@RequestHeader(value = "userId") long userId,
 			@RequestBody @Valid UserReportRequestDto reportRequestDto
 	) {
 		log.info("Post evaluated Report -> userId: {}, payload: {}", userId, reportRequestDto);

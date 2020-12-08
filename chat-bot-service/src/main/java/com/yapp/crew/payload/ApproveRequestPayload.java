@@ -13,11 +13,11 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ApproveRequestPayload {
 
-	private Long chatRoomId;
+	private long chatRoomId;
 
-	private Long boardId;
+	private long boardId;
 
-	private Long hostId;
+	private long hostId;
 
-	private Long guestId;
+	private long guestId;
 }

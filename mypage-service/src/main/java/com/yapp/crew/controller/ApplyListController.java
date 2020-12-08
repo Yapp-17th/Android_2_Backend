@@ -26,8 +26,8 @@ public class ApplyListController {
 
 	@GetMapping(path = "/v1/user/my-profile/history/{boardId}/applied", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> getAppliedList(
-			@RequestHeader(value = "userId") Long userId,
-			@PathVariable(name = "boardId") Long boardId
+			@RequestHeader(value = "userId") long userId,
+			@PathVariable(name = "boardId") long boardId
 	) {
 		log.info("Get applied list -> userId: {}, boardId: {}", userId, boardId);
 		List<ApplyListInfo> applyListInfos = applyListService.getApplyList(userId, boardId);
@@ -35,5 +35,4 @@ public class ApplyListController {
 
 		return ResponseEntity.ok().body(applyListResponseDto);
 	}
-
 }

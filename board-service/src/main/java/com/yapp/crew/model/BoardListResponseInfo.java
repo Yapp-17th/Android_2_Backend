@@ -2,7 +2,6 @@ package com.yapp.crew.model;
 
 import com.yapp.crew.domain.model.Board;
 import com.yapp.crew.domain.model.User;
-import com.yapp.crew.domain.status.UserStatus;
 import java.util.function.Predicate;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,42 +12,41 @@ import lombok.Setter;
 @NoArgsConstructor
 public class BoardListResponseInfo {
 
-	private Long boardId;
-	private Long hostId;
+	private long boardId;
+	private long hostId;
 	private String hostName;
 	private String title;
 	private BoardStatusInfo groupStatus;
 	private String exercise;
 	private String city;
-	private Boolean isBookMark;
+	private boolean isBookMark;
 	private String boardTime;
-	private Integer recruitNumber;
-	private Integer recruitedNumber;
+	private int recruitNumber;
+	private int recruitedNumber;
 
 	public static BoardListResponseInfoBuilder getBuilder() {
 		return new BoardListResponseInfoBuilder();
 	}
 
 	public static class BoardListResponseInfoBuilder {
-
-		private Long boardId = -1L;
-		private Long hostId = -1L;
+		private long boardId = -1L;
+		private long hostId = -1L;
 		private String hostName = "(알수없음)";
 		private String title = "";
 		private BoardStatusInfo groupStatus = BoardStatusInfo.emptyBody();
 		private String exercise = "";
 		private String city = "";
-		private Boolean isBookMark = false;
+		private boolean isBookMark = false;
 		private String boardTime = "";
-		private Integer recruitNumber = -1;
-		private Integer recruitedNumber = -1;
+		private int recruitNumber = -1;
+		private int recruitedNumber = -1;
 
-		public BoardListResponseInfoBuilder withBoardId(Long boardId) {
+		public BoardListResponseInfoBuilder withBoardId(long boardId) {
 			this.boardId = boardId;
 			return this;
 		}
 
-		public BoardListResponseInfoBuilder withHostId(Long hostId) {
+		public BoardListResponseInfoBuilder withHostId(long hostId) {
 			this.hostId = hostId;
 			return this;
 		}
@@ -78,17 +76,17 @@ public class BoardListResponseInfo {
 			return this;
 		}
 
-		public BoardListResponseInfoBuilder withRecruitNumber(Integer recruitNumber) {
+		public BoardListResponseInfoBuilder withRecruitNumber(int recruitNumber) {
 			this.recruitNumber = recruitNumber;
 			return this;
 		}
 
-		public BoardListResponseInfoBuilder withRecruitedNumber(Integer recruitedNumber) {
+		public BoardListResponseInfoBuilder withRecruitedNumber(int recruitedNumber) {
 			this.recruitedNumber = recruitedNumber;
 			return this;
 		}
 
-		public BoardListResponseInfoBuilder withIsBookMark(Boolean isBookMark) {
+		public BoardListResponseInfoBuilder withIsBookMark(boolean isBookMark) {
 			this.isBookMark = isBookMark;
 			return this;
 		}
@@ -109,7 +107,7 @@ public class BoardListResponseInfo {
 			boardListResponseInfo.setCity(city);
 			boardListResponseInfo.setRecruitNumber(recruitNumber);
 			boardListResponseInfo.setRecruitedNumber(recruitedNumber);
-			boardListResponseInfo.setIsBookMark(isBookMark);
+			boardListResponseInfo.setBookMark(isBookMark);
 			boardListResponseInfo.setBoardTime(boardTime);
 			return boardListResponseInfo;
 		}
@@ -133,7 +131,6 @@ public class BoardListResponseInfo {
 					.withHostName(board.getUser().getNickname())
 					.build();
 		}
-
 		return boardListResponseInfoBuilder.build();
 	}
 }

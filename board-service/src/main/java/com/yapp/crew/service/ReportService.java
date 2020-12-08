@@ -69,11 +69,11 @@ public class ReportService {
 		reportRepository.save(report);
 	}
 
-	private Optional<User> findUserById(Long userId) {
+	private Optional<User> findUserById(long userId) {
 		return userRepository.findUserById(userId);
 	}
 
-	private Optional<Board> findBoardById(Long boardId) {
+	private Optional<Board> findBoardById(long boardId) {
 		return boardRepository.findBoardById(boardId).filter(board -> board.getStatus().getCode() != BoardStatus.CANCELED.getCode());
 	}
 }

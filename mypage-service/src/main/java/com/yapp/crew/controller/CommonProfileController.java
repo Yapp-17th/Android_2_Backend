@@ -31,17 +31,16 @@ public class CommonProfileController {
 
 	@GetMapping(path = "/v1/user/{userId}/profile", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> getCommonProfile(
-			@RequestHeader(value = "userId") Long tokenUserId,
-			@PathVariable("userId") Long userId
+			@RequestHeader(value = "userId") long tokenUserId,
+			@PathVariable("userId") long userId
 	) {
 		log.info("Get common profile -> tokenUserId: {}, userId: {}", tokenUserId, userId);
-		if (tokenUserId.equals(userId)) {
+		if (tokenUserId == userId) {
 			UserProfileInfo userProfileInfo = myProfileService.getProfile(userId);
 			UserProfileResponseDto userProfileResponseDto = UserProfileResponseDto.build(userProfileInfo);
 
 			return ResponseEntity.ok().body(userProfileResponseDto);
 		}
-
 		UserProfileInfo userProfileInfo = commonProfileService.getProfile(userId);
 		UserProfileResponseDto userProfileResponseDto = UserProfileResponseDto.build(userProfileInfo);
 
@@ -50,8 +49,8 @@ public class CommonProfileController {
 
 	@GetMapping(path = "/v1/user/{userId}/profile/history", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> getCommonHistory(
-			@RequestHeader(value = "userId") Long tokenUserId,
-			@PathVariable("userId") Long userId
+			@RequestHeader(value = "userId") long tokenUserId,
+			@PathVariable("userId") long userId
 	) {
 		log.info("Get common history -> tokenUserId: {}, userId: {}", tokenUserId, userId);
 		List<HistoryListInfo> historyListInfos = commonProfileService.getHistoryList(userId);
