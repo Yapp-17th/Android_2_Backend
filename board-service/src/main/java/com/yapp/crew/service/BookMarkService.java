@@ -32,7 +32,7 @@ public class BookMarkService {
 	}
 
 	@Transactional
-	public SimpleResponse createBookMark(Long boardId, Long userId) {
+	public SimpleResponse createBookMark(long boardId, long userId) {
 		Board board = findBoardById(boardId)
 				.orElseThrow(() -> new BoardNotFoundException(boardId));
 
@@ -44,7 +44,7 @@ public class BookMarkService {
 	}
 
 	@Transactional
-	public SimpleResponse deleteBookMark(Long boardId, Long userId) {
+	public SimpleResponse deleteBookMark(long boardId, long userId) {
 		Board board = findBoardById(boardId)
 				.orElseThrow(() -> new BoardNotFoundException(boardId));
 
@@ -72,11 +72,11 @@ public class BookMarkService {
 		bookMarkRepository.save(bookMark);
 	}
 
-	private Optional<Board> findBoardById(Long boardId) {
+	private Optional<Board> findBoardById(long boardId) {
 		return boardRepository.findBoardById(boardId).filter(board -> board.getStatus().getCode() != BoardStatus.CANCELED.getCode());
 	}
 
-	private Optional<User> findUserById(Long userId) {
+	private Optional<User> findUserById(long userId) {
 		return userRepository.findUserById(userId);
 	}
 }

@@ -30,7 +30,7 @@ public class BookmarkController {
 
 	@PostMapping(path = "/v1/board/bookmark", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> postBoard(
-			@RequestHeader(value = "userId") Long userId,
+			@RequestHeader(value = "userId") long userId,
 			@RequestBody @Valid BoardIdRequestDto boardIdRequestDto
 	) {
 		log.info("Post board -> userId: {}, payload: {}", userId, boardIdRequestDto);
@@ -41,8 +41,8 @@ public class BookmarkController {
 
 	@DeleteMapping(path = "/v1/board/{boardId}/bookmark", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> deleteBoard(
-			@RequestHeader(value = "userId") Long userId,
-			@PathVariable(name = "boardId") Long boardId
+			@RequestHeader(value = "userId") long userId,
+			@PathVariable(name = "boardId") long boardId
 	) {
 		log.info("Delete board -> userId: {}, boardId: {}", userId, boardId);
 		SimpleResponse simpleResponse = bookMarkService.deleteBookMark(boardId, userId);

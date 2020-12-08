@@ -28,7 +28,7 @@ public class HiddenBoardController {
 
 	@PostMapping(path = "/v1/board/hidden", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> postBoard(
-			@RequestHeader(value = "userId") Long userId,
+			@RequestHeader(value = "userId") long userId,
 			@RequestBody @Valid BoardIdRequestDto boardIdRequestDto
 	) {
 		log.info("Post board -> userId: {}, payload: {}", userId, boardIdRequestDto);

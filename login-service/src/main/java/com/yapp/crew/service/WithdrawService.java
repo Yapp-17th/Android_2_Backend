@@ -26,7 +26,7 @@ public class WithdrawService {
 
 	@Transactional
 	public UserAuthResponse withdraw(String token) {
-		Long userId = Long.valueOf(jwtUtils.getUserIdFromToken(token));
+		long userId = Long.parseLong(jwtUtils.getUserIdFromToken(token));
 
 		User user = getUserByUserId(userId)
 				.orElseThrow(() -> new UserNotFoundException(userId));
@@ -41,7 +41,7 @@ public class WithdrawService {
 		userRepository.save(user);
 	}
 
-	private Optional<User> getUserByUserId(Long userId) {
+	private Optional<User> getUserByUserId(long userId) {
 		return userRepository.findUserById(userId);
 	}
 }

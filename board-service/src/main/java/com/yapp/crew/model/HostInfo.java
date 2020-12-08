@@ -2,7 +2,6 @@ package com.yapp.crew.model;
 
 import com.yapp.crew.domain.model.Evaluation;
 import com.yapp.crew.domain.model.User;
-import com.yapp.crew.domain.status.UserStatus;
 import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,10 +10,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class HostInfo {
 
-	private Long hostId;
+	private long hostId;
 	private String hostName;
-	private Long likes;
-	private Long dislikes;
+	private long likes;
+	private long dislikes;
 	private String intro;
 
 	public static HostInfo emptyBody() {
@@ -28,7 +27,6 @@ public class HostInfo {
 	}
 
 	public static HostInfo build(User user, List<Evaluation> evaluationList) {
-
 		if (user.isValidUser()) {
 			HostInfo hostInfo = new HostInfo();
 			hostInfo.hostId = user.getId();
@@ -39,7 +37,6 @@ public class HostInfo {
 
 			return hostInfo;
 		}
-
 		return HostInfo.emptyBody();
 	}
 }

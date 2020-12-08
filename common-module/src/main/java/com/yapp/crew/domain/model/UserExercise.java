@@ -36,7 +36,6 @@ public class UserExercise extends BaseEntity {
 	}
 
 	public static class UserExerciseBuilder {
-
 		private User user;
 		private Category category;
 

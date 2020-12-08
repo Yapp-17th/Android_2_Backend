@@ -29,7 +29,7 @@ public class ReportController {
 
 	@PostMapping(path = "/v1/board/report", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> postBoard(
-			@RequestHeader(value = "userId") Long userId,
+			@RequestHeader(value = "userId") long userId,
 			@RequestBody @Valid BoardReportRequestDto boardReportRequestDto
 	) {
 		log.info("Post board -> userId: {}, payload: {}", userId, boardReportRequestDto);

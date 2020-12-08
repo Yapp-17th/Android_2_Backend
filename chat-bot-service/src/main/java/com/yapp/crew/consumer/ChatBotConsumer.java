@@ -41,19 +41,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class ChatBotConsumer {
 
 	private final BotMessages botMessages;
-
 	private final ChatBotProducer chatBotProducer;
-
 	private final AppliedUserRepository appliedUserRepository;
-
 	private final EvaluationRepository evaluationRepository;
-
 	private final ChatRoomRepository chatRoomRepository;
-
 	private final BoardRepository boardRepository;
-
 	private final UserRepository userRepository;
-
 	private final ObjectMapper objectMapper;
 
 	@Autowired
@@ -126,7 +119,7 @@ public class ChatBotConsumer {
 		List<Evaluation> evaluations = evaluationRepository.findAllByEvaluatedId(applier.getId());
 
 		Optional<AppliedUser> appliedUser = appliedUserRepository.findByBoardIdAndUserId(board.getId(), applier.getId());
-		if (appliedUser.isPresent() && (appliedUser.get().getStatus().equals(AppliedStatus.APPLIED) || appliedUser.get().getStatus().equals(AppliedStatus.APPROVED))) {
+		if (appliedUser.isPresent() && (appliedUser.get().getStatus() == AppliedStatus.APPLIED || appliedUser.get().getStatus() == AppliedStatus.APPROVED)) {
 			throw new AlreadyAppliedException(applier.getId(), board.getId());
 		}
 		appliedUser.get().applyUser();

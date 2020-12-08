@@ -92,7 +92,7 @@ public class BoardSearchAndFilterRepository {
 		return Expressions.anyOf(cities.stream().map(this::isFilteredCity).toArray(BooleanExpression[]::new));
 	}
 
-	private BooleanExpression isFilteredCity(Long cityId) {
+	private BooleanExpression isFilteredCity(long cityId) {
 		return board.address.id.eq(cityId);
 	}
 

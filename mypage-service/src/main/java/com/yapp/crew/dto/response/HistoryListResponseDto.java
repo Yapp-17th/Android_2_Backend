@@ -13,8 +13,8 @@ import org.springframework.http.HttpStatus;
 @NoArgsConstructor
 public class HistoryListResponseDto {
 
-	private Integer status;
-	private Boolean success;
+	private int status;
+	private boolean success;
 	private String message;
 	private String type;
 	private List<HistoryListInfo> data;
@@ -24,18 +24,18 @@ public class HistoryListResponseDto {
 	}
 
 	public static class HistoryListResponseDtoBuilder {
-		private Integer status = HttpStatus.OK.value();
-		private Boolean success = true;
+		private int status = HttpStatus.OK.value();
+		private boolean success = true;
 		private String message = "히스토리 조회 성공";
 		private String type = "";
 		private List<HistoryListInfo> data = Collections.emptyList();
 
-		public HistoryListResponseDtoBuilder withStatus(Integer status) {
+		public HistoryListResponseDtoBuilder withStatus(int status) {
 			this.status = status;
 			return this;
 		}
 
-		public HistoryListResponseDtoBuilder withSuccess(Boolean success) {
+		public HistoryListResponseDtoBuilder withSuccess(boolean success) {
 			this.success = success;
 			return this;
 		}

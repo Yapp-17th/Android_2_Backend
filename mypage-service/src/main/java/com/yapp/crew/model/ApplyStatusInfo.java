@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ApplyStatusInfo {
 
-	Integer code;
+	int code;
 	String name;
 
 	public static ApplyStatusInfo build(AppliedStatus appliedStatus) {

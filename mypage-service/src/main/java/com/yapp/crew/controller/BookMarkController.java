@@ -24,7 +24,7 @@ public class BookMarkController {
 	}
 
 	@GetMapping(path = "/v1/user/my-profile/bookmark", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> getMyBookmark(@RequestHeader(value = "userId") Long userId) {
+	public ResponseEntity<?> getMyBookmark(@RequestHeader(value = "userId") long userId) {
 		log.info("Get my bookmark -> userId: {}", userId);
 
 		List<BoardListInfo> boardListInfos = bookMarkService.getBookMarks(userId);

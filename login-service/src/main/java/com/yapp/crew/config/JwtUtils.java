@@ -18,10 +18,13 @@ public class JwtUtils {
 
 	@Value(value = "${jwt.secret}")
 	private String secret;
+
 	@Value(value = "${jwt.expiration}")
 	private String expiration;
+
 	@Value(value = "${jwt.header}")
 	private String header;
+
 	@Value(value = "${jwt.prefix}")
 	private String prefix;
 

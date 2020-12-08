@@ -73,9 +73,9 @@ public class Board extends BaseEntity {
 	@Enumerated(value = EnumType.ORDINAL)
 	private BoardStatus status = BoardStatus.RECRUITING;
 
-	@Column(name = "recruit_count", nullable = false)
 	@Setter(value = AccessLevel.PRIVATE)
-	private Integer recruitCount = 0;
+	@Column(name = "recruit_count", nullable = false)
+	private int recruitCount;
 
 	@Setter(value = AccessLevel.PRIVATE)
 	@Column(name = "starts_at", nullable = false)
@@ -152,7 +152,6 @@ public class Board extends BaseEntity {
 	}
 
 	public static class BoardBuilder {
-
 		private String title;
 		private String content;
 		private String place;
@@ -230,6 +229,6 @@ public class Board extends BaseEntity {
 
 	@Override
 	public String toString() {
-		return this.getId().toString();
+		return String.valueOf(this.getId());
 	}
 }

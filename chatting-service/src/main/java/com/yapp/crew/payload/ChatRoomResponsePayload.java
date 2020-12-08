@@ -18,13 +18,13 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ChatRoomResponsePayload {
 
-	private Long id;
+	private long id;
 
-	private Long hostId;
+	private long hostId;
 
-	private Long guestId;
+	private long guestId;
 
-	private Long boardId;
+	private long boardId;
 
 	private String opponentNickname;
 
@@ -34,39 +34,39 @@ public class ChatRoomResponsePayload {
 
 	private MessageResponsePayload lastMessage;
 
-	private Long unreadMessages;
+	private long unreadMessages;
 
 	public static ChatRoomResponseBuilder getBuilder() {
 		return new ChatRoomResponseBuilder();
 	}
 
 	public static class ChatRoomResponseBuilder {
-		private Long id = -1L;
-		private Long hostId = -1L;
-		private Long guestId = -1L;
-		private Long boardId = -1L;
+		private long id = -1L;
+		private long hostId = -1L;
+		private long guestId = -1L;
+		private long boardId = -1L;
 		private String opponentNickname = "";
 		private String status = "";
 		private LocalDateTime createdAt = LocalDateTime.now();
 		private MessageResponsePayload lastMessage = MessageResponsePayload.emptyBody();
-		private Long unreadMessages = -1L;
+		private long unreadMessages = -1L;
 
-		public ChatRoomResponseBuilder withId(Long id) {
+		public ChatRoomResponseBuilder withId(long id) {
 			this.id = id;
 			return this;
 		}
 
-		public ChatRoomResponseBuilder withHostId(Long hostId) {
+		public ChatRoomResponseBuilder withHostId(long hostId) {
 			this.hostId = hostId;
 			return this;
 		}
 
-		public ChatRoomResponseBuilder withGuestId(Long guestId) {
+		public ChatRoomResponseBuilder withGuestId(long guestId) {
 			this.guestId = guestId;
 			return this;
 		}
 
-		public ChatRoomResponseBuilder withBoardId(Long boardId) {
+		public ChatRoomResponseBuilder withBoardId(long boardId) {
 			this.boardId = boardId;
 			return this;
 		}
@@ -91,7 +91,7 @@ public class ChatRoomResponsePayload {
 			return this;
 		}
 
-		public ChatRoomResponseBuilder withUnreadMessages(Long unreadMessages) {
+		public ChatRoomResponseBuilder withUnreadMessages(long unreadMessages) {
 			this.unreadMessages = unreadMessages;
 			return this;
 		}
@@ -123,20 +123,7 @@ public class ChatRoomResponsePayload {
 				.build();
 	}
 
-	public static ChatRoomResponsePayload buildChatRoomResponsePayload(ChatRoom chatRoom, MessageResponsePayload lastMessage, Long unreadMessages) {
-		return ChatRoomResponsePayload.getBuilder()
-				.withId(chatRoom.getId())
-				.withHostId(chatRoom.getHost().getId())
-				.withGuestId(chatRoom.getGuest().getId())
-				.withBoardId(chatRoom.getBoard().getId())
-				.withStatus(chatRoom.getStatus())
-				.withLastMessage(lastMessage)
-				.withUnreadMessages(unreadMessages)
-				.withCreatedAt(chatRoom.getCreatedAt())
-				.build();
-	}
-
-	public static ChatRoomResponsePayload buildChatRoomResponsePayload(ChatRoom chatRoom, MessageResponsePayload lastMessage, Long unreadMessages, String opponentNickname) {
+	public static ChatRoomResponsePayload buildChatRoomResponsePayload(ChatRoom chatRoom, MessageResponsePayload lastMessage, long unreadMessages, String opponentNickname) {
 		return ChatRoomResponsePayload.getBuilder()
 				.withId(chatRoom.getId())
 				.withHostId(chatRoom.getHost().getId())
@@ -150,13 +137,13 @@ public class ChatRoomResponsePayload {
 				.build();
 	}
 
-	public static List<ChatRoomResponsePayload> buildChatRoomResponsePayload(List<ChatRoom> chatRooms, Long userId) {
+	public static List<ChatRoomResponsePayload> buildChatRoomResponsePayload(List<ChatRoom> chatRooms, long userId) {
 		return chatRooms.stream()
 				.map(chatRoom -> {
 					List<Message> messages = chatRoom.getMessages();
 
 					boolean isHost = chatRoom.isUserChatRoomHost(userId);
-					Long unreadMessages = chatRoom.countUnreadMessages(isHost);
+					long unreadMessages = chatRoom.countUnreadMessages(isHost);
 					String opponentNickname;
 					if (isHost) {
 						opponentNickname = chatRoom.getGuest().getNickname();

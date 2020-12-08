@@ -13,8 +13,8 @@ import org.springframework.http.HttpStatus;
 @NoArgsConstructor
 public class ApplyListResponseDto {
 
-	private Integer status;
-	private Boolean success;
+	private int status;
+	private boolean success;
 	private String message;
 	private List<ApplyListInfo> data;
 
@@ -23,17 +23,17 @@ public class ApplyListResponseDto {
 	}
 
 	public static class ApplyListResponseDtoBuilder {
-		private Integer status = HttpStatus.OK.value();
-		private Boolean success = true;
+		private int status = HttpStatus.OK.value();
+		private boolean success = true;
 		private String message = "신청자 리스트 조회 성공";
 		private List<ApplyListInfo> data = Collections.emptyList();
 
-		public ApplyListResponseDtoBuilder withStatus(Integer status) {
+		public ApplyListResponseDtoBuilder withStatus(int status) {
 			this.status = status;
 			return this;
 		}
 
-		public ApplyListResponseDtoBuilder withSuccess(Boolean success) {
+		public ApplyListResponseDtoBuilder withSuccess(boolean success) {
 			this.success = success;
 			return this;
 		}

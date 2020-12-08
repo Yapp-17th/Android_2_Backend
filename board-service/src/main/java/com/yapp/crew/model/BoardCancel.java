@@ -7,11 +7,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class BoardCancel {
 
-	private Long boardId;
+	private long boardId;
 
-	private Long userId;
+	private long userId;
 
-	public static BoardCancel build(Long boardId, Long userId) {
+	public static BoardCancel build(long boardId, long userId) {
 		BoardCancel payload = new BoardCancel();
 		payload.boardId = boardId;
 		payload.userId = userId;

@@ -9,10 +9,10 @@ import lombok.NoArgsConstructor;
 public class BoardReportRequestDto {
 
 	@NotNull
-	private Long boardId;
+	private long boardId;
 
 	@NotNull
-	private Long reportType;
+	private long reportType;
 
 	private String content;
 

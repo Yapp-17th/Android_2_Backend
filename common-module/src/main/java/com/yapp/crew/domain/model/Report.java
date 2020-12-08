@@ -51,7 +51,6 @@ public class Report extends BaseEntity {
 	}
 
 	public static class ReportBuilder {
-
 		private User reporter;
 		private User reported;
 		private ReportType type;

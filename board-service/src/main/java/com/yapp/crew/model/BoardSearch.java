@@ -8,10 +8,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class BoardSearch {
 
-	private Long userId;
+	private long userId;
 	private List<String> keywords;
 
-	public static BoardSearch build(List<String> keyword, Long userId) {
+	public static BoardSearch build(List<String> keyword, long userId) {
 		BoardSearch boardSearch = new BoardSearch();
 		boardSearch.userId = userId;
 		boardSearch.keywords = keyword;

@@ -1,7 +1,6 @@
 package com.yapp.crew.model;
 
 import com.yapp.crew.domain.model.Tag;
-import com.yapp.crew.domain.type.UserTag;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -9,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TagCode {
 
-	private Long id;
+	private long id;
 	private String name;
 
 	public static TagCode build(Tag tag) {
@@ -20,7 +19,7 @@ public class TagCode {
 		return tagCode;
 	}
 
-	public static TagCode build(Long id, String name) {
+	public static TagCode build(long id, String name) {
 		TagCode tagCode = new TagCode();
 		tagCode.id = id;
 		tagCode.name = name;

@@ -8,7 +8,5 @@ public interface ReportRepository extends JpaRepository<Report, Long> {
 
 	List<Report> findAll();
 
-	List<Report> findAllByReportedId(Long userId);
-
 	Report save(Report report);
 }

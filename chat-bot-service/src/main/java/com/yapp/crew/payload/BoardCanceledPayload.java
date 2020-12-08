@@ -13,7 +13,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class BoardCanceledPayload {
 
-	Long boardId;
+	long boardId;
 
-	Long userId;
+	long userId;
 }

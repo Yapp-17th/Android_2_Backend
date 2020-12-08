@@ -1,5 +1,6 @@
 package com.yapp.crew.payload;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.yapp.crew.domain.model.Message;
 import com.yapp.crew.domain.repository.MessageRepository;
 import com.yapp.crew.domain.type.MessageType;
@@ -18,7 +19,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class MessageResponsePayload {
 
-	private Long id;
+	private long id;
 
 	private String content;
 
@@ -26,15 +27,17 @@ public class MessageResponsePayload {
 
 	private String realTimeUpdateType;
 
-	private Boolean isHostRead;
+	@JsonProperty(value = "isHostRead")
+	private boolean isHostRead;
 
-	private Boolean isGuestRead;
+	@JsonProperty(value = "isGuestRead")
+	private boolean isGuestRead;
 
-	private Long messageId;
+	private long messageId;
 
-	private Long chatRoomId;
+	private long chatRoomId;
 
-	private Long senderId;
+	private long senderId;
 
 	private String senderNickname;
 
@@ -49,19 +52,19 @@ public class MessageResponsePayload {
 	}
 
 	public static class MessageResponsePayloadBuilder {
-		private Long id = -1L;
+		private long id = -1L;
 		private String content = "";
 		private String type = "";
 		private String realTimeUpdateType = "";
-		private Boolean isHostRead = false;
-		private Boolean isGuestRead = false;
-		private Long messageId = -1L;
-		private Long chatRoomId = -1L;
-		private Long senderId = -1L;
+		private boolean isHostRead = false;
+		private boolean isGuestRead = false;
+		private long messageId = -1L;
+		private long chatRoomId = -1L;
+		private long senderId = -1L;
 		private String senderNickname = "";
 		private LocalDateTime createdAt = LocalDateTime.now();
 
-		public MessageResponsePayloadBuilder withId(Long id) {
+		public MessageResponsePayloadBuilder withId(long id) {
 			this.id = id;
 			return this;
 		}
@@ -81,27 +84,27 @@ public class MessageResponsePayload {
 			return this;
 		}
 
-		public MessageResponsePayloadBuilder withIsHostRead(Boolean isHostRead) {
+		public MessageResponsePayloadBuilder withIsHostRead(boolean isHostRead) {
 			this.isHostRead = isHostRead;
 			return this;
 		}
 
-		public MessageResponsePayloadBuilder withIsGuestRead(Boolean isGuestRead) {
+		public MessageResponsePayloadBuilder withIsGuestRead(boolean isGuestRead) {
 			this.isGuestRead = isGuestRead;
 			return this;
 		}
 
-		public MessageResponsePayloadBuilder withMessageId(Long messageId) {
+		public MessageResponsePayloadBuilder withMessageId(long messageId) {
 			this.messageId = messageId;
 			return this;
 		}
 
-		public MessageResponsePayloadBuilder withChatRoomId(Long chatRoomId) {
+		public MessageResponsePayloadBuilder withChatRoomId(long chatRoomId) {
 			this.chatRoomId = chatRoomId;
 			return this;
 		}
 
-		public MessageResponsePayloadBuilder withSenderId(Long senderId) {
+		public MessageResponsePayloadBuilder withSenderId(long senderId) {
 			this.senderId = senderId;
 			return this;
 		}
@@ -122,8 +125,8 @@ public class MessageResponsePayload {
 			payload.setContent(content);
 			payload.setType(type);
 			payload.setRealTimeUpdateType(realTimeUpdateType);
-			payload.setIsHostRead(isHostRead);
-			payload.setIsGuestRead(isGuestRead);
+			payload.setHostRead(isHostRead);
+			payload.setGuestRead(isGuestRead);
 			payload.setMessageId(messageId);
 			payload.setChatRoomId(chatRoomId);
 			payload.setSenderId(senderId);
@@ -157,9 +160,7 @@ public class MessageResponsePayload {
 		return messages.stream()
 				.map(message -> {
 					message.readMessage(isHost);
-
 					messageRepository.save(message);
-
 					return MessageResponsePayload.buildChatMessageResponsePayload(message);
 				})
 				.collect(Collectors.toList());

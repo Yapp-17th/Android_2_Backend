@@ -8,9 +8,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserReportRequest {
 
-	private Long reportedId;
-	private Long reportId;
-	private Long type;
+	private long reportedId;
+	private long reportId;
+	private int type;
 	private String content;
 
 	public static UserReportRequest build(long userId, UserReportRequestDto userReportRequestDto) {

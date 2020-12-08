@@ -9,7 +9,7 @@ public interface TagRepository extends JpaRepository<Tag, Long> {
 
 	List<Tag> findAll();
 
-	Optional<Tag> findTagById(Long id);
+	Optional<Tag> findTagById(long id);
 
 	Tag save(Tag tag);
 }

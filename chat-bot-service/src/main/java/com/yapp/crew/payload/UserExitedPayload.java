@@ -13,7 +13,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class UserExitedPayload {
 
-	private Long chatRoomId;
+	private long chatRoomId;
 
-	private Long userId;
+	private long userId;
 }

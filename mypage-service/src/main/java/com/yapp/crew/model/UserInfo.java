@@ -1,7 +1,6 @@
 package com.yapp.crew.model;
 
 import com.yapp.crew.domain.model.User;
-import com.yapp.crew.domain.status.UserStatus;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -12,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserInfo {
 
-	private Long userId = -1L;
+	private long userId = -1L;
 	private String userName = "(알수없음)";
 	private String nickName = "(알수없음)";
 	private String email = "";
@@ -32,7 +31,6 @@ public class UserInfo {
 			userInfo.category.addAll(user.getUserExercise().stream().map(exercise -> CategoryCode.build(exercise.getCategory())).collect(Collectors.toSet()));
 			userInfo.city = CityCode.build(user.getAddress());
 		}
-
 		return userInfo;
 	}
 }

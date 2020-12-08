@@ -18,16 +18,16 @@ public class BoardInfoRequestDto {
 	private String content;
 
 	@NotNull
-	private Long category;
+	private long category;
 
 	@NotNull
-	private Long city;
+	private long city;
 
 	@NotNull
-	private Long userTag;
+	private long userTag;
 
 	@NotNull
-	private Integer recruitNumber;
+	private int recruitNumber;
 
 	@NotNull
 	@FutureOrPresent

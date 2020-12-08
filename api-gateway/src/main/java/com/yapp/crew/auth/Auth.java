@@ -30,7 +30,7 @@ public class Auth {
 		}
 	}
 
-	public Long parseUserIdFromToken(String token) {
+	public long parseUserIdFromToken(String token) {
 		token = token.replace(jwtPrefix + " ", "");
 		Jws<Claims> claimsJws = Jwts.parserBuilder()
 				.setSigningKey(Keys.hmacShaKeyFor(jwtSecret.getBytes()))

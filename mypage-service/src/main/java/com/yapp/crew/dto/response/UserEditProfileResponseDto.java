@@ -11,38 +11,37 @@ import org.springframework.http.HttpStatus;
 @NoArgsConstructor
 public class UserEditProfileResponseDto {
 
-	private Integer status;
-	private Boolean success;
+	private int status;
+	private boolean success;
 	private String message;
 	private UserInfo data;
 
-	public static UserEditProfileResponseDtoBuidler getBuilder() {
-		return new UserEditProfileResponseDtoBuidler();
+	public static UserEditProfileResponseDtoBuilder getBuilder() {
+		return new UserEditProfileResponseDtoBuilder();
 	}
 
-	public static class UserEditProfileResponseDtoBuidler {
-
-		private Integer status = HttpStatus.OK.value();
-		private Boolean success = true;
+	public static class UserEditProfileResponseDtoBuilder {
+		private int status = HttpStatus.OK.value();
+		private boolean success = true;
 		private String message = "회원 수정용 프로필 조회 완료";
 		private UserInfo data;
 
-		public UserEditProfileResponseDtoBuidler withStatus(Integer status) {
+		public UserEditProfileResponseDtoBuilder withStatus(int status) {
 			this.status = status;
 			return this;
 		}
 
-		public UserEditProfileResponseDtoBuidler withSuccess(Boolean success) {
+		public UserEditProfileResponseDtoBuilder withSuccess(boolean success) {
 			this.success = success;
 			return this;
 		}
 
-		public UserEditProfileResponseDtoBuidler withMessage(String message) {
+		public UserEditProfileResponseDtoBuilder withMessage(String message) {
 			this.message = message;
 			return this;
 		}
 
-		public UserEditProfileResponseDtoBuidler withData(UserInfo data) {
+		public UserEditProfileResponseDtoBuilder withData(UserInfo data) {
 			this.data = data;
 			return this;
 		}
