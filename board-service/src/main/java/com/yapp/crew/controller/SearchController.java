@@ -32,7 +32,7 @@ public class SearchController {
 	@GetMapping(path = "/v1/board/search", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> getBoardList(
 			@RequestHeader(value = "userId") long userId,
-			@PageableDefault(size = 20, page = 0) Pageable pageable,
+			@PageableDefault(size = 200, page = 0) Pageable pageable,
 			@RequestParam List<String> keyword
 	) {
 		log.info("Get board list -> userId: {}, pageable: {}, keyword: {}", userId, pageable, keyword);
