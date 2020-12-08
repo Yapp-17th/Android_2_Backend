@@ -218,7 +218,7 @@ public class ChatBotConsumer {
 				.forEach(chatRoom -> {
 					MessageRequestPayload boardFinishedMessagePayload = MessageRequestPayload.builder()
 							.content(botMessages.getBoardFinished())
-							.type(MessageType.BOT_MESSAGE)
+							.type(MessageType.BOARD_COMPLETE)
 							.senderId(bot.getId())
 							.chatRoomId(chatRoom.getId())
 							.boardId(board.getId())
