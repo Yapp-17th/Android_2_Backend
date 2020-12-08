@@ -77,7 +77,7 @@ public class BoardService {
 	}
 
 	@Transactional
-	public SimpleResponse postBoard(BoardPostRequiredInfo boardPostRequiredInfo, Long userId) {
+	public SimpleResponse postBoard(BoardPostRequiredInfo boardPostRequiredInfo, long userId) {
 		User user = findUserById(userId)
 				.orElseThrow(() -> new UserNotFoundException(userId));
 
@@ -119,7 +119,7 @@ public class BoardService {
 	}
 
 	@Transactional
-	public BoardContentResponseInfo getBoardContent(Long boardId, Long userId) {
+	public BoardContentResponseInfo getBoardContent(long boardId, long userId) {
 		Board board = findBoardById(boardId)
 				.orElseThrow(() -> new BoardNotFoundException(boardId));
 
@@ -128,11 +128,11 @@ public class BoardService {
 	}
 
 	@Transactional
-	public SimpleResponse deleteBoard(Long boardId, Long userId) throws JsonProcessingException {
+	public SimpleResponse deleteBoard(long boardId, long userId) throws JsonProcessingException {
 		Board board = findMyBoardById(boardId, userId)
 				.orElseThrow(() -> new BoardNotFoundException(boardId));
 
-		if (!board.getUser().getId().equals(userId)) {
+		if (board.getUser().getId() != userId) {
 			throw new UnAuthorizedEventException("Board Service - Incorrect board host with id: " + userId);
 		}
 		deleteBoard(board);
@@ -142,11 +142,11 @@ public class BoardService {
 	}
 
 	@Transactional
-	public BoardContentResponseInfo editBoardContent(Long boardId, Long userId, BoardPostRequiredInfo boardPostRequiredInfo) {
+	public BoardContentResponseInfo editBoardContent(long boardId, long userId, BoardPostRequiredInfo boardPostRequiredInfo) {
 		Board board = findMyBoardById(boardId, userId)
 				.orElseThrow(() -> new BoardNotFoundException(boardId));
 
-		if (!board.getUser().getId().equals(userId)) {
+		if (board.getUser().getId() != userId) {
 			throw new UnAuthorizedEventException("Board Service - Incorrect board host with id: " + userId);
 		}
 
@@ -191,34 +191,34 @@ public class BoardService {
 		boardRepository.save(board);
 	}
 
-	private List<Evaluation> findAllByEvaluatedId(Long userId) {
+	private List<Evaluation> findAllByEvaluatedId(long userId) {
 		return evaluationRepository.findAllByEvaluatedId(userId);
 	}
 
-	private Optional<Board> findMyBoardById(Long boardId, Long userId) {
+	private Optional<Board> findMyBoardById(long boardId, long userId) {
 		return boardRepository.findBoardById(boardId)
 				.filter(board -> board.getStatus().getCode() != BoardStatus.CANCELED.getCode())
-				.filter(board -> board.getUser().getId().equals(userId));
+				.filter(board -> board.getUser().getId() == userId);
 	}
 
-	private Optional<Board> findBoardById(Long boardId) {
+	private Optional<Board> findBoardById(long boardId) {
 		return boardRepository.findBoardById(boardId)
 				.filter(board -> board.getStatus().getCode() != BoardStatus.CANCELED.getCode());
 	}
 
-	private Optional<User> findUserById(Long userId) {
+	private Optional<User> findUserById(long userId) {
 		return userRepository.findUserById(userId);
 	}
 
-	private Optional<Category> findCategoryById(Long categoryId) {
+	private Optional<Category> findCategoryById(long categoryId) {
 		return categoryRepository.findCategoryById(categoryId);
 	}
 
-	private Optional<Address> findAddressById(Long addressId) {
+	private Optional<Address> findAddressById(long addressId) {
 		return addressRepository.findAddressById(addressId);
 	}
 
-	private Optional<Tag> findTagById(Long tagId) {
+	private Optional<Tag> findTagById(long tagId) {
 		return tagRepository.findTagById(tagId);
 	}
 

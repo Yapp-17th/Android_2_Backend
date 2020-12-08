@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 @Getter
 public class SimpleResponseDto {
 
-	private Integer status;
-	private Boolean success;
+	private int status;
+	private boolean success;
 	private String message;
 
 	public static SimpleResponseDto build(SimpleResponse simpleResponse) {

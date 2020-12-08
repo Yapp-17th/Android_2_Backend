@@ -38,11 +38,11 @@ public class ChatRoom extends BaseEntity {
 
 	@Setter(value = AccessLevel.PRIVATE)
 	@Column(name = "host_exited", nullable = false)
-	private Boolean hostExited = false;
+	private boolean hostExited;
 
 	@Setter(value = AccessLevel.PRIVATE)
 	@Column(name = "guest_exited", nullable = false)
-	private Boolean guestExited = false;
+	private boolean guestExited;
 
 	@JsonBackReference
 	@Setter(value = AccessLevel.PROTECTED)
@@ -91,11 +91,11 @@ public class ChatRoom extends BaseEntity {
 		setStatus(ChatRoomStatus.INACTIVE);
 	}
 
-	public boolean isUserChatRoomHost(Long userId) {
-		return userId.equals(getHost().getId());
+	public boolean isUserChatRoomHost(long userId) {
+		return userId == getHost().getId();
 	}
 
-	public Long countUnreadMessages(boolean isHost) {
+	public long countUnreadMessages(boolean isHost) {
 		if (isHost) {
 			return getMessages().stream()
 					.filter(message -> !message.isHostRead())
@@ -106,7 +106,7 @@ public class ChatRoom extends BaseEntity {
 				.count();
 	}
 
-	public Long findFirstUnreadChatMessage(boolean isHost) {
+	public long findFirstUnreadChatMessage(boolean isHost) {
 		Optional<Message> firstUnreadChatMessage;
 
 		if (isHost) {
@@ -138,7 +138,6 @@ public class ChatRoom extends BaseEntity {
 	}
 
 	public static class ChatRoomBuilder {
-
 		private User host;
 		private User guest;
 		private Board board;

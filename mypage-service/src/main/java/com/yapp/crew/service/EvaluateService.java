@@ -54,7 +54,7 @@ public class EvaluateService {
 		return evaluations.stream()
 				.filter(evaluation -> findUserById(evaluation.getEvaluatedId()).orElse(null) != null)
 				.map(evaluation -> EvaluateListInfo.build(evaluation, findUserById(evaluation.getEvaluatedId()).get(), board))
-				.sorted(Comparator.comparing(EvaluateListInfo::getIsHost))
+				.sorted(Comparator.comparing(EvaluateListInfo::isHost))
 				.collect(Collectors.toList());
 	}
 
@@ -69,7 +69,6 @@ public class EvaluateService {
 		} else {
 			insertEvaluation(board, evaluateId, evaluatedId, isLike);
 		}
-
 		return SimpleResponse.pass(ResponseType.EVALUATE_SUCCESS);
 	}
 
@@ -85,7 +84,7 @@ public class EvaluateService {
 		Report report = reportBuilder
 				.withReporter(reporter)
 				.withReported(reported)
-				.withType(ReportType.valueOfCode(userReportRequest.getType().intValue()))
+				.withType(ReportType.valueOfCode(userReportRequest.getType()))
 				.withContent(userReportRequest.getContent())
 				.build();
 
@@ -94,11 +93,11 @@ public class EvaluateService {
 		return SimpleResponse.pass(ResponseType.REPORT_SUCCESS);
 	}
 
-	private Optional<User> findUserById(Long userId) {
+	private Optional<User> findUserById(long userId) {
 		return userRepository.findUserById(userId);
 	}
 
-	private Optional<Board> findBoardById(Long boardId) {
+	private Optional<Board> findBoardById(long boardId) {
 		return boardRepository.findBoardById(boardId);
 	}
 

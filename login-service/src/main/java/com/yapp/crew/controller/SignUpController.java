@@ -44,7 +44,6 @@ public class SignUpController {
 		if (httpHeaders != null) {
 			return ResponseEntity.ok().headers(httpHeaders).body(simpleResponseDto);
 		}
-
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 				.body(SimpleResponseDto.build(SimpleResponse.fail(HttpStatus.INTERNAL_SERVER_ERROR, ResponseType.INTERNAL_SERVER_FAIL)));
 	}

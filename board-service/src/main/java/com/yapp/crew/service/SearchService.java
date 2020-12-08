@@ -44,7 +44,7 @@ public class SearchService {
 		return boardSearchAndFilterRepository.search(boardSearchCondition, pageable);
 	}
 
-	private Optional<User> findUserById(Long userId) {
+	private Optional<User> findUserById(long userId) {
 		return userRepository.findUserById(userId);
 	}
 }

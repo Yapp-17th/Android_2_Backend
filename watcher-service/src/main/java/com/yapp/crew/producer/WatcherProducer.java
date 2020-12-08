@@ -37,7 +37,7 @@ public class WatcherProducer {
 	}
 
 	public ListenableFuture<SendResult<Long, String>> produceBoardSuccessfullyFinishedEvent(BoardFinishedPayload payload) throws JsonProcessingException {
-		Long key = payload.getBoardId();
+		long key = payload.getBoardId();
 		String value = objectMapper.writeValueAsString(payload);
 
 		ProducerRecord<Long, String> producerRecord = buildProducerRecord(key, value, boardFinishedTopic);
@@ -57,12 +57,12 @@ public class WatcherProducer {
 		return listenableFuture;
 	}
 
-	private ProducerRecord<Long, String> buildProducerRecord(Long key, String value, String topic) {
+	private ProducerRecord<Long, String> buildProducerRecord(long key, String value, String topic) {
 		List<Header> recordHeaders = List.of(new RecordHeader("event-source", "scanner".getBytes()));
 		return new ProducerRecord<Long, String>(topic, null, key, value, recordHeaders);
 	}
 
-	private void handleFailure(Long key, String value, Throwable ex) {
+	private void handleFailure(long key, String value, Throwable ex) {
 		log.error("Error sending the message and exception is {}", ex.getMessage());
 		try {
 			throw ex;
@@ -71,7 +71,7 @@ public class WatcherProducer {
 		}
 	}
 
-	private void handleSuccess(Long key, String value, SendResult<Long, String> result) {
+	private void handleSuccess(long key, String value, SendResult<Long, String> result) {
 		log.info("Message send successfully for the key: {} and the value is {}, partition is {}", key, value, result.getRecordMetadata().partition());
 	}
 }

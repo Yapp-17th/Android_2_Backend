@@ -15,14 +15,14 @@ import lombok.Setter;
 public class ApproveRequestPayload {
 
 	@NotNull
-	private Long chatRoomId;
+	private long chatRoomId;
 
-	private Long boardId;
+	private long boardId;
 
-	private Long hostId;
+	private long hostId;
 
 	@NotNull
-	private Long guestId;
+	private long guestId;
 
 	@Override
 	public String toString() {

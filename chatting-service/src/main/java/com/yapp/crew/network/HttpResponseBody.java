@@ -20,7 +20,7 @@ public class HttpResponseBody<T> {
 
 	private LocalDateTime transactionTime;
 
-	private Integer status;
+	private int status;
 
 	private ResponseType responseType;
 
@@ -28,7 +28,7 @@ public class HttpResponseBody<T> {
 	private String message;
 
 	@JsonInclude(NON_NULL)
-	private Long firstUnreadMessageId;
+	private long firstUnreadMessageId;
 
 	@JsonInclude(NON_NULL)
 	private String boardTitle;
@@ -37,17 +37,17 @@ public class HttpResponseBody<T> {
 	private AppliedStatus appliedStatus;
 
 	@JsonInclude(NON_NULL)
-	private Boolean isHostExited;
+	private boolean isHostExited;
 
 	@JsonInclude(NON_NULL)
-	private Boolean isGuestExited;
+	private boolean isGuestExited;
 
 	@JsonInclude(NON_NULL)
 	private T data;
 
-	public static <T> HttpResponseBody<T> buildChatMessagesResponse(T data, Integer status,
-			ResponseType responseType, Long firstUnreadMessageId, String boardTitle, AppliedStatus appliedStatus, ChatRoom chatRoom) {
-
+	public static <T> HttpResponseBody<T> buildChatMessagesResponse(
+			T data, int status, ResponseType responseType, long firstUnreadMessageId, String boardTitle, AppliedStatus appliedStatus, ChatRoom chatRoom
+	) {
 		return (HttpResponseBody<T>) HttpResponseBody.builder()
 				.transactionTime(LocalDateTime.now())
 				.status(status)
@@ -55,27 +55,13 @@ public class HttpResponseBody<T> {
 				.firstUnreadMessageId(firstUnreadMessageId)
 				.boardTitle(boardTitle)
 				.appliedStatus(appliedStatus)
-				.isHostExited(chatRoom.getHostExited())
-				.isGuestExited(chatRoom.getGuestExited())
+				.isHostExited(chatRoom.isHostExited())
+				.isGuestExited(chatRoom.isGuestExited())
 				.data(data)
 				.build();
 	}
 
-	public static <T> HttpResponseBody<T> buildChatMessagesResponse(T data, Integer status,
-			ResponseType responseType, Long firstUnreadMessageId) {
-
-		return (HttpResponseBody<T>) HttpResponseBody.builder()
-				.transactionTime(LocalDateTime.now())
-				.status(status)
-				.responseType(responseType)
-				.firstUnreadMessageId(firstUnreadMessageId)
-				.data(data)
-				.build();
-	}
-
-	public static <T> HttpResponseBody<T> buildChatRoomsResponse(T data, Integer status,
-			ResponseType responseType) {
-
+	public static <T> HttpResponseBody<T> buildChatRoomsResponse(T data, int status, ResponseType responseType) {
 		return (HttpResponseBody<T>) HttpResponseBody.builder()
 				.transactionTime(LocalDateTime.now())
 				.status(status)
@@ -84,9 +70,7 @@ public class HttpResponseBody<T> {
 				.build();
 	}
 
-	public static <T> HttpResponseBody<T> buildChatRoomResponse(T data, Integer status,
-			ResponseType responseType) {
-
+	public static <T> HttpResponseBody<T> buildChatRoomResponse(T data, int status, ResponseType responseType) {
 		return (HttpResponseBody<T>) HttpResponseBody.builder()
 				.transactionTime(LocalDateTime.now())
 				.status(status)
@@ -95,9 +79,7 @@ public class HttpResponseBody<T> {
 				.build();
 	}
 
-	public static <T> HttpResponseBody<T> buildErrorResponse(Integer status,
-			ResponseType responseType, String message) {
-
+	public static <T> HttpResponseBody<T> buildSuccessResponse(int status, ResponseType responseType, String message) {
 		return (HttpResponseBody<T>) HttpResponseBody.builder()
 				.transactionTime(LocalDateTime.now())
 				.status(status)
@@ -106,20 +88,7 @@ public class HttpResponseBody<T> {
 				.build();
 	}
 
-	public static <T> HttpResponseBody<T> buildSuccessResponse(Integer status,
-			ResponseType responseType, String message) {
-
-		return (HttpResponseBody<T>) HttpResponseBody.builder()
-				.transactionTime(LocalDateTime.now())
-				.status(status)
-				.responseType(responseType)
-				.message(message)
-				.build();
-	}
-
-	public static <T> HttpResponseBody<T> buildSuccessResponse(Integer status,
-			ResponseType responseType, String message, T data) {
-
+	public static <T> HttpResponseBody<T> buildSuccessResponse(int status, ResponseType responseType, String message, T data) {
 		return (HttpResponseBody<T>) HttpResponseBody.builder()
 				.transactionTime(LocalDateTime.now())
 				.status(status)

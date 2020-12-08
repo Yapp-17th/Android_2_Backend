@@ -25,14 +25,13 @@ public class UserAuthenticationService {
 		log.info("suspended users -> {}", suspendedUser);
 
 		suspendedUser.forEach(user -> {
-			if (user.getSuspendedDay().equals(7)) {
+			if (user.getSuspendedDay() == 7) {
 				user.setUserStatusActive();
 				user.resetSuspendedDays();
 				log.info("set user status active -> {}", user.getId());
 			} else {
 				user.increaseSuspendedDays();
 			}
-
 			userRepository.save(user);
 		});
 	}

@@ -11,8 +11,8 @@ import org.springframework.http.HttpStatus;
 @NoArgsConstructor
 public class BoardListSuccessResponseDto {
 
-	private final Integer status = HttpStatus.OK.value();
-	private final Boolean success = true;
+	private final int status = HttpStatus.OK.value();
+	private final boolean success = true;
 	private final ResponseType message = ResponseType.BOARD_CONTENT_SUCCESS;
 	private List<BoardListResponseInfo> data;
 

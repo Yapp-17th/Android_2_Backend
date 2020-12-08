@@ -1,9 +1,9 @@
 package com.yapp.crew.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.yapp.crew.domain.model.Board;
 import com.yapp.crew.domain.model.User;
 import com.yapp.crew.domain.status.BoardStatus;
-import com.yapp.crew.domain.status.UserStatus;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -11,9 +11,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class HistoryListInfo {
 
-	private Boolean isHost = false;
+	@JsonProperty(value = "isHost")
+	private boolean isHost = false;
+
 	private String nickName = "(알수없음)";
-	private Boolean isContinue = false;
+
+	@JsonProperty(value = "isContinue")
+	private boolean isContinue = false;
+
 	private BoardListInfo boardInfo;
 
 	public static HistoryListInfo build(Board board, User user) {
@@ -25,7 +30,6 @@ public class HistoryListInfo {
 		if (user.isValidUser()) {
 			historyListInfo.nickName = user.getNickname();
 		}
-
 		return historyListInfo;
 	}
 }

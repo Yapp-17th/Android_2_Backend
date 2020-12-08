@@ -13,8 +13,8 @@ import org.springframework.http.HttpStatus;
 @NoArgsConstructor
 public class BookMarkListResponseDto {
 
-	private Integer status;
-	private Boolean success;
+	private int status;
+	private boolean success;
 	private String message;
 	private List<BoardListInfo> data;
 
@@ -23,17 +23,17 @@ public class BookMarkListResponseDto {
 	}
 
 	public static class BookMarkListResponseDtoBuilder {
-		private Integer status = HttpStatus.OK.value();
-		private Boolean success = true;
+		private int status = HttpStatus.OK.value();
+		private boolean success = true;
 		private String message = "신청자 리스트 조회 성공";
 		private List<BoardListInfo> data = Collections.emptyList();
 
-		public BookMarkListResponseDtoBuilder withStatus(Integer status) {
+		public BookMarkListResponseDtoBuilder withStatus(int status) {
 			this.status = status;
 			return this;
 		}
 
-		public BookMarkListResponseDtoBuilder withSuccess(Boolean success) {
+		public BookMarkListResponseDtoBuilder withSuccess(boolean success) {
 			this.success = success;
 			return this;
 		}

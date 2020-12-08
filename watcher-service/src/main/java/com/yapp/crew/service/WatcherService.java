@@ -25,7 +25,7 @@ public class WatcherService {
 
 	private final BoardBatchService boardBatchService;
 
-	private UserAuthenticationService userAuthenticationService;
+	private final UserAuthenticationService userAuthenticationService;
 
 	@Autowired
 	public WatcherService(
@@ -46,7 +46,7 @@ public class WatcherService {
 		log.info("Watcher start...");
 		List<Board> boards = boardRepository.findAllByStartsAtBetween(LocalDateTime.now().minusDays(1), LocalDateTime.now())
 				.stream()
-				.filter(board -> !board.getStatus().equals(BoardStatus.CANCELED) && !board.getStatus().equals(BoardStatus.FINISHED))
+				.filter(board -> board.getStatus() != BoardStatus.CANCELED && board.getStatus() != BoardStatus.FINISHED)
 				.collect(Collectors.toList());
 		log.info("Boards that needs an update -> {}", boards);
 
@@ -64,7 +64,6 @@ public class WatcherService {
 					ex.printStackTrace();
 				}
 			});
-
 			boardBatchService.updateBoardFinishedAll(boards);
 		}
 	}

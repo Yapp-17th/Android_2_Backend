@@ -48,11 +48,11 @@ public class ApplyListService {
 						chatRoomRepository.save(newChatRoom);
 						isNewRoom = true;
 					}
-					else if (chatRoom.get().getHostExited()) {
+					else if (chatRoom.get().isHostExited()) {
 						chatRoom.get().inviteUser(true);
 						chatRoomRepository.save(chatRoom.get());
 					}
-					else if (chatRoom.get().getGuestExited()) {
+					else if (chatRoom.get().isGuestExited()) {
 						chatRoom.get().inviteUser(false);
 						chatRoomRepository.save(chatRoom.get());
 					}
@@ -77,11 +77,11 @@ public class ApplyListService {
 				.collect(Collectors.toList());
 	}
 
-	private Optional<Board> findBoardById(Long boardId) {
+	private Optional<Board> findBoardById(long boardId) {
 		return boardRepository.findBoardById(boardId);
 	}
 
-	private Optional<ChatRoom> findByGuestIdAndBoardId(Long guestId, Long boardId) {
+	private Optional<ChatRoom> findByGuestIdAndBoardId(long guestId, long boardId) {
 		return chatRoomRepository.findByGuestIdAndBoardId(guestId, boardId);
 	}
 }

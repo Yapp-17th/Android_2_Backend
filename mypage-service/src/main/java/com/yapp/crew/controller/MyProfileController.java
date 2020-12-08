@@ -36,7 +36,7 @@ public class MyProfileController {
 	}
 
 	@GetMapping(path = "/v1/user/my-profile", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> getMyProfile(@RequestHeader(value = "userId") Long userId) {
+	public ResponseEntity<?> getMyProfile(@RequestHeader(value = "userId") long userId) {
 		log.info("Get my profile -> userId: {}", userId);
 		UserProfileInfo userProfileInfo = myProfileService.getProfile(userId);
 		UserProfileResponseDto userProfileResponseDto = UserProfileResponseDto.build(userProfileInfo);
@@ -45,7 +45,7 @@ public class MyProfileController {
 	}
 
 	@GetMapping(path = "/v1/user/my-profile/edit", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> getEditMyProfile(@RequestHeader(value = "userId") Long userId) {
+	public ResponseEntity<?> getEditMyProfile(@RequestHeader(value = "userId") long userId) {
 		log.info("Get my edit profile -> userId: {}", userId);
 		UserInfo userInfo = myProfileService.getEditProfile(userId);
 		UserEditProfileResponseDto userEditProfileResponseDto = UserEditProfileResponseDto.build(userInfo);
@@ -55,7 +55,7 @@ public class MyProfileController {
 
 	@PutMapping(path = "/v1/user/my-profile", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> updateMyProfile(
-			@RequestHeader(value = "userId") Long userId,
+			@RequestHeader(value = "userId") long userId,
 			@RequestBody @Valid UserUpdateRequestDto userUpdateRequestDto
 	) {
 		log.info("Update my profile -> userId: {}, payload: {}", userId, userUpdateRequestDto);
@@ -68,7 +68,7 @@ public class MyProfileController {
 
 	@GetMapping(path = "/v1/user/my-profile/history", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> getMyHistory(
-			@RequestHeader(value = "userId") Long userId,
+			@RequestHeader(value = "userId") long userId,
 			@RequestParam(required = false, defaultValue = "continue") String type
 	) {
 		log.info("Get my history -> userId: {}, type: {}", userId, type);

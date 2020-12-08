@@ -73,20 +73,20 @@ public class AuthenticationFilter extends ZuulFilter {
 			}
 
 			auth.verifyToken(token);
-			Long userId = auth.parseUserIdFromToken(token);
+			long userId = auth.parseUserIdFromToken(token);
 			User user = userRepository.findUserById(userId)
 					.orElseThrow(() -> new UserNotFoundException("[Zuul Proxy Exception] Cannot find user with id: " + userId));
 
 			checkUserStatus(user.getStatus(), userId);
 
-			ctx.addZuulRequestHeader("userId", userId.toString());
+			ctx.addZuulRequestHeader("userId", String.valueOf(userId));
 		} catch (Exception ex) {
 			exceptionHandler.handleException(ex);
 		}
 		return null;
 	}
 
-	private void checkUserStatus(UserStatus userStatus, Long userId) throws InactiveUserException, SuspendedUserException {
+	private void checkUserStatus(UserStatus userStatus, long userId) throws InactiveUserException, SuspendedUserException {
 		if (userStatus == UserStatus.INACTIVE) {
 			throw new InactiveUserException("[Zuul Proxy Exception] Inactive user has accessed with id: " + userId);
 		} else if (userStatus == UserStatus.SUSPENDED || userStatus == UserStatus.FORBIDDEN) {

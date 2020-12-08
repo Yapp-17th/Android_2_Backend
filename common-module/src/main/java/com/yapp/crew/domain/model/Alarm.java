@@ -36,7 +36,6 @@ public class Alarm extends BaseEntity {
 	}
 
 	public static class AlarmBuilder {
-
 		private AlarmType type;
 		private String content;
 

@@ -54,13 +54,13 @@ public class CommonProfileService {
 				.collect(Collectors.toList());
 	}
 
-	private Optional<User> findUserById(Long userId) {
+	private Optional<User> findUserById(long userId) {
 		return userRepository.findUserById(userId).stream()
 				.filter(user -> user.getStatus() == UserStatus.ACTIVE)
 				.findFirst();
 	}
 
-	private List<Evaluation> findAllByEvaluatedId(Long userId) {
+	private List<Evaluation> findAllByEvaluatedId(long userId) {
 		return evaluationRepository.findAllByEvaluatedId(userId);
 	}
 

@@ -42,11 +42,11 @@ public class Message extends BaseEntity {
 
 	@Setter(value = AccessLevel.PRIVATE)
 	@Column(name = "is_host_read", nullable = false)
-	private boolean isHostRead = false;
+	private boolean isHostRead;
 
 	@Setter(value = AccessLevel.PRIVATE)
 	@Column(name = "is_guest_read", nullable = false)
-	private boolean isGuestRead = false;
+	private boolean isGuestRead;
 
 	@JsonBackReference
 	@Setter(value = AccessLevel.PRIVATE)
@@ -85,7 +85,6 @@ public class Message extends BaseEntity {
 	}
 
 	public static class MessageBuilder {
-
 		private String content;
 		private MessageType type;
 		private long messageId;

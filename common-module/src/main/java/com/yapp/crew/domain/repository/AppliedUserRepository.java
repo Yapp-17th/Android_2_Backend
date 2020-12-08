@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface AppliedUserRepository extends JpaRepository<AppliedUser, Long> {
 
-	Optional<AppliedUser> findByBoardIdAndUserId(Long boardId, Long userId);
+	Optional<AppliedUser> findByBoardIdAndUserId(long boardId, long userId);
 }

@@ -11,8 +11,8 @@ import org.springframework.http.HttpStatus;
 @NoArgsConstructor
 public class UserProfileResponseDto {
 
-	private Integer status;
-	private Boolean success;
+	private int status;
+	private boolean success;
 	private String message;
 	private UserProfileInfo data;
 
@@ -21,18 +21,17 @@ public class UserProfileResponseDto {
 	}
 
 	public static class UserProfileResponseDtoBuilder {
-
-		private Integer status = HttpStatus.OK.value();
-		private Boolean success = true;
+		private int status = HttpStatus.OK.value();
+		private boolean success = true;
 		private String message = "회원 프로필 조회 완료";
 		private UserProfileInfo data = UserProfileInfo.emptyBody();
 
-		public UserProfileResponseDtoBuilder withStatus(Integer status) {
+		public UserProfileResponseDtoBuilder withStatus(int status) {
 			this.status = status;
 			return this;
 		}
 
-		public UserProfileResponseDtoBuilder withSuccess(Boolean success) {
+		public UserProfileResponseDtoBuilder withSuccess(boolean success) {
 			this.success = success;
 			return this;
 		}

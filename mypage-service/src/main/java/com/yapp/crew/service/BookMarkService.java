@@ -34,7 +34,7 @@ public class BookMarkService {
 				.collect(Collectors.toList());
 	}
 
-	private Optional<User> findUserById(Long userId) {
+	private Optional<User> findUserById(long userId) {
 		return userRepository.findUserById(userId);
 	}
 }

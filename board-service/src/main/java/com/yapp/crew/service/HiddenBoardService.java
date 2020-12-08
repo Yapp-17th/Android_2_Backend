@@ -32,7 +32,7 @@ public class HiddenBoardService {
 	}
 
 	@Transactional
-	public SimpleResponse createHiddenBoard(Long boardId, Long userId) {
+	public SimpleResponse createHiddenBoard(long boardId, long userId) {
 		Board board = findBoardById(boardId)
 				.orElseThrow(() -> new BoardNotFoundException(boardId));
 
@@ -56,11 +56,11 @@ public class HiddenBoardService {
 		hiddenBoardRepository.save(hiddenBoard);
 	}
 
-	private Optional<Board> findBoardById(Long boardId) {
+	private Optional<Board> findBoardById(long boardId) {
 		return boardRepository.findBoardById(boardId).filter(board -> board.getStatus().getCode() != BoardStatus.CANCELED.getCode());
 	}
 
-	private Optional<User> findUserById(Long userId) {
+	private Optional<User> findUserById(long userId) {
 		return userRepository.findUserById(userId);
 	}
 }

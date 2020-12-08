@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CategoryCode {
 
-	private Long id;
+	private long id;
 	private String name;
 
 	public static CategoryCode build(Category category) {
@@ -19,7 +19,7 @@ public class CategoryCode {
 		return categoryCode;
 	}
 
-	public static CategoryCode build(Long id, String name){
+	public static CategoryCode build(long id, String name){
 		CategoryCode categoryCode = new CategoryCode();
 		categoryCode.id = id;
 		categoryCode.name = name;

@@ -26,10 +26,10 @@ public class MessageRequestPayload {
 	private RealTimeUpdateType realTimeUpdateType;
 
 	@NotNull
-	private Long senderId;
+	private long senderId;
 
 	@NotNull
-	private Long chatRoomId;
+	private long chatRoomId;
 
-	private Long boardId;
+	private long boardId;
 }

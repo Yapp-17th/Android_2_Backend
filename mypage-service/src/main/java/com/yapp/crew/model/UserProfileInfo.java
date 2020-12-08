@@ -1,8 +1,8 @@
 package com.yapp.crew.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.yapp.crew.domain.model.Evaluation;
 import com.yapp.crew.domain.model.User;
-import com.yapp.crew.domain.status.UserStatus;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,13 +15,21 @@ import lombok.Setter;
 @NoArgsConstructor
 public class UserProfileInfo {
 
-	private Long userId;
-	private Boolean isMine;
+	private long userId;
+
+	@JsonProperty(value = "isMine")
+	private boolean isMine;
+
 	private String nickName;
-	private Integer like;
-	private Integer dislike;
+
+	private int like;
+
+	private int dislike;
+
 	private String intro;
+
 	private String city;
+
 	private List<String> category;
 
 	public static UserProfileInfo emptyBody() {
@@ -33,22 +41,21 @@ public class UserProfileInfo {
 	}
 
 	public static class UserProfileInfoBuilder {
-
-		private Long userId = -1L;
-		private Boolean isMine = false;
+		private long userId = -1L;
+		private boolean isMine = false;
 		private String nickName = "(알수없음)";
-		private Integer like = 0;
-		private Integer dislike = 0;
+		private int like = 0;
+		private int dislike = 0;
 		private String intro = "";
 		private String city = "";
 		private List<String> category = Collections.emptyList();
 
-		public UserProfileInfoBuilder withUserId(Long userId) {
+		public UserProfileInfoBuilder withUserId(long userId) {
 			this.userId = userId;
 			return this;
 		}
 
-		public UserProfileInfoBuilder withIsMine(Boolean isMine) {
+		public UserProfileInfoBuilder withIsMine(boolean isMine) {
 			this.isMine = isMine;
 			return this;
 		}
@@ -58,12 +65,12 @@ public class UserProfileInfo {
 			return this;
 		}
 
-		public UserProfileInfoBuilder withLike(Integer like) {
+		public UserProfileInfoBuilder withLike(int like) {
 			this.like = like;
 			return this;
 		}
 
-		public UserProfileInfoBuilder withDislike(Integer dislike) {
+		public UserProfileInfoBuilder withDislike(int dislike) {
 			this.dislike = dislike;
 			return this;
 		}
@@ -86,7 +93,7 @@ public class UserProfileInfo {
 		public UserProfileInfo build() {
 			UserProfileInfo userProfileInfo = new UserProfileInfo();
 			userProfileInfo.setUserId(userId);
-			userProfileInfo.setIsMine(isMine);
+			userProfileInfo.setMine(isMine);
 			userProfileInfo.setNickName(nickName);
 			userProfileInfo.setLike(like);
 			userProfileInfo.setDislike(dislike);

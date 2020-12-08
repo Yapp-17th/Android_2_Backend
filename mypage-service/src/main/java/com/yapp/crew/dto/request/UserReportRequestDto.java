@@ -9,10 +9,10 @@ import lombok.NoArgsConstructor;
 public class UserReportRequestDto {
 
 	@NotNull
-	private Long userId;
+	private long userId;
 
 	@NotNull
-	private Long reportType;
+	private int reportType;
 
 	private String content;
 

@@ -8,7 +8,7 @@ public interface UserExerciseRepository extends JpaRepository<UserExercise, Long
 
 	List<UserExercise> findAll();
 
-	List<UserExercise> findAllByUserId(Long userId);
+	List<UserExercise> findAllByUserId(long userId);
 
-	UserExercise save(UserExercise userExcercise);
+	UserExercise save(UserExercise userExercise);
 }

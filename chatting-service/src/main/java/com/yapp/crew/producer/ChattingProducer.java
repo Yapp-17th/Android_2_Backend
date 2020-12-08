@@ -66,7 +66,7 @@ public class ChattingProducer {
 	}
 
 	public ListenableFuture<SendResult<Long, String>> sendMessage(MessageRequestPayload messageRequestPayload) throws JsonProcessingException {
-		Long key = messageRequestPayload.getChatRoomId();
+		long key = messageRequestPayload.getChatRoomId();
 		String value = objectMapper.writeValueAsString(messageRequestPayload);
 
 		ProducerRecord<Long, String> producerRecord = buildProducerRecord(key, value, chatMessageTopic);
@@ -87,7 +87,7 @@ public class ChattingProducer {
 	}
 
 	public ListenableFuture<SendResult<Long, String>> sendGuidelineBotMessage(GuidelineRequestPayload guidelineRequestPayload) throws JsonProcessingException {
-		Long key = guidelineRequestPayload.getChatRoomId();
+		long key = guidelineRequestPayload.getChatRoomId();
 		String value = objectMapper.writeValueAsString(guidelineRequestPayload);
 
 		ProducerRecord<Long, String> producerRecord = buildProducerRecord(key, value, guidelineMessageTopic);
@@ -108,7 +108,7 @@ public class ChattingProducer {
 	}
 
 	public ListenableFuture<SendResult<Long, String>> applyUser(ApplyRequestPayload applyRequestPayload) throws JsonProcessingException {
-		Long key = applyRequestPayload.getBoardId();
+		long key = applyRequestPayload.getBoardId();
 		String value = objectMapper.writeValueAsString(applyRequestPayload);
 
 		ProducerRecord<Long, String> producerRecord = buildProducerRecord(key, value, applyUserTopic);
@@ -127,7 +127,7 @@ public class ChattingProducer {
 				MessageResponsePayload applyRealtimeUpdatePayload = MessageResponsePayload.buildRealTimeUpdateResponsePayload(RealTimeUpdateType.APPLIED);
 
 				simpMessagingTemplate.convertAndSend(
-						"/sub/chat/room/" + applyRequestPayload.getChatRoomId().toString(),
+						"/sub/chat/room/" + applyRequestPayload.getChatRoomId(),
 						applyRealtimeUpdatePayload
 				);
 				log.info("Send real-time apply message to chat room with id: {}", applyRequestPayload.getChatRoomId());
@@ -137,7 +137,7 @@ public class ChattingProducer {
 	}
 
 	public ListenableFuture<SendResult<Long, String>> approveUser(ApproveRequestPayload approveRequestPayload) throws JsonProcessingException {
-		Long key = approveRequestPayload.getBoardId();
+		long key = approveRequestPayload.getBoardId();
 		String value = objectMapper.writeValueAsString(approveRequestPayload);
 
 		ProducerRecord<Long, String> producerRecord = buildProducerRecord(key, value, approveUserTopic);
@@ -156,7 +156,7 @@ public class ChattingProducer {
 				MessageResponsePayload approveRealtimeUpdatePayload = MessageResponsePayload.buildRealTimeUpdateResponsePayload(RealTimeUpdateType.APPROVED);
 
 				simpMessagingTemplate.convertAndSend(
-						"/sub/chat/room/" + approveRequestPayload.getChatRoomId().toString(),
+						"/sub/chat/room/" + approveRequestPayload.getChatRoomId(),
 						approveRealtimeUpdatePayload
 				);
 				log.info("Send real-time approve message to chat room with id: {}", approveRequestPayload.getChatRoomId());
@@ -166,7 +166,7 @@ public class ChattingProducer {
 	}
 
 	public ListenableFuture<SendResult<Long, String>> disapproveUser(ApproveRequestPayload approveRequestPayload) throws JsonProcessingException {
-		Long key = approveRequestPayload.getBoardId();
+		long key = approveRequestPayload.getBoardId();
 		String value = objectMapper.writeValueAsString(approveRequestPayload);
 
 		ProducerRecord<Long, String> producerRecord = buildProducerRecord(key, value, disapproveUserTopic);
@@ -185,7 +185,7 @@ public class ChattingProducer {
 				MessageResponsePayload disapproveRealtimeUpdatePayload = MessageResponsePayload.buildRealTimeUpdateResponsePayload(RealTimeUpdateType.DISAPPROVED);
 
 				simpMessagingTemplate.convertAndSend(
-						"/sub/chat/room/" + approveRequestPayload.getChatRoomId().toString(),
+						"/sub/chat/room/" + approveRequestPayload.getChatRoomId(),
 						disapproveRealtimeUpdatePayload
 				);
 				log.info("Send real-time disapprove message to chat room with id: {}", approveRequestPayload.getChatRoomId());
@@ -195,7 +195,7 @@ public class ChattingProducer {
 	}
 
 	public ListenableFuture<SendResult<Long, String>> sendUserExitMessage(UserExitedPayload userExitedPayload) throws JsonProcessingException {
-		Long key = userExitedPayload.getChatRoomId();
+		long key = userExitedPayload.getChatRoomId();
 		String value = objectMapper.writeValueAsString(userExitedPayload);
 
 		ProducerRecord<Long, String> producerRecord = buildProducerRecord(key, value, userExitedTopic);
@@ -214,7 +214,7 @@ public class ChattingProducer {
 				MessageResponsePayload userExitedRealtimeUpdatePayload = MessageResponsePayload.buildRealTimeUpdateResponsePayload(RealTimeUpdateType.USER_EXITED);
 
 				simpMessagingTemplate.convertAndSend(
-						"/sub/user/" + userExitedPayload.getUserId().toString() + "/chat/room",
+						"/sub/user/" + userExitedPayload.getUserId() + "/chat/room",
 						userExitedRealtimeUpdatePayload
 				);
 				log.info("Send real-time exit message to user chat list with id: {}", userExitedPayload.getUserId());
@@ -226,7 +226,7 @@ public class ChattingProducer {
 	public SendResult<Long, String> sendMessageSynchronously(MessageRequestPayload messageRequestPayload)
 			throws JsonProcessingException, InterruptedException, ExecutionException, TimeoutException {
 
-		Long key = messageRequestPayload.getChatRoomId();
+		long key = messageRequestPayload.getChatRoomId();
 		String value = objectMapper.writeValueAsString(messageRequestPayload);
 		SendResult<Long, String> sendResult = null;
 
@@ -243,12 +243,12 @@ public class ChattingProducer {
 		return sendResult;
 	}
 
-	private ProducerRecord<Long, String> buildProducerRecord(Long key, String value, String topic) {
+	private ProducerRecord<Long, String> buildProducerRecord(long key, String value, String topic) {
 		List<Header> recordHeaders = List.of(new RecordHeader("event-source", "scanner".getBytes()));
 		return new ProducerRecord<Long, String>(topic, null, key, value, recordHeaders);
 	}
 
-	private void handleFailure(Long key, String value, Throwable ex) {
+	private void handleFailure(long key, String value, Throwable ex) {
 		log.error("Error sending the message and exception is {}", ex.getMessage());
 		try {
 			throw ex;
@@ -257,7 +257,7 @@ public class ChattingProducer {
 		}
 	}
 
-	private void handleSuccess(Long key, String value, SendResult<Long, String> result) {
+	private void handleSuccess(long key, String value, SendResult<Long, String> result) {
 		log.info("Message send successfully for the key: {} and the value is {}, partition is {}", key, value, result.getRecordMetadata().partition());
 	}
 }

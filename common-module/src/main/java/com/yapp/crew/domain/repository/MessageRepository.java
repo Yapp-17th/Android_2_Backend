@@ -9,15 +9,13 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
 
 	List<Message> findAll();
 
-	List<Message> findAllByChatRoomId(Long chatRoomId);
-
 	List<Message> findAllByIdIn(List<Long> ids);
 
-	List<Message> findAllByChatRoomIdOrderByCreatedAt(Long chatRoomId);
+	List<Message> findAllByChatRoomIdOrderByCreatedAt(long chatRoomId);
 
-	List<Message> findAllByChatRoomIdAndMessageIdGreaterThan(Long chatRoomId, Long messageId);
+	List<Message> findAllByChatRoomIdAndMessageIdGreaterThan(long chatRoomId, long messageId);
 
-	Optional<Message> findFirstByChatRoomIdOrderByIdDesc(Long chatRoomId);
+	Optional<Message> findFirstByChatRoomIdOrderByIdDesc(long chatRoomId);
 
 	Message save(Message message);
 }

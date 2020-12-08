@@ -18,15 +18,14 @@ public class HttpResponseBody<T> {
 
 	private LocalDateTime transactionTime;
 
-	private Integer status;
+	private int status;
 
 	private ResponseType responseType;
 
 	@JsonInclude(NON_NULL)
 	private String message;
 
-	public static <T> HttpResponseBody<T> buildErrorResponse(Integer status,
-			ResponseType responseType, String message) {
+	public static <T> HttpResponseBody<T> buildErrorResponse(int status, ResponseType responseType, String message) {
 		return (HttpResponseBody<T>) HttpResponseBody.builder()
 				.transactionTime(LocalDateTime.now())
 				.status(status)

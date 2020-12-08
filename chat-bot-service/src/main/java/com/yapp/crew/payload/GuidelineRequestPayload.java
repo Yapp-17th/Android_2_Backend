@@ -13,7 +13,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class GuidelineRequestPayload {
 
-	private Long senderId;
+	private long senderId;
 
-	private Long chatRoomId;
+	private long chatRoomId;
 }

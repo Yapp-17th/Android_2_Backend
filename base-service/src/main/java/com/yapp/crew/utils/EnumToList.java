@@ -20,5 +20,4 @@ public class EnumToList {
 	public static List<String> userTypeEnumToList() {
 		return Arrays.stream(UserTag.values()).map(UserTag::getName).collect(Collectors.toList());
 	}
-
 }
