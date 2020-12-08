@@ -1,6 +1,10 @@
 package com.yapp.crew.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.google.common.base.CharMatcher;
+import com.google.common.base.Objects;
+import com.google.common.base.Splitter;
+import com.google.common.collect.Lists;
 import com.yapp.crew.domain.errors.AlreadyApprovedException;
 import com.yapp.crew.domain.errors.AlreadyExitedException;
 import com.yapp.crew.domain.errors.BoardNotFoundException;
@@ -35,6 +39,7 @@ import com.yapp.crew.payload.ApproveRequestPayload;
 import com.yapp.crew.payload.ChatRoomRequestPayload;
 import com.yapp.crew.payload.ChatRoomResponsePayload;
 import com.yapp.crew.payload.GuidelineRequestPayload;
+import com.yapp.crew.payload.MessageRequestPayload;
 import com.yapp.crew.payload.MessageResponsePayload;
 import com.yapp.crew.payload.UserExitedPayload;
 import com.yapp.crew.producer.ChattingProducer;
@@ -241,7 +246,7 @@ public class ChattingService {
 	}
 
 	@Transactional
-	public HttpResponseBody<?> updateMessageIsRead(Long userId, Long chatRoomId, Long messageId) {
+	public HttpResponseBody<?> messageUpdate(Long userId, Long chatRoomId, Long messageId) {
 		ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
 				.orElseThrow(() -> new ChatRoomNotFoundException(chatRoomId));
 
@@ -259,6 +264,26 @@ public class ChattingService {
 				ResponseType.SUCCESS.getMessage(),
 				MessageResponsePayload.buildChatMessageResponsePayload(message)
 		);
+	}
+
+	public void messageBulkUpdate(MessageRequestPayload payload) {
+		String messagesRawString = CharMatcher.anyOf("[]").replaceFrom(payload.getContent(), "");
+		if (!messagesRawString.equals("")) {
+			List<String> messageStringList = Splitter.on(',')
+					.trimResults()
+					.omitEmptyStrings()
+					.splitToList(messagesRawString);
+			List<Long> messageIdList = Lists.transform(messageStringList, Long::parseLong);
+
+			ChatRoom chatRoom = chatRoomRepository.findById(payload.getChatRoomId())
+					.orElseThrow(() -> new ChatRoomNotFoundException(payload.getChatRoomId()));
+
+			boolean isHost = chatRoom.isUserChatRoomHost(payload.getSenderId());
+
+			List<Message> messages = messageRepository.findAllByIdIn(messageIdList);
+			messages.forEach(message -> message.readMessage(isHost));
+			messageRepository.saveAll(messages);
+		}
 	}
 
 	public HttpResponseBody<?> applyUser(ApplyRequestPayload applyRequestPayload) throws JsonProcessingException {
