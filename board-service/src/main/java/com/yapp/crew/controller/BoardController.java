@@ -10,12 +10,14 @@ import com.yapp.crew.model.BoardListResponseInfo;
 import com.yapp.crew.model.BoardPostRequiredInfo;
 import com.yapp.crew.network.model.SimpleResponse;
 import com.yapp.crew.service.BoardService;
+import java.util.Date;
 import java.util.List;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -47,10 +49,11 @@ public class BoardController {
 			@PageableDefault(size = 20) Pageable pageable,
 			@RequestParam(required = false) String sorting,
 			@RequestParam List<Long> category,
-			@RequestParam List<Long> address
+			@RequestParam List<Long> address,
+			@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") Date timestamp
 	) {
 		log.info("Get board list -> userId: {}, pageable: {}, sorting: {}, category: {}, address: {}", userId, pageable, sorting, category, address);
-		List<BoardListResponseInfo> boardList = boardService.getBoardList(BoardFilterCondition.build(sorting, category, address, userId), pageable);
+		List<BoardListResponseInfo> boardList = boardService.getBoardList(BoardFilterCondition.build(sorting, category, address, userId, timestamp), pageable);
 
 		BoardListSuccessResponseDto boardListSuccessResponseDto = BoardListSuccessResponseDto.build(boardList);
 		return ResponseEntity.ok().body(boardListSuccessResponseDto);

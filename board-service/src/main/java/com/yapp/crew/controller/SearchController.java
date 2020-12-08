@@ -4,11 +4,13 @@ import com.yapp.crew.domain.condition.BoardSearchCondition;
 import com.yapp.crew.dto.response.BoardListSuccessResponseDto;
 import com.yapp.crew.model.BoardListResponseInfo;
 import com.yapp.crew.service.SearchService;
+import java.util.Date;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -33,10 +35,11 @@ public class SearchController {
 	public ResponseEntity<?> getBoardList(
 			@RequestHeader(value = "userId") Long userId,
 			@PageableDefault(size = 20, page = 0) Pageable pageable,
-			@RequestParam List<String> keyword
+			@RequestParam List<String> keyword,
+			@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") Date timestamp
 	) {
 		log.info("Get board list -> userId: {}, pageable: {}, keyword: {}", userId, pageable, keyword);
-		List<BoardListResponseInfo> boardList = searchService.searchBoardList(BoardSearchCondition.build(keyword, userId), pageable);
+		List<BoardListResponseInfo> boardList = searchService.searchBoardList(BoardSearchCondition.build(keyword, userId, timestamp), pageable);
 
 		BoardListSuccessResponseDto boardListSuccessResponseDto = BoardListSuccessResponseDto.build(boardList);
 		return ResponseEntity.ok().body(boardListSuccessResponseDto);

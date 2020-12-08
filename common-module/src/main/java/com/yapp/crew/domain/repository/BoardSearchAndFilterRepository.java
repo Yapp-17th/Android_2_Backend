@@ -14,6 +14,9 @@ import com.yapp.crew.domain.model.Board;
 import com.yapp.crew.domain.status.AppliedStatus;
 import com.yapp.crew.domain.status.BoardStatus;
 import com.yapp.crew.domain.type.SortingType;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
 import org.springframework.data.domain.Pageable;
@@ -35,7 +38,8 @@ public class BoardSearchAndFilterRepository {
 				.where(
 						hiddenBoard.user.id.isNull(),
 						isSearchedKeywords(boardSearchCondition.getKeywords()),
-						isDeletedBoard()
+						isDeletedBoard(),
+						isBeforeTimestamp(boardSearchCondition.getTimestamp())
 				)
 				.orderBy(board.status.asc(), board.createdAt.desc()) // 최신순 정렬
 				.offset(pageable.getOffset())
@@ -53,7 +57,8 @@ public class BoardSearchAndFilterRepository {
 						hiddenBoard.user.id.isNull(),
 						isFilteredCategories(boardFilterCondition.getCategory()),
 						isFilteredCities(boardFilterCondition.getCity()),
-						isDeletedBoard()
+						isDeletedBoard(),
+						isBeforeTimestamp(boardFilterCondition.getTimestamp())
 				)
 				.groupBy(board.id)
 				.orderBy(board.status.asc(), orderType(boardFilterCondition.getSorting()))
@@ -63,7 +68,7 @@ public class BoardSearchAndFilterRepository {
 	}
 
 	private OrderSpecifier<?> orderType(SortingType sortingType) {
-		if(sortingType == SortingType.REMAIN){
+		if (sortingType == SortingType.REMAIN) {
 			return board.recruitCount.subtract(appliedUser.user.id.count().coalesce(0L)).desc();
 		}
 		if (sortingType == SortingType.DEADLINE) {
@@ -73,7 +78,7 @@ public class BoardSearchAndFilterRepository {
 	}
 
 	private BooleanExpression isFilteredCategories(List<Long> categories) {
-		if(categories.contains(0L)){
+		if (categories.contains(0L)) {
 			return null;
 		}
 
@@ -85,7 +90,7 @@ public class BoardSearchAndFilterRepository {
 	}
 
 	private BooleanExpression isFilteredCities(List<Long> cities) {
-		if(cities.contains(0L)){
+		if (cities.contains(0L)) {
 			return null;
 		}
 
@@ -106,5 +111,10 @@ public class BoardSearchAndFilterRepository {
 
 	private BooleanExpression isDeletedBoard() {
 		return board.status.ne(BoardStatus.CANCELED);
+	}
+
+	private BooleanExpression isBeforeTimestamp(Date timestamp) {
+		return board.updatedAt
+				.before(LocalDateTime.ofInstant(timestamp.toInstant(), ZoneId.systemDefault()));
 	}
 }
