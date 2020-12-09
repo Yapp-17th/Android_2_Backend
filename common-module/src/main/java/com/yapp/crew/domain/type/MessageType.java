@@ -7,7 +7,8 @@ public enum MessageType {
 	PROFILE(3, "상대방 프로필 요청"),
 	BOT_MESSAGE(4, "봇 메시지"),
 	BOT_NOTICE(5, "봇 공지사항"),
-	BOARD_COMPLETE(6, "게시글 활동 완료");
+	BOARD_COMPLETE(6, "게시글 활동 완료"),
+	UPDATE(7, "메시지 업데이트");
 
 	private final int code;
 	private final String name;

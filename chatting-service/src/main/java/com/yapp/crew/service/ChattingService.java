@@ -31,6 +31,7 @@ import com.yapp.crew.domain.repository.MessageRepository;
 import com.yapp.crew.domain.repository.UserRepository;
 import com.yapp.crew.domain.status.AppliedStatus;
 import com.yapp.crew.domain.status.BoardStatus;
+import com.yapp.crew.domain.type.MessageType;
 import com.yapp.crew.domain.type.ResponseType;
 import com.yapp.crew.network.HttpResponseBody;
 import com.yapp.crew.payload.ApplyRequestPayload;
@@ -261,6 +262,9 @@ public class ChattingService {
 	}
 
 	public void messageBulkUpdate(MessageRequestPayload payload) {
+		if (payload.getType() != MessageType.UPDATE) {
+			return;
+		}
 		String messagesRawString = CharMatcher.anyOf("[]").replaceFrom(payload.getContent(), "");
 		if (!messagesRawString.equals("")) {
 			List<String> messageStringList = Splitter.on(',')
