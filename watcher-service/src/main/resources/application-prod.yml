@@ -30,7 +30,7 @@ spring:
         bootstrap.servers: 101.101.219.23:9092
 
   datasource:
-    url: jdbc:mysql://mysql:3306/explanet_prod?rewriteBatchedStatements=true&allowPublicKeyRetrieval=true&useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul&createDatabaseIfNotExist=true
+    url: jdbc:mysql://mysql:3306/explanet_prod?rewriteBatchedStatements=true&profileSQL=true&logger=Slf4JLogger&maxQuerySizeToLog=999999&allowPublicKeyRetrieval=true&useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul&createDatabaseIfNotExist=true
     username: explanet
     password: QPVYXdeVWbFP4YK6sLrd
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -47,6 +47,12 @@ spring:
     database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
       ddl-auto: update
+    properties:
+      hibernate:
+        order_inserts: true
+        order_updates: true
+        jdbc:
+          batch_size: 200
 
 kafka:
   topics:
