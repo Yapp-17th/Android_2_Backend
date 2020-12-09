@@ -6,11 +6,11 @@ import com.yapp.crew.domain.model.Evaluation.EvaluationBuilder;
 import com.yapp.crew.domain.repository.BoardRepository;
 import com.yapp.crew.domain.repository.EvaluationRepository;
 import com.yapp.crew.domain.status.AppliedStatus;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,7 +34,6 @@ public class BoardBatchService {
 		log.info("Successfully updated board");
 	}
 
-	@Retryable(maxAttempts = 5)
 	@Transactional
 	void saveEvaluationList(Board board) {
 		EvaluationBuilder evaluationBuilder = Evaluation.getBuilder();
@@ -46,6 +45,7 @@ public class BoardBatchService {
 		userIds.add(board.getUser().getId());
 		log.info("Board approved user ids -> {}", userIds);
 
+		List<Evaluation> evaluations = new LinkedList<>();
 		for (int i = 0; i < userIds.size(); i++) {
 			for (int j = 0; j < userIds.size(); j++) {
 				if (i == j) {
@@ -59,11 +59,11 @@ public class BoardBatchService {
 						.withIsDislike(false)
 						.withIsLike(false)
 						.build();
-				log.info("Create evaluation -> {}", evaluation);
 				board.addEvaluation(evaluation);
-				evaluationRepository.save(evaluation);
+				evaluations.add(evaluation);
 			}
 		}
+		evaluationRepository.saveAll(evaluations);
 		log.info("Successfully created evaluations for boardId -> {}", board.getId());
 	}
 }

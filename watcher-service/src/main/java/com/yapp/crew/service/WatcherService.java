@@ -65,6 +65,7 @@ public class WatcherService {
 				}
 			});
 			boardBatchService.updateBoardFinishedAll(boards);
+			log.info("finished update board!");
 		}
 	}
 

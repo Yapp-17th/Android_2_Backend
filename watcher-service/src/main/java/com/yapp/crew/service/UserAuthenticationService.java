@@ -32,7 +32,7 @@ public class UserAuthenticationService {
 			} else {
 				user.increaseSuspendedDays();
 			}
-			userRepository.save(user);
 		});
+		userRepository.saveAll(suspendedUser);
 	}
 }
