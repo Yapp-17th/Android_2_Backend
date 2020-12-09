@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j(topic = "Board Batch Service")
 @Service
@@ -27,14 +26,12 @@ public class BoardBatchService {
 		this.boardRepository = boardRepository;
 	}
 
-	@Transactional
 	void updateBoardFinishedAll(List<Board> boardList) {
 		boardList.forEach(Board::finishBoard);
 		boardRepository.saveAll(boardList);
 		log.info("Successfully updated board");
 	}
 
-	@Transactional
 	void saveEvaluationList(Board board) {
 		EvaluationBuilder evaluationBuilder = Evaluation.getBuilder();
 
