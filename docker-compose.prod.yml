@@ -3,6 +3,7 @@ services:
   zookeeper:
     image: wurstmeister/zookeeper
     container_name: zookeeper
+    restart: on-failure
     ports:
       - "2181:2181"
 
@@ -20,6 +21,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
+    restart: on-failure
     depends_on:
       - zookeeper
 
@@ -37,6 +39,7 @@ services:
       - MYSQL_DATABASE=explanet_prod
       - MYSQL_USER=explanet
       - MYSQL_PASSWORD=QPVYXdeVWbFP4YK6sLrd
+    restart: on-failure
 #    healthcheck:
 #      test: ["CMD", "mysqladmin", "ping", "-h", "mysql", "-u$$MYSQL_USER", "-p$$MYSQL_ROOT_PASSWORD" ]
 #      interval: 30s
@@ -60,6 +63,7 @@ services:
     volumes:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
+    restart: on-failure
     depends_on:
       - mysql
 
@@ -80,6 +84,7 @@ services:
     volumes:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
+    restart: on-failure
     depends_on:
       - mysql
       - kafka
@@ -102,6 +107,7 @@ services:
     volumes:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
+    restart: on-failure
     depends_on:
       - mysql
       - kafka
@@ -124,6 +130,7 @@ services:
     volumes:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
+    restart: on-failure
     depends_on:
       - mysql
       - api-gateway
@@ -145,6 +152,7 @@ services:
     volumes:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
+    restart: on-failure
     depends_on:
       - mysql
       - kafka
@@ -167,6 +175,7 @@ services:
     volumes:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
+    restart: on-failure
     depends_on:
       - mysql
       - api-gateway
@@ -188,6 +197,7 @@ services:
     volumes:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
+    restart: on-failure
     depends_on:
       - mysql
       - api-gateway
@@ -209,6 +219,7 @@ services:
     volumes:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
+    restart: on-failure
     depends_on:
       - mysql
       - kafka
