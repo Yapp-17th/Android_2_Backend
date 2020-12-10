@@ -220,7 +220,7 @@ public class ChattingService {
 		long firstUnreadChatMessageId = chatRoom.findFirstUnreadChatMessage(isHost);
 		if (firstUnreadChatMessageId != -1L) {
 			List<Message> unreadMessages = messageRepository.findAllByChatRoomIdAndMessageIdGreaterThan(chatRoomId, firstUnreadChatMessageId - 1);
-			unreadMessages.forEach(message -> message.readMessage(isHost));
+			unreadMessages.forEach(message -> message.readMessage(false, isHost));
 			messageRepository.saveAll(unreadMessages);
 		}
 
@@ -250,7 +250,7 @@ public class ChattingService {
 
 		boolean isHost = chatRoom.isUserChatRoomHost(userId);
 
-		message.readMessage(isHost);
+		message.readMessage(false, isHost);
 		messageRepository.save(message);
 
 		return HttpResponseBody.buildSuccessResponse(
@@ -279,7 +279,7 @@ public class ChattingService {
 			boolean isHost = chatRoom.isUserChatRoomHost(payload.getSenderId());
 
 			List<Message> messages = messageRepository.findAllByIdIn(messageIdList);
-			messages.forEach(message -> message.readMessage(isHost));
+			messages.forEach(message -> message.readMessage(true, isHost));
 			messageRepository.saveAll(messages);
 		}
 	}

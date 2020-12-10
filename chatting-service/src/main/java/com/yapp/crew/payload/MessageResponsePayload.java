@@ -159,7 +159,7 @@ public class MessageResponsePayload {
 	public static List<MessageResponsePayload> buildMessageResponsePayload(MessageRepository messageRepository, List<Message> messages, boolean isHost) {
 		return messages.stream()
 				.map(message -> {
-					message.readMessage(isHost);
+					message.readMessage(false, isHost);
 					messageRepository.save(message);
 					return MessageResponsePayload.buildChatMessageResponsePayload(message);
 				})
