@@ -81,21 +81,12 @@ public class ChattingConsumer {
 		messageRepository.save(message);
 
 		MessageResponsePayload payload = MessageResponsePayload.buildChatMessageResponsePayload(message);
-		sendMessage(message, sender, chatRoom, payload);
+		sendMessage(message, chatRoom, payload);
 	}
 
-	private void sendMessage(Message message, User sender, ChatRoom chatRoom, MessageResponsePayload payload) {
+	private void sendMessage(Message message, ChatRoom chatRoom, MessageResponsePayload payload) {
 		simpMessagingTemplate.convertAndSend("/sub/chat/room/" + message.getChatRoom().getId(), payload);
-
-		if (sender.getId().equals(chatRoom.getGuest().getId())) {
-			simpMessagingTemplate.convertAndSend("/sub/user/" + chatRoom.getHost().getId() + "/chat/room", payload);
-		}
-		else if (sender.getId().equals(chatRoom.getHost().getId())) {
-			simpMessagingTemplate.convertAndSend("/sub/user/" + chatRoom.getGuest().getId() + "/chat/room", payload);
-		}
-		else {
-			simpMessagingTemplate.convertAndSend("/sub/user/" + chatRoom.getHost().getId() + "/chat/room", payload);
-			simpMessagingTemplate.convertAndSend("/sub/user/" + chatRoom.getGuest().getId() + "/chat/room", payload);
-		}
+		simpMessagingTemplate.convertAndSend("/sub/user/" + chatRoom.getHost().getId() + "/chat/room", payload);
+		simpMessagingTemplate.convertAndSend("/sub/user/" + chatRoom.getGuest().getId() + "/chat/room", payload);
 	}
 }
