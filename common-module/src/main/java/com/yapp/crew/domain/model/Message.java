@@ -60,7 +60,12 @@ public class Message extends BaseEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	private ChatRoom chatRoom;
 
-	public void readMessage(boolean isHost) {
+	public void readMessage(boolean readBoth, boolean isHost) {
+		if (readBoth) {
+			setHostRead(true);
+			setGuestRead(true);
+			return;
+		}
 		if (isHost) {
 			setHostRead(true);
 			return;
