@@ -44,10 +44,7 @@ public class WatcherService {
 	@Scheduled(cron = "0 0 0 * * *")
 	public void boardSuccessfullyFinishedWatcher() {
 		log.info("Watcher start...");
-		List<Board> boards = boardRepository.findAllByStartsAtBetween(LocalDateTime.now().minusDays(1), LocalDateTime.now())
-				.stream()
-				.filter(board -> board.getStatus() != BoardStatus.CANCELED && board.getStatus() != BoardStatus.FINISHED)
-				.collect(Collectors.toList());
+		List<Board> boards = boardRepository.findAllBoardByExpiredStatus(LocalDateTime.now().minusDays(1), LocalDateTime.now());
 		log.info("Boards that needs an update -> {}", boards);
 
 		if (!boards.isEmpty()) {
