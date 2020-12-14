@@ -55,7 +55,7 @@ public class CommonProfileService {
 
 	private Optional<User> findUserById(long userId) {
 		return userRepository.findUserById(userId).stream()
-				.filter(user -> user.getStatus() == UserStatus.ACTIVE)
+				.filter(User::isValidUser)
 				.findFirst();
 	}
 
