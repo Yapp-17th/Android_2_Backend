@@ -1,12 +1,12 @@
 package com.yapp.crew.service;
 
+import com.yapp.crew.domain.condition.HistoryCondition;
 import com.yapp.crew.domain.errors.AddressNotFoundException;
 import com.yapp.crew.domain.errors.CategoryNotFoundException;
 import com.yapp.crew.domain.errors.InternalServerErrorException;
 import com.yapp.crew.domain.errors.UserDuplicateFieldException;
 import com.yapp.crew.domain.errors.UserNotFoundException;
 import com.yapp.crew.domain.model.Address;
-import com.yapp.crew.domain.model.Board;
 import com.yapp.crew.domain.model.Category;
 import com.yapp.crew.domain.model.Evaluation;
 import com.yapp.crew.domain.model.User;
@@ -14,13 +14,11 @@ import com.yapp.crew.domain.model.User.UserBuilder;
 import com.yapp.crew.domain.model.UserExercise;
 import com.yapp.crew.domain.model.UserExercise.UserExerciseBuilder;
 import com.yapp.crew.domain.repository.AddressRepository;
-import com.yapp.crew.domain.repository.BoardRepository;
 import com.yapp.crew.domain.repository.CategoryRepository;
 import com.yapp.crew.domain.repository.EvaluationRepository;
 import com.yapp.crew.domain.repository.UserExerciseRepository;
+import com.yapp.crew.domain.repository.UserProfileHistoryRepository;
 import com.yapp.crew.domain.repository.UserRepository;
-import com.yapp.crew.domain.status.AppliedStatus;
-import com.yapp.crew.domain.status.BoardStatus;
 import com.yapp.crew.domain.type.ResponseType;
 import com.yapp.crew.domain.type.UniqueIndexEnum;
 import com.yapp.crew.model.HistoryListInfo;
@@ -35,6 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,26 +43,26 @@ public class MyProfileService {
 
 	private UserRepository userRepository;
 	private EvaluationRepository evaluationRepository;
-	private BoardRepository boardRepository;
 	private AddressRepository addressRepository;
 	private CategoryRepository categoryRepository;
 	private UserExerciseRepository userExerciseRepository;
+	private UserProfileHistoryRepository userProfileHistoryRepository;
 
 	@Autowired
 	public MyProfileService(
 			UserRepository userRepository,
 			EvaluationRepository evaluationRepository,
-			BoardRepository boardRepository,
 			AddressRepository addressRepository,
 			CategoryRepository categoryRepository,
-			UserExerciseRepository userExerciseRepository
+			UserExerciseRepository userExerciseRepository,
+			UserProfileHistoryRepository userProfileHistoryRepository
 	) {
 		this.userRepository = userRepository;
 		this.evaluationRepository = evaluationRepository;
-		this.boardRepository = boardRepository;
 		this.addressRepository = addressRepository;
 		this.categoryRepository = categoryRepository;
 		this.userExerciseRepository = userExerciseRepository;
+		this.userProfileHistoryRepository = userProfileHistoryRepository;
 	}
 
 	@Transactional
@@ -93,19 +92,12 @@ public class MyProfileService {
 	}
 
 	@Transactional
-	public List<HistoryListInfo> getHistoryList(long userId, String type) {
-		User user = findUserById(userId)
-				.orElseThrow(() -> new UserNotFoundException(userId));
+	public List<HistoryListInfo> getHistoryList(HistoryCondition historyCondition, Pageable pageable) {
+		User user = findUserById(historyCondition.getUserId())
+				.orElseThrow(() -> new UserNotFoundException(historyCondition.getUserId()));
 
-		if (StringUtils.equalsIgnoreCase(type, "continue")) {
-			return findAllBoards(user).stream()
-					.filter(board -> (board.getStatus() == BoardStatus.RECRUITING || board.getStatus() == BoardStatus.COMPLETE))
-					.map(board -> HistoryListInfo.build(board, user))
-					.collect(Collectors.toList());
-		}
-
-		return findAllBoards(user).stream()
-				.filter(board -> (board.getStatus() == BoardStatus.CANCELED || board.getStatus() == BoardStatus.FINISHED))
+		return userProfileHistoryRepository.getHistory(historyCondition, pageable)
+				.stream()
 				.map(board -> HistoryListInfo.build(board, user))
 				.collect(Collectors.toList());
 	}
@@ -120,17 +112,6 @@ public class MyProfileService {
 
 	private List<Evaluation> findAllByEvaluatedId(long userId) {
 		return evaluationRepository.findAllByEvaluatedId(userId);
-	}
-
-	private List<Board> findAllBoards(User user) {
-		return boardRepository.findAll().stream()
-				.filter(
-						board ->
-								(board.getUser().getId().equals(user.getId())) ||
-										(board.getAppliedUsers().stream().anyMatch(appliedUser -> (appliedUser.getUser()
-												.getId().equals(user.getId())) && (appliedUser.getStatus() == AppliedStatus.APPROVED)))
-				)
-				.collect(Collectors.toList());
 	}
 
 	private void updateUser(User user, UserUpdateRequest userUpdateRequest) {
