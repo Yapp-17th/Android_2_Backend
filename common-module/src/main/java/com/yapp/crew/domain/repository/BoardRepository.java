@@ -16,7 +16,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 
 	Board save(Board board);
 
-	@Query(value = "SELECT b FROM Board b where b.startsAt >= :startDate AND b.startsAt <= :endDate AND b.status >= 2", nativeQuery = true)
+	@Query("SELECT b FROM Board b where b.startsAt >= :startDate AND b.startsAt <= :endDate AND b.status >= 2")
 	List<Board> findAllBoardByExpiredStatus(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 
 }
