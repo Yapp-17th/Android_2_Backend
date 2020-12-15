@@ -1,5 +1,7 @@
 package com.yapp.crew.controller;
 
+import com.yapp.crew.domain.condition.HistoryCondition;
+import com.yapp.crew.domain.type.HistoryType;
 import com.yapp.crew.dto.request.UserUpdateRequestDto;
 import com.yapp.crew.dto.response.HistoryListResponseDto;
 import com.yapp.crew.dto.response.UserEditProfileResponseDto;
@@ -15,6 +17,8 @@ import java.util.List;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -69,11 +73,12 @@ public class MyProfileController {
 	@GetMapping(path = "/v1/user/my-profile/history", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> getMyHistory(
 			@RequestHeader(value = "userId") long userId,
-			@RequestParam(required = false, defaultValue = "continue") String type
+			@PageableDefault(size = 200) Pageable pageable,
+			@RequestParam(required = false, defaultValue = "CONTINUE") String type
 	) {
 		log.info("Get my history -> userId: {}, type: {}", userId, type);
-		List<HistoryListInfo> historyListInfos = myProfileService.getHistoryList(userId, type);
-		HistoryListResponseDto historyListResponseDto = HistoryListResponseDto.build(type, historyListInfos);
+		List<HistoryListInfo> historyListInfos = myProfileService.getHistoryList(HistoryCondition.build(userId, type), pageable);
+		HistoryListResponseDto historyListResponseDto = HistoryListResponseDto.build(HistoryType.getHistoryType(type), historyListInfos);
 
 		return ResponseEntity.ok().body(historyListResponseDto);
 	}

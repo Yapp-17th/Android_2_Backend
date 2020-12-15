@@ -1,5 +1,6 @@
 package com.yapp.crew.dto.response;
 
+import com.yapp.crew.domain.type.HistoryType;
 import com.yapp.crew.model.HistoryListInfo;
 import java.util.Collections;
 import java.util.List;
@@ -16,7 +17,7 @@ public class HistoryListResponseDto {
 	private int status;
 	private boolean success;
 	private String message;
-	private String type;
+	private HistoryType type;
 	private List<HistoryListInfo> data;
 
 	public static HistoryListResponseDtoBuilder getBuilder() {
@@ -27,7 +28,7 @@ public class HistoryListResponseDto {
 		private int status = HttpStatus.OK.value();
 		private boolean success = true;
 		private String message = "히스토리 조회 성공";
-		private String type = "";
+		private HistoryType type = HistoryType.COMPLETE;
 		private List<HistoryListInfo> data = Collections.emptyList();
 
 		public HistoryListResponseDtoBuilder withStatus(int status) {
@@ -45,7 +46,7 @@ public class HistoryListResponseDto {
 			return this;
 		}
 
-		public HistoryListResponseDtoBuilder withType(String type) {
+		public HistoryListResponseDtoBuilder withType(HistoryType type) {
 			this.type = type;
 			return this;
 		}
@@ -66,7 +67,7 @@ public class HistoryListResponseDto {
 		}
 	}
 
-	public static HistoryListResponseDto build(String type, List<HistoryListInfo> data) {
+	public static HistoryListResponseDto build(HistoryType type, List<HistoryListInfo> data) {
 		return HistoryListResponseDto.getBuilder().withType(type).withData(data).build();
 	}
 }
