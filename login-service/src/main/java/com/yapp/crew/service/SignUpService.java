@@ -65,7 +65,7 @@ public class SignUpService {
 			return signUpNewUser(signupUserInfo);
 		}
 
-		if (user.getStatus() == UserStatus.SUSPENDED) {
+		if (user.getStatus() == UserStatus.SUSPENDED || user.getStatus() == UserStatus.FORBIDDEN) {
 			throw new SuspendedUserException(user.getId());
 		}
 		return signUpExistingUser(user);

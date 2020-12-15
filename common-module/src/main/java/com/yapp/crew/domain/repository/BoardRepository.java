@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface BoardRepository extends JpaRepository<Board, Long> {
 
@@ -12,7 +14,9 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 
 	List<Board> findAll();
 
-	List<Board> findAllByStartsAtBetween(LocalDateTime starts, LocalDateTime ends);
-
 	Board save(Board board);
+
+	@Query("SELECT b FROM Board b where b.startsAt >= :startDate AND b.startsAt <= :endDate AND b.status >= 2")
+	List<Board> findAllBoardByExpiredStatus(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
+
 }
