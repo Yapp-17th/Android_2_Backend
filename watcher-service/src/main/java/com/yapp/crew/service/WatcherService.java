@@ -6,7 +6,9 @@ import com.yapp.crew.domain.repository.BoardRepository;
 import com.yapp.crew.domain.status.BoardStatus;
 import com.yapp.crew.payload.BoardFinishedPayload;
 import com.yapp.crew.producer.WatcherProducer;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
@@ -44,7 +46,8 @@ public class WatcherService {
 	@Scheduled(cron = "0 0 0 * * *")
 	public void boardSuccessfullyFinishedWatcher() {
 		log.info("Watcher start...");
-		List<Board> boards = boardRepository.findAllBoardByExpiredStatus(LocalDateTime.now().minusDays(1), LocalDateTime.now());
+		LocalDateTime now = LocalDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT);
+		List<Board> boards = boardRepository.findAllBoardByExpiredStatus(now.minusDays(1), now);
 		log.info("Boards that needs an update -> {}", boards);
 
 		if (!boards.isEmpty()) {
