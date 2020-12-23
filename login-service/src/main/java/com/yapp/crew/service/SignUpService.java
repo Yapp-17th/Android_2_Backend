@@ -71,7 +71,6 @@ public class SignUpService {
 		return signUpExistingUser(user);
 	}
 
-	@Transactional
 	public UserAuthResponse signUpNewUser(SignupUserInfo signupUserInfo) {
 		UserBuilder userBuilder = User.getBuilder();
 
@@ -107,7 +106,6 @@ public class SignUpService {
 		return new UserAuthResponse(httpHeaders, simpleResponse);
 	}
 
-	@Transactional
 	public UserAuthResponse signUpExistingUser(User user) {
 		updateUserActive(user);
 		HttpHeaders httpHeaders = tokenService.setToken(user);
