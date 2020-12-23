@@ -157,6 +157,7 @@ public class ChattingService {
 		}
 	}
 
+	@Transactional
 	public HttpResponseBody<?> exitChatRoom(long userId, long chatRoomId) throws JsonProcessingException {
 		User user = userRepository.findUserById(userId)
 				.orElseThrow(() -> new UserNotFoundException(userId));
@@ -188,6 +189,7 @@ public class ChattingService {
 		);
 	}
 
+	@Transactional
 	public HttpResponseBody<List<ChatRoomResponsePayload>> receiveChatRooms(long userId) {
 		List<ChatRoom> chatRooms = chatRoomRepository.findAllByUserId(userId).stream()
 				.filter(chatRoom -> {
@@ -261,6 +263,7 @@ public class ChattingService {
 		);
 	}
 
+	@Transactional
 	public void messageBulkUpdate(MessageRequestPayload payload) {
 		if (payload.getType() != MessageType.UPDATE) {
 			return;
@@ -284,6 +287,7 @@ public class ChattingService {
 		}
 	}
 
+	@Transactional
 	public HttpResponseBody<?> applyUser(ApplyRequestPayload applyRequestPayload) throws JsonProcessingException {
 		ChatRoom chatRoom = chatRoomRepository.findById(applyRequestPayload.getChatRoomId())
 				.orElseThrow(() -> new ChatRoomNotFoundException(applyRequestPayload.getChatRoomId()));
@@ -370,6 +374,7 @@ public class ChattingService {
 		);
 	}
 
+	@Transactional
 	public HttpResponseBody<?> disapproveUser(ApproveRequestPayload approveRequestPayload) throws JsonProcessingException {
 		Board board = boardRepository.findById(approveRequestPayload.getBoardId())
 				.orElseThrow(() -> new BoardNotFoundException(approveRequestPayload.getBoardId()));
