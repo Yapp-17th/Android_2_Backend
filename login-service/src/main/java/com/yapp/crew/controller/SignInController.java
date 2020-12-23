@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -49,8 +50,8 @@ public class SignInController {
 				.body(SimpleResponseDto.build(SimpleResponse.fail(HttpStatus.INTERNAL_SERVER_ERROR, ResponseType.INTERNAL_SERVER_FAIL)));
 	}
 
-	@PostMapping(path = "/v1/user/auto-in", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> postAutoSignIn(@RequestHeader(value = "Authorization") String token) {
+	@GetMapping(path = "/v1/user/auto-in", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> getAutoSignIn(@RequestHeader(value = "Authorization") String token) {
 		UserAuthResponse userAuthResponse = signInService.autoSignIn(token);
 
 		HttpHeaders httpHeaders = userAuthResponse.getHttpHeaders();
