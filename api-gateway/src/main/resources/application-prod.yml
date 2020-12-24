@@ -9,7 +9,7 @@ zuul:
   host:
     connect-timeout-millis: 600000
     socket-timeout-millis: 600000
-  sensitiveHeaders: Cookie,Set-Cookie,Authorization
+  sensitiveHeaders: Cookie,Set-Cookie
   routes:
     chatting-service:
       path: /api/chatting-service/**
