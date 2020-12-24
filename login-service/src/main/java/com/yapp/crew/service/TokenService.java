@@ -25,4 +25,19 @@ public class TokenService {
 
 		return responseHeaders;
 	}
+
+	public HttpHeaders refreshToken(User user, String token) {
+		String refreshToken = null;
+		if (jwtUtil.verifyToken(token)) {
+			refreshToken = token;
+		} else {
+			refreshToken = jwtUtil.createToken(user);
+		}
+
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.set("token", refreshToken);
+		responseHeaders.set("userId", String.valueOf(user.getId()));
+
+		return responseHeaders;
+	}
 }
