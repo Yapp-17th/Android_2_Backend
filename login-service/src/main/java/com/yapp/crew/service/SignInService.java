@@ -1,5 +1,6 @@
 package com.yapp.crew.service;
 
+import com.yapp.crew.config.JwtUtils;
 import com.yapp.crew.domain.errors.ForbiddenUserSignUpException;
 import com.yapp.crew.domain.errors.InactiveUserException;
 import com.yapp.crew.domain.errors.SuspendedUserException;
@@ -21,11 +22,13 @@ public class SignInService {
 
 	private UserRepository userRepository;
 	private TokenService tokenService;
+	private JwtUtils jwtUtils;
 
 	@Autowired
-	public SignInService(UserRepository userRepository, TokenService tokenService) {
+	public SignInService(UserRepository userRepository, TokenService tokenService, JwtUtils jwtUtils) {
 		this.userRepository = userRepository;
 		this.tokenService = tokenService;
+		this.jwtUtils = jwtUtils;
 	}
 
 	public UserAuthResponse signIn(LoginUserInfo loginUserInfo) {
@@ -36,7 +39,7 @@ public class SignInService {
 			throw new SuspendedUserException(existingUser.getId());
 		} else if (existingUser.getStatus() == UserStatus.INACTIVE) {
 			throw new InactiveUserException(existingUser.getId());
-		} else if(existingUser.getStatus() == UserStatus.FORBIDDEN){
+		} else if (existingUser.getStatus() == UserStatus.FORBIDDEN) {
 			throw new ForbiddenUserSignUpException(existingUser.getId());
 		}
 
@@ -46,7 +49,23 @@ public class SignInService {
 		return new UserAuthResponse(httpHeaders, simpleResponse);
 	}
 
+	public UserAuthResponse autoSignIn(String token) {
+		long userId = Long.parseLong(jwtUtils.getUserIdFromToken(token));
+
+		User user = getUserByUserId(userId)
+				.orElseThrow(() -> new UserNotFoundException(userId));
+
+		HttpHeaders httpHeaders = tokenService.refreshToken(user, token);
+		SimpleResponse simpleResponse = SimpleResponse.pass(ResponseType.SUCCESS);
+
+		return new UserAuthResponse(httpHeaders, simpleResponse);
+	}
+
 	private Optional<User> getUserByOauthId(String oauthId) {
 		return userRepository.findByOauthId(oauthId);
+	}
+
+	private Optional<User> getUserByUserId(long userId) {
+		return userRepository.findUserById(userId);
 	}
 }

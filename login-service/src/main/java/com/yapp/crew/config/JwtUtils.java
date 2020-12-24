@@ -2,6 +2,7 @@ package com.yapp.crew.config;
 
 import com.yapp.crew.domain.model.User;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import java.util.Calendar;
@@ -70,6 +71,21 @@ public class JwtUtils {
 		return userId;
 	}
 
+	public Date getExpirationFromToken(String token) {
+		token = token.replace(prefix + " ", "");
+		log.info("remove prefix token: " + token);
+
+		Date expiration;
+		try {
+			final Claims claims = getClaimsFromToken(token);
+			expiration = claims.getExpiration();
+			log.info("expiration from token: " + expiration.toString());
+		} catch (Exception e) {
+			expiration = new Date();
+		}
+		return expiration;
+	}
+
 	private Claims getClaimsFromToken(String token) {
 		Claims claims;
 		try {
@@ -82,5 +98,18 @@ public class JwtUtils {
 			claims = null;
 		}
 		return claims;
+	}
+
+	public boolean verifyToken(String token) {
+		if (token == null || token.isBlank()) {
+			return false;
+		}
+
+		if (!token.startsWith("Bearer")) {
+			return false;
+		}
+
+		Date expiration = getExpirationFromToken(token);
+		return expiration.before(new Date());
 	}
 }
