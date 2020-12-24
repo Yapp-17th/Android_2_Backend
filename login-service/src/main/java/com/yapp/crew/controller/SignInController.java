@@ -52,6 +52,7 @@ public class SignInController {
 
 	@GetMapping(path = "/v1/user/auto-in", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> getAutoSignIn(@RequestHeader(value = "Authorization") String token) {
+		log.info("auto log in -> header: {}", token);
 		UserAuthResponse userAuthResponse = signInService.autoSignIn(token);
 
 		HttpHeaders httpHeaders = userAuthResponse.getHttpHeaders();
