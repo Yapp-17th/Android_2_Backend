@@ -97,11 +97,25 @@ public class BoardSearchAndFilterRepository {
 	}
 
 	private BooleanExpression isSearchedKeywords(List<String> keywords) {
-		return Expressions.allOf(keywords.stream().map(this::isSearchedKeyword).toArray(BooleanExpression[]::new));
+		return Expressions.anyOf(keywords.stream().map(keyword -> {
+				BooleanExpression isContent = isSearchedKeywordInContent(keyword);
+				BooleanExpression isTitle = isSearchedKeywordInTitle(keyword);
+				BooleanExpression isNickname = isSearchedKeywordInUserNickname(keyword);
+
+				return Expressions.anyOf(isContent, isTitle, isNickname);
+		}).toArray(BooleanExpression[]::new));
 	}
 
-	private BooleanExpression isSearchedKeyword(String keyword) {
+	private BooleanExpression isSearchedKeywordInContent(String keyword) {
 		return board.content.containsIgnoreCase(keyword);
+	}
+
+	private BooleanExpression isSearchedKeywordInTitle(String keyword) {
+		return board.title.containsIgnoreCase(keyword);
+	}
+
+	private BooleanExpression isSearchedKeywordInUserNickname(String keyword) {
+		return board.user.nickname.containsIgnoreCase(keyword);
 	}
 
 	private BooleanExpression isDeletedBoard() {
