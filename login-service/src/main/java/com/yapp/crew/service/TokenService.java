@@ -29,7 +29,7 @@ public class TokenService {
 	public HttpHeaders refreshToken(User user, String token) {
 		String refreshToken = null;
 		if (jwtUtil.verifyToken(token)) {
-			refreshToken = token;
+			refreshToken = "Bearer " + token;
 		} else {
 			refreshToken = jwtUtil.createToken(user);
 		}
