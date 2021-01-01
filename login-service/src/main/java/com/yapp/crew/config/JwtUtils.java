@@ -58,13 +58,9 @@ public class JwtUtils {
 	}
 
 	public long getUserIdFromToken(String token) {
-		token = token.replace(prefix + " ", "");
-		log.info("remove prefix token: " + token);
-
 		try {
 			final Claims claims = getClaimsFromToken(token).getBody();
 			long userId = Long.parseLong(String.valueOf(claims.get("userId")));
-
 			log.info("userId from token: " + userId);
 			return userId;
 		} catch (Exception e) {
@@ -73,9 +69,6 @@ public class JwtUtils {
 	}
 
 	public Date getExpirationFromToken(String token) {
-		token = token.replace(prefix + " ", "");
-		log.info("remove prefix token: " + token);
-
 		Date expiration;
 		try {
 			final Claims claims = getClaimsFromToken(token).getBody();
@@ -88,6 +81,9 @@ public class JwtUtils {
 	}
 
 	private Jws<Claims> getClaimsFromToken(String token) {
+		token = token.replace(prefix + " ", "");
+		log.info("remove prefix token: " + token);
+		
 		Jws<Claims> claims;
 		try {
 			claims = Jwts.parserBuilder()
