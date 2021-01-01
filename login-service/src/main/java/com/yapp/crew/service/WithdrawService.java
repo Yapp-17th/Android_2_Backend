@@ -26,7 +26,7 @@ public class WithdrawService {
 
 	@Transactional
 	public UserAuthResponse withdraw(String token) {
-		long userId = Long.parseLong(jwtUtils.getUserIdFromToken(token));
+		long userId = jwtUtils.getUserIdFromToken(token);
 
 		User user = getUserByUserId(userId)
 				.orElseThrow(() -> new UserNotFoundException(userId));
