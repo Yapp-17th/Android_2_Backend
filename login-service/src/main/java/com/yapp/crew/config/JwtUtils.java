@@ -1,5 +1,6 @@
 package com.yapp.crew.config;
 
+import com.yapp.crew.domain.errors.TokenRequiredException;
 import com.yapp.crew.domain.model.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -56,28 +57,21 @@ public class JwtUtils {
 		return calendar.getTime();
 	}
 
-	public String getUserIdFromToken(String token) {
-		token = token.replace(prefix + " ", "");
-		log.info("remove prefix token: " + token);
-
-		String userId;
+	public long getUserIdFromToken(String token) {
 		try {
-			final Claims claims = getClaimsFromToken(token);
-			userId = String.valueOf(claims.get("userId"));
+			final Claims claims = getClaimsFromToken(token).getBody();
+			long userId = Long.parseLong(String.valueOf(claims.get("userId")));
 			log.info("userId from token: " + userId);
+			return userId;
 		} catch (Exception e) {
-			userId = null;
+			throw new TokenRequiredException("[Auto Login Service] Token is required but wasn't sent");
 		}
-		return userId;
 	}
 
 	public Date getExpirationFromToken(String token) {
-		token = token.replace(prefix + " ", "");
-		log.info("remove prefix token: " + token);
-
 		Date expiration;
 		try {
-			final Claims claims = getClaimsFromToken(token);
+			final Claims claims = getClaimsFromToken(token).getBody();
 			expiration = claims.getExpiration();
 			log.info("expiration from token: " + expiration.toString());
 		} catch (Exception e) {
@@ -86,14 +80,16 @@ public class JwtUtils {
 		return expiration;
 	}
 
-	private Claims getClaimsFromToken(String token) {
-		Claims claims;
+	private Jws<Claims> getClaimsFromToken(String token) {
+		token = token.replace(prefix + " ", "");
+		log.info("remove prefix token: " + token);
+		
+		Jws<Claims> claims;
 		try {
 			claims = Jwts.parserBuilder()
 					.setSigningKey(Keys.hmacShaKeyFor(secret.getBytes()))
 					.build()
-					.parseClaimsJws(token)
-					.getBody();
+					.parseClaimsJws(token);
 		} catch (Exception e) {
 			claims = null;
 		}
