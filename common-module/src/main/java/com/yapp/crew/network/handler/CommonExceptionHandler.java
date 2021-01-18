@@ -109,7 +109,7 @@ public class CommonExceptionHandler {
 	@ExceptionHandler(value = InactiveUserException.class)
 	public ResponseEntity<?> handleInactiveUserException(InactiveUserException ex) {
 		log.error(ex.getMessage());
-		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.FORBIDDEN, ResponseType.INACTIVE_USER_FAIL);
+		SimpleResponse responseBody = SimpleResponse.fail(HttpStatus.UNAUTHORIZED, ResponseType.INACTIVE_USER_FAIL);
 		return ResponseEntity.ok().body(responseBody);
 	}
 
